@@ -1,0 +1,12 @@
+.familyMemberFormContainer {
+  /* width: calc(100% - 160px); */
+  width: 100%;
+  min-height: auto;
+  /* overflow: scroll; */
+  position: relative;
+}
+.cascadeTableWrapper {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}

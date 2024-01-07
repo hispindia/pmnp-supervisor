@@ -1,0 +1,198 @@
+[
+    {
+        "compulsory": false,
+        "id": "BUEzQEErqa7",
+        "displayName": "Registered Year",
+        "displayFormName": "Registered Year",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": true
+    },
+    {
+        "compulsory": true,
+        "id": "xbwURy2jG2K",
+        "displayName": "Unit of Village",
+        "displayFormName": "Unit of Village",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": true
+    },
+    {
+        "compulsory": true,
+        "id": "W8WZcI1SUjC",
+        "displayName": "House number",
+        "displayFormName": "House number",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": true
+    },
+    {
+        "compulsory": false,
+        "id": "gSImG6wxCkY",
+        "displayName": "Family Book Number",
+        "displayFormName": "Family Book Number",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": true
+    },
+    {
+        "compulsory": false,
+        "id": "fhQjNMIVkzb",
+        "displayName": "Identification details",
+        "displayFormName": "Identification details",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": false
+    },
+    {
+        "compulsory": false,
+        "id": "utW5gK4ihvz",
+        "displayName": "Registered district",
+        "displayFormName": "Registered district",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": false
+    },
+    {
+        "compulsory": false,
+        "id": "BgKZvUxweKO",
+        "displayName": "Registered province",
+        "displayFormName": "Registered province",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": false
+    },
+    {
+        "compulsory": true,
+        "id": "rzGghDo5ipI",
+        "displayName": "Residence status",
+        "displayFormName": "Residence status",
+        "valueType": "TEXT",
+        "valueSet": [
+            {
+                "value": "Residence",
+                "label": "Residence"
+            },
+            {
+                "value": "Mobile worker",
+                "label": "Mobile worker"
+            },
+            {
+                "value": "Student",
+                "label": "Student"
+            },
+            {
+                "value": "Others",
+                "label": "Others"
+            }
+        ],
+        "displayInList": false
+    },
+    {
+        "compulsory": false,
+        "id": "ZjBtYjd8qWG",
+        "displayName": "Identification document",
+        "displayFormName": "Identification document",
+        "valueType": "TEXT",
+        "valueSet": [
+            {
+                "value": "Family book number",
+                "label": "Family book number"
+            },
+            {
+                "value": "Passport details",
+                "label": "Passport details"
+            },
+            {
+                "value": "Student id card",
+                "label": "Student id card"
+            },
+            {
+                "value": "None",
+                "label": "None"
+            }
+        ],
+        "displayInList": false
+    },
+    {
+        "compulsory": false,
+        "id": "AiwUJOsOC86",
+        "displayName": "Family registered",
+        "displayFormName": "Family registered",
+        "valueType": "BOOLEAN",
+        "valueSet": null,
+        "displayInList": false
+    },
+    {
+        "compulsory": false,
+        "id": "IRaL8wHG0tG",
+        "displayName": "Address",
+        "displayFormName": "Address",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": false
+    },
+    {
+        "compulsory": false,
+        "id": "CKQuSLAY0Xf",
+        "displayName": "Temporary Family Book Number",
+        "displayFormName": "Temporary Family Book Number",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": false
+    },
+    {
+        "compulsory": false,
+        "id": "XwnHdecsbvz",
+        "displayName": "Registered village",
+        "displayFormName": "Registered village",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": false
+    },
+    {
+        "compulsory": false,
+        "id": "IEE2BMhfoSc",
+        "displayName": "First name",
+        "displayFormName": "First name",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": true
+    },
+    {
+        "compulsory": false,
+        "id": "IBLkiaYRRL3",
+        "displayName": "Last name",
+        "displayFormName": "Last name",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": true
+    },
+    {
+        "compulsory": true,
+        "id": "G9KYJZ8dW76",
+        "displayName": "Form No.",
+        "displayFormName": "Form No.",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": true
+    },
+    {
+        "compulsory": false,
+        "id": "nYcHuUDqeBY",
+        "displayName": "Tel",
+        "displayFormName": "Tel",
+        "valueType": "PHONE_NUMBER",
+        "valueSet": null,
+        "displayInList": true
+    },
+    {
+        "compulsory": false,
+        "id": "UQdxC9ojcju",
+        "displayNamef": "Specify resident details",
+        "displayFormName": "Specify resident details",
+        "valueType": "TEXT",
+        "valueSet": null,
+        "displayInList": false
+    }
+]
