@@ -77,7 +77,8 @@
     "typeface-roboto": "^0.0.75"
   },
   "scripts": {
-    "start": "webpack --config webpack.config.js && serve -s dist"
+    "start": "webpack --config webpack.config.js && serve -s dist",
+    "start1": "NODE_ENV=development react-scripts start"
   },
   "devDependencies": {
     "bestzip": "^2.1.2",

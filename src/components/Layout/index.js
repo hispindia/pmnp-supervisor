@@ -4,7 +4,7 @@ import { SnackbarProvider } from "notistack";
 import AppContextProvider from "../../components/App/App.context";
 import styles from "../../components/App/App.module.css";
 
-import HeaderBar from "components/HeaderBar/HeaderBar.component";
+import HeaderBar from "../../components/HeaderBar/HeaderBar.component";
 const { app, headerBarContainer } = styles;
 
 const theme = createMuiTheme({
@@ -23,6 +23,7 @@ const Layout = ({ children }) => {
           <div className={app}>
             <div className={headerBarContainer}>
               <HeaderBar title="Family Information System" />
+              {/* HeaderBar testing */}
             </div>
             {children}
           </div>

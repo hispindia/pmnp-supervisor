@@ -4,12 +4,11 @@ import ControlBar from "../ControlBar/ControlBar";
 import RegisteredTeiListContainer from "../../containers/RegisteredTeiList";
 
 import FormContainer from "../../containers/MainForm";
-import Report from '../../modules/Report/containers/Layout';
+import Report from "../../modules/Report/containers/Layout";
 import withOrgUnitRequired from "../../hocs/withOrgUnitRequired";
 import OrgUnitRequired from "../../skeletons/OrgUnitRequired";
 
 // import RegisteredTeiFormContainer from "../../containers/RegisteredTeiForm";
-
 
 // const { appContentContainer } = styles;
 
@@ -27,7 +26,10 @@ const App = () => {
         {/*  path="/form"*/}
         {/*  render={() => <FormContainer programMetadata={programMetadata} />}*/}
         {/*/>*/}
-        <Route path="/report" component={withOrgUnitRequired(OrgUnitRequired)(Report)} />
+        <Route
+          path="/report"
+          component={withOrgUnitRequired(OrgUnitRequired)(Report)}
+        />
       </Switch>
     </>
   );
