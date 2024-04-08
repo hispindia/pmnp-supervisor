@@ -15,17 +15,25 @@
  */
 
 // import { offlineFallback } from "workbox-recipes";
-import { setDefaultHandler } from "workbox-routing";
-import { NetworkOnly } from "workbox-strategies";
+import { setDefaultHandler, registerRoute } from "workbox-routing";
+import { NetworkFirst } from "workbox-strategies";
+import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 
 // Asset hashes to see if content has changed.
 const assetHashes = self.__WB_MANIFEST;
-console.log(assetHashes);
+console.log("assetHashes", assetHashes);
 
 // Sets a default Network Only handler, but consider writing your own handlers, too!
-setDefaultHandler(new NetworkOnly());
+// setDefaultHandler(new NetworkFirst());
+registerRoute(({ request }) => request.method === "GET", new NetworkFirst());
 
 // HTML to serve when the site is offline
 // offlineFallback({
 //   pageFallback: "/offline.html",
 // });
+
+//cleanup Outdated Caches
+cleanupOutdatedCaches();
+
+// pre cache And Route
+precacheAndRoute(assetHashes);
