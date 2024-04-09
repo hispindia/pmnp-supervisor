@@ -78,8 +78,10 @@ const FamilyMemberForm = ({
   useEffect(() => {
     return () => {
       console.log("FamilyMemberForm - unmounted");
-      dispatch(clear());
-      setData([]);
+
+      // TODO: why crash here???
+      // dispatch(clear());
+      // setData([]);
     };
   }, []);
 
