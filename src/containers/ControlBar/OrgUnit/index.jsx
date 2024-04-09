@@ -7,7 +7,6 @@ import { setSelectedOrgUnit } from "../../../redux/actions/metadata";
 import OrgUnit from "../../../components/ControlBar/OrgUnit";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import db, { addOrgs } from "@/indexDB/db";
 
 const OrgUnitContainer = () => {
   const { t } = useTranslation();

@@ -1,5 +1,9 @@
 import db from "./db";
 
+export const TABLE_NAME = "trackedEntityInstance";
+export const TABLE_FIELDS =
+  "++id, trackedEntityInstance, lastUpdated, orgUnit, trackedEntityType, isDeleted, isOnline, attribute, valueType, displayName, value";
+
 import { dataApi } from "@/api";
 
 import * as enrollmentManager from "@/indexDB/EnrollmentManager";
@@ -15,10 +19,6 @@ import {
   toDhis2TrackedEntities,
   toDhis2TrackedEntity,
 } from "./data/trackedEntity";
-
-export const TABLE_FIELDS =
-  "++id, trackedEntityInstance, lastUpdated, orgUnit, trackedEntityType, isDeleted, isOnline, attribute, valueType, displayName, value";
-export const TABLE_NAME = "trackedEntityInstance";
 
 export const pull = async () => {
   try {

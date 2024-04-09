@@ -1,5 +1,5 @@
 import React from "react";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { SnackbarProvider } from "notistack";
 import AppContextProvider from "../App/App.context";
 import styles from "../../components/App/App.module.css";
@@ -7,7 +7,7 @@ import styles from "../../components/App/App.module.css";
 import HeaderBar from "@/components/HeaderBar/HeaderBar.component";
 const { app, headerBarContainer } = styles;
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     button: {
       textTransform: "none",

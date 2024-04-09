@@ -1,10 +1,10 @@
 // node_modules
+import { generateUid } from "@/utils";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Alert from "@material-ui/lab/Alert";
-import { generateUid } from "@/utils";
 import i18n from "i18next";
 import _ from "lodash";
 import moment from "moment";
@@ -584,7 +584,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
         }
         endIcon={activeStep != numOfStep && <NavigateNextIcon />}
         onClick={(e) => handleChangeStep(activeStep + 1)}
-        disableElevation
+        // disableElevation
         {...newProps}
       >
         {activeStep == numOfStep ? t("save") : t("next")}
@@ -599,7 +599,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
           size="small"
           variant="contained"
           onClick={(e) => setIsYearPickerOpen(true)}
-          disableElevation
+          // disableElevation
           disabled
         >
           {t("addYear")}
@@ -735,7 +735,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
             color="primary"
             className={event.status != "ACTIVE" && incompleteButton}
             disabled={disableCompleteBtn}
-            disableElevation
+            // disableElevation
             onClick={handleCompleteToggle}
           >
             {event.status == "ACTIVE" ? t("complete") : t("inComplete")}

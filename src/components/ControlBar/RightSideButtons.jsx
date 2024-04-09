@@ -39,7 +39,7 @@ const RightSideButtons = ({
             <Button
               variant="contained"
               color="default"
-              disableElevation
+              // disableElevation
               onClick={onClickExit}
             >
               {exitLabel}
