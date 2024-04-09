@@ -3,6 +3,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import manifest from "./manifest.webapp.json";
 import react from "@vitejs/plugin-react";
 import assetManifest from "rollup-plugin-output-manifest";
+import * as path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,6 +21,9 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }],
+  },
   build: {
     sourcemap: true,
     rollupOptions: {

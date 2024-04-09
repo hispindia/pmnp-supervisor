@@ -1,0 +1,12 @@
+.hierachy-selector * {
+  font-size: 13px;
+}
+
+.hierachy-selector-item {
+  margin: 5px;
+}
+
+.hierachy-selector-label {
+  font-weight: bold;
+  font-size: 13px;
+}
