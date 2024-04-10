@@ -33,6 +33,7 @@ const FormNoInputContainer = ({ id, initialValue, ...props }) => {
         filters: [`attribute=${id}:EQ:${value}`],
       });
     } else {
+      console.log("???", programMetadata.id);
       findTei = dataApi.findTei(selectedOrgUnit.id, programMetadata.id, [
         {
           attribute: id,
@@ -44,8 +45,8 @@ const FormNoInputContainer = ({ id, initialValue, ...props }) => {
     return findTei.then((json) => {
       console.log({ json });
       setLoading(false);
-      if (json.trackedEntityInstances) {
-        if (json.trackedEntityInstances.length > 0) {
+      if (json.instances) {
+        if (json.instances.length > 0) {
           return callback(
             new Error(
               t("uniqueFormNoError", {

@@ -1,505 +1,491 @@
-import { pull, push } from './Fetch';
-import BaseApiClass from './BaseApiClass';
-import moment from 'moment';
+import { pull, push } from "./Fetch";
+import BaseApiClass from "./BaseApiClass";
+import moment from "moment";
 
 export default class DataApiClass extends BaseApiClass {
-    constructor(...agrs) {
-        super(...agrs);
-        this.this = this;
+  constructor(...agrs) {
+    super(...agrs);
+    this.this = this;
+  }
+
+  getTrackedEntityInstanceList = (orgUnit, program, pageSize, page, filter) =>
+    pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker/trackedEntities.json`,
+      {
+        paging: true,
+        pageSize: pageSize,
+        totalPages: true,
+        page: page,
+        filter: filter,
+      },
+      [
+        `orgUnit=${orgUnit}`,
+        `ouMode=SELECTED`,
+        `order=created:desc`,
+        `program=${program}`,
+      ]
+    );
+
+  getTrackedEntityInstanceListByQuery = (
+    orgUnit,
+    program,
+    pageSize,
+    page,
+    filter,
+    order
+  ) =>
+    pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker/trackedEntities.json`,
+      {
+        paging: true,
+        pageSize: pageSize,
+        totalPages: true,
+        page: page,
+        filter: filter,
+        order: order,
+      },
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
+    );
+
+  getAllTrackedEntityInstancesByIDs = (program, teiList) =>
+    pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker/trackedEntities.json`,
+      {
+        paging: false,
+      },
+      [`fields=*`, `trackedEntity=${teiList.join(";")}`, `program=${program}`]
+    );
+
+  getAllTrackedEntityInstanceList = (orgUnit, program) =>
+    pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstances/query`,
+      {
+        paging: false,
+      },
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
+    );
+
+  getEventsByTEI = (program, trackedEntityInstance, startDate, endDate) => {
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/events`,
+      {
+        paging: false,
+      },
+      [
+        `fields=:all`,
+        `program=${program}`,
+        `trackedEntityInstance=${trackedEntityInstance}`,
+        `startDate=${startDate}&endDate=${endDate}`,
+      ]
+    );
+  };
+
+  getEventsByQuery = (programStage, orgUnit, filters, startDate, endDate) => {
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/events/query`,
+      {
+        paging: false,
+      },
+      [
+        filters.join("&"),
+        `includeAllDataElements`,
+        `orgUnit=${orgUnit}`,
+        `programStage=${programStage}`,
+        `startDate=${startDate}&endDate=${endDate}`,
+      ]
+    );
+  };
+
+  getAllTrackedEntityFiltersList = (program) =>
+    pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstanceFilters`,
+      {
+        paging: false,
+      },
+      [`fields=:all`, `program=${program}`]
+    );
+
+  findTei = (orgUnit, program, attributes) => {
+    let filters = "";
+    attributes.forEach((attr) => {
+      filters += `&filter=${attr.attribute}:EQ:${attr.value}`;
+    });
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker/trackedEntities.json`,
+      {
+        paging: false,
+        filter: filters,
+      },
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
+    );
+  };
+
+  search = (ouId, ouMode, queryUrl, program, attribute, pager, paging) => {
+    var url = this.getSearchUrl(
+      ouId,
+      ouMode,
+      queryUrl,
+      program,
+      attribute,
+      pager,
+      paging
+    );
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstances/query`,
+      {},
+      [url]
+    );
+  };
+
+  getSearchUrl = (
+    ouId,
+    ouMode,
+    queryUrl,
+    program,
+    attribute,
+    pager,
+    paging
+  ) => {
+    var url = "";
+    url += "orgUnit=" + ouId + "&ouMode=" + ouMode;
+
+    if (queryUrl) {
+      url = url + "&" + queryUrl;
     }
+    if (program) {
+      url = url + "&program=" + program;
+    }
+    if (attribute) {
+      url = url + "&" + attribute;
+    }
+    if (paging) {
+      var pgSize = (pager && pager.pageSize) || 50;
+      var pg = (pager && pager.page) || 1;
+      pgSize = pgSize > 1 ? pgSize : 1;
+      pg = pg > 1 ? pg : 1;
+      url = url + "&pageSize=" + pgSize + "&page=" + pg;
+      if (pager && pager.skipTotalPages) {
+        url += "&totalPages=false";
+      } else {
+        url += "&totalPages=true";
+      }
+    } else {
+      url = url + "&paging=false";
+    }
+    return url;
+  };
 
-    getTrackedEntityInstanceList = (orgUnit, program, pageSize, page, filter) =>
-        pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances`,
-            {
-                paging: true,
-                pageSize: pageSize,
-                totalPages: true,
-                page: page,
-                filter: filter,
-            },
-            [
-                `ou=${orgUnit}`,
-                `ouMode=SELECTED`,
-                `order=created:desc`,
-                `program=${program}`,
-            ]
-        );
+  getPeriodDate = (days) => moment().add(days, "days").format("YYYY-MM-DD");
 
-    getTrackedEntityInstanceListByQuery = (
-        orgUnit,
-        program,
-        pageSize,
-        page,
-        filter,
-        order
-    ) =>
-        pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances`,
-            {
-                paging: true,
-                pageSize: pageSize,
-                totalPages: true,
-                page: page,
-                filter: filter,
-                order: order,
-            },
-            [`ou=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
-        );
+  getEventUrl = (eventFilter) => {
+    var eventUrl = "";
+    if (eventFilter) {
+      if (eventFilter.eventStatus)
+        eventUrl = "eventStatus=" + eventFilter.eventStatus;
+      if (eventFilter.eventCreatedPeriod) {
+        if (eventUrl) eventUrl += "&";
+        eventUrl +=
+          "eventStartDate=" +
+          this.getPeriodDate(eventFilter.eventCreatedPeriod.periodFrom);
+        eventUrl +=
+          "&eventEndDate=" +
+          this.getPeriodDate(eventFilter.eventCreatedPeriod.periodTo);
+      }
+      if (eventFilter.programStage) {
+        if (eventUrl) eventUrl += "&";
+        eventUrl += "programStage=" + eventFilter.programStage;
+      }
+      if (eventFilter.assignedUserMode) {
+        if (eventUrl) eventUrl += "&";
+        eventUrl += "assignedUserMode=" + eventFilter.assignedUserMode;
+      }
+      if (
+        !eventFilter.assignedUserMode ||
+        (eventFilter.assignedUserMode == "PROVIDED" &&
+          eventFilter.assignedUsers &&
+          eventFilter.assignedUsers.length > 0)
+      ) {
+        if (eventUrl) eventUrl += "&";
+        eventUrl += "assignedUser=";
+        for (var i = 0; i < eventFilter.assignedUsers.length; i++) {
+          if (i > 0) eventUrl += ";";
+          eventUrl += eventFilter.assignedUsers[i];
+        }
+      }
+    }
+    return eventUrl;
+  };
 
-    getAllTrackedEntityInstancesByIDs = (program, teiList) =>
-        pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances`,
-            {
-                paging: false,
-            },
-            [
-                `fields=*`,
-                `trackedEntityInstance=${teiList.join(';')}`,
-                `program=${program}`,
-            ]
-        );
+  getTrackedEntityInstanceById = (id, program) => {
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker/trackedEntities/${id}.json`,
+      { paging: false },
+      [`fields=*`, `program=${program}`]
+    );
+  };
 
-    getAllTrackedEntityInstanceList = (orgUnit, program) =>
-        pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances/query`,
-            {
-                paging: false,
-            },
-            [`ou=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
-        );
+  getTrackedEntityInstanceByQuery = (ou, filters, attributes) => {
+    console.log("getTrackedEntityInstanceByQuery");
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstances/query.json`,
+      {},
+      [
+        `orgUnit=${ou}`,
+        filters.join("&"),
+        attributes.map((e) => "attribute=" + e).join("&"),
+      ]
+    );
+  };
 
-    getEventsByTEI = (program, trackedEntityInstance, startDate, endDate) => {
-        return pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/events`,
-            {
-                paging: false,
-            },
-            [
-                `fields=:all`,
-                `program=${program}`,
-                `trackedEntityInstance=${trackedEntityInstance}`,
-                `startDate=${startDate}&endDate=${endDate}`,
-            ]
-        );
-    };
+  getTrackedEntityInstances = (ou, filters, attributes, program) => {
+    console.log("trackedEntities");
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker/trackedEntities.json`,
+      {},
+      [
+        `orgUnit=${ou}`,
+        `program=${program}`,
+        filters.join("&"),
+        attributes.map((e) => "attribute=" + e).join("&"),
+      ]
+    );
+  };
 
-    getEventsByQuery = (programStage, orgUnit, filters, startDate, endDate) => {
-        return pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/events/query`,
-            {
-                paging: false,
-            },
-            [
-                filters.join('&'),
-                `includeAllDataElements`,
-                `orgUnit=${orgUnit}`,
-                `programStage=${programStage}`,
-                `startDate=${startDate}&endDate=${endDate}`,
-            ]
-        );
-    };
+  // get = (endPoint, options) => {
+  //     const { query } = props;
 
-    getAllTrackedEntityFiltersList = (program) =>
-        pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstanceFilters`,
-            {
-                paging: false,
-            },
-            [`fields=:all`, `program=${program}`]
-        );
+  //     // const query = {
+  //     //     ou: orgUnit,
+  //     //     program: programId,
+  //     //     ouMode: 'DESCENDANTS',
+  //     //     skipPaging: false,
+  //     //     pageSize: 200,
+  //     //     page,
+  //     //     includeDeleted: true,
+  //     //     lastUpdatedStartDate: lastUpdated,
+  //     //     fields: [
+  //     //         'trackedEntityInstance',
+  //     //         'trackedEntityType',
+  //     //         'orgUnit',
+  //     //         'lastUpdated',
+  //     //         'inactive',
+  //     //         'deleted',
+  //     //         'attributes[attribute,value,displayName,valueType]',
+  //     //     ],
+  //     // };
 
-    findTei = (orgUnit, program, attributes) => {
-        let filters = '';
-        attributes.forEach((attr) => {
-            filters += `&filter=${attr.attribute}:EQ:${attr.value}`;
-        });
-        return pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances`,
-            {
-                paging: false,
-                filter: filters,
-            },
-            [`ou=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
-        );
-    };
+  //     return pull(
+  //         this.baseUrl,
+  //         this.username,
+  //         this.password,
+  //         `/api/trackedEntityInstances`,
+  //         {},
+  //         [
+  //             `ou=${ou}`,
+  //             filters.join('&'),
+  //             attributes.map((e) => 'attribute=' + e).join('&'),
+  //         ]
+  //     );
+  // };
 
-    search = (ouId, ouMode, queryUrl, program, attribute, pager, paging) => {
-        var url = this.getSearchUrl(
-            ouId,
-            ouMode,
-            queryUrl,
+  // https://dhis2.asia/laomembers/api/trackedEntityInstances/query.json?attribute=gv9xX5w4kKt:EQ:yAHVhPxHorS&ou=Y9PhSNpBvg0&attribute=tASKWHyRolc&attribute=NLth2WTyo7M&attribute=tJrT8GIy477&attribute=BaiVwt8jVfg&attribute=IBLkiaYRRL3&attribute=bIzDI9HJCB0&attribute=IEE2BMhfoSc&attribute=tQeFLjYbqzv&attribute=DmuazFb368B&attribute=ck9h7CokxQE
+
+  // async getTrackedEntityFiltersById(id, program) {
+  //   const tei = await pull(
+  //     this.baseUrl,
+  //     this.username,
+  //     this.password,
+  //     `/api/trackedEntityInstanceFilters/${id}`,
+  //     { paging: false },
+  //     [`fields=*`, `program=${program}`]
+  //   );
+  //   return tei;
+  // }
+
+  getWorkingListDataWithMultipleEventFilters = (
+    workingList,
+    ou,
+    program,
+    pager,
+    sortColumn
+  ) =>
+    new Promise((resolve) => {
+      var promises = [];
+      workingList.eventFilters.forEach((eventFilter) => {
+        var eventUrl = this.getEventUrl(eventFilter);
+        var tempPager = {
+          pageSize: 1000,
+          page: 1,
+        };
+        promises.push(
+          this.search(
+            ou,
+            "SELECTED",
+            eventUrl, //queryUrl
             program,
-            attribute,
-            pager,
-            paging
+            null, //attribute
+            tempPager,
+            true // paging
+          )
         );
-        return pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances/query`,
-            {},
-            [url]
-        );
-    };
+      });
 
-    getSearchUrl = (
-        ouId,
-        ouMode,
-        queryUrl,
-        program,
-        attribute,
-        pager,
-        paging
-    ) => {
-        var url = '';
-        url += 'ou=' + ouId + '&ouMode=' + ouMode;
+      Promise.all(promises).then((response) => {
+        var data = { height: 0, width: 0, rows: [] };
+        var existingTeis = {};
+        var allRows = [];
 
-        if (queryUrl) {
-            url = url + '&' + queryUrl;
-        }
-        if (program) {
-            url = url + '&program=' + program;
-        }
-        if (attribute) {
-            url = url + '&' + attribute;
-        }
-        if (paging) {
-            var pgSize = (pager && pager.pageSize) || 50;
-            var pg = (pager && pager.page) || 1;
-            pgSize = pgSize > 1 ? pgSize : 1;
-            pg = pg > 1 ? pg : 1;
-            url = url + '&pageSize=' + pgSize + '&page=' + pg;
-            if (pager && pager.skipTotalPages) {
-                url += '&totalPages=false';
-            } else {
-                url += '&totalPages=true';
-            }
-        } else {
-            url = url + '&paging=false';
-        }
-        return url;
-    };
-
-    getPeriodDate = (days) => moment().add(days, 'days').format('YYYY-MM-DD');
-
-    getEventUrl = (eventFilter) => {
-        var eventUrl = '';
-        if (eventFilter) {
-            if (eventFilter.eventStatus)
-                eventUrl = 'eventStatus=' + eventFilter.eventStatus;
-            if (eventFilter.eventCreatedPeriod) {
-                if (eventUrl) eventUrl += '&';
-                eventUrl +=
-                    'eventStartDate=' +
-                    this.getPeriodDate(
-                        eventFilter.eventCreatedPeriod.periodFrom
-                    );
-                eventUrl +=
-                    '&eventEndDate=' +
-                    this.getPeriodDate(eventFilter.eventCreatedPeriod.periodTo);
-            }
-            if (eventFilter.programStage) {
-                if (eventUrl) eventUrl += '&';
-                eventUrl += 'programStage=' + eventFilter.programStage;
-            }
-            if (eventFilter.assignedUserMode) {
-                if (eventUrl) eventUrl += '&';
-                eventUrl += 'assignedUserMode=' + eventFilter.assignedUserMode;
-            }
-            if (
-                !eventFilter.assignedUserMode ||
-                (eventFilter.assignedUserMode == 'PROVIDED' &&
-                    eventFilter.assignedUsers &&
-                    eventFilter.assignedUsers.length > 0)
-            ) {
-                if (eventUrl) eventUrl += '&';
-                eventUrl += 'assignedUser=';
-                for (var i = 0; i < eventFilter.assignedUsers.length; i++) {
-                    if (i > 0) eventUrl += ';';
-                    eventUrl += eventFilter.assignedUsers[i];
-                }
-            }
-        }
-        return eventUrl;
-    };
-
-    getTrackedEntityInstanceById = (id, program) => {
-        return pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances/${id}`,
-            { paging: false },
-            [`fields=*`, `program=${program}`]
-        );
-    };
-
-    getTrackedEntityInstanceByQuery = (ou, filters, attributes) => {
-        console.log('getTrackedEntityInstanceByQuery');
-        return pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances/query.json`,
-            {},
-            [
-                `ou=${ou}`,
-                filters.join('&'),
-                attributes.map((e) => 'attribute=' + e).join('&'),
-            ]
-        );
-    };
-
-    getTrackedEntityInstances = (ou, filters, attributes) => {
-        console.log('getTrackedEntityInstances');
-        return pull(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances`,
-            {},
-            [
-                `ou=${ou}`,
-                filters.join('&'),
-                attributes.map((e) => 'attribute=' + e).join('&'),
-            ]
-        );
-    };
-
-    // get = (endPoint, options) => {
-    //     const { query } = props;
-
-    //     // const query = {
-    //     //     ou: orgUnit,
-    //     //     program: programId,
-    //     //     ouMode: 'DESCENDANTS',
-    //     //     skipPaging: false,
-    //     //     pageSize: 200,
-    //     //     page,
-    //     //     includeDeleted: true,
-    //     //     lastUpdatedStartDate: lastUpdated,
-    //     //     fields: [
-    //     //         'trackedEntityInstance',
-    //     //         'trackedEntityType',
-    //     //         'orgUnit',
-    //     //         'lastUpdated',
-    //     //         'inactive',
-    //     //         'deleted',
-    //     //         'attributes[attribute,value,displayName,valueType]',
-    //     //     ],
-    //     // };
-
-    //     return pull(
-    //         this.baseUrl,
-    //         this.username,
-    //         this.password,
-    //         `/api/trackedEntityInstances`,
-    //         {},
-    //         [
-    //             `ou=${ou}`,
-    //             filters.join('&'),
-    //             attributes.map((e) => 'attribute=' + e).join('&'),
-    //         ]
-    //     );
-    // };
-
-    // https://dhis2.asia/laomembers/api/trackedEntityInstances/query.json?attribute=gv9xX5w4kKt:EQ:yAHVhPxHorS&ou=Y9PhSNpBvg0&attribute=tASKWHyRolc&attribute=NLth2WTyo7M&attribute=tJrT8GIy477&attribute=BaiVwt8jVfg&attribute=IBLkiaYRRL3&attribute=bIzDI9HJCB0&attribute=IEE2BMhfoSc&attribute=tQeFLjYbqzv&attribute=DmuazFb368B&attribute=ck9h7CokxQE
-
-    // async getTrackedEntityFiltersById(id, program) {
-    //   const tei = await pull(
-    //     this.baseUrl,
-    //     this.username,
-    //     this.password,
-    //     `/api/trackedEntityInstanceFilters/${id}`,
-    //     { paging: false },
-    //     [`fields=*`, `program=${program}`]
-    //   );
-    //   return tei;
-    // }
-
-    getWorkingListDataWithMultipleEventFilters = (
-        workingList,
-        ou,
-        program,
-        pager,
-        sortColumn
-    ) =>
-        new Promise((resolve) => {
-            var promises = [];
-            workingList.eventFilters.forEach((eventFilter) => {
-                var eventUrl = this.getEventUrl(eventFilter);
-                var tempPager = {
-                    pageSize: 1000,
-                    page: 1,
-                };
-                promises.push(
-                    this.search(
-                        ou,
-                        'SELECTED',
-                        eventUrl, //queryUrl
-                        program,
-                        null, //attribute
-                        tempPager,
-                        true // paging
-                    )
-                );
-            });
-
-            Promise.all(promises).then((response) => {
-                var data = { height: 0, width: 0, rows: [] };
-                var existingTeis = {};
-                var allRows = [];
-
-                response.forEach((responseData) => {
-                    data.headers =
-                        data.headers &&
-                        data.headers.length > responseData.headers.length
-                            ? data.headers
-                            : responseData.headers;
-                    data.width =
-                        data.width > responseData.width
-                            ? data.width
-                            : responseData.width;
-                    allRows = allRows.concat(responseData.rows);
-                });
-
-                //Getting distinct list
-                var existing = {};
-                data.rows = allRows.filter(function (d) {
-                    if (existing[d[0]]) return false;
-                    existing[d[0]] = true;
-                    return true;
-                });
-
-                // var sortColumnIndex = data.headers.findIndex(function (h) {
-                //   return h.name === sortColumn.id;
-                // });
-                // if (sortColumnIndex)
-                //   data.rows = orderByKeyFilter(
-                //     data.rows,
-                //     sortColumnIndex,
-                //     sortColumn.direction
-                //   );
-                // //order list
-                // cachedMultipleEventFiltersData[workingList.name] = data;
-                // workingList.cachedSorting = searchParams.sortUrl;
-                // workingList.cachedOrgUnit = searchParams.orgUnitId;
-                // var data = getCachedMultipleEventFiltersData(
-                //   workingList,
-                //   pager,
-                //   sortColumn
-                // );
-                resolve(data);
-            });
+        response.forEach((responseData) => {
+          data.headers =
+            data.headers && data.headers.length > responseData.headers.length
+              ? data.headers
+              : responseData.headers;
+          data.width =
+            data.width > responseData.width ? data.width : responseData.width;
+          allRows = allRows.concat(responseData.rows);
         });
 
-    pushTrackedEntityInstance = (tei, program) =>
-        push(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances?program=${program}`,
-            tei
-        );
+        //Getting distinct list
+        var existing = {};
+        data.rows = allRows.filter(function (d) {
+          if (existing[d[0]]) return false;
+          existing[d[0]] = true;
+          return true;
+        });
 
-    postTrackedEntityInstance = async (tei) => {
-        const result = await push(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances`,
-            tei,
-            'POST'
-        );
-    };
+        // var sortColumnIndex = data.headers.findIndex(function (h) {
+        //   return h.name === sortColumn.id;
+        // });
+        // if (sortColumnIndex)
+        //   data.rows = orderByKeyFilter(
+        //     data.rows,
+        //     sortColumnIndex,
+        //     sortColumn.direction
+        //   );
+        // //order list
+        // cachedMultipleEventFiltersData[workingList.name] = data;
+        // workingList.cachedSorting = searchParams.sortUrl;
+        // workingList.cachedOrgUnit = searchParams.orgUnitId;
+        // var data = getCachedMultipleEventFiltersData(
+        //   workingList,
+        //   pager,
+        //   sortColumn
+        // );
+        resolve(data);
+      });
+    });
 
-    postTrackedEntityInstances = async (teis) => {
-        return await push(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances?dryRun=true`,
-            teis,
-            'POST'
-        );
-    };
+  pushTrackedEntityInstance = (tei, program) =>
+    push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstances?program=${program}`,
+      tei
+    );
 
-    putTrackedEntityInstance = async (tei, program) => {
-        const result = await push(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances/${tei.trackedEntityInstance}?program=${program}`,
-            tei,
-            'PUT'
-        );
-    };
+  postTrackedEntityInstance = async (tei) => {
+    const result = await push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstances`,
+      tei,
+      "POST"
+    );
+  };
 
-    pushEnrollment = (enrollment, program) =>
-        push(
-            this.baseUrl,
-            this.username,
-            this.password,
-            [`/api/enrollments?`, program ? `program=${program}` : null]
-                .filter((e) => Boolean(e))
-                .join(''),
-            enrollment
-        );
+  postTrackedEntityInstances = async (teis) => {
+    return await push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstances?dryRun=true`,
+      teis,
+      "POST"
+    );
+  };
 
-    pushEvents = (events) =>
-        push(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/events/`,
-            events
-        );
+  putTrackedEntityInstance = async (tei, program) => {
+    const result = await push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstances/${tei.trackedEntityInstance}?program=${program}`,
+      tei,
+      "PUT"
+    );
+  };
 
-    deleteEvent = async (event) => {
-        const result = await push(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/events?strategy=DELETE`,
-            event
-        );
-        return result.status == 'OK';
-    };
+  pushEnrollment = (enrollment, program) =>
+    push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      [`/api/enrollments?`, program ? `program=${program}` : null]
+        .filter((e) => Boolean(e))
+        .join(""),
+      enrollment
+    );
 
-    deleteTei = async (tei) => {
-        const result = await push(
-            this.baseUrl,
-            this.username,
-            this.password,
-            `/api/trackedEntityInstances?strategy=DELETE`,
-            tei
-        );
-        return result.status == 'OK';
-    };
+  pushEvents = (events) =>
+    push(this.baseUrl, this.username, this.password, `/api/events/`, events);
+
+  deleteEvent = async (event) => {
+    const result = await push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/events?strategy=DELETE`,
+      event
+    );
+    return result.status == "OK";
+  };
+
+  deleteTei = async (tei) => {
+    const result = await push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/trackedEntityInstances?strategy=DELETE`,
+      tei
+    );
+    return result.status == "OK";
+  };
 }

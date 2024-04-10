@@ -107,14 +107,13 @@ function* initExistedDataSaga() {
       dataApi.getTrackedEntityInstances,
       orgUnit,
       [`attribute=gv9xX5w4kKt:EQ:${teiId}`],
-      Object.entries(teiMapping).map((e) => e[1])
+      Object.entries(teiMapping).map((e) => e[1]),
+      `xvzrp56zKvI`
     );
   }
 
   // const headerIndexes = yield call(getHeaderIndexes, memberTEIs);
-  const memberTEIsUid = memberTEIs.trackedEntityInstances.map(
-    (tei) => tei.trackedEntityInstance
-  );
+  const memberTEIsUid = memberTEIs.instances.map((tei) => tei.trackedEntity);
 
   // get by event query
   let memberTEIsEvents = null;

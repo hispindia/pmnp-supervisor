@@ -1,8 +1,8 @@
 import db from "./db";
 
-export const TABLE_NAME = "trackedEntityInstance";
+export const TABLE_NAME = "trackedEntity";
 export const TABLE_FIELDS =
-  "++id, trackedEntityInstance, lastUpdated, orgUnit, trackedEntityType, isDeleted, isOnline, attribute, valueType, displayName, value";
+  "++id, trackedEntity, updatedAt, orgUnit, trackedEntityType, isDeleted, isOnline, attribute, valueType, displayName, value";
 
 import { dataApi } from "@/api";
 
@@ -46,31 +46,31 @@ export const pull = async () => {
                 page,
               },
               [
-                `ou=${org.id}`,
+                `orgUnit=${org.id}`,
                 `program=${program.id}`,
                 `ouMode=DESCENDANTS`,
                 `includeDeleted=true`,
                 // `lastUpdatedStartDate=${lastUpdated}`, // Need to get all data
-                `fields=trackedEntityInstance,trackedEntityType,orgUnit,lastUpdated,deleted,attributes[attribute,value,displayName,valueType]`,
+                `fields=trackedEntityInstance,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType]`,
               ]
             );
 
             if (
-              !result.trackedEntityInstances ||
-              result.trackedEntityInstances.length === 0 ||
-              page > result.pager.pageCount
+              !result.instances ||
+              result.instances.length === 0 ||
+              page > result.pageCount
             ) {
               break;
             }
 
             console.log(
-              `TEI = (page=${page}/${result.pager.pageCount}, count=${result.trackedEntityInstances.length})`
+              `TEI = (page=${page}/${result.pageCount}, count=${result.instances.length})`
             );
 
             await persist(await beforePersist(result));
 
             // Update total pages
-            totalPages = result.pager.pageCount;
+            totalPages = result.pageCount;
           }
         } catch (error) {
           console.log("TrackedEntity:pull", error);
@@ -201,7 +201,7 @@ const beforePersist = async (result, isOnline = 1) => {
   const objects = [];
   const ids = [];
 
-  const trackedEntityInstances = result.trackedEntityInstances;
+  const trackedEntityInstances = result.instances;
 
   if (!trackedEntityInstances) {
     return objects;
@@ -209,8 +209,8 @@ const beforePersist = async (result, isOnline = 1) => {
 
   for (const te of trackedEntityInstances) {
     const trackedEntity = {
-      trackedEntityInstance: te.trackedEntityInstance,
-      lastUpdated: te.lastUpdated,
+      trackedEntity: te.trackedEntity,
+      updatedAt: te.updatedAt,
       orgUnit: te.orgUnit,
       trackedEntityType: te.trackedEntityType,
       isOnline,
@@ -219,7 +219,7 @@ const beforePersist = async (result, isOnline = 1) => {
       displayName: "",
     };
 
-    ids.push(trackedEntity.trackedEntityInstance);
+    ids.push(trackedEntity.trackedEntity);
 
     if (te.attributes) {
       for (const at of te.attributes) {
@@ -439,37 +439,32 @@ export const updateTEIByID = async (me) => {
   }
 };
 
-export const deleteTrackedEntityInstances = async ({
-  trackedEntityInstances,
-}) => {
+export const deleteTrackedEntityInstances = async ({ trackedEntities }) => {
   try {
-    for (const trackedEntityInstance of trackedEntityInstances) {
-      const teiId = trackedEntityInstance?.trackedEntityInstance;
+    for (const trackedEntity of trackedEntities) {
+      const teiId = trackedEntity?.trackedEntity;
 
       if (!teiId) {
         return;
       }
 
-      await db[TABLE_NAME].where("trackedEntityInstance").anyOf(teiId).delete();
+      await db[TABLE_NAME].where("trackedEntity").anyOf(teiId).delete();
 
-      if (trackedEntityInstance.enrollments.length > 0) {
+      if (trackedEntity.enrollments.length > 0) {
         // DELETE ENROLLMENT
         const enrollment = JSON.parse(
-          JSON.stringify(trackedEntityInstance.enrollments[0])
+          JSON.stringify(trackedEntity.enrollments[0])
         );
-        await db.enrollment
-          .where("trackedEntityInstance")
-          .anyOf(teiId)
-          .delete();
+        await db.enrollment.where("trackedEntity").anyOf(teiId).delete();
 
         // UPDATE EVENTS
         if (enrollment.events.length > 0) {
-          await db.event.where("trackedEntityInstance").anyOf(teiId).delete();
+          await db.event.where("trackedEntity").anyOf(teiId).delete();
         }
       }
     }
   } catch (error) {
-    console.error(`Failed to add trackedEntityInstance`, error);
+    console.error(`Failed to add trackedEntity`, error);
   }
 };
 

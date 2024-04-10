@@ -36,7 +36,7 @@ export const pull = async () => {
                 page,
               },
               [
-                `ou=${org.id}`,
+                `orgUnit=${org.id}`,
                 `program=${program.id}`,
                 `ouMode=DESCENDANTS`,
                 `includeDeleted=true`,
