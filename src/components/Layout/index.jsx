@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { SnackbarProvider } from "notistack";
 import AppContextProvider from "../App/App.context";
@@ -16,14 +16,24 @@ const theme = createTheme({
 });
 
 const Layout = ({ children }) => {
+  const isPwa = window.matchMedia("(display-mode: standalone)").matches;
+
+  useEffect(() => {
+    window.addEventListener("appinstalled", () => {
+      location.reload();
+    });
+  }, []);
+
   return (
     <SnackbarProvider maxSnack={3}>
       <AppContextProvider>
         <ThemeProvider theme={theme}>
           <div className={app}>
-            <div className={headerBarContainer}>
-              <HeaderBar title="Family Information System" />
-            </div>
+            {!isPwa && (
+              <div className={headerBarContainer}>
+                <HeaderBar title="Family Information System" />
+              </div>
+            )}
             {children}
           </div>
         </ThemeProvider>

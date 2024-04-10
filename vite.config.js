@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import manifest from "./manifest.webapp.json";
 import react from "@vitejs/plugin-react";
@@ -10,6 +10,7 @@ export default defineConfig({
   base: "./",
   plugins: [
     react(),
+    splitVendorChunkPlugin(),
     VitePWA({
       manifest,
       srcDir: ".",
@@ -19,15 +20,18 @@ export default defineConfig({
       workbox: {
         globPatterns: ["**/*.{js,css,html,png,jpg,jpeg,svg,json}"],
       },
+      injectManifest: {
+        maximumFileSizeToCacheInBytes: 6900000,
+      },
     }),
   ],
   resolve: {
     alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }],
   },
-  build: {
-    sourcemap: true,
-    rollupOptions: {
-      plugins: [assetManifest()],
-    },
-  },
+  // build: {
+  //   sourcemap: true,
+  //   rollupOptions: {
+  //     plugins: [assetManifest()],
+  //   },
+  // },
 });
