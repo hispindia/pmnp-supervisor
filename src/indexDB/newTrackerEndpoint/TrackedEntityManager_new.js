@@ -33,7 +33,7 @@ export const pull = async () => {
                 `includeDeleted=true`,
                 // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
                 `fields=${[
-                  "trackedEntityInstance",
+                  "trackedEntity",
                   "trackedEntityType",
                   "orgUnit",
                   "updatedAt",
@@ -113,7 +113,7 @@ const beforePersist = async (result) => {
     // const partitions = chunk(ids, 200);
 
     // for (const partition of partitions) {
-    //     await db[TABLE_NAME].where('trackedEntityInstance')
+    //     await db[TABLE_NAME].where('trackedEntity')
     //         .anyOf(partition)
     //         .delete();
     // }
@@ -130,7 +130,7 @@ export const updateTEIByID = async (me) => {
   }
 };
 
-// trackedEntityInstance	INTEGER	NO	NULL
+// trackedEntity	INTEGER	NO	NULL
 // updatedAt	date	NO	NULL
 // orgUnit	varchar(11)	NO	NULL
 // trackedEntityType	varchar(11)	NO	NULL

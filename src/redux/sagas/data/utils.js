@@ -1,279 +1,277 @@
-import moment from 'moment';
-import queryString from 'query-string';
-import { call, select } from 'redux-saga/effects';
+import moment from "moment";
+import queryString from "query-string";
+import { call, select } from "redux-saga/effects";
 
 export function* getTeiId() {
-    const searchString = yield select((state) => state.router.location.search);
-    const { tei: teiId } = queryString.parse(searchString);
-    return teiId;
+  const searchString = yield select((state) => state.router.location.search);
+  const { tei: teiId } = queryString.parse(searchString);
+  return teiId;
 }
 
 export function* getHeaderIndexes(payload) {
-    return payload.headers.reduce((res, h) => {
-        res[h.name] = payload.headers.map((e) => e.name).indexOf(h.name);
-        return res;
-    }, {});
+  return payload.headers.reduce((res, h) => {
+    res[h.name] = payload.headers.map((e) => e.name).indexOf(h.name);
+    return res;
+  }, {});
 }
 
 export function* getSelectedOrgUnitByOuId(ouId) {
-    const orgUnits = yield select(
-        (state) => state.metadata.programMetadata.organisationUnits
-    );
-    const ou = orgUnits.find((o) => o.id === ouId);
-    return { ...ou, selected: [ou.path] } || null;
+  const orgUnits = yield select(
+    (state) => state.metadata.programMetadata.organisationUnits
+  );
+  const ou = orgUnits.find((o) => o.id === ouId);
+  return { ...ou, selected: [ou.path] } || null;
 }
 
 export function* getCurrentEvent() {
-    const currentEvents = yield select(
-        (state) => state.data.tei.data.currentEvents
-    );
-    const currentEventIndex = yield select(
-        (state) => state.data.tei.selectedYear.index
-    );
+  const currentEvents = yield select(
+    (state) => state.data.tei.data.currentEvents
+  );
+  const currentEventIndex = yield select(
+    (state) => state.data.tei.selectedYear.index
+  );
 
-    return currentEvents[currentEventIndex];
+  return currentEvents[currentEventIndex];
 }
 
 export function* makeNewCurrentEvent(dataValues) {
-    const currentEvent = yield call(getCurrentEvent);
-    return {
-        ...currentEvent,
-        dataValues: {
-            ...currentEvent.dataValues,
-            ...dataValues,
-        },
-    };
+  const currentEvent = yield call(getCurrentEvent);
+  return {
+    ...currentEvent,
+    dataValues: {
+      ...currentEvent.dataValues,
+      ...dataValues,
+    },
+  };
 }
 
 export function* makeNewCurrentEvents(dataValues) {
-    const newCurrentEvent = yield call(makeNewCurrentEvent, dataValues);
-    newCurrentEvent._isDirty = false;
-    const currentEvents = yield select(
-        (state) => state.data.tei.data.currentEvents
-    );
-    const newCurrentEvents = JSON.parse(JSON.stringify(currentEvents));
-    const currentEventIndex = yield select(
-        (state) => state.data.tei.selectedYear.index
-    );
-    newCurrentEvents.splice(currentEventIndex, 1, newCurrentEvent);
-    return newCurrentEvents;
+  const newCurrentEvent = yield call(makeNewCurrentEvent, dataValues);
+  newCurrentEvent._isDirty = false;
+  const currentEvents = yield select(
+    (state) => state.data.tei.data.currentEvents
+  );
+  const newCurrentEvents = JSON.parse(JSON.stringify(currentEvents));
+  const currentEventIndex = yield select(
+    (state) => state.data.tei.selectedYear.index
+  );
+  newCurrentEvents.splice(currentEventIndex, 1, newCurrentEvent);
+  return newCurrentEvents;
 }
 
 export function* transformEvent(event) {
-    const transformed = { ...event };
-    console.log({ transformed });
-    transformed.dataValues = Object.keys(transformed.dataValues).map(
-        (dataElement) => {
-            const dv = {
-                dataElement,
-                value: transformed.dataValues[dataElement],
-            };
-            return dv;
-        }
-    );
-    return transformed;
+  const transformed = { ...event };
+  console.log({ transformed });
+  transformed.dataValues = Object.keys(transformed.dataValues).map(
+    (dataElement) => {
+      const dv = {
+        dataElement,
+        value: transformed.dataValues[dataElement],
+      };
+      return dv;
+    }
+  );
+  return transformed;
 }
 
 const teiMapping = {
-    BaiVwt8jVfg: 'age',
-    DmuazFb368B: 'sex',
-    IBLkiaYRRL3: 'lastname',
-    IEE2BMhfoSc: 'firstname',
-    NLth2WTyo7M: 'nationality',
-    bIzDI9HJCB0: 'birthyear',
-    ck9h7CokxQE: 'agetype',
-    tASKWHyRolc: 'status',
-    tJrT8GIy477: 'ethnicity',
-    tQeFLjYbqzv: 'DOB',
-    W4aInCTn8p5: 'newFamilyBookNum',
-    rSETgSvyVpJ: 'covidNum',
-    PYgXM3R2TQd: 'policeNum',
-    g9wNk1T3MLE: 'phoneNum',
-    // gv9xX5w4kKt: "FI_UID"
+  BaiVwt8jVfg: "age",
+  DmuazFb368B: "sex",
+  IBLkiaYRRL3: "lastname",
+  IEE2BMhfoSc: "firstname",
+  NLth2WTyo7M: "nationality",
+  bIzDI9HJCB0: "birthyear",
+  ck9h7CokxQE: "agetype",
+  tASKWHyRolc: "status",
+  tJrT8GIy477: "ethnicity",
+  tQeFLjYbqzv: "DOB",
+  W4aInCTn8p5: "newFamilyBookNum",
+  rSETgSvyVpJ: "covidNum",
+  PYgXM3R2TQd: "policeNum",
+  g9wNk1T3MLE: "phoneNum",
+  // gv9xX5w4kKt: "FI_UID"
 };
 const enrMapping = {};
 const eventMapping = {
-    PzzayUNGasj: 'DOB',
-    Z9a4Vim1cuJ: 'education',
-    hV0pAEbJqZj: 'status',
-    it3Ih0CVTV1: 'age',
-    kf8isugsc3x: 'birthyear',
-    u0Ke4EXsIKZ: 'relation',
-    vbBhehiwNLV: 'insurance',
-    xXybyxfggiE: 'maritalstatus',
-    xvLv4LQGQuT: 'agetype',
-    // ig2YSpQdP55: "FI_UID"
+  PzzayUNGasj: "DOB",
+  Z9a4Vim1cuJ: "education",
+  hV0pAEbJqZj: "status",
+  it3Ih0CVTV1: "age",
+  kf8isugsc3x: "birthyear",
+  u0Ke4EXsIKZ: "relation",
+  vbBhehiwNLV: "insurance",
+  xXybyxfggiE: "maritalstatus",
+  xvLv4LQGQuT: "agetype",
+  // ig2YSpQdP55: "FI_UID"
 };
 const dataMapping = {
-    Active: 'active',
-    Transferred: 'transfer-out',
-    Dead: 'dead',
+  Active: "active",
+  Transferred: "transfer-out",
+  Dead: "dead",
 };
 
 const convertValueBack = (valueType, value) => {
-    switch (valueType) {
-        case 'TEXT':
-        case 'INTEGER_POSITIVE':
-        case 'INTEGER_NEGATIVE':
-        case 'INTEGER_ZERO_OR_POSITIVE':
-        case 'PERCENTAGE':
-        case 'NUMBER':
-        case 'INTEGER':
-        case 'PHONE_NUMBER':
-        case 'EMAIL':
-        case 'LONG_TEXT':
-            return dataMapping.hasOwnProperty(value)
-                ? dataMapping[value]
-                : value;
-        case 'DATE':
-            return value ? moment(value).format('YYYY-MM-DD') : value;
-        case 'DATETIME':
-            return moment(value);
-        case 'TIME':
-            return moment(value);
-        case 'BOOLEAN':
-            return value + '';
-        case 'TRUE_ONLY':
-            return value ? value + '' : '';
-        case 'AGE':
-            return value ? moment(value).format('YYYY-MM-DD') : value;
-        default:
-            return null;
-    }
+  switch (valueType) {
+    case "TEXT":
+    case "INTEGER_POSITIVE":
+    case "INTEGER_NEGATIVE":
+    case "INTEGER_ZERO_OR_POSITIVE":
+    case "PERCENTAGE":
+    case "NUMBER":
+    case "INTEGER":
+    case "PHONE_NUMBER":
+    case "EMAIL":
+    case "LONG_TEXT":
+      return dataMapping.hasOwnProperty(value) ? dataMapping[value] : value;
+    case "DATE":
+      return value ? moment(value).format("YYYY-MM-DD") : value;
+    case "DATETIME":
+      return moment(value);
+    case "TIME":
+      return moment(value);
+    case "BOOLEAN":
+      return value + "";
+    case "TRUE_ONLY":
+      return value ? value + "" : "";
+    case "AGE":
+      return value ? moment(value).format("YYYY-MM-DD") : value;
+    default:
+      return null;
+  }
 };
 
 export function* generateTEIDhis2Payload(payload, programMetadata) {
-    // let { family, currentEvent, memberEvent, memberDetails, memberTEI } = payload;
-    let { family, memberEvent, memberDetails, memberEnrollment } = payload;
+  // let { family, currentEvent, memberEvent, memberDetails, memberTEI } = payload;
+  let { family, memberEvent, memberDetails, memberEnrollment } = payload;
 
-    let { orgUnit } = family;
-    let { eventDate, event } = memberEvent;
-    let { enrollment } = memberEnrollment;
+  let { orgUnit } = family;
+  let { eventDate, event } = memberEvent;
+  let { enrollment } = memberEnrollment;
 
-    // let year = moment(eventDate).year();
+  // let year = moment(eventDate).year();
 
-    // // Create: new member event
-    // if (memberDetails.isNew) {
-    //   memberDetails = {
-    //     ...memberDetails,
-    //     ENR: generateUid(),
-    //     EVENTS: {
-    //       [year]: generateUid(),
-    //     },
-    //     isNew: false,
-    //   };
-    // }
+  // // Create: new member event
+  // if (memberDetails.isNew) {
+  //   memberDetails = {
+  //     ...memberDetails,
+  //     ENR: generateUid(),
+  //     EVENTS: {
+  //       [year]: generateUid(),
+  //     },
+  //     isNew: false,
+  //   };
+  // }
 
-    // // Update: existing event
-    // // find eventId and enrId
-    // // await get memberTei here
-    // // https://hispvn.org/laofm/api/events.json?trackedEntityInstance=AzMAwQV57pR&startDate=2019-01-01&endDate=2019-12-31
-    // else if (memberEvent) {
-    //   let enrId = memberEvent.events[0].enrollment;
-    //   let eventId = memberEvent.events[0].event;
+  // // Update: existing event
+  // // find eventId and enrId
+  // // await get memberTei here
+  // // https://hispvn.org/laofm/api/events.json?trackedEntity=AzMAwQV57pR&startDate=2019-01-01&endDate=2019-12-31
+  // else if (memberEvent) {
+  //   let enrId = memberEvent.events[0].enrollment;
+  //   let eventId = memberEvent.events[0].event;
 
-    //   // if enr and events aren't exist
-    //   if (!("enr" in memberDetails) && !("events" in memberDetails)) {
-    //     memberDetails = {
-    //       ...memberDetails,
-    //       ENR: enrId,
-    //       EVENTS: {
-    //         [year]: eventId,
-    //       },
-    //     };
-    //   }
-    // }
+  //   // if enr and events aren't exist
+  //   if (!("enr" in memberDetails) && !("events" in memberDetails)) {
+  //     memberDetails = {
+  //       ...memberDetails,
+  //       ENR: enrId,
+  //       EVENTS: {
+  //         [year]: eventId,
+  //       },
+  //     };
+  //   }
+  // }
 
-    // delete memberDetails.isNew;
+  // delete memberDetails.isNew;
 
-    // Reconstruct payload
-    // TEI
-    let tei = {
-        orgUnit: orgUnit,
-        trackedEntityInstance: memberDetails.id,
-        trackedEntityType: 'MCPQUTHX1Ze',
-        programOwners: [],
-        enrollments: [],
-        attributes: [],
-    };
+  // Reconstruct payload
+  // TEI
+  let tei = {
+    orgUnit: orgUnit,
+    trackedEntity: memberDetails.id,
+    trackedEntityType: "MCPQUTHX1Ze",
+    programOwners: [],
+    enrollments: [],
+    attributes: [],
+  };
 
-    Object.entries(teiMapping).forEach(([key, value]) => {
-        const attributeMetadata = programMetadata.trackedEntityAttributes.find(
-            (attr) => attr.id === key
-        );
+  Object.entries(teiMapping).forEach(([key, value]) => {
+    const attributeMetadata = programMetadata.trackedEntityAttributes.find(
+      (attr) => attr.id === key
+    );
 
-        tei.attributes.push({
-            attribute: key,
-            value: convertValueBack(
-                attributeMetadata.valueType,
-                memberDetails[teiMapping[key]]
-            ),
-        });
-    });
-
-    // assign family TEI id to each member
     tei.attributes.push({
-        attribute: 'gv9xX5w4kKt',
-        value: family.trackedEntityInstance,
+      attribute: key,
+      value: convertValueBack(
+        attributeMetadata.valueType,
+        memberDetails[teiMapping[key]]
+      ),
     });
+  });
 
-    // ENR
-    let enrollmentPayload = {
-        orgUnit: orgUnit,
-        program: 'xvzrp56zKvI',
-        trackedEntityInstance: memberDetails.id,
-        enrollment: enrollment,
-        trackedEntityType: 'MCPQUTHX1Ze',
-        enrollmentDate: memberEnrollment.enrollmentDate,
-        incidentDate: memberEnrollment.enrollmentDate,
-        status: 'ACTIVE',
-        events: [],
-    };
+  // assign family TEI id to each member
+  tei.attributes.push({
+    attribute: "gv9xX5w4kKt",
+    value: family.trackedEntity,
+  });
 
-    let eventPayload = {
-        event: event,
-        status: 'COMPLETED',
-        program: 'xvzrp56zKvI',
-        programStage: 'Ux1dcyOiHe7',
-        enrollmentStatus: 'ACTIVE',
-        enrollment: enrollment,
-        orgUnit: orgUnit,
-        eventDate: eventDate,
-        dueDate: eventDate,
-        trackedEntityInstance: memberDetails.id,
-        status: memberEvent.status,
-        dataValues: [],
-    };
+  // ENR
+  let enrollmentPayload = {
+    orgUnit: orgUnit,
+    program: "xvzrp56zKvI",
+    trackedEntity: memberDetails.id,
+    enrollment: enrollment,
+    trackedEntityType: "MCPQUTHX1Ze",
+    enrollmentDate: memberEnrollment.enrollmentDate,
+    incidentDate: memberEnrollment.enrollmentDate,
+    status: "ACTIVE",
+    events: [],
+  };
 
-    let programStage = programMetadata.programStages[0];
+  let eventPayload = {
+    event: event,
+    status: "COMPLETED",
+    program: "xvzrp56zKvI",
+    programStage: "Ux1dcyOiHe7",
+    enrollmentStatus: "ACTIVE",
+    enrollment: enrollment,
+    orgUnit: orgUnit,
+    eventDate: eventDate,
+    dueDate: eventDate,
+    trackedEntity: memberDetails.id,
+    status: memberEvent.status,
+    dataValues: [],
+  };
 
-    Object.entries(eventMapping).forEach(([key, value]) => {
-        const dataElementMetadata = programStage.dataElements.find(
-            (de) => de.id === key
-        );
+  let programStage = programMetadata.programStages[0];
 
-        eventPayload.dataValues.push({
-            dataElement: key,
-            value: convertValueBack(
-                dataElementMetadata.valueType,
-                memberDetails[eventMapping[key]]
-            ),
-        });
-    });
+  Object.entries(eventMapping).forEach(([key, value]) => {
+    const dataElementMetadata = programStage.dataElements.find(
+      (de) => de.id === key
+    );
 
-    // assign family TEI id to each member
     eventPayload.dataValues.push({
-        dataElement: 'ig2YSpQdP55',
-        value: family.trackedEntityInstance,
+      dataElement: key,
+      value: convertValueBack(
+        dataElementMetadata.valueType,
+        memberDetails[eventMapping[key]]
+      ),
     });
+  });
 
-    eventPayload.eventDate = eventDate;
-    eventPayload.dueDate = eventDate;
+  // assign family TEI id to each member
+  eventPayload.dataValues.push({
+    dataElement: "ig2YSpQdP55",
+    value: family.trackedEntity,
+  });
 
-    // Combine payload
-    enrollmentPayload.events.push(eventPayload);
-    tei.enrollments.push(enrollmentPayload);
+  eventPayload.eventDate = eventDate;
+  eventPayload.dueDate = eventDate;
 
-    console.log({ tei, memberDetails });
-    return { data: tei, memberDetails };
+  // Combine payload
+  enrollmentPayload.events.push(eventPayload);
+  tei.enrollments.push(enrollmentPayload);
+
+  console.log({ tei, memberDetails });
+  return { data: tei, memberDetails };
 }

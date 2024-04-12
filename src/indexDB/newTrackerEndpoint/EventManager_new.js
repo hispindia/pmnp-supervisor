@@ -99,7 +99,7 @@ const beforePersist = async (result) => {
         status: ev.status,
         enrollment: ev.enrollment,
         enrollmentStatus: ev.enrollmentStatus,
-        trackedEntity: ev.trackedEntityInstance,
+        trackedEntity: ev.trackedEntity,
         attributeOptionCombo: ev.attributeOptionCombo,
         scheduledAt: ev.scheduledAt,
         occurredAt: ev.occurredAt,

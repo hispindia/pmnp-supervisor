@@ -82,7 +82,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/events`,
+      `/api/tracker/events`,
       {
         paging: false,
       },
@@ -287,57 +287,6 @@ export default class DataApiClass extends BaseApiClass {
     );
   };
 
-  // get = (endPoint, options) => {
-  //     const { query } = props;
-
-  //     // const query = {
-  //     //     ou: orgUnit,
-  //     //     program: programId,
-  //     //     ouMode: 'DESCENDANTS',
-  //     //     skipPaging: false,
-  //     //     pageSize: 200,
-  //     //     page,
-  //     //     includeDeleted: true,
-  //     //     lastUpdatedStartDate: lastUpdated,
-  //     //     fields: [
-  //     //         'trackedEntityInstance',
-  //     //         'trackedEntityType',
-  //     //         'orgUnit',
-  //     //         'lastUpdated',
-  //     //         'inactive',
-  //     //         'deleted',
-  //     //         'attributes[attribute,value,displayName,valueType]',
-  //     //     ],
-  //     // };
-
-  //     return pull(
-  //         this.baseUrl,
-  //         this.username,
-  //         this.password,
-  //         `/api/trackedEntityInstances`,
-  //         {},
-  //         [
-  //             `ou=${ou}`,
-  //             filters.join('&'),
-  //             attributes.map((e) => 'attribute=' + e).join('&'),
-  //         ]
-  //     );
-  // };
-
-  // https://dhis2.asia/laomembers/api/trackedEntityInstances/query.json?attribute=gv9xX5w4kKt:EQ:yAHVhPxHorS&ou=Y9PhSNpBvg0&attribute=tASKWHyRolc&attribute=NLth2WTyo7M&attribute=tJrT8GIy477&attribute=BaiVwt8jVfg&attribute=IBLkiaYRRL3&attribute=bIzDI9HJCB0&attribute=IEE2BMhfoSc&attribute=tQeFLjYbqzv&attribute=DmuazFb368B&attribute=ck9h7CokxQE
-
-  // async getTrackedEntityFiltersById(id, program) {
-  //   const tei = await pull(
-  //     this.baseUrl,
-  //     this.username,
-  //     this.password,
-  //     `/api/trackedEntityInstanceFilters/${id}`,
-  //     { paging: false },
-  //     [`fields=*`, `program=${program}`]
-  //   );
-  //   return tei;
-  // }
-
   getWorkingListDataWithMultipleEventFilters = (
     workingList,
     ou,
@@ -416,7 +365,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/trackedEntityInstances?program=${program}`,
+      `/api/tracker?program=${program}`,
       tei
     );
 
@@ -425,7 +374,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/trackedEntityInstances`,
+      `/api/tracker`,
       tei,
       "POST"
     );
@@ -436,7 +385,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/trackedEntityInstances?dryRun=true`,
+      `/api/tracker`,
       teis,
       "POST"
     );
@@ -447,7 +396,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/trackedEntityInstances/${tei.trackedEntityInstance}?program=${program}`,
+      `/api/tracker/${tei.trackedEntity}?program=${program}`,
       tei,
       "PUT"
     );
@@ -465,14 +414,14 @@ export default class DataApiClass extends BaseApiClass {
     );
 
   pushEvents = (events) =>
-    push(this.baseUrl, this.username, this.password, `/api/events/`, events);
+    push(this.baseUrl, this.username, this.password, `/api/tracker`, events);
 
   deleteEvent = async (event) => {
     const result = await push(
       this.baseUrl,
       this.username,
       this.password,
-      `/api/events?strategy=DELETE`,
+      `/api/tracker?importStrategy=DELETE`,
       event
     );
     return result.status == "OK";
@@ -483,7 +432,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/trackedEntityInstances?strategy=DELETE`,
+      `/api/tracker?importStrategy=DELETE`,
       tei
     );
     return result.status == "OK";

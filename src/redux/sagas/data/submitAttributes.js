@@ -49,7 +49,7 @@ function* handleSubmitAttributes({ attributes }) {
       });
       yield put(
         getTeiSuccessMessage(
-          `Created new tracked entity instance: ${currentTei.trackedEntityInstance} successfully`
+          `Created new tracked entity instance: ${currentTei.trackedEntity} successfully`
         )
       );
     }
@@ -89,10 +89,17 @@ function* putTeiToServer({ currentTei, currentEnrollment, attributes }) {
 
   if (offlineStatus) {
     yield call(trackedEntityInstanceManager.setTrackedEntityInstance, {
-      trackedEntityInstance: currentTei,
+      trackedEntity: currentTei,
     });
   } else {
-    yield call(dataApi.putTrackedEntityInstance, currentTei, programMetadataId);
+    // yield call(dataApi.putTrackedEntityInstance, currentTei, programMetadataId);
+    yield call(
+      dataApi.postTrackedEntityInstance,
+      {
+        trackedEntities: [currentTei],
+      },
+      programMetadataId
+    );
   }
 }
 
@@ -125,7 +132,7 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
     console.log(teiWithEnrollment);
 
     yield call(trackedEntityInstanceManager.setTrackedEntityInstance, {
-      trackedEntityInstance: teiWithEnrollment,
+      trackedEntity: teiWithEnrollment,
     });
   } else {
     yield call(
@@ -136,7 +143,7 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
     yield call(dataApi.pushEnrollment, newEnrollment, programMetadataId);
   }
 
-  yield put(push(`/form?tei=${currentTei.trackedEntityInstance}`));
+  yield put(push(`/form?tei=${currentTei.trackedEntity}`));
 }
 
 export default function* submitAttributes() {

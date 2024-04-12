@@ -96,7 +96,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
         memberTEI = yield call(
           trackedEntityInstanceManager.getTrackedEntityInstanceById,
           {
-            trackedEntityInstance: selectedMember.id,
+            trackedEntity: selectedMember.id,
             program: programMetadataMember.id,
           }
         );
@@ -263,7 +263,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
     yield put(getTeiError(e.message));
   } finally {
     // refresh TEI
-    yield put(getTei(currentTei.trackedEntityInstance));
+    yield put(getTei(currentTei.trackedEntity));
     yield put(loadTei(false));
   }
 }
@@ -275,11 +275,11 @@ function* pushTEI(updatedMemberTei) {
     // OFFLINE MODE
     if (offlineStatus) {
       yield call(trackedEntityInstanceManager.setTrackedEntityInstance, {
-        trackedEntityInstance: updatedMemberTei.data,
+        trackedEntity: updatedMemberTei.data,
       });
     } else {
       yield call(dataApi.postTrackedEntityInstance, {
-        trackedEntityInstances: [updatedMemberTei.data],
+        trackedEntities: [updatedMemberTei.data],
       });
     }
   } catch (e) {

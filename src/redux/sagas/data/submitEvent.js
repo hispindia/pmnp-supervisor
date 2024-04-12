@@ -56,7 +56,7 @@ function* handleSubmitEvent({ event }) {
     yield put(getTeiError(e.message));
   } finally {
     // refresh TEI
-    yield put(getTei(currentTei.trackedEntityInstance));
+    yield put(getTei(currentTei.trackedEntity));
     yield put(loadTei(false));
   }
 }
@@ -165,7 +165,7 @@ function* handleCloneEvent({ year }) {
     _isDirty: false,
     _isCloned: true,
     event: generateUid(),
-    trackedEntityInstance: currentTei.trackedEntityInstance,
+    trackedEntity: currentTei.trackedEntity,
     orgUnit: selectedOrgUnit.id,
     program: programMetadata.id,
     programStage: "vY4mlqYfJEH",
@@ -221,7 +221,7 @@ function* handleCloneEvent({ year }) {
           trackedEntityInstanceManager.getTrackedEntityInstancesByIDs,
           {
             program: "xvzrp56zKvI",
-            trackedEntityInstances: memberTEIsUid,
+            trackedEntities: memberTEIsUid,
           }
         );
       } else {
@@ -234,20 +234,20 @@ function* handleCloneEvent({ year }) {
 
       if (memberTEIsEvents) {
         const memberTEIsWithEvents = memberTEIsEvents
-          ? memberTEIsEvents.trackedEntityInstances
+          ? memberTEIsEvents.trackedEntities
           : [];
 
         let updatedMemberTeis = [];
         for (let cas of cascadeDataValue) {
           let aTEI = memberTEIsWithEvents.find(
-            (e) => e.trackedEntityInstance == cas.id
+            (e) => e.trackedEntity == cas.id
           );
 
           let newEvent = {
             event: generateUid(),
             eventDate: newFamilyEvent.eventDate,
             dueDate: newFamilyEvent.eventDate,
-            trackedEntityInstance: cas.id,
+            trackedEntity: cas.id,
             status: newFamilyEvent.status,
           };
 
@@ -294,11 +294,11 @@ function* pushTEIs(updatedMemberTeis) {
     // OFFLINE MODE
     if (offlineStatus) {
       yield call(trackedEntityInstanceManager.setTrackedEntityInstances, {
-        trackedEntityInstances: updatedMemberTeis,
+        trackedEntities: updatedMemberTeis,
       });
     } else {
       yield call(dataApi.postTrackedEntityInstance, {
-        trackedEntityInstances: updatedMemberTeis,
+        trackedEntities: [updatedMemberTeis],
       });
     }
   } catch (e) {

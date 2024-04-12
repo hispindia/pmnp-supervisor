@@ -290,13 +290,13 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
     } else {
       initProfile({
         isNew: true,
-        trackedEntityInstance: tei.selectedTei,
+        trackedEntity: tei.selectedTei,
         orgUnit: orgUnit.selectedOrgUnit.id,
         trackedEntityType: programMetadata.trackedEntityType,
         enrollments: [
           {
             enrollment: enrollmentId,
-            trackedEntityInstance: tei.selectedTei,
+            trackedEntity: tei.selectedTei,
             orgUnit: orgUnit.selectedOrgUnit.id,
             program: program.selectedProgram,
             enrollmentDate: moment().subtract(2, "year").format("YYYY-MM-DD"),
@@ -314,7 +314,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
     } else {
       initEvent({
         event: generateUid(),
-        trackedEntityInstance: tei.selectedTei,
+        trackedEntity: tei.selectedTei,
         orgUnit: orgUnit.selectedOrgUnit.id,
         program: program.selectedProgram,
         programStage: "vY4mlqYfJEH",
@@ -464,7 +464,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
       let newEv = {
         _isDirty: true,
         event: generateUid(),
-        trackedEntityInstance: tei.selectedTei,
+        trackedEntity: tei.selectedTei,
         orgUnit: orgUnit.selectedOrgUnit.id,
         program: program.selectedProgram,
         programStage: "vY4mlqYfJEH",

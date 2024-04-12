@@ -23,7 +23,7 @@ import {
 export const pull = async () => {
   try {
     await db[TABLE_NAME].clear();
-    // const lastUpdated = moment().subtract(3, 'months').format('YYYY-MM-DD');
+    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
     const { organisationUnits } = await meManager.getMe();
 
@@ -38,7 +38,7 @@ export const pull = async () => {
             }
 
             const result = await dataApi.get(
-              "/api/trackedEntityInstances",
+              "/api/tracker/trackedEntities",
               {
                 paging: true,
                 totalPages: true,
@@ -50,8 +50,8 @@ export const pull = async () => {
                 `program=${program.id}`,
                 `ouMode=DESCENDANTS`,
                 `includeDeleted=true`,
-                // `lastUpdatedStartDate=${lastUpdated}`, // Need to get all data
-                `fields=trackedEntityInstance,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType]`,
+                // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
+                `fields=trackedEntity,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType]`,
               ]
             );
 
@@ -122,19 +122,19 @@ export const pushAndMarkOnline = async (trackedEntities) => {
 
     try {
       const result = await dataApi.postTrackedEntityInstances({
-        trackedEntityInstances: partition,
+        trackedEntities: partition,
       });
 
       console.log("postTrackedEntityInstances", { result });
 
       if (result.httpStatusCode === 200) {
-        await markOnline(partition.map((te) => te.trackedEntityInstance));
+        await markOnline(partition.map((te) => te.trackedEntity));
       }
 
       results.push(result);
     } catch (error) {
       results.push(error);
-      console.error(`Failed to push trackedEntityInstance`, error);
+      console.error(`Failed to push trackedEntity`, error);
     }
   }
 
@@ -142,26 +142,23 @@ export const pushAndMarkOnline = async (trackedEntities) => {
 };
 
 const markOnline = async (trackedEntityIds) => {
-  return await db[TABLE_NAME].where("trackedEntityInstance")
+  return await db[TABLE_NAME].where("trackedEntity")
     .anyOf(trackedEntityIds)
     .modify({ isOnline: 1 });
 };
 
-export const setTrackedEntityInstance = async ({ trackedEntityInstance }) => {
+export const setTrackedEntityInstance = async ({ trackedEntity }) => {
   try {
-    const tei = JSON.parse(JSON.stringify(trackedEntityInstance));
+    const tei = JSON.parse(JSON.stringify(trackedEntity));
 
-    const updatedTeis = await beforePersist(
-      { trackedEntityInstances: [tei] },
-      0
-    );
+    const updatedTeis = await beforePersist({ trackedEntities: [tei] }, 0);
 
     await persist(updatedTeis);
 
-    if (trackedEntityInstance.enrollments.length > 0) {
+    if (trackedEntity.enrollments.length > 0) {
       // UPDATE ENROLLMENT
       const enrollment = JSON.parse(
-        JSON.stringify(trackedEntityInstance.enrollments[0])
+        JSON.stringify(trackedEntity.enrollments[0])
       );
 
       await enrollmentManager.setEnrollment({
@@ -179,17 +176,17 @@ export const setTrackedEntityInstance = async ({ trackedEntityInstance }) => {
       }
     }
   } catch (error) {
-    console.error(`Failed to add trackedEntityInstance`, error);
+    console.error(`Failed to add trackedEntity`, error);
   }
 };
 
-export const setTrackedEntityInstances = async ({ trackedEntityInstances }) => {
+export const setTrackedEntityInstances = async ({ trackedEntities }) => {
   try {
-    for (const trackedEntityInstance of trackedEntityInstances) {
-      await setTrackedEntityInstance({ trackedEntityInstance });
+    for (const trackedEntity of trackedEntities) {
+      await setTrackedEntityInstance({ trackedEntity });
     }
   } catch (error) {
-    console.error(`Failed to add trackedEntityInstance`, error);
+    console.error(`Failed to add trackedEntity`, error);
   }
 };
 
@@ -201,13 +198,13 @@ const beforePersist = async (result, isOnline = 1) => {
   const objects = [];
   const ids = [];
 
-  const trackedEntityInstances = result.instances;
+  const trackedEntities = result.instances;
 
-  if (!trackedEntityInstances) {
+  if (!trackedEntities) {
     return objects;
   }
 
-  for (const te of trackedEntityInstances) {
+  for (const te of trackedEntities) {
     const trackedEntity = {
       trackedEntity: te.trackedEntity,
       updatedAt: te.updatedAt,
@@ -240,23 +237,21 @@ const beforePersist = async (result, isOnline = 1) => {
   const partitions = chunk(ids, 200);
 
   for (const partition of partitions) {
-    await db[TABLE_NAME].where("trackedEntityInstance")
-      .anyOf(partition)
-      .delete();
+    await db[TABLE_NAME].where("trackedEntity").anyOf(partition).delete();
   }
 
   return objects;
 };
 
-export const findOne = async (trackedEntityInstance) => {
+export const findOne = async (trackedEntity) => {
   try {
-    const tei = await db[TABLE_NAME].where("trackedEntityInstance")
-      .equals(trackedEntityInstance)
+    const tei = await db[TABLE_NAME].where("trackedEntity")
+      .equals(trackedEntity)
       .toArray();
 
     return toDhis2TrackedEntity(tei);
   } catch (error) {
-    console.error(`Failed to get trackedEntityInstance`, error);
+    console.error(`Failed to get trackedEntity`, error);
   }
 };
 
@@ -270,7 +265,7 @@ export const find = async ({
 }) => {
   try {
     const result = {
-      trackedEntityInstances: [],
+      trackedEntities: [],
     };
 
     // get child orgUnits
@@ -318,43 +313,41 @@ export const find = async ({
       return result;
     }
 
-    const trackedEntityInstances = enrs.map((enr) => enr.trackedEntityInstance);
+    const trackedEntities = enrs.map((enr) => enr.trackedEntity);
 
-    const teis = await db[TABLE_NAME].where("trackedEntityInstance")
-      .anyOf(trackedEntityInstances)
+    const teis = await db[TABLE_NAME].where("trackedEntity")
+      .anyOf(trackedEntities)
       .toArray();
 
-    result.trackedEntityInstances = toDhis2TrackedEntities(teis);
+    result.trackedEntities = toDhis2TrackedEntities(teis);
 
     if (paging) {
       result.pager = pager;
     }
     return result;
   } catch (error) {
-    console.error(`Failed to get trackedEntityInstance`, error);
+    console.error(`Failed to get trackedEntity`, error);
   }
 };
 
 export const getTrackedEntityInstanceById = async ({
-  trackedEntityInstance,
+  trackedEntity,
   program,
 }) => {
   const events = await db.event
-    .where("trackedEntityInstance")
-    .equals(trackedEntityInstance)
+    .where("trackedEntity")
+    .equals(trackedEntity)
     .and((event) => event.program === program)
     .toArray();
 
   const enr = await db.enrollment
-    .where("trackedEntityInstance")
-    .equals(trackedEntityInstance)
+    .where("trackedEntity")
+    .equals(trackedEntity)
     .and((enr) => enr.program === program)
     .first();
 
   const tei = toDhis2TrackedEntity(
-    await db[TABLE_NAME].where("trackedEntityInstance")
-      .equals(trackedEntityInstance)
-      .toArray()
+    await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray()
   );
 
   if (enr) {
@@ -383,22 +376,22 @@ export const getTrackedEntityInstances = async ({ orgUnit, filters }) => {
 
   let teisMatchFilter = await queryBuilder.toArray();
 
-  let teis = await db[TABLE_NAME].where("trackedEntityInstance")
-    .anyOf(teisMatchFilter.map((tei) => tei.trackedEntityInstance))
+  let teis = await db[TABLE_NAME].where("trackedEntity")
+    .anyOf(teisMatchFilter.map((tei) => tei.trackedEntity))
     .toArray();
 
   return {
-    trackedEntityInstances: toDhis2TrackedEntities(teis),
+    trackedEntities: toDhis2TrackedEntities(teis),
   };
 };
 
 export const getTrackedEntityInstancesByIDs = async ({
   program,
-  trackedEntityInstances,
+  trackedEntities,
 }) => {
   const enrs = await db.enrollment
-    .where("trackedEntityInstance")
-    .anyOf(trackedEntityInstances)
+    .where("trackedEntity")
+    .anyOf(trackedEntities)
     .and((enr) => enr.program === program)
     .toArray();
 
@@ -413,21 +406,17 @@ export const getTrackedEntityInstancesByIDs = async ({
   }
 
   const teis = toDhis2TrackedEntities(
-    await db[TABLE_NAME].where("trackedEntityInstance")
-      .anyOf(trackedEntityInstances)
-      .toArray()
+    await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities).toArray()
   );
 
   for (const tei of teis) {
-    const teiEnr = enrs.find(
-      (enr) => enr.trackedEntityInstance === tei.trackedEntityInstance
-    );
+    const teiEnr = enrs.find((enr) => enr.trackedEntity === tei.trackedEntity);
 
     tei.enrollments = toDhis2Enrollments([teiEnr], teiEnr.events || []);
   }
 
   return {
-    trackedEntityInstances: teis,
+    trackedEntities: teis,
   };
 };
 
@@ -468,8 +457,8 @@ export const deleteTrackedEntityInstances = async ({ trackedEntities }) => {
   }
 };
 
-// trackedEntityInstance	INTEGER	NO	NULL
-// lastUpdated	date	NO	NULL
+// trackedEntity	INTEGER	NO	NULL
+// updatedAt	date	NO	NULL
 // orgUnit	varchar(11)	NO	NULL
 // trackedEntityType	varchar(11)	NO	NULL
 // isDeleted	boolean	NO	NULL

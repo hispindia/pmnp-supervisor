@@ -5,7 +5,7 @@ import * as organisationUnit from "./OrganisationUnitManager";
 import * as organisationsUnitLevel from "./OrganisationUnitLevelManager";
 import * as me from "./MeManager";
 import * as enrollment from "./EnrollmentManager";
-import * as trackedEntityInstance from "./TrackedEntityInstanceManager";
+import * as trackedEntity from "./TrackedEntityInstanceManager";
 import * as program from "./ProgramManager";
 import * as optionSet from "./OptionSetManager";
 import * as event from "./EventManager";
@@ -17,9 +17,9 @@ db.version(1).stores({
   [organisationUnit.TABLE_NAME]: organisationUnit.TABLE_FIELDS,
   [organisationsUnitLevel.TABLE_NAME]: organisationsUnitLevel.TABLE_FIELDS,
   [enrollment.TABLE_NAME]: enrollment.TABLE_FIELDS,
-  // [trackedEntityInstance.TABLE_NAME]: trackedEntityInstance.TABLE_FIELDS,
-  trackedEntityInstance:
-    "++id, trackedEntityInstance, lastUpdated, orgUnit, trackedEntityType, isDeleted, isOnline, attribute, valueType, displayName, value",
+  // [trackedEntity.TABLE_NAME]: trackedEntity.TABLE_FIELDS,
+  trackedEntity:
+    "++id, trackedEntity, updatedAt, orgUnit, trackedEntityType, isDeleted, isOnline, attribute, valueType, displayName, value",
   [program.TABLE_NAME]: program.TABLE_FIELDS,
   [optionSet.TABLE_NAME]: optionSet.TABLE_FIELDS,
   [event.TABLE_NAME]: event.TABLE_FIELDS,

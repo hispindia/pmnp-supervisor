@@ -7,13 +7,13 @@ import { toDhis2Enrollments } from "./data/enrollment";
 import { chunk } from "lodash";
 
 export const TABLE_FIELDS =
-  "++id, enrollment, lastUpdated, orgUnit, trackedEntityType, program, enrollmentStatus, trackedEntityInstance, enrollmentDate, incidentDate, isFollowUp, isDeleted, isOnline, attribute, value";
+  "++id, enrollment, updatedAt, orgUnit, trackedEntityType, program, enrollmentStatus, trackedEntity, enrollmentDate, incidentDate, isFollowUp, isDeleted, isOnline, attribute, value";
 export const TABLE_NAME = "enrollment";
 
 export const pull = async () => {
   try {
     await db[TABLE_NAME].clear();
-    // const lastUpdated = moment().subtract(3, 'months').format('YYYY-MM-DD');
+    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
     const { organisationUnits } = await meManager.getMe();
 
@@ -40,12 +40,12 @@ export const pull = async () => {
                 `program=${program.id}`,
                 `ouMode=DESCENDANTS`,
                 `includeDeleted=true`,
-                // `lastUpdatedStartDate=${lastUpdated}`, // Need to get all data
+                // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
                 `fields=${[
                   "enrollment",
-                  "lastUpdated",
+                  "updatedAt",
                   "trackedEntityType",
-                  "trackedEntityInstance",
+                  "trackedEntity",
                   "program",
                   "status",
                   "orgUnit",
@@ -161,12 +161,12 @@ const beforePersist = async (result, program, isOnline = 1) => {
     for (const en of enrollments) {
       const enrollment = {
         enrollment: en.enrollment,
-        lastUpdated: en.lastUpdated || moment().format("YYYY-MM-DD"),
+        updatedAt: en.updatedAt || moment().format("YYYY-MM-DD"),
         program: program,
         orgUnit: en.orgUnit,
         enrollmentStatus: en.status,
         trackedEntityType: en.trackedEntityType,
-        trackedEntityInstance: en.trackedEntityInstance,
+        trackedEntity: en.trackedEntity,
         enrollmentDate: en.enrollmentDate,
         incidentDate: en.incidentDate,
         isOnline,

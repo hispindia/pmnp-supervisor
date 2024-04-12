@@ -4,7 +4,7 @@ import * as programManager from "@/indexDB/ProgramManager";
 import * as meManager from "@/indexDB/MeManager";
 
 export const TABLE_FIELDS =
-  "++id, enrollment, lastUpdated, orgUnit, trackedEntityType, program, enrollmentStatus, trackedEntityInstance, enrollmentDate, incidentDate, isFollowUp, isDeleted, isOnline, attribute, value";
+  "++id, enrollment, lastUpdated, orgUnit, trackedEntityType, program, enrollmentStatus, trackedEntity, enrollmentDate, incidentDate, isFollowUp, isDeleted, isOnline, attribute, value";
 export const TABLE_NAME = "enrollment";
 
 export const pull = async () => {
@@ -42,7 +42,7 @@ export const pull = async () => {
                   "enrollment",
                   "lastUpdated",
                   "trackedEntityType",
-                  "trackedEntityInstance",
+                  "trackedEntity",
                   "program",
                   "status",
                   "orgUnit",
@@ -104,7 +104,7 @@ const beforePersist = async (result, program) => {
         orgUnit: en.orgUnit,
         enrollmentStatus: en.status,
         trackedEntityType: en.trackedEntityType,
-        trackedEntityInstance: en.trackedEntityInstance,
+        trackedEntity: en.trackedEntity,
         enrollmentDate: en.enrollmentDate,
         incidentDate: en.incidentDate,
         isOnline: 1,

@@ -77,7 +77,7 @@ function* initExistedDataSaga() {
     // clone new data object
     data = yield call(
       trackedEntityInstanceManager.getTrackedEntityInstanceById,
-      { trackedEntityInstance: teiId, program: programId }
+      { trackedEntity: teiId, program: programId }
     );
   } else {
     // get Family TEI
@@ -93,7 +93,7 @@ function* initExistedDataSaga() {
 
   const selectedOrgUnit = yield call(getSelectedOrgUnitByOuId, orgUnit);
 
-  let memberTEIs = { trackedEntityInstances: [] };
+  let memberTEIs = { trackedEntities: [] };
 
   // OFFLINE MODE
   if (offlineStatus) {
@@ -124,7 +124,7 @@ function* initExistedDataSaga() {
         trackedEntityInstanceManager.getTrackedEntityInstancesByIDs,
         {
           program: "xvzrp56zKvI",
-          trackedEntityInstances: memberTEIsUid,
+          trackedEntities: memberTEIsUid,
         }
       );
     } else {

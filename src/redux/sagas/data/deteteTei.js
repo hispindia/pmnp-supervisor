@@ -20,7 +20,7 @@ function* handleDeleteTei({ teiId }) {
 
     if (offlineStatus) {
       yield call(trackedEntityInstanceManager.deleteTrackedEntityInstances, {
-        trackedEntityInstances: payload.trackedEntityInstances,
+        trackedEntities: payload.trackedEntities,
       });
     } else {
       yield call(dataApi.deleteTei, payload);
@@ -38,9 +38,9 @@ function* handleDeleteTei({ teiId }) {
 
 const teiIdToDeletePayload = (teiId) => {
   return {
-    trackedEntityInstances: [
+    trackedEntities: [
       {
-        trackedEntityInstance: teiId,
+        trackedEntity: teiId,
       },
     ],
   };

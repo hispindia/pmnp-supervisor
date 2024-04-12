@@ -7,7 +7,7 @@ import { chunk } from "lodash";
 import { toDhis2Events } from "./data/event";
 
 export const TABLE_FIELDS =
-  "++id, event, lastUpdated, orgUnit, program, programStage, eventStatus, enrollment, enrollmentStatus, trackedEntityInstance, attributeCategoryOptions, attributeOptionCombo, dueDate, eventDate, isFollowUp, isDeleted, isOnline, dataElement, value, isProvidedElsewhere";
+  "++id, event, updatedAt, orgUnit, program, programStage, eventStatus, enrollment, enrollmentStatus, trackedEntity, attributeCategoryOptions, attributeOptionCombo, dueDate, eventDate, isFollowUp, isDeleted, isOnline, dataElement, value, isProvidedElsewhere";
 export const TABLE_NAME = "event";
 
 export const getEventsRawData = async (pager, org, program) => {
@@ -24,14 +24,14 @@ export const getEventsRawData = async (pager, org, program) => {
       `ouMode=DESCENDANTS`,
       `program=${program.id}`,
       `includeDeleted=true`,
-      // `lastUpdatedStartDate=${lastUpdated}`, // Need to get all data
+      // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
       `fields=${[
         "event",
-        "lastUpdated",
+        "updatedAt",
         "dueDate",
         "eventDate",
         "orgUnit",
-        "trackedEntityInstance",
+        "trackedEntity",
         "program",
         "programStage",
         "status",
@@ -71,7 +71,7 @@ export const pull = async () => {
   try {
     // Delete the table
     await db[TABLE_NAME].clear();
-    // const lastUpdated = moment().subtract(3, 'months').format('YYYY-MM-DD');
+    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
     const { organisationUnits } = await meManager.getMe();
 
@@ -197,7 +197,7 @@ const pushAndMarkOnline = async (events) => {
 
   //         results.push(result);
   //     } catch (error) {
-  //         console.error(`Failed to push trackedEntityInstance`, error);
+  //         console.error(`Failed to push trackedEntity`, error);
   //     }
   // }
 
@@ -221,14 +221,14 @@ export const beforePersist = async (result) => {
   for (const ev of events) {
     const event = {
       event: ev.event,
-      lastUpdated: ev.lastUpdated,
+      updatedAt: ev.updatedAt,
       program: ev.program,
       programStage: ev.programStage,
       orgUnit: ev.orgUnit,
       eventStatus: ev.status,
       enrollment: ev.enrollment,
       enrollmentStatus: ev.enrollmentStatus,
-      trackedEntityInstance: ev.trackedEntityInstance,
+      trackedEntity: ev.trackedEntity,
       attributeOptionCombo: ev.attributeOptionCombo,
       dueDate: ev.dueDate,
       eventDate: ev.eventDate,
@@ -328,14 +328,14 @@ const beforePersistAnalyticsData = async (result, program) => {
   for (const ev of events) {
     const event = {
       event: ev[findHeaderIndex(result.headers, "psi")],
-      lastUpdated: ev[findHeaderIndex(result.headers, "eventdate")], //ev.lastUpdated,
+      updatedAt: ev[findHeaderIndex(result.headers, "eventdate")], //ev.updatedAt,
       program: program.id,
       programStage: ev[findHeaderIndex(result.headers, "ps")],
       orgUnit: ev[findHeaderIndex(result.headers, "ou")],
       eventStatus: `ACTIVE`, //ev.status,
       enrollment: ev[findHeaderIndex(result.headers, "pi")],
       enrollmentStatus: `ACTIVE`, //ev.enrollmentStatus,
-      trackedEntityInstance: ev[findHeaderIndex(result.headers, "tei")],
+      trackedEntity: ev[findHeaderIndex(result.headers, "tei")],
       attributeOptionCombo: `HllvX50cXC0`, // ev.attributeOptionCombo,
       dueDate: ev[findHeaderIndex(result.headers, "eventdate")], // ev.dueDate,
       eventDate: ev[findHeaderIndex(result.headers, "eventdate")],
@@ -391,7 +391,7 @@ const setEvent = async (ev) => {
 
     const event = {
       event: ev.event,
-      lastUpdated: moment().format("YYYY-MM-DD HH:mm:ss"),
+      updatedAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       program: ev.program,
       programStage: ev.programStage,
       orgUnit: ev.orgUnit,
@@ -399,7 +399,7 @@ const setEvent = async (ev) => {
       eventStatus: ev.eventStatus || ev.status,
       enrollment: ev.enrollment,
       enrollmentStatus: ev.status || ev.enrollmentStatus,
-      trackedEntityInstance: ev.trackedEntityInstance,
+      trackedEntity: ev.trackedEntity,
       attributeOptionCombo: ev.attributeOptionCombo || "HllvX50cXC0",
       dueDate: ev.dueDate,
       eventDate: ev.eventDate,
@@ -439,14 +439,14 @@ const setEvent = async (ev) => {
 
 /**
 event	INTEGER	NO	NULL	
-lastUpdated	date	NO	NULL	
+updatedAt	date	NO	NULL	
 orgUnit	varchar(11)	NO	NULL	
 program	varchar(11)	NO	NULL	
 programStage	varchar(11)	NO	NULL	
 eventStatus	TEXT	NO	NULL	
 enrollment	varchar(11)	YES	NULL	
 enrollmentStatus	TEXT	YES	NULL	
-trackedEntityInstance	varchar(11)	YES	NULL	
+trackedEntity	varchar(11)	YES	NULL	
 attributeCategoryOptions	varchar(11)	YES	NULL	
 attributeOptionCombo	varchar(11)	YES	NULL	
 dueDate	date	YES	NULL	

@@ -25,7 +25,7 @@ function* handleDeleteMember({ teiId }) {
     memberTEI = yield call(
       trackedEntityInstanceManager.getTrackedEntityInstanceById,
       {
-        trackedEntityInstance: selectedMember.id,
+        trackedEntity: selectedMember.id,
         program: programMetadataMember.id,
       }
     );
