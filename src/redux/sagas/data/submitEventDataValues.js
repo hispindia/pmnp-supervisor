@@ -120,7 +120,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
           let eventByYear = _.filter(
             memberTEI.enrollments[0].events,
             function (n) {
-              return moment(n.eventDate).isBetween(
+              return moment(n.occurredAt).isBetween(
                 `${year}-01-01`,
                 `${year}-12-31`,
                 undefined,
@@ -165,8 +165,8 @@ function* handleSubmitEventDataValues({ dataValues }) {
               try {
                 let newEvent = {
                   event: generateUid(),
-                  eventDate: newCurrentEvent.eventDate,
-                  dueDate: newCurrentEvent.eventDate,
+                  occurredAt: newCurrentEvent.occurredAt,
+                  dueDate: newCurrentEvent.occurredAt,
                 };
 
                 // Generate member payload - UPDATE
@@ -192,13 +192,13 @@ function* handleSubmitEventDataValues({ dataValues }) {
           try {
             let newEnrollment = {
               enrollment: generateUid(),
-              enrollmentDate: newCurrentEvent.eventDate,
-              incidentDate: newCurrentEvent.eventDate,
+              enrolledAt: newCurrentEvent.occurredAt,
+              incidentDate: newCurrentEvent.occurredAt,
             };
             let newEvent = {
               event: generateUid(),
-              eventDate: newCurrentEvent.eventDate,
-              dueDate: newCurrentEvent.eventDate,
+              occurredAt: newCurrentEvent.occurredAt,
+              dueDate: newCurrentEvent.occurredAt,
             };
 
             // Generate member payload - UPDATE
@@ -230,13 +230,13 @@ function* handleSubmitEventDataValues({ dataValues }) {
         try {
           let newEnrollment = {
             enrollment: generateUid(),
-            enrollmentDate: newCurrentEvent.eventDate,
-            incidentDate: newCurrentEvent.eventDate,
+            enrolledAt: newCurrentEvent.occurredAt,
+            incidentDate: newCurrentEvent.occurredAt,
           };
           let newEvent = {
             event: generateUid(),
-            eventDate: newCurrentEvent.eventDate,
-            dueDate: newCurrentEvent.eventDate,
+            occurredAt: newCurrentEvent.occurredAt,
+            dueDate: newCurrentEvent.occurredAt,
           };
 
           // Generate member payload - UPDATE

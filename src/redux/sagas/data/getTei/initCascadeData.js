@@ -51,14 +51,14 @@ function* initCascadeDataFromTEIsEvents(payload) {
   currentCascade =
     payload &&
     currentEvents.reduce((res, ce) => {
-      let year = moment(ce.eventDate).year();
+      let year = moment(ce.occurredAt).year();
       process.env.NODE_ENV && console.log(year);
 
       let cascadeByYear = memberTEIsWithEvents.reduce((cas, tei) => {
         const enr = tei.enrollments[0];
         const events = enr.events;
         const eventByYear = _.filter(events, function (n) {
-          return moment(n.eventDate).isBetween(
+          return moment(n.occurredAt).isBetween(
             `${year}-01-01`,
             `${year}-12-31`,
             undefined,
@@ -121,7 +121,7 @@ function* initCascadeData(payload) {
   currentCascade =
     payload &&
     currentEvents.reduce((res, ce) => {
-      let year = moment(ce.eventDate).year();
+      let year = moment(ce.occurredAt).year();
 
       const cascadeByYear = JSON.parse(ce.dataValues.oC9jreyd9SD);
 

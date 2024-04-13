@@ -4,7 +4,7 @@ import * as programManager from "@/indexDB/ProgramManager";
 import * as meManager from "@/indexDB/MeManager";
 
 export const TABLE_FIELDS =
-  "event, lastUpdated, orgUnit, program, programStage, eventStatus, enrollment, enrollmentStatus, trackedEntity, attributeCategoryOptions, attributeOptionCombo, dueDate, eventDate, isFollowUp, isDeleted, isOnline, dataElement, value, isProvidedElsewhere";
+  "event, lastUpdated, orgUnit, program, programStage, eventStatus, enrollment, enrollmentStatus, trackedEntity, attributeCategoryOptions, attributeOptionCombo, dueDate, occurredAt, isFollowUp, isDeleted, isOnline, dataElement, value, isProvidedElsewhere";
 export const TABLE_NAME = "event";
 
 export const pull = async () => {
@@ -35,7 +35,7 @@ export const pull = async () => {
                   "event",
                   "lastUpdated",
                   "dueDate",
-                  "eventDate",
+                  "occurredAt",
                   "orgUnit",
                   "trackedEntity",
                   "program",
@@ -102,7 +102,7 @@ const beforePersist = async (result) => {
         trackedEntity: ev.trackedEntity,
         attributeOptionCombo: ev.attributeOptionCombo,
         dueDate: ev.dueDate,
-        eventDate: ev.eventDate,
+        occurredAt: ev.occurredAt,
         isOnline: 1,
         isFollowUp: ev.followup ? 1 : 0,
         isDeleted: ev.deleted ? 1 : 0,
@@ -146,7 +146,7 @@ trackedEntity	varchar(11)	YES	NULL
 attributeCategoryOptions	varchar(11)	YES	NULL	
 attributeOptionCombo	varchar(11)	YES	NULL	
 dueDate	date	YES	NULL	
-eventDate	date	YES	NULL	
+occurredAt	date	YES	NULL	
 isFollowUp	boolean	NO	NULL	
 isDeleted	boolean	NO	NULL	
 isOnline	boolean	NO	NULL	

@@ -26,7 +26,7 @@ const CensusDetailFormContainer = () => {
   const { startDate, endDate } = getHalfYear(selected6Month, year);
 
   const currentEvent = currentEvents.find((event) =>
-    moment(event.eventDate).isBetween(startDate, endDate, null, "[]")
+    moment(event.occurredAt).isBetween(startDate, endDate, null, "[]")
   );
 
   const onTabChange = (tabIndex) => {
@@ -49,7 +49,7 @@ const CensusDetailFormContainer = () => {
             ...cloneEvent,
             _isDirty: true,
             event: generateUid(),
-            eventDate: `${endDate}`,
+            occurredAt: `${endDate}`,
             dueDate: `${endDate}`,
             status: "ACTIVE",
             dataValues: eventDataValues,

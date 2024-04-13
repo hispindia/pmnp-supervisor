@@ -106,9 +106,9 @@ export const initData = (state, action) => {
     },
     {}
   );
-  currentEnrollment.enrollmentDate = convertValue(
+  currentEnrollment.enrolledAt = convertValue(
     "DATE",
-    currentEnrollment.enrollmentDate
+    currentEnrollment.enrolledAt
   );
   currentEnrollment.incidentDate = convertValue(
     "DATE",
@@ -121,7 +121,7 @@ export const initData = (state, action) => {
       (ps) => ps.id === event.programStage
     );
     if (!programStage) return;
-    event.eventDate = convertValue("DATE", event.eventDate);
+    event.occurredAt = convertValue("DATE", event.occurredAt);
     event.dueDate = convertValue("DATE", event.dueDate);
     event.isNew = false;
     event.isDirty = false;
@@ -168,9 +168,9 @@ export const initDataMember = (state, action) => {
     },
     {}
   );
-  memberEnrollment.enrollmentDate = convertValue(
+  memberEnrollment.enrolledAt = convertValue(
     "DATE",
-    memberEnrollment.enrollmentDate
+    memberEnrollment.enrolledAt
   );
   memberEnrollment.incidentDate = convertValue(
     "DATE",
@@ -183,7 +183,7 @@ export const initDataMember = (state, action) => {
       (ps) => ps.id === event.programStage
     );
     if (!programStage) return;
-    event.eventDate = convertValue("DATE", event.eventDate);
+    event.occurredAt = convertValue("DATE", event.occurredAt);
     event.dueDate = convertValue("DATE", event.dueDate);
     event.isNew = false;
     event.isDirty = false;

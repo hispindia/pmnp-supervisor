@@ -68,7 +68,7 @@ function* handleEditEventDate({ year }) {
 
   const newCurrentEvent = {
     ...currentEvent,
-    eventDate: `${year}-12-31`,
+    occurredAt: `${year}-12-31`,
     dueDate: `${year}-12-31`,
   };
   let payloadTransformed = yield call(transformEvent, {
@@ -109,8 +109,8 @@ function* handleCloneEvent({ year }) {
     let listEvents = JSON.parse(
       JSON.stringify(
         tempEvents.sort(function (a, b) {
-          var keyA = new Date(a.eventDate),
-            keyB = new Date(b.eventDate);
+          var keyA = new Date(a.occurredAt),
+            keyB = new Date(b.occurredAt);
           // Compare the 2 dates
           if (keyA < keyB) return -1;
           if (keyA > keyB) return 1;
@@ -136,7 +136,7 @@ function* handleCloneEvent({ year }) {
     payloadTransformed = yield call(transformEvent, {
       dataValues: { ...previousEvent.dataValues },
     });
-    const previousEventYear = moment(previousEvent.eventDate).year();
+    const previousEventYear = moment(previousEvent.occurredAt).year();
     // Clone cascadeDataValue
     cascadeDataValue = JSON.parse(
       JSON.stringify(currentCascade[previousEventYear])
@@ -170,7 +170,7 @@ function* handleCloneEvent({ year }) {
     program: programMetadata.id,
     programStage: "vY4mlqYfJEH",
     enrollment: currentEnrollment.enrollment,
-    eventDate: `${year}-12-31`,
+    occurredAt: `${year}-12-31`,
     dueDate: `${year}-12-31`,
     status: "ACTIVE",
     dataValues: payloadTransformed?.dataValues || [], // payloadTransformed.dataValues,
@@ -245,8 +245,8 @@ function* handleCloneEvent({ year }) {
 
           let newEvent = {
             event: generateUid(),
-            eventDate: newFamilyEvent.eventDate,
-            dueDate: newFamilyEvent.eventDate,
+            occurredAt: newFamilyEvent.occurredAt,
+            dueDate: newFamilyEvent.occurredAt,
             trackedEntity: cas.id,
             status: newFamilyEvent.status,
           };

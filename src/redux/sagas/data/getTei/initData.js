@@ -36,9 +36,9 @@ function* handleInitData(trackedEntity) {
     },
     {}
   );
-  currentEnrollment.enrollmentDate = convertValue(
+  currentEnrollment.enrolledAt = convertValue(
     "DATE",
-    currentEnrollment.enrollmentDate
+    currentEnrollment.enrolledAt
   );
   currentEnrollment.incidentDate = convertValue(
     "DATE",
@@ -51,7 +51,7 @@ function* handleInitData(trackedEntity) {
       (ps) => ps.id === event.programStage
     );
     if (!programStage) return;
-    event.eventDate = convertValue("DATE", event.eventDate);
+    event.occurredAt = convertValue("DATE", event.occurredAt);
     event.dueDate = convertValue("DATE", event.dueDate);
     event.isNew = false;
     event.isDirty = false;
@@ -71,9 +71,9 @@ function* handleInitData(trackedEntity) {
     );
   });
 
-  // Sort events by eventDate
+  // Sort events by occurredAt
   currentEvents.sort((a, b) => {
-    return new Date(a.eventDate) - new Date(b.eventDate);
+    return new Date(a.occurredAt) - new Date(b.occurredAt);
   });
 
   console.log("handleInitData", currentEvents);
@@ -81,7 +81,7 @@ function* handleInitData(trackedEntity) {
   // currentEvents
   if (currentEvents.length > 0) {
     const currentAvailableYears = currentEvents.map((event) =>
-      moment(event.eventDate).format("YYYY")
+      moment(event.occurredAt).format("YYYY")
     );
     const isYearSelected =
       selectedIndex !== -1 && selectedYear !== null && selected6Month !== null;
@@ -89,8 +89,8 @@ function* handleInitData(trackedEntity) {
     // Set default selected year when no year is selected
     if (!isYearSelected || !currentAvailableYears.includes(selectedYear)) {
       let index = currentEvents.length - 1;
-      let eventDate = currentEvents[index].eventDate;
-      const eventYear = moment(eventDate).format("YYYY");
+      let occurredAt = currentEvents[index].occurredAt;
+      const eventYear = moment(occurredAt).format("YYYY");
 
       yield put(changeEventFamily(index, eventYear, selected6Month));
     }

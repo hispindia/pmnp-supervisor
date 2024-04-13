@@ -111,9 +111,7 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
   );
   const newEnrollment = {
     ...currentEnrollment,
-    enrollmentDate: moment([+attributes.BUEzQEErqa7, 11, 31]).format(
-      "YYYY-MM-DD"
-    ),
+    enrolledAt: moment([+attributes.BUEzQEErqa7, 11, 31]).format("YYYY-MM-DD"),
     incidentDate: moment([+attributes.BUEzQEErqa7, 11, 31]).format(
       "YYYY-MM-DD"
     ),

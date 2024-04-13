@@ -7,7 +7,7 @@ import { chunk } from "lodash";
 import { toDhis2Events } from "./data/event";
 
 export const TABLE_FIELDS =
-  "++id, event, updatedAt, orgUnit, program, programStage, eventStatus, enrollment, enrollmentStatus, trackedEntity, attributeCategoryOptions, attributeOptionCombo, dueDate, eventDate, isFollowUp, isDeleted, isOnline, dataElement, value, isProvidedElsewhere";
+  "++id, event, updatedAt, orgUnit, program, programStage, eventStatus, enrollment, enrollmentStatus, trackedEntity, attributeCategoryOptions, attributeOptionCombo, dueDate, occurredAt, isFollowUp, isDeleted, isOnline, dataElement, value, isProvidedElsewhere";
 export const TABLE_NAME = "event";
 
 export const getEventsRawData = async (pager, org, program) => {
@@ -29,7 +29,7 @@ export const getEventsRawData = async (pager, org, program) => {
         "event",
         "updatedAt",
         "dueDate",
-        "eventDate",
+        "occurredAt",
         "orgUnit",
         "trackedEntity",
         "program",
@@ -231,7 +231,7 @@ export const beforePersist = async (result) => {
       trackedEntity: ev.trackedEntity,
       attributeOptionCombo: ev.attributeOptionCombo,
       dueDate: ev.dueDate,
-      eventDate: ev.eventDate,
+      occurredAt: ev.occurredAt,
       isOnline: 1,
       isFollowUp: ev.followup ? 1 : 0,
       isDeleted: ev.deleted ? 1 : 0,
@@ -290,12 +290,12 @@ export const getEventsByQuery = async ({
 
   if (startDate) {
     queryBuilder = queryBuilder.and((env) => {
-      return moment(env.eventDate, "YYYY-MM-DD").isSameOrAfter(startDate);
+      return moment(env.occurredAt, "YYYY-MM-DD").isSameOrAfter(startDate);
     });
   }
   if (endDate) {
     queryBuilder = queryBuilder.and((env) => {
-      return moment(env.eventDate, "YYYY-MM-DD").isSameOrBefore(endDate);
+      return moment(env.occurredAt, "YYYY-MM-DD").isSameOrBefore(endDate);
     });
   }
 
@@ -338,7 +338,7 @@ const beforePersistAnalyticsData = async (result, program) => {
       trackedEntity: ev[findHeaderIndex(result.headers, "tei")],
       attributeOptionCombo: `HllvX50cXC0`, // ev.attributeOptionCombo,
       dueDate: ev[findHeaderIndex(result.headers, "eventdate")], // ev.dueDate,
-      eventDate: ev[findHeaderIndex(result.headers, "eventdate")],
+      occurredAt: ev[findHeaderIndex(result.headers, "eventdate")],
       isOnline: 1,
       isFollowUp: 0, // ev.followup || false,
       isDeleted: 0, // ev.deleted || false,
@@ -402,7 +402,7 @@ const setEvent = async (ev) => {
       trackedEntity: ev.trackedEntity,
       attributeOptionCombo: ev.attributeOptionCombo || "HllvX50cXC0",
       dueDate: ev.dueDate,
-      eventDate: ev.eventDate,
+      occurredAt: ev.occurredAt,
       isOnline: 0,
       isFollowUp: ev.followup ? 1 : 0,
       isDeleted: ev.deleted ? 1 : 0,
@@ -450,7 +450,7 @@ trackedEntity	varchar(11)	YES	NULL
 attributeCategoryOptions	varchar(11)	YES	NULL	
 attributeOptionCombo	varchar(11)	YES	NULL	
 dueDate	date	YES	NULL	
-eventDate	date	YES	NULL	
+occurredAt	date	YES	NULL	
 isFollowUp	boolean	NO	NULL	
 isDeleted	boolean	NO	NULL	
 isOnline	boolean	NO	NULL	

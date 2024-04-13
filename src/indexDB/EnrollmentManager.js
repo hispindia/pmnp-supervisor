@@ -7,7 +7,7 @@ import { toDhis2Enrollments } from "./data/enrollment";
 import { chunk } from "lodash";
 
 export const TABLE_FIELDS =
-  "++id, enrollment, updatedAt, orgUnit, trackedEntityType, program, enrollmentStatus, trackedEntity, enrollmentDate, incidentDate, isFollowUp, isDeleted, isOnline, attribute, value";
+  "++id, enrollment, updatedAt, orgUnit, trackedEntityType, program, enrollmentStatus, trackedEntity, enrolledAt, incidentDate, isFollowUp, isDeleted, isOnline, attribute, value";
 export const TABLE_NAME = "enrollment";
 
 export const pull = async () => {
@@ -49,7 +49,7 @@ export const pull = async () => {
                   "program",
                   "status",
                   "orgUnit",
-                  "enrollmentDate",
+                  "enrolledAt",
                   "incidentDate",
                   "followup",
                 ].join(",")}`,
@@ -167,7 +167,7 @@ const beforePersist = async (result, program, isOnline = 1) => {
         enrollmentStatus: en.status,
         trackedEntityType: en.trackedEntityType,
         trackedEntity: en.trackedEntity,
-        enrollmentDate: en.enrollmentDate,
+        enrolledAt: en.enrolledAt,
         incidentDate: en.incidentDate,
         isOnline,
         isFollowUp: en.followup ? 1 : 0,

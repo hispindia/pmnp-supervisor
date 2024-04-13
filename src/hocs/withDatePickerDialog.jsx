@@ -80,7 +80,7 @@ const withDatePickerDialog = (Component) =>
                   // handleEditEventDate(eventID, year);
                   onChange && onChange(moment(date).year());
                 }}
-                // minDate={new Date(tei.enrollment.enrollmentDate)}
+                // minDate={new Date(tei.enrollment.enrolledAt)}
                 minDate={new Date(`${props.minDate}`)}
                 maxDate={new Date(`${props.maxDate}`)}
                 disableToolbar={props.disableToolbar}

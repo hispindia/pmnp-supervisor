@@ -48,7 +48,7 @@ const SideBar = () => {
   };
 
   const handleAddSelectedYear = (year) => {
-    let existedYear = currentEvents.map((e) => moment(e.eventDate).year());
+    let existedYear = currentEvents.map((e) => moment(e.occurredAt).year());
     console.log({ existedYear });
     if (!existedYear.includes(year)) {
       setWarningText(null);
@@ -61,7 +61,7 @@ const SideBar = () => {
 
   // dont use
   // const handleEditEventDate = (year) => {
-  //     let existedYear = currentEvents.map((e) => moment(e.eventDate).year());
+  //     let existedYear = currentEvents.map((e) => moment(e.occurredAt).year());
   //     if (!existedYear.includes(year)) {
   //         setWarningText(null);
   //         // update event date

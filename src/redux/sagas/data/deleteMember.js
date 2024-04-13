@@ -56,7 +56,7 @@ function* handleDeleteMember({ teiId }) {
         let eventByYear = _.filter(
           memberTEI.enrollments[0].events,
           function (n) {
-            return moment(n.eventDate).isBetween(
+            return moment(n.occurredAt).isBetween(
               `${year}-01-01`,
               `${year}-12-31`,
               undefined,
