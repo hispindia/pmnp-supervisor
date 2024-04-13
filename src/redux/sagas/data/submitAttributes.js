@@ -82,6 +82,7 @@ function* makePayload(attributes) {
 }
 
 function* putTeiToServer({ currentTei, currentEnrollment, attributes }) {
+  console.log("putTeiToServer");
   const { offlineStatus } = yield select((state) => state.common);
   const programMetadataId = yield select(
     (state) => state.metadata.programMetadata.id
@@ -94,7 +95,7 @@ function* putTeiToServer({ currentTei, currentEnrollment, attributes }) {
   } else {
     // yield call(dataApi.putTrackedEntityInstance, currentTei, programMetadataId);
     yield call(
-      dataApi.postTrackedEntityInstance,
+      dataApi.postTrackedEntityInstances,
       {
         trackedEntities: [currentTei],
       },

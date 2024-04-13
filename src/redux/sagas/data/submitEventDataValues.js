@@ -278,7 +278,7 @@ function* pushTEI(updatedMemberTei) {
         trackedEntity: updatedMemberTei.data,
       });
     } else {
-      yield call(dataApi.postTrackedEntityInstance, {
+      yield call(dataApi.postTrackedEntityInstances, {
         trackedEntities: [updatedMemberTei.data],
       });
     }

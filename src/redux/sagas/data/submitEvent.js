@@ -289,6 +289,7 @@ function* handleCloneEvent({ year }) {
 }
 
 function* pushTEIs(updatedMemberTeis) {
+  console.log("pushTEIs");
   const { offlineStatus } = yield select((state) => state.common);
   try {
     // OFFLINE MODE
@@ -297,7 +298,7 @@ function* pushTEIs(updatedMemberTeis) {
         trackedEntities: updatedMemberTeis,
       });
     } else {
-      yield call(dataApi.postTrackedEntityInstance, {
+      yield call(dataApi.postTrackedEntityInstances, {
         trackedEntities: [updatedMemberTeis],
       });
     }

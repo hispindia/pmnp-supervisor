@@ -145,44 +145,8 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
   let { family, memberEvent, memberDetails, memberEnrollment } = payload;
 
   let { orgUnit } = family;
-  let { eventDate, event } = memberEvent;
+  let { event } = memberEvent;
   let { enrollment } = memberEnrollment;
-
-  // let year = moment(eventDate).year();
-
-  // // Create: new member event
-  // if (memberDetails.isNew) {
-  //   memberDetails = {
-  //     ...memberDetails,
-  //     ENR: generateUid(),
-  //     EVENTS: {
-  //       [year]: generateUid(),
-  //     },
-  //     isNew: false,
-  //   };
-  // }
-
-  // // Update: existing event
-  // // find eventId and enrId
-  // // await get memberTei here
-  // // https://hispvn.org/laofm/api/events.json?trackedEntity=AzMAwQV57pR&startDate=2019-01-01&endDate=2019-12-31
-  // else if (memberEvent) {
-  //   let enrId = memberEvent.events[0].enrollment;
-  //   let eventId = memberEvent.events[0].event;
-
-  //   // if enr and events aren't exist
-  //   if (!("enr" in memberDetails) && !("events" in memberDetails)) {
-  //     memberDetails = {
-  //       ...memberDetails,
-  //       ENR: enrId,
-  //       EVENTS: {
-  //         [year]: eventId,
-  //       },
-  //     };
-  //   }
-  // }
-
-  // delete memberDetails.isNew;
 
   // Reconstruct payload
   // TEI
@@ -215,6 +179,9 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     value: family.trackedEntity,
   });
 
+  // clear all empty attributes
+  tei.attributes = tei.attributes.filter((attr) => attr.value);
+
   // ENR
   let enrollmentPayload = {
     orgUnit: orgUnit,
@@ -222,8 +189,9 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     trackedEntity: memberDetails.id,
     enrollment: enrollment,
     trackedEntityType: "MCPQUTHX1Ze",
-    enrollmentDate: memberEnrollment.enrollmentDate,
-    incidentDate: memberEnrollment.enrollmentDate,
+    enrolledAt: memberEnrollment.enrolledAt,
+    occurredAt: memberEnrollment.occurredAt,
+    incidentDate: memberEnrollment.enrolledAt,
     status: "ACTIVE",
     events: [],
   };
@@ -236,8 +204,8 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     enrollmentStatus: "ACTIVE",
     enrollment: enrollment,
     orgUnit: orgUnit,
-    eventDate: eventDate,
-    dueDate: eventDate,
+    occurredAt: memberEvent.occurredAt,
+    dueDate: memberEvent.occurredAt,
     trackedEntity: memberDetails.id,
     status: memberEvent.status,
     dataValues: [],
@@ -265,8 +233,8 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     value: family.trackedEntity,
   });
 
-  eventPayload.eventDate = eventDate;
-  eventPayload.dueDate = eventDate;
+  eventPayload.occurredAt = memberEvent.occurredAt;
+  eventPayload.dueDate = memberEvent.occurredAt;
 
   // Combine payload
   enrollmentPayload.events.push(eventPayload);
