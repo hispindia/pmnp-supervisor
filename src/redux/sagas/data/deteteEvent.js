@@ -3,7 +3,7 @@ import { dataApi } from "../../../api";
 import { getTei } from "../../actions/data/tei";
 import { getTeisErrorMessage, getTeisSuccessMessage } from "../../actions/teis";
 import { DELETE_EVENT, DELETE_FAMILY_EVENT } from "../../types/data/tei";
-import * as eventManager from "../../../indexDB/EventManager";
+import * as eventManager from "../../../indexDB/EventManager/EventManager";
 
 export default function* deleteEventSaga() {
   yield takeEvery(DELETE_EVENT, handleDeleteEvent);

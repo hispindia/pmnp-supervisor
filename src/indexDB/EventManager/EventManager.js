@@ -1,14 +1,11 @@
-import db from "./db";
+import db from "../db";
+import { TABLE_NAME } from ".";
 import { dataApi } from "@/api";
-import * as programManager from "@/indexDB/ProgramManager";
-import * as meManager from "@/indexDB/MeManager";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
 import moment from "moment";
 import { chunk } from "lodash";
-import { toDhis2Events } from "./data/event";
-
-export const TABLE_FIELDS =
-  "++id, event, updatedAt, orgUnit, program, programStage, eventStatus, enrollment, enrollmentStatus, trackedEntity, attributeCategoryOptions, attributeOptionCombo, dueDate, occurredAt, isFollowUp, isDeleted, isOnline, dataElement, value, isProvidedElsewhere";
-export const TABLE_NAME = "event";
+import { toDhis2Events } from "../data/event";
 
 export const getEventsRawData = async (pager, org, program) => {
   return await dataApi.get(

@@ -5,7 +5,7 @@ import { dataApi } from "../../../api";
 import { deleteTei, deleteEvent } from "../../actions/data/tei";
 import _ from "lodash";
 import moment from "moment";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 export default function* deleteMemberSaga() {
   yield takeEvery(DELETE_MEMBER, handleDeleteMember);
@@ -22,13 +22,10 @@ function* handleDeleteMember({ teiId }) {
   let memberTEI = null;
 
   if (offlineStatus) {
-    memberTEI = yield call(
-      trackedEntityInstanceManager.getTrackedEntityInstanceById,
-      {
-        trackedEntity: selectedMember.id,
-        program: programMetadataMember.id,
-      }
-    );
+    memberTEI = yield call(trackedEntityManager.getTrackedEntityInstanceById, {
+      trackedEntity: selectedMember.id,
+      program: programMetadataMember.id,
+    });
   } else {
     memberTEI = yield call(
       dataApi.getTrackedEntityInstanceById,

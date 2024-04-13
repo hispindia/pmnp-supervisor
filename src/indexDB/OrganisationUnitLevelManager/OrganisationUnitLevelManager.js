@@ -1,8 +1,6 @@
-import db from "./db";
+import db from "../db";
 import { metadataApi } from "@/api";
-
-export const TABLE_FIELDS = "id, level, displayName";
-export const TABLE_NAME = "organisationsUnitLevel";
+import { TABLE_NAME } from ".";
 
 export const pull = async () => {
   try {

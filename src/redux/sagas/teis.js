@@ -16,7 +16,7 @@ import {
   sort,
 } from "../actions/teis";
 import { returnFilterString } from "../../utils";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 function* getTeis(newPayload = {}) {
   const { offlineStatus } = yield select((state) => state.common);
@@ -45,7 +45,7 @@ function* getTeis(newPayload = {}) {
 
     // OFFLINE MODE
     if (offlineStatus) {
-      instanceList = yield call(trackedEntityInstanceManager.find, {
+      instanceList = yield call(trackedEntityManager.find, {
         orgUnit: selectedOrgUnit.id,
         program: programMetadata.id,
         pageSize: nextPayload.pageSize,

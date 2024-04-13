@@ -1,8 +1,8 @@
 import { metadataApi } from "@/api";
-import * as meManager from "@/indexDB/MeManager";
-import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager";
-import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager";
-import * as programManager from "@/indexDB/ProgramManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
+import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
+import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
 
 export const getMetadataSet = (isOfflineMode) => {
   if (isOfflineMode) {

@@ -1,24 +1,22 @@
-import db from "./db";
+import db from "../db";
 
-export const TABLE_NAME = "trackedEntity";
-export const TABLE_FIELDS =
-  "++id, trackedEntity, updatedAt, orgUnit, trackedEntityType, isDeleted, isOnline, attribute, valueType, displayName, value";
+import { TABLE_NAME } from ".";
 
 import { dataApi } from "@/api";
 
-import * as enrollmentManager from "@/indexDB/EnrollmentManager";
-import * as eventManager from "@/indexDB/EventManager";
-import * as meManager from "@/indexDB/MeManager";
-import * as orgUnitManager from "@/indexDB/OrganisationUnitManager";
-import * as programManager from "@/indexDB/ProgramManager";
+import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
+import * as eventManager from "@/indexDB/EventManager/EventManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
+import * as orgUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
 
 import { chunk } from "lodash";
-import { toDhis2Enrollments } from "./data/enrollment";
-import { toDhis2Events } from "./data/event";
+import { toDhis2Enrollments } from "../data/enrollment";
+import { toDhis2Events } from "../data/event";
 import {
   toDhis2TrackedEntities,
   toDhis2TrackedEntity,
-} from "./data/trackedEntity";
+} from "../data/trackedEntity";
 
 export const pull = async () => {
   try {

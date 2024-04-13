@@ -1,10 +1,7 @@
-import db from "./db";
+import db from "../db";
 import { groupBy } from "lodash";
 import { metadataApi } from "@/api";
-
-export const TABLE_FIELDS =
-  "id, code, displayName, level, path, withinUserHierarchy";
-export const TABLE_NAME = "organisationUnit";
+import { TABLE_NAME } from ".";
 
 export const pull = async () => {
   try {

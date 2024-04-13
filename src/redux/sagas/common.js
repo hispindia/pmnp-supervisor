@@ -6,13 +6,13 @@ import {
 } from "@/redux/actions/common/type";
 import { loadTei } from "@/redux/actions/data/tei";
 
-import * as meManager from "@/indexDB/MeManager";
-import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager";
-import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager";
-import * as programManager from "@/indexDB/ProgramManager";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
-import * as enrollmentManager from "@/indexDB/EnrollmentManager";
-import * as eventManager from "@/indexDB/EventManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
+import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
+import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
+import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 function* handleOfflineStatusChange({ offlineStatus }) {
   yield put(loadTei(true));
@@ -33,7 +33,7 @@ function* handleOfflineStatusChange({ offlineStatus }) {
       /**
        * pull data from server and save to indexedDB
        * */
-      yield call(trackedEntityInstanceManager.pull);
+      yield call(trackedEntityManager.pull);
       yield call(enrollmentManager.pull);
       yield call(eventManager.pull);
     }
@@ -51,7 +51,7 @@ function* handlePushToServer() {
     /**
      * push data to server by order
      */
-    yield call(trackedEntityInstanceManager.push);
+    yield call(trackedEntityManager.push);
     yield call(enrollmentManager.push);
     yield call(eventManager.push);
   } catch (error) {

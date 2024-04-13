@@ -1,5 +1,5 @@
 import { push } from "connected-react-router";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { dataApi } from "../../../../api";
 import { editingAttributes } from "../../../actions/data";
@@ -75,10 +75,10 @@ function* initExistedDataSaga() {
   // OFFLINE MODE
   if (offlineStatus) {
     // clone new data object
-    data = yield call(
-      trackedEntityInstanceManager.getTrackedEntityInstanceById,
-      { trackedEntity: teiId, program: programId }
-    );
+    data = yield call(trackedEntityManager.getTrackedEntityInstanceById, {
+      trackedEntity: teiId,
+      program: programId,
+    });
   } else {
     // get Family TEI
     data = yield call(dataApi.getTrackedEntityInstanceById, teiId, programId);
@@ -97,10 +97,10 @@ function* initExistedDataSaga() {
 
   // OFFLINE MODE
   if (offlineStatus) {
-    memberTEIs = yield call(
-      trackedEntityInstanceManager.getTrackedEntityInstances,
-      { orgUnit, filters: [`attribute=gv9xX5w4kKt:EQ:${teiId}`] }
-    );
+    memberTEIs = yield call(trackedEntityManager.getTrackedEntityInstances, {
+      orgUnit,
+      filters: [`attribute=gv9xX5w4kKt:EQ:${teiId}`],
+    });
   } else {
     // get Members TEI
     memberTEIs = yield call(
@@ -121,7 +121,7 @@ function* initExistedDataSaga() {
   if (memberTEIsUid && memberTEIsUid.length > 0) {
     if (offlineStatus) {
       memberTEIsEvents = yield call(
-        trackedEntityInstanceManager.getTrackedEntityInstancesByIDs,
+        trackedEntityManager.getTrackedEntityInstancesByIDs,
         {
           program: "xvzrp56zKvI",
           trackedEntities: memberTEIsUid,

@@ -20,8 +20,8 @@ import {
 } from "../../actions/data/tei";
 import { updateCascade } from "../../actions/data/tei/currentCascade";
 import { updateEvents } from "../../actions/data/tei/currentEvent";
-import * as eventManager from "@/indexDB/EventManager";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as eventManager from "@/indexDB/EventManager/EventManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 function* handleSubmitEventDataValues({ dataValues }) {
   console.log("handleSubmitEventDataValues", { dataValues });
@@ -94,7 +94,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
       let memberTEI = {};
       if (offlineStatus) {
         memberTEI = yield call(
-          trackedEntityInstanceManager.getTrackedEntityInstanceById,
+          trackedEntityManager.getTrackedEntityInstanceById,
           {
             trackedEntity: selectedMember.id,
             program: programMetadataMember.id,
@@ -274,7 +274,7 @@ function* pushTEI(updatedMemberTei) {
   try {
     // OFFLINE MODE
     if (offlineStatus) {
-      yield call(trackedEntityInstanceManager.setTrackedEntityInstance, {
+      yield call(trackedEntityManager.setTrackedEntityInstance, {
         trackedEntity: updatedMemberTei.data,
       });
     } else {

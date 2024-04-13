@@ -15,8 +15,8 @@ import { editingAttributes } from "../../actions/data";
 import { getTeiId } from "./utils";
 import moment from "moment";
 import { push } from "connected-react-router";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
-import * as enrollmentManager from "@/indexDB/EnrollmentManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 
 function* handleSubmitAttributes({ attributes }) {
   const { offlineStatus } = yield select((state) => state.common);
@@ -89,7 +89,7 @@ function* putTeiToServer({ currentTei, currentEnrollment, attributes }) {
   );
 
   if (offlineStatus) {
-    yield call(trackedEntityInstanceManager.setTrackedEntityInstance, {
+    yield call(trackedEntityManager.setTrackedEntityInstance, {
       trackedEntity: currentTei,
     });
   } else {
@@ -130,7 +130,7 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
 
     console.log(teiWithEnrollment);
 
-    yield call(trackedEntityInstanceManager.setTrackedEntityInstance, {
+    yield call(trackedEntityManager.setTrackedEntityInstance, {
       trackedEntity: teiWithEnrollment,
     });
   } else {

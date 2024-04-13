@@ -21,8 +21,8 @@ import { updateEvents } from "../../actions/data/tei/currentEvent";
 import { generateUid } from "@/utils";
 
 import moment from "moment";
-import * as eventManager from "@/indexDB/EventManager";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as eventManager from "@/indexDB/EventManager/EventManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 const teiMapping = {
   firstname: "IEE2BMhfoSc",
@@ -218,7 +218,7 @@ function* handleCloneEvent({ year }) {
 
       if (offlineStatus) {
         memberTEIsEvents = yield call(
-          trackedEntityInstanceManager.getTrackedEntityInstancesByIDs,
+          trackedEntityManager.getTrackedEntityInstancesByIDs,
           {
             program: "xvzrp56zKvI",
             trackedEntities: memberTEIsUid,
@@ -294,7 +294,7 @@ function* pushTEIs(updatedMemberTeis) {
   try {
     // OFFLINE MODE
     if (offlineStatus) {
-      yield call(trackedEntityInstanceManager.setTrackedEntityInstances, {
+      yield call(trackedEntityManager.setTrackedEntityInstances, {
         trackedEntities: updatedMemberTeis,
       });
     } else {
