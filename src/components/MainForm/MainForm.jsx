@@ -31,9 +31,6 @@ const MainForm = ({
                 marginBottom: 10,
               }}
             >
-              <Button type="primary">
-                <BarChartOutlined />
-              </Button>
               <Button type="text">
                 <CloseOutlined onClick={onCloseClick} />
               </Button>
@@ -50,7 +47,6 @@ const MainForm = ({
           key="2"
         >
           <FMLayoutContainer />
-          <div>FMLayoutContainer</div>
         </TabPane>
         <TabPane
           tab={t("censusDetails")}

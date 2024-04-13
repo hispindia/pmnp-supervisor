@@ -387,7 +387,7 @@ const CascadeTable = (props) => {
 
         {/* <hr className="mb-4" /> */}
         <div className="row">
-          <div className="col-md-4 order-md-4 mb-4">
+          <div className="pl-3 mb-sm-4 mb-1 mr-auto mr-sm-0">
             <Button
               type="button"
               size="sm"
@@ -399,12 +399,12 @@ const CascadeTable = (props) => {
               {uiLocale.addNewMember}
             </Button>
           </div>
-          <div className="col-md-4 order-md-4 mb-4">
+          {/* <div className="col-md-4 order-md-4 mb-4">
             <div>{externalComponents && externalComponents["nextButton"]}</div>
-          </div>
+          </div> */}
         </div>
         <div className="row">
-          <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto">
+          <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive">
             <BootstrapTable
               keyField="id"
               data={showData}

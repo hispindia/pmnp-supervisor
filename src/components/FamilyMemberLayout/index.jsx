@@ -1,7 +1,7 @@
 import React from "react";
 import { SnackbarProvider } from "notistack";
 
-import { Col, Row } from "antd";
+import { Col, Row, Flex } from "antd";
 
 /* containers */
 import FamilyMemberFormContainer from "../../containers/FamilyMemberForm";
@@ -13,14 +13,14 @@ import "./index.css";
 const FamilyMemberLayout = () => {
   return (
     <SnackbarProvider maxSnack={3}>
-      <Row wrap={false} gutter={16}>
-        <Col className="leftBar">
+      <div className="wrapper">
+        <div className="leftBar pl-3">
           <SideBarContainer />
-        </Col>
-        <Col className="rightBar">
+        </div>
+        <div className="rightBar">
           <FamilyMemberFormContainer />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </SnackbarProvider>
   );
 };

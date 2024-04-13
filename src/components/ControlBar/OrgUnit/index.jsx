@@ -13,7 +13,7 @@ const OrgUnit = ({
 }) => {
   return (
     <Row justify="center" align="middle">
-      <Col>
+      <Col className="d-none d-sm-block">
         <div
           style={{
             paddingRight: 8,
