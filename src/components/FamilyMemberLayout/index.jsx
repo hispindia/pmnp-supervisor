@@ -13,8 +13,8 @@ import "./index.css";
 const FamilyMemberLayout = () => {
   return (
     <SnackbarProvider maxSnack={3}>
-      <div className="wrapper">
-        <div className="leftBar pl-3">
+      <div className="wrapper mt-2">
+        <div className="leftBar mr-3">
           <SideBarContainer />
         </div>
         <div className="rightBar">

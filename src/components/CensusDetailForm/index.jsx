@@ -728,13 +728,21 @@ const CensusDetailForm = ({
     >
       <div className="d-md-flex">
         <Col className="leftBar mr-2 mt-2">
+          <SideBarContainer />
+
           <Row justify="center">
-            <Button type="primary" htmlType="submit" className="mb-2">
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="mt-2"
+              style={{
+                width: "100%",
+                backgroundColor: "#4CAF50",
+              }}
+            >
               {t("save")}
             </Button>
           </Row>
-
-          <SideBarContainer />
         </Col>
 
         <Col className="rightBar">

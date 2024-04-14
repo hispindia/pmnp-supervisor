@@ -387,7 +387,7 @@ const CascadeTable = (props) => {
 
         {/* <hr className="mb-4" /> */}
         <div className="row">
-          <div className="pl-3 mb-4 mr-auto mr-sm-0">
+          <div className="mb-4 mr-auto mr-sm-0">
             <Button
               type="button"
               size="sm"
@@ -405,7 +405,7 @@ const CascadeTable = (props) => {
           </div> */}
         </div>
         <div className="row">
-          <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive">
+          <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive pl-0">
             <BootstrapTable
               keyField="id"
               data={showData}

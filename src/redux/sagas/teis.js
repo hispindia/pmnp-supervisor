@@ -70,7 +70,14 @@ function* getTeis(newPayload = {}) {
     yield all([
       put(filter(nextPayload.filters)),
       put(sort(nextPayload.orderString)),
-      put(changePager(instanceList.pager)),
+      put(
+        changePager({
+          page: instanceList.page,
+          pageSize: instanceList.pageSize,
+          total: instanceList.total,
+          pageCount: instanceList.pageCount,
+        })
+      ),
     ]);
     yield put(
       getTeisSuccessMessage("Get tracked entity instances successfully")
