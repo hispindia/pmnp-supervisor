@@ -1,25 +1,19 @@
-import React from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-
-import { Button, IconButton } from "@material-ui/core";
-
+import { Button } from "antd";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 
 // Icons
-import ClearIcon from "@material-ui/icons/Clear";
+import { CloseOutlined } from "@ant-design/icons";
 
-const DeleteConfirmationButton = withDeleteConfirmation(IconButton);
+const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
 const DeleteButton = ({ event, onHandleDelete }) => {
   return (
     <DeleteConfirmationButton
-      variant="outline-danger"
-      size="sm"
       // className={`${yearDeleteItem}`}
       // disableFocusRipple={true}
       // disableRipple={true}
       // disabled={event.status != "ACTIVE"}
-      color="secondary"
+      danger
       messageText={"This process cannot be undone!"}
       cancelText={"Cancel"}
       deleteText={"Delete"}
@@ -27,9 +21,9 @@ const DeleteButton = ({ event, onHandleDelete }) => {
       onDelete={(e) => {
         onHandleDelete(e, event.event);
       }}
-    >
-      <ClearIcon fontSize="small" />
-    </DeleteConfirmationButton>
+      type="link"
+      icon={<CloseOutlined style={{ fontSize: "16px", color: "" }} />}
+    ></DeleteConfirmationButton>
   );
 };
 

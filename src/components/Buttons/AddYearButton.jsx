@@ -1,23 +1,9 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
 import withDatePickerDialog from "../../hocs/withDatePickerDialog";
 
-import { Button } from "@material-ui/core";
+import { Button } from "antd";
 import { useTranslation } from "react-i18next";
-
-const useButtonStyle = makeStyles({
-  root: {
-    width: "100px",
-    margin: "10px",
-  },
-});
 
 const AddYearButtonWithDatePickerDialog = withDatePickerDialog(Button);
 
@@ -33,7 +19,6 @@ const AddYearButton = forwardRef(
     },
     ref
   ) => {
-    const buttonStyle = useButtonStyle();
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -52,9 +37,10 @@ const AddYearButton = forwardRef(
     return (
       <>
         <AddYearButtonWithDatePickerDialog
-          classes={buttonStyle}
-          size="small"
-          variant="contained"
+          style={{ width: "100px", margin: "10px auto" }}
+          // size="small"
+          type="primary"
+          // variant="contained"
           // disableElevation
           selectedDate={selectedYear}
           onChange={handleAddSelectedYear}

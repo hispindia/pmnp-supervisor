@@ -28,6 +28,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@vite-pwa/assets-generator": "^0.2.4",
+    "ant-responsive-table": "^1.0.8",
     "antd": "^5.12.5",
     "axios": "^1.2.2",
     "babel-preset-es2015": "^6.24.1",

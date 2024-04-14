@@ -420,7 +420,7 @@ const locale = {
     en: "Form no. {{number}} already existing for the village {{orgName}}. Enter a different Form No.",
     lo: "ຟອມເລກທີ {{number}} ໄດ້ຖືກລົງທະບຽນໃນ {{orgName}} ໄປແລ້ວ, ກະລຸນາກວດຄືນ ຫຼື ລົງທະບຽນເລກທີຟອມໃໝ່.",
   },
-  addYear: { en: "ADD YEAR", lo: "ເພີ່ມປີ" },
+  addYear: { en: "Add Year", lo: "ເພີ່ມປີ" },
   addNewMember: { en: "Add New Member", lo: "ເພີ່ມສະມາຊິກໃໝ່" },
   number: { en: "No.", lo: "ລຳດັບ" },
   relationWithHead: {

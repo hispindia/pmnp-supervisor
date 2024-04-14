@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Popconfirm, Table } from "antd";
+import { Button, Popconfirm } from "antd";
+import Table from "ant-responsive-table";
 import "./index.css";
 import { TableColumn, TableFilter } from "../../utils";
 import { DeleteTwoTone } from "@ant-design/icons";
@@ -22,6 +23,8 @@ const RegisteredTeiList = ({
   const { t } = useTranslation();
   const deleteColumn = {
     width: 72,
+    showOnResponse: true,
+    showOnDesktop: true,
     render: (text, record, index) => {
       return (
         <div onClick={(e) => e.stopPropagation()}>
@@ -59,6 +62,8 @@ const RegisteredTeiList = ({
               onFilter={onFilter}
             />
           ),
+          showOnResponse: true,
+          showOnDesktop: true,
           render: (value) => <TableColumn metadata={tea} value={value} />,
         };
         return teaObject;
@@ -132,38 +137,74 @@ const RegisteredTeiList = ({
 
   return (
     <Table
-      onRow={(record, rowIndex) => {
-        return {
-          onClick: (event) => {
-            onRowClick(record, rowIndex, event);
-          },
-        };
+      antTableProps={{
+        onRow: (record, rowIndex) => {
+          return {
+            onClick: (event) => {
+              onRowClick(record, rowIndex, event);
+            },
+          };
+        },
+        sticky: true,
+        columns: [deleteColumn].concat(createColumns()),
+        dataSource: createDataSource(),
+        scroll: { y: "calc(100vh - 268px)" },
+        bordered: true,
+
+        pagination: {
+          position: ["bottomCenter"],
+          showSizeChanger: true,
+          current: page,
+          pageSize: pageSize,
+          total: total,
+          onChange: onChangePage,
+        },
+        onChangePage: onChangePage,
+        onChange: (
+          pagination,
+          filters,
+          sorter,
+          { currentDataSource: [], action }
+        ) => {
+          if (action === "sort") {
+            onSort(sorter);
+          }
+        },
       }}
-      sticky
-      tableLayout={"fixed"}
-      columns={[deleteColumn].concat(createColumns())}
-      dataSource={createDataSource()}
-      scroll={{ y: "calc(100vh - 268px)" }}
-      bordered={true}
-      pagination={{
-        position: ["bottomCenter"],
-        showSizeChanger: true,
-        current: page,
-        pageSize: pageSize,
-        total: total,
-        onChange: onChangePage,
-      }}
-      onChange={(
-        pagination,
-        filters,
-        sorter,
-        { currentDataSource: [], action }
-      ) => {
-        if (action === "sort") {
-          onSort(sorter);
-        }
-      }}
-      onChangePage={onChangePage}
+      mobileBreakPoint={768}
+
+      // onRow={(record, rowIndex) => {
+      //   return {
+      //     onClick: (event) => {
+      //       onRowClick(record, rowIndex, event);
+      //     },
+      //   };
+      // }}
+      // sticky
+      // tableLayout={"fixed"}
+      // columns={[deleteColumn].concat(createColumns())}
+      // dataSource={createDataSource()}
+      // scroll={{ y: "calc(100vh - 268px)" }}
+      // bordered={true}
+      // pagination={{
+      //   position: ["bottomCenter"],
+      //   showSizeChanger: true,
+      //   current: page,
+      //   pageSize: pageSize,
+      //   total: total,
+      //   onChange: onChangePage,
+      // }}
+      // onChange={(
+      //   pagination,
+      //   filters,
+      //   sorter,
+      //   { currentDataSource: [], action }
+      // ) => {
+      //   if (action === "sort") {
+      //     onSort(sorter);
+      //   }
+      // }}
+      // onChangePage={onChangePage}
     />
   );
 };

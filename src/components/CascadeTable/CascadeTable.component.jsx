@@ -391,6 +391,7 @@ const CascadeTable = (props) => {
             <Button
               type="button"
               size="sm"
+              style={{ width: 160 }}
               className="btn btn-success"
               onClick={() => handleBeforeAddNewRow()}
               aria-controls="collapseExample"
