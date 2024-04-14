@@ -23,8 +23,6 @@ const RegisteredTeiList = ({
   const { t } = useTranslation();
   const deleteColumn = {
     width: 72,
-    showOnResponse: true,
-    showOnDesktop: true,
     render: (text, record, index) => {
       return (
         <div onClick={(e) => e.stopPropagation()}>
@@ -44,6 +42,8 @@ const RegisteredTeiList = ({
         </div>
       );
     },
+    showOnResponse: true,
+    showOnDesktop: true,
   };
 
   const createColumns = () => {

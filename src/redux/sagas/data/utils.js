@@ -190,7 +190,7 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     enrollment: enrollment,
     trackedEntityType: "MCPQUTHX1Ze",
     enrolledAt: memberEnrollment.enrolledAt,
-    occurredAt: memberEnrollment.occurredAt,
+    occurredAt: memberEnrollment.enrolledAt,
     incidentDate: memberEnrollment.enrolledAt,
     status: "ACTIVE",
     events: [],

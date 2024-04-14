@@ -374,7 +374,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/tracker`,
+      `/api/tracker?async=false`,
       tei,
       "POST"
     );
@@ -385,7 +385,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/tracker`,
+      `/api/tracker?async=false`,
       teis,
       "POST"
     );
