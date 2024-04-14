@@ -23,25 +23,30 @@ const RegisteredTeiList = ({
   const { t } = useTranslation();
   const deleteColumn = {
     width: 72,
-    render: (text, record, index) => {
-      return (
-        <div onClick={(e) => e.stopPropagation()}>
-          <Popconfirm
-            placement="bottomLeft"
-            title={t("deleteDialogTitle")}
-            onConfirm={() => onDeleteTei(record)}
-            okText={t("yes")}
-            cancelText={t("no")}
-          >
-            <Button
-              icon={<DeleteTwoTone twoToneColor="#cf1322" />}
-              type="text"
-              danger
-            />
-          </Popconfirm>
-        </div>
-      );
-    },
+    key: "deleteKey",
+    render: (text, record, index) => (
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: "20px",
+          height: "20px",
+        }}
+      >
+        <Popconfirm
+          placement="bottomLeft"
+          title={t("deleteDialogTitle")}
+          onConfirm={() => onDeleteTei(record)}
+          okText={t("yes")}
+          cancelText={t("no")}
+        >
+          <Button
+            icon={<DeleteTwoTone twoToneColor="#cf1322" />}
+            type="text"
+            danger
+          />
+        </Popconfirm>
+      </div>
+    ),
     showOnResponse: true,
     showOnDesktop: true,
   };
