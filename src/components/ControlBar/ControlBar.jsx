@@ -10,6 +10,7 @@ import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButt
 import { setSelectedOrgUnit } from "../../redux/actions/metadata";
 import OfflineModeButton from "@/containers/ControlBar/OfflineModeButton";
 import PushToServerButton from "@/containers/ControlBar/PushToServerButton";
+import { MenuOutlined } from "@ant-design/icons";
 
 const { controlBarContainer } = styles;
 
@@ -20,14 +21,10 @@ const items = [
   },
   {
     key: "2",
-    label: <ReportButtonContainer />,
-  },
-  {
-    key: "3",
     label: <OfflineModeButton />,
   },
   {
-    key: "4",
+    key: "3",
     label: <PushToServerButton />,
   },
 ];
@@ -50,7 +47,11 @@ const ControlBar = () => {
               //   dropdownRender={(menu) => <div>{cloneElement(menu)}</div>}
             >
               <a onClick={(e) => e.preventDefault()}>
-                <Button>Menu</Button>
+                {/* hamburger icon */}
+
+                <Button>
+                  <MenuOutlined />
+                </Button>
               </a>
             </Dropdown>
           </div>
@@ -59,7 +60,7 @@ const ControlBar = () => {
             <AddNewFamilyButtonContainer />
           </div>
 
-          <div className="d-none d-md-block">
+          <div className="d-none d-lg-block">
             <ReportButtonContainer />
           </div>
         </div>

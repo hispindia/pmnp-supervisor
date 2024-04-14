@@ -387,7 +387,7 @@ const CascadeTable = (props) => {
 
         {/* <hr className="mb-4" /> */}
         <div className="row">
-          <div className="pl-3 mb-sm-4 mb-1 mr-auto mr-sm-0">
+          <div className="pl-3 mb-4 mr-auto mr-sm-0">
             <Button
               type="button"
               size="sm"
