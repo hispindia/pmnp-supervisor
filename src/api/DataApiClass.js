@@ -365,7 +365,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/tracker?program=${program}`,
+      `/api/tracker?async=false&program=${program}`,
       tei
     );
 
@@ -414,7 +414,13 @@ export default class DataApiClass extends BaseApiClass {
     );
 
   pushEvents = (events) =>
-    push(this.baseUrl, this.username, this.password, `/api/tracker`, events);
+    push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker?async=false`,
+      events
+    );
 
   deleteEvent = async (event) => {
     const result = await push(

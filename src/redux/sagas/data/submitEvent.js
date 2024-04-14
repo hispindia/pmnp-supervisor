@@ -213,6 +213,8 @@ function* handleCloneEvent({ year }) {
       ? cascadeDataValue.map((r) => r.id)
       : null;
 
+    console.log("Clone member events", { memberTEIsUid });
+
     if (memberTEIsUid && memberTEIsUid.length > 0) {
       let memberTEIsEvents = null;
 
@@ -231,10 +233,10 @@ function* handleCloneEvent({ year }) {
           memberTEIsUid
         );
       }
-
+      console.log({ memberTEIsEvents });
       if (memberTEIsEvents) {
         const memberTEIsWithEvents = memberTEIsEvents
-          ? memberTEIsEvents.trackedEntities
+          ? memberTEIsEvents.instances
           : [];
 
         let updatedMemberTeis = [];
@@ -276,7 +278,7 @@ function* handleCloneEvent({ year }) {
 
         console.log("handleCloneEvent", newMembersTEIPayload);
 
-        yield call(pushTEIs, newMembersTEIPayload);
+        yield call(pushTEIs, ...newMembersTEIPayload);
       }
     }
   } catch (e) {
