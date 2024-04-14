@@ -276,9 +276,9 @@ function* handleCloneEvent({ year }) {
         // push member TEI and events
         let newMembersTEIPayload = updatedMemberTeis.map((u) => u.data);
 
-        console.log("handleCloneEvent", newMembersTEIPayload);
+        console.log("handleCloneEvent", { newMembersTEIPayload });
 
-        yield call(pushTEIs, ...newMembersTEIPayload);
+        yield call(pushTEIs, newMembersTEIPayload);
       }
     }
   } catch (e) {
@@ -291,7 +291,7 @@ function* handleCloneEvent({ year }) {
 }
 
 function* pushTEIs(updatedMemberTeis) {
-  console.log("pushTEIs");
+  console.log("pushTEIs", { updatedMemberTeis });
   const { offlineStatus } = yield select((state) => state.common);
   try {
     // OFFLINE MODE
@@ -301,7 +301,7 @@ function* pushTEIs(updatedMemberTeis) {
       });
     } else {
       yield call(dataApi.postTrackedEntityInstances, {
-        trackedEntities: [updatedMemberTeis],
+        trackedEntities: updatedMemberTeis,
       });
     }
   } catch (e) {

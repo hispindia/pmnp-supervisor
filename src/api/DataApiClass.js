@@ -427,7 +427,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/tracker?importStrategy=DELETE`,
+      `/api/tracker?importStrategy=DELETE&async=false`,
       event
     );
     return result.status == "OK";
