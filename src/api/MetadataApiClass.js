@@ -146,19 +146,17 @@ export default class MetadataApiClass extends BaseApiClass {
   };
 
   getUserOrgUnits = async () => {
-    return process.env.NODE_ENV == "development"
-      ? dev_data.organisationUnits
-      : pull(
-          this.baseUrl,
-          this.username,
-          this.password,
-          "/api/organisationUnits",
-          { paging: false },
-          [
-            "withinUserHierarchy=true",
-            "fields=id,code,path,displayName,level,parent,translations",
-          ]
-        );
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      "/api/organisationUnits",
+      { paging: false },
+      [
+        "withinUserHierarchy=true",
+        "fields=id,code,path,displayName,level,parent,translations",
+      ]
+    );
   };
 
   getProgramMetadataTest = async (program) => {

@@ -1,12 +1,8 @@
-import React from "react";
-import { Button, Popconfirm } from "antd";
-import Table from "ant-responsive-table";
-import "./index.css";
-import { TableColumn, TableFilter } from "../../utils";
 import { DeleteTwoTone } from "@ant-design/icons";
+import { Button, Popconfirm, Table } from "antd";
 import { useTranslation } from "react-i18next";
-
-/* Components */
+import { TableColumn, TableFilter } from "../../utils";
+import "./index.css";
 
 const RegisteredTeiList = ({
   teis,
@@ -22,7 +18,7 @@ const RegisteredTeiList = ({
 }) => {
   const { t } = useTranslation();
   const deleteColumn = {
-    width: 72,
+    width: 56,
     key: "deleteKey",
     render: (text, record, index) => (
       <div
@@ -42,13 +38,12 @@ const RegisteredTeiList = ({
           <Button
             icon={<DeleteTwoTone twoToneColor="#cf1322" />}
             type="text"
+            size="small"
             danger
           />
         </Popconfirm>
       </div>
     ),
-    showOnResponse: true,
-    showOnDesktop: true,
   };
 
   const createColumns = () => {
@@ -67,16 +62,15 @@ const RegisteredTeiList = ({
               onFilter={onFilter}
             />
           ),
-          showOnResponse: true,
-          showOnDesktop: true,
           render: (value) => <TableColumn metadata={tea} value={value} />,
         };
+
         return teaObject;
       });
     const lastUpdatedObject = {
       title: t("lastUpdated"),
-      dataIndex: "lastupdated",
-      key: "lastupdated",
+      dataIndex: "occurredAt",
+      key: "occurredAt",
       sorter: true,
       // filterDropdown: TableFilter(null, onFilter, {
       //   name: "lastupdated",
@@ -85,7 +79,7 @@ const RegisteredTeiList = ({
       render: (value) => (
         <TableColumn
           metadata={null}
-          external={{ name: "lastupdated", type: "DATE" }}
+          external={{ name: "occurredAt", type: "DATE" }}
           value={value}
         />
       ),
@@ -142,74 +136,74 @@ const RegisteredTeiList = ({
 
   return (
     <Table
-      antTableProps={{
-        onRow: (record, rowIndex) => {
-          return {
-            onClick: (event) => {
-              onRowClick(record, rowIndex, event);
-            },
-          };
-        },
-        sticky: true,
-        columns: [deleteColumn].concat(createColumns()),
-        dataSource: createDataSource(),
-        scroll: { y: "calc(100vh - 268px)" },
-        bordered: true,
+      // antTableProps={{
+      //   onRow: (record, rowIndex) => {
+      //     return {
+      //       onClick: (event) => {
+      //         onRowClick(record, rowIndex, event);
+      //       },
+      //     };
+      //   },
+      //   sticky: true,
+      //   columns: [deleteColumn].concat(createColumns()),
+      //   dataSource: createDataSource(),
+      //   scroll: { y: "calc(100vh - 268px)" },
+      //   bordered: true,
 
-        pagination: {
-          position: ["bottomCenter"],
-          showSizeChanger: true,
-          current: page,
-          pageSize: pageSize,
-          total: total,
-          onChange: onChangePage,
-        },
-        onChangePage: onChangePage,
-        onChange: (
-          pagination,
-          filters,
-          sorter,
-          { currentDataSource: [], action }
-        ) => {
-          if (action === "sort") {
-            onSort(sorter);
-          }
-        },
-      }}
-      mobileBreakPoint={768}
-
-      // onRow={(record, rowIndex) => {
-      //   return {
-      //     onClick: (event) => {
-      //       onRowClick(record, rowIndex, event);
-      //     },
-      //   };
+      //   pagination: {
+      //     position: ["bottomCenter"],
+      //     showSizeChanger: true,
+      //     current: page,
+      //     pageSize: pageSize,
+      //     total: total,
+      //     onChange: onChangePage,
+      //   },
+      //   onChangePage: onChangePage,
+      //   onChange: (
+      //     pagination,
+      //     filters,
+      //     sorter,
+      //     { currentDataSource: [], action }
+      //   ) => {
+      //     if (action === "sort") {
+      //       onSort(sorter);
+      //     }
+      //   },
       // }}
+      // mobileBreakPoint={768}
+
+      onRow={(record, rowIndex) => {
+        return {
+          onClick: (event) => {
+            onRowClick(record, rowIndex, event);
+          },
+        };
+      }}
       // sticky
       // tableLayout={"fixed"}
-      // columns={[deleteColumn].concat(createColumns())}
-      // dataSource={createDataSource()}
-      // scroll={{ y: "calc(100vh - 268px)" }}
-      // bordered={true}
-      // pagination={{
-      //   position: ["bottomCenter"],
-      //   showSizeChanger: true,
-      //   current: page,
-      //   pageSize: pageSize,
-      //   total: total,
-      //   onChange: onChangePage,
-      // }}
-      // onChange={(
-      //   pagination,
-      //   filters,
-      //   sorter,
-      //   { currentDataSource: [], action }
-      // ) => {
-      //   if (action === "sort") {
-      //     onSort(sorter);
-      //   }
-      // }}
-      // onChangePage={onChangePage}
+      columns={[deleteColumn].concat(createColumns())}
+      dataSource={createDataSource()}
+      scroll={{ /*y: "calc(100vh - 268px)",*/ x: 900 }}
+      bordered={true}
+      pagination={{
+        position: ["bottomCenter"],
+        showSizeChanger: true,
+        current: page,
+        pageSize: pageSize,
+        total: total,
+        onChange: onChangePage,
+      }}
+      onChange={(
+        pagination,
+        filters,
+        sorter,
+        { currentDataSource: [], action }
+      ) => {
+        if (action === "sort") {
+          onSort(sorter);
+        }
+      }}
+      onChangePage={onChangePage}
     />
   );
 };

@@ -41,7 +41,7 @@ const RegisteredTeiListContainer = () => {
   } = useSelector((state) => state.teis);
   const history = useHistory();
 
-  console.log({ page, pageSize, total });
+  console.log({ trackedEntityAttributes });
 
   useEffect(() => {
     dispatch(getTeis());
