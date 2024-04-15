@@ -146,7 +146,7 @@ export default class MetadataApiClass extends BaseApiClass {
   };
 
   getUserOrgUnits = async () => {
-    return process.env.NODE_ENV !== "development"
+    return process.env.NODE_ENV == "development"
       ? dev_data.organisationUnits
       : pull(
           this.baseUrl,
