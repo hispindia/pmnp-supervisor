@@ -5,6 +5,7 @@ import { getTeiSuccess, changeEventFamily } from "../../../actions/data/tei";
 import moment from "moment";
 
 function* handleInitData(trackedEntity) {
+  console.log("handleInitData", { trackedEntity });
   const programStages = yield select(
     (state) => state.metadata.programMetadata.programStages
   );

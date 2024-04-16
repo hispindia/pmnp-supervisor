@@ -65,7 +65,12 @@ export const pull = async () => {
               `TEI = (page=${page}/${result.pageCount}, count=${result.instances.length})`
             );
 
-            await persist(await beforePersist(result));
+            const resultTrackEntities = {
+              ...result,
+              trackedEntities: result.instances,
+            };
+
+            await persist(await beforePersist(resultTrackEntities));
 
             // Update total pages
             totalPages = result.pageCount;
@@ -196,7 +201,7 @@ const beforePersist = async (result, isOnline = 1) => {
   const objects = [];
   const ids = [];
 
-  const trackedEntities = result.instances;
+  const trackedEntities = result.trackedEntities;
 
   if (!trackedEntities) {
     return objects;
@@ -263,7 +268,7 @@ export const find = async ({
 }) => {
   try {
     const result = {
-      trackedEntities: [],
+      instances: [],
     };
 
     // get child orgUnits
@@ -317,7 +322,7 @@ export const find = async ({
       .anyOf(trackedEntities)
       .toArray();
 
-    result.trackedEntities = toDhis2TrackedEntities(teis);
+    result.instances = toDhis2TrackedEntities(teis);
 
     if (paging) {
       result.pager = pager;
@@ -379,7 +384,7 @@ export const getTrackedEntityInstances = async ({ orgUnit, filters }) => {
     .toArray();
 
   return {
-    trackedEntities: toDhis2TrackedEntities(teis),
+    instances: toDhis2TrackedEntities(teis),
   };
 };
 
@@ -414,7 +419,7 @@ export const getTrackedEntityInstancesByIDs = async ({
   }
 
   return {
-    trackedEntities: teis,
+    instances: teis,
   };
 };
 

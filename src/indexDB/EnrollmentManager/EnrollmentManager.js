@@ -25,7 +25,7 @@ export const pull = async () => {
             }
 
             const result = await dataApi.get(
-              "/api/enrollments",
+              "/api/tracker/enrollments",
               {
                 paging: true,
                 totalPages: true,
@@ -54,18 +54,23 @@ export const pull = async () => {
             );
 
             if (
-              !result.enrollments ||
-              result.enrollments.length === 0 ||
-              page > result.pager.pageCount
+              !result.instances ||
+              result.instances.length === 0 ||
+              page > result.pageCount
             ) {
               break;
             }
 
             console.log(
-              `ENROLLMENT = ${program.id} (page=${page}/${result.pager.pageCount}, count=${result.enrollments.length})`
+              `ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`
             );
 
-            await persist(await beforePersist([result], program.id));
+            const resultEnrollments = {
+              ...result,
+              enrollments: result.instances,
+            };
+
+            await persist(await beforePersist([resultEnrollments], program.id));
           }
         } catch (error) {
           console.log("Enrollment:pull", error);
@@ -98,6 +103,7 @@ export const push = async () => {
 };
 
 const persist = async (enrollments) => {
+  console.log("persist", { enrollments });
   await db[TABLE_NAME].bulkPut(enrollments);
 };
 
