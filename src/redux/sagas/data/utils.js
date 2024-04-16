@@ -27,11 +27,19 @@ export function* getCurrentEvent() {
   const currentEvents = yield select(
     (state) => state.data.tei.data.currentEvents
   );
+
+  // cannot be used anymor because familyEvents structure has been changed
   const currentEventIndex = yield select(
     (state) => state.data.tei.selectedYear.index
   );
+  const currentYear = yield select((state) => state.data.tei.selectedYear.year);
 
-  return currentEvents[currentEventIndex];
+  // get current event by year
+  const currentEvent = currentEvents.find(
+    (e) => moment(e.occurredAt).year() == currentYear
+  );
+
+  return currentEvent;
 }
 
 export function* makeNewCurrentEvent(dataValues) {

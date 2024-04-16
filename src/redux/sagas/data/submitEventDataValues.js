@@ -299,16 +299,6 @@ function* makeNewCurrentEventPayload(dataValues) {
   };
 }
 
-function* getCurrentEvent() {
-  const currentEvents = yield select(
-    (state) => state.data.tei.data.currentEvents
-  );
-  const currentEventIndex = yield select(
-    (state) => state.data.tei.selectedYear.index
-  );
-  return currentEvents[currentEventIndex];
-}
-
 export default function* submitAttributes() {
   yield takeLatest(SUBMIT_EVENT_DATA_VALUES, handleSubmitEventDataValues);
 }
