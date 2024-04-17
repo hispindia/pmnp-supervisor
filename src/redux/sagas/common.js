@@ -1,9 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 
-import {
-  SET_OFFLINE_STATUS,
-  PUSH_TO_SERVER,
-} from "@/redux/actions/common/type";
+import { SET_OFFLINE_STATUS, PUSH_TO_SERVER } from "@/redux/actions/common/type";
 import { loadTei } from "@/redux/actions/data/tei";
 
 import * as meManager from "@/indexDB/MeManager/MeManager";
@@ -13,6 +10,7 @@ import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
+import { setCurrentOfflineLoading } from "../actions/common";
 
 function* handleOfflineStatusChange({ offlineStatus }) {
   yield put(loadTei(true));
@@ -25,17 +23,22 @@ function* handleOfflineStatusChange({ offlineStatus }) {
       /**
        * pull metadata from server and save to indexedDB
        * */
+      yield put(setCurrentOfflineLoading({ id: "metadata", percent: 0 }));
       yield call(meManager.pull);
+      yield put(setCurrentOfflineLoading({ id: "metadata", percent: 15 }));
       yield call(organisationUnitLevelsManager.pull);
+      yield put(setCurrentOfflineLoading({ id: "metadata", percent: 30 }));
       yield call(organisationUnitManager.pull);
+      yield put(setCurrentOfflineLoading({ id: "metadata", percent: 70 }));
       yield call(programManager.pull);
+      yield put(setCurrentOfflineLoading({ id: "metadata", percent: 100 }));
 
       /**
        * pull data from server and save to indexedDB
        * */
-      yield call(trackedEntityManager.pull);
-      yield call(enrollmentManager.pull);
-      yield call(eventManager.pull);
+      // yield call(trackedEntityManager.pull);
+      // yield call(enrollmentManager.pull);
+      // yield call(eventManager.pull);
     }
   } catch (error) {
   } finally {
