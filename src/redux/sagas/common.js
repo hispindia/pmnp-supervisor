@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 
-import { SET_OFFLINE_STATUS, PUSH_TO_SERVER } from "@/redux/actions/common/type";
+import { PUSH_TO_SERVER, SET_OFFLINE_LOADING_STATUS, SET_OFFLINE_STATUS } from "@/redux/actions/common/type";
 import { loadTei } from "@/redux/actions/data/tei";
 
 import * as meManager from "@/indexDB/MeManager/MeManager";
@@ -13,14 +13,9 @@ import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 import { setCurrentOfflineLoading } from "../actions/common";
 
-function* handleOfflineStatusChange({ offlineStatus }) {
-  yield put(loadTei(true));
-
+function* handleOfflineLoadingStatusChange({ offlineLoading }) {
   try {
-    // save offline status to localStorage
-    localStorage.setItem("offlineStatus", offlineStatus);
-
-    if (offlineStatus) {
+    if (offlineLoading) {
       /**
        * pull metadata from server and save to indexedDB
        * */
@@ -95,11 +90,14 @@ function* handleOfflineStatusChange({ offlineStatus }) {
       }
     }
   } catch (error) {
-    console.log("handleOfflineStatusChange - error", error);
+    console.log("handleOfflineLoadingStatusChange - error", error);
   } finally {
-    console.log("offlineStatus changed", offlineStatus);
-    yield put(loadTei(false));
+    console.log("offlineLoading changed", offlineLoading);
   }
+}
+
+function* handleOfflineStatusChange({ offlineStatus }) {
+  localStorage.setItem("offlineStatus", offlineStatus);
 }
 
 function* handlePushToServer() {
@@ -122,5 +120,6 @@ function* handlePushToServer() {
 
 export default function* commonSaga() {
   yield takeLatest(SET_OFFLINE_STATUS, handleOfflineStatusChange);
+  yield takeLatest(SET_OFFLINE_LOADING_STATUS, handleOfflineLoadingStatusChange);
   yield takeLatest(PUSH_TO_SERVER, handlePushToServer);
 }

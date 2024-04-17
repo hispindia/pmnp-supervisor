@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import PrepareOfflineModal from "./PrepareOfflineModal";
-import { setOfflineStatus } from "@/redux/actions/common";
+import { setOfflineLoadingStatus, setOfflineStatus } from "@/redux/actions/common";
 
 const OfflineModeButton = () => {
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ const OfflineModeButton = () => {
         checked={offlineStatus}
         onChange={(checked) => {
           if (checked) {
-            dispatch(setOfflineStatus(true));
+            dispatch(setOfflineLoadingStatus(true));
             setPrepareModalOpen(true);
           } else {
             dispatch(setOfflineStatus(false));

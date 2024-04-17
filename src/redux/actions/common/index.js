@@ -5,9 +5,9 @@ export const setOfflineStatus = (offlineStatus) => ({
   offlineStatus,
 });
 
-export const setOfflineLoadingStatus = (offlineLoadingStatus) => ({
+export const setOfflineLoadingStatus = (offlineLoading) => ({
   type: SET_OFFLINE_LOADING_STATUS,
-  offlineLoadingStatus,
+  offlineLoading,
 });
 
 export const setCurrentOfflineLoading = (currentOfflineLoading) => ({

@@ -1,7 +1,7 @@
-import { Modal, Typography, Flex, Progress } from "antd";
+import { Modal, Typography, Progress } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setOfflineStatus } from "@/redux/actions/common";
+import { setOfflineStatus, setOfflineLoadingStatus } from "@/redux/actions/common";
 import { useEffect } from "react";
 
 const downloadMapping = [
@@ -12,10 +12,13 @@ const downloadMapping = [
 ];
 
 const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
+  const dispatch = useDispatch();
   const { currentOfflineLoading } = useSelector((state) => state.common);
 
   useEffect(() => {
     if (currentOfflineLoading.id === downloadMapping[downloadMapping.length - 1].id && currentOfflineLoading.percent >= 100) {
+      dispatch(setOfflineLoadingStatus(false));
+      dispatch(setOfflineStatus(true));
       onClose();
     }
   }, [currentOfflineLoading.id, currentOfflineLoading.percent]);
@@ -46,6 +49,7 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
           </div>
         );
       })}
+      <div style={{ marginBottom: 24 }}></div>
     </Modal>
   );
 };
