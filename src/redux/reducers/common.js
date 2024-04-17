@@ -36,3 +36,7 @@ export default function (state = initialState, action) {
 export const getOfflineStatus = () => ({
   type: GET_OFFLINE_STATUS,
 });
+
+export const getOfflineLoadingStatus = () => ({
+  type: GET_OFFLINE_LOADING_STATUS,
+});
