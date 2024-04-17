@@ -11,10 +11,14 @@ const downloadMapping = [
   { id: "event", label: "Download events" },
 ];
 
-const PrepareOfflineModal = ({ open, onCancel }) => {
+const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
   const { currentOfflineLoading } = useSelector((state) => state.common);
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    if (currentOfflineLoading.id === downloadMapping[downloadMapping.length - 1].id && currentOfflineLoading.percent >= 100) {
+      onClose();
+    }
+  }, [currentOfflineLoading.id, currentOfflineLoading.percent]);
 
   return (
     <Modal

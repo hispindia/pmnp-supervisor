@@ -18,9 +18,13 @@ const OfflineModeButton = () => {
     dispatch(setOfflineStatus(false));
   };
 
+  const handleClose = () => {
+    setPrepareModalOpen(false);
+  };
+
   return (
     <>
-      <PrepareOfflineModal open={prepareModalOpen} onCancel={handleCancelOffline} />
+      <PrepareOfflineModal open={prepareModalOpen} onCancel={handleCancelOffline} onClose={handleClose} />
       <Switch
         checkedChildren={t("offline")}
         unCheckedChildren={t("online")}
