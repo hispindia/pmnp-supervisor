@@ -1,12 +1,17 @@
 import {
   GET_OFFLINE_STATUS,
   SET_OFFLINE_STATUS,
+
+  // Loading
+  GET_OFFLINE_LOADING_STATUS,
+  SET_OFFLINE_LOADING_STATUS,
 } from "@/redux/actions/common/type";
 
 const savedOfflineStatus = localStorage.getItem("offlineStatus");
 
 const initialState = {
   offlineStatus: savedOfflineStatus === "true" ? true : false,
+  offlineLoading: false,
 };
 
 export default function (state = initialState, action) {
@@ -15,6 +20,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         offlineStatus: action.offlineStatus,
+      };
+    }
+    case SET_OFFLINE_LOADING_STATUS: {
+      return {
+        ...state,
+        offlineLoading: action.offlineLoading,
       };
     }
     default:
