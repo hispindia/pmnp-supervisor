@@ -407,7 +407,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      [`/api/tracker?async=false&`, program ? `program=${program}` : null]
+      [`/api/tracker?async=false`, program ? `&program=${program}` : null]
         .filter((e) => Boolean(e))
         .join(""),
       enrollment

@@ -55,7 +55,14 @@ const SidebarItem = ({
           );
         })
       ) : (
-        <ListItemText primary={"No data"} />
+        <ListItemText
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          primary={"No data"}
+        />
       )}
     </List>
   );

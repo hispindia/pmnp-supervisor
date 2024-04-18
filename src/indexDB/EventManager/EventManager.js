@@ -170,7 +170,7 @@ const pushAndMarkOnline = async (events) => {
   const partitions = chunk(events, 20);
 
   for (const partition of partitions) {
-    console.log(partition);
+    console.log("pushEvents", { partition });
 
     try {
       const result = await dataApi.pushEvents({
@@ -181,32 +181,14 @@ const pushAndMarkOnline = async (events) => {
 
       results.push(result);
 
-      if (result.httpStatusCode === 200) {
-        await markOnline(partition.map((en) => en.event));
-      }
+      // if (result.httpStatusCode === 200) {
+      //   await markOnline(partition.map((en) => en.event));
+      // }
     } catch (error) {
       console.error(`Failed to push event`, error);
       results.push(error);
     }
   }
-
-  // for (const trackedEntity of trackedEntities) {
-  //     try {
-  //         const result = await dataApi.post(
-  //             '/api/trackedEntityInstances',
-  //             trackedEntity
-  //         );
-
-  //         if (result.status === 200) {
-  //             trackedEntity.isOnline = true;
-  //             await db[TABLE_NAME].put(trackedEntity);
-  //         }
-
-  //         results.push(result);
-  //     } catch (error) {
-  //         console.error(`Failed to push trackedEntity`, error);
-  //     }
-  // }
 
   return results;
 };

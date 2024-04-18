@@ -16,6 +16,7 @@ export const toDhis2Enrollments = (enrollments, events = []) => {
       ...props,
       enrollment,
       enrolledAt: moment(enrolledAt).format("YYYY-MM-DD"),
+      occurredAt: moment(enrolledAt).format("YYYY-MM-DD"),
       status: enrollmentStatus,
       events: events,
     })

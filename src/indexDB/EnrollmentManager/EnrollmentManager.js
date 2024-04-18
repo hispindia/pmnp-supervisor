@@ -136,7 +136,7 @@ const pushAndMarkOnline = async (enrollments) => {
   const partitions = chunk(enrollments, 20);
 
   for (const partition of partitions) {
-    console.log(partition);
+    console.log("pushEnrollment", { partition });
 
     try {
       const result = await dataApi.pushEnrollment({
@@ -147,9 +147,9 @@ const pushAndMarkOnline = async (enrollments) => {
 
       results.push(result);
 
-      if (result.httpStatusCode === 200) {
-        await markOnline(partition.map((en) => en.enrollment));
-      }
+      // if (result.httpStatusCode === 200) {
+      //   await markOnline(partition.map((en) => en.enrollment));
+      // }
     } catch (error) {
       console.error(`Failed to push enrollment`, error);
       results.push(error);
