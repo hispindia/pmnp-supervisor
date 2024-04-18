@@ -174,9 +174,15 @@ const calculateAgeGroup = (metadata, data, currentEvent) => {
       currentEvent,
       null
     );
-    let evalValue = { age: res };
+    var evalValue1 = { age: res };
     Object.entries(mapping).forEach((m) => {
-      if (eval(m[0])) {
+      if (
+        eval(
+          ` let value = ${JSON.stringify(
+            value
+          )} ; let evalValue = ${JSON.stringify(evalValue1)};` + m[0]
+        )
+      ) {
         tempValues[m[1]] = tempValues[m[1]] + 1;
       }
     });
