@@ -136,10 +136,18 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
   } else {
     yield call(
       dataApi.pushTrackedEntityInstance,
-      currentTei,
+      {
+        trackedEntities: [currentTei],
+      },
       programMetadataId
     );
-    yield call(dataApi.pushEnrollment, newEnrollment, programMetadataId);
+    yield call(
+      dataApi.pushEnrollment,
+      {
+        enrollments: [newEnrollment],
+      },
+      programMetadataId
+    );
   }
 
   yield put(push(`/form?tei=${currentTei.trackedEntity}`));
