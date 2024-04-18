@@ -18,6 +18,7 @@ import * as eventManager from "@/indexDB/EventManager/EventManager";
 import { mainStore } from "@/redux/store";
 import {
   setCurrentOfflineLoading,
+  setOfflineLoadingStatus,
   setOfflineStatus,
 } from "@/redux/actions/common";
 
@@ -67,20 +68,21 @@ function* handleOfflineStatusChange({ offlineStatus }) {
 }
 
 function* handlePushToServer() {
-  yield put(loadTei(true));
-
   try {
     /**
      * push data to server by order
      */
+    yield put(setCurrentOfflineLoading({ id: "metadata", percent: 100 }));
     yield call(trackedEntityManager.push);
+    yield put(setCurrentOfflineLoading({ id: "tei", percent: 100 }));
     yield call(enrollmentManager.push);
+    yield put(setCurrentOfflineLoading({ id: "enr", percent: 100 }));
     yield call(eventManager.push);
+    yield put(setCurrentOfflineLoading({ id: "event", percent: 100 }));
   } catch (error) {
     console.log("handlePushToServer - error", error);
   } finally {
     console.log("handlePushToServer - finally");
-    yield put(loadTei(false));
   }
 }
 

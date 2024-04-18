@@ -1,4 +1,9 @@
-import { SET_OFFLINE_STATUS, SET_OFFLINE_LOADING_STATUS, SET_CURRENT_OFFLINE_LOADING, PUSH_TO_SERVER } from "./type";
+import {
+  SET_OFFLINE_STATUS,
+  SET_OFFLINE_LOADING_STATUS,
+  SET_CURRENT_OFFLINE_LOADING,
+  PUSH_TO_SERVER,
+} from "./type";
 
 export const setOfflineStatus = (offlineStatus) => ({
   type: SET_OFFLINE_STATUS,
