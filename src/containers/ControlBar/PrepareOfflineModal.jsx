@@ -7,14 +7,7 @@ import {
 } from "@/redux/actions/common";
 import { useEffect } from "react";
 
-const downloadMapping = [
-  { id: "metadata", label: "Download metadata" },
-  { id: "tei", label: "Download tracked entities" },
-  { id: "enr", label: "Download enrollments" },
-  { id: "event", label: "Download events" },
-];
-
-const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
+const PrepareOfflineModal = ({ open, onCancel, onClose, downloadMapping }) => {
   const dispatch = useDispatch();
   const { currentOfflineLoading } = useSelector((state) => state.common);
 

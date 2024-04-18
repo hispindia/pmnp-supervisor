@@ -4,7 +4,17 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import PrepareOfflineModal from "./PrepareOfflineModal";
-import { setOfflineLoadingStatus, setOfflineStatus } from "@/redux/actions/common";
+import {
+  setOfflineLoadingStatus,
+  setOfflineStatus,
+} from "@/redux/actions/common";
+
+const downloadMapping = [
+  { id: "metadata", label: "Download metadata" },
+  { id: "tei", label: "Download tracked entities" },
+  { id: "enr", label: "Download enrollments" },
+  { id: "event", label: "Download events" },
+];
 
 const OfflineModeButton = () => {
   const { t } = useTranslation();
@@ -24,7 +34,12 @@ const OfflineModeButton = () => {
 
   return (
     <>
-      <PrepareOfflineModal open={prepareModalOpen} onCancel={handleCancelOffline} onClose={handleClose} />
+      <PrepareOfflineModal
+        downloadMapping={downloadMapping}
+        open={prepareModalOpen}
+        onCancel={handleCancelOffline}
+        onClose={handleClose}
+      />
       <Switch
         checkedChildren={t("offline")}
         unCheckedChildren={t("online")}

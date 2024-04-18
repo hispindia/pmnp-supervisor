@@ -6,6 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import PrepareOfflineModal from "./PrepareOfflineModal";
 
+const downloadMapping = [
+  { id: "tei", label: "Push tracked entities" },
+  { id: "enr", label: "Push enrollments" },
+  { id: "event", label: "Push events" },
+];
+
 const PushToServerButton = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -22,6 +28,7 @@ const PushToServerButton = () => {
   return (
     <>
       <PrepareOfflineModal
+        downloadMapping={downloadMapping}
         open={prepareModalOpen}
         onCancel={handleCancelOffline}
         onClose={handleClose}
