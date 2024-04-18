@@ -147,7 +147,7 @@ const pushAndMarkOnline = async (enrollments) => {
 
       results.push(result);
 
-      if (result.httpStatusCode === 200) {
+      if (result.status === "OK") {
         await markOnline(partition.map((en) => en.enrollment));
       }
     } catch (error) {

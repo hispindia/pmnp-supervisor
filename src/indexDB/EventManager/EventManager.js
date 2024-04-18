@@ -181,7 +181,7 @@ const pushAndMarkOnline = async (events) => {
 
       results.push(result);
 
-      if (result.httpStatusCode === 200) {
+      if (result.status === "OK") {
         await markOnline(partition.map((en) => en.event));
       }
     } catch (error) {

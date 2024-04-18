@@ -137,7 +137,7 @@ export const pushAndMarkOnline = async (trackedEntities) => {
 
       console.log("postTrackedEntityInstances", { result });
 
-      if (result.httpStatusCode === 200) {
+      if (result.status === "OK") {
         await markOnline(partition.map((te) => te.trackedEntity));
       }
 
