@@ -72,7 +72,6 @@ function* handlePushToServer() {
     /**
      * push data to server by order
      */
-    yield put(setCurrentOfflineLoading({ id: "metadata", percent: 100 }));
     yield call(trackedEntityManager.push);
     yield put(setCurrentOfflineLoading({ id: "tei", percent: 100 }));
     yield call(enrollmentManager.push);
