@@ -1,8 +1,6 @@
-import db from "../db";
-
-import { TABLE_NAME } from ".";
-
 import { dataApi } from "@/api";
+import { TABLE_NAME } from ".";
+import db from "../db";
 
 import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
@@ -13,106 +11,87 @@ import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
 import { chunk } from "lodash";
 import { toDhis2Enrollments } from "../data/enrollment";
 import { toDhis2Events } from "../data/event";
-import { toDhis2TrackedEntities, toDhis2TrackedEntity } from "../data/trackedEntity";
+import {
+  toDhis2TrackedEntities,
+  toDhis2TrackedEntity,
+} from "../data/trackedEntity";
 
-export const firstPull = (programs, organisationUnits) => async () => {
+export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
   try {
     await db[TABLE_NAME].clear();
     // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
-    const pages = [];
+    const programs = await programManager.getPrograms();
+    const { organisationUnits } = await meManager.getMe();
 
     for (const org of organisationUnits) {
-      for (let program of programs) {
-        const totalPages = await pull(org, program, 1)();
-        pages.push({ program, org, totalPages });
+      for (let i = 0; i < programs.length; i++) {
+        const program = programs[i];
+        let totalPages = 0;
+
+        try {
+          for (let page = 1; ; page++) {
+            if (totalPages && page > totalPages) {
+              break;
+            }
+
+            const result = await dataApi.get(
+              "/api/tracker/trackedEntities",
+              {
+                paging: true,
+                totalPages: true,
+                pageSize: 200,
+                page,
+              },
+              [
+                `orgUnit=${org.id}`,
+                `program=${program.id}`,
+                `ouMode=DESCENDANTS`,
+                `includeDeleted=true`,
+                // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
+                `fields=trackedEntity,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType]`,
+              ]
+            );
+
+            if (
+              !result.instances ||
+              result.instances.length === 0 ||
+              page > result.pageCount
+            ) {
+              break;
+            }
+
+            console.log(
+              `TEI = (page=${page}/${result.pageCount}, count=${result.instances.length})`
+            );
+
+            if (handleDispatchCurrentOfflineLoading) {
+              handleDispatchCurrentOfflineLoading({
+                id: "tei",
+                percent:
+                  ((page / result.pageCount + i) * 100) / programs.length,
+              });
+            }
+
+            const resultTrackEntities = {
+              ...result,
+              trackedEntities: result.instances,
+            };
+
+            await persist(await beforePersist(resultTrackEntities));
+
+            // Update total pages
+            totalPages = result.pageCount;
+          }
+        } catch (error) {
+          console.log("TrackedEntity:pull", error);
+          continue;
+        }
       }
     }
-
-    return pages;
   } catch (error) {
     console.log("TrackedEntity:pull", error);
   }
 };
-
-export const pull = (org, program, page) => async () => {
-  const result = await dataApi.get("/api/tracker/trackedEntities", { paging: true, totalPages: true, pageSize: 200, page }, [
-    `orgUnit=${org.id}`,
-    `program=${program.id}`,
-    `ouMode=DESCENDANTS`,
-    `includeDeleted=true`,
-    // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
-    `fields=trackedEntity,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType]`,
-  ]);
-
-  if (!result.instances || result.instances.length === 0) return;
-
-  const resultTrackEntities = { ...result, trackedEntities: result.instances };
-  await persist(await beforePersist(resultTrackEntities));
-
-  return result.pageCount;
-};
-
-// export const pull = async () => {
-//   try {
-//     await db[TABLE_NAME].clear();
-//     // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
-//     const programs = await programManager.getPrograms();
-//     const { organisationUnits } = await meManager.getMe();
-
-//     for (const org of organisationUnits) {
-//       for (let program of programs) {
-//         let totalPages = 0;
-
-//         try {
-//           for (let page = 1; ; page++) {
-//             if (totalPages && page > totalPages) {
-//               break;
-//             }
-
-//             const result = await dataApi.get(
-//               "/api/tracker/trackedEntities",
-//               {
-//                 paging: true,
-//                 totalPages: true,
-//                 pageSize: 200,
-//                 page,
-//               },
-//               [
-//                 `orgUnit=${org.id}`,
-//                 `program=${program.id}`,
-//                 `ouMode=DESCENDANTS`,
-//                 `includeDeleted=true`,
-//                 // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
-//                 `fields=trackedEntity,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType]`,
-//               ]
-//             );
-
-//             if (!result.instances || result.instances.length === 0 || page > result.pageCount) {
-//               break;
-//             }
-
-//             console.log(`TEI = (page=${page}/${result.pageCount}, count=${result.instances.length})`);
-
-//             const resultTrackEntities = {
-//               ...result,
-//               trackedEntities: result.instances,
-//             };
-
-//             await persist(await beforePersist(resultTrackEntities));
-
-//             // Update total pages
-//             totalPages = result.pageCount;
-//           }
-//         } catch (error) {
-//           console.log("TrackedEntity:pull", error);
-//           continue;
-//         }
-//       }
-//     }
-//   } catch (error) {
-//     console.log("TrackedEntity:pull", error);
-//   }
-// };
 
 export const push = async () => {
   console.time("TrackedEntity::push");
@@ -121,7 +100,9 @@ export const push = async () => {
   const trackedEntities = await findOffline();
 
   if (trackedEntities?.length > 0) {
-    const results = await pushAndMarkOnline(toDhis2TrackedEntities(trackedEntities));
+    const results = await pushAndMarkOnline(
+      toDhis2TrackedEntities(trackedEntities)
+    );
 
     for (const result of results) {
       console.log(result.status);
@@ -171,7 +152,9 @@ export const pushAndMarkOnline = async (trackedEntities) => {
 };
 
 const markOnline = async (trackedEntityIds) => {
-  return await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntityIds).modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("trackedEntity")
+    .anyOf(trackedEntityIds)
+    .modify({ isOnline: 1 });
 };
 
 export const setTrackedEntityInstance = async ({ trackedEntity }) => {
@@ -184,7 +167,9 @@ export const setTrackedEntityInstance = async ({ trackedEntity }) => {
 
     if (trackedEntity.enrollments.length > 0) {
       // UPDATE ENROLLMENT
-      const enrollment = JSON.parse(JSON.stringify(trackedEntity.enrollments[0]));
+      const enrollment = JSON.parse(
+        JSON.stringify(trackedEntity.enrollments[0])
+      );
 
       await enrollmentManager.setEnrollment({
         enrollment,
@@ -270,7 +255,9 @@ const beforePersist = async (result, isOnline = 1) => {
 
 export const findOne = async (trackedEntity) => {
   try {
-    const tei = await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray();
+    const tei = await db[TABLE_NAME].where("trackedEntity")
+      .equals(trackedEntity)
+      .toArray();
 
     return toDhis2TrackedEntity(tei);
   } catch (error) {
@@ -278,7 +265,14 @@ export const findOne = async (trackedEntity) => {
   }
 };
 
-export const find = async ({ paging = true, pageSize, page, orgUnit, program, ouMode = "SELECTED" }) => {
+export const find = async ({
+  paging = true,
+  pageSize,
+  page,
+  orgUnit,
+  program,
+  ouMode = "SELECTED",
+}) => {
   try {
     const result = {
       instances: [],
@@ -287,19 +281,24 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, program, ou
     // get child orgUnits
     const selectedOrgUnit = await orgUnitManager.getOrgWithChildren(orgUnit);
 
-    const selectedOrgUnitIds = selectedOrgUnit?.children.map((ou) => ou.id) || [];
+    const selectedOrgUnitIds =
+      selectedOrgUnit?.children.map((ou) => ou.id) || [];
 
     let query = {
       program,
     };
 
     // filter out undefined values
-    Object.keys(query).forEach((key) => query[key] === undefined && delete query[key]);
+    Object.keys(query).forEach(
+      (key) => query[key] === undefined && delete query[key]
+    );
 
     let queryBuilder = db.enrollment.where(query);
 
     if (ouMode === "DESCENDANTS" && selectedOrgUnitIds.length > 0) {
-      queryBuilder = queryBuilder.and((enr) => selectedOrgUnitIds.includes(enr.orgUnit));
+      queryBuilder = queryBuilder.and((enr) =>
+        selectedOrgUnitIds.includes(enr.orgUnit)
+      );
     } else {
       queryBuilder = queryBuilder.and((enr) => enr.orgUnit === orgUnit);
     }
@@ -326,7 +325,9 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, program, ou
 
     const trackedEntities = enrs.map((enr) => enr.trackedEntity);
 
-    const teis = await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities).toArray();
+    const teis = await db[TABLE_NAME].where("trackedEntity")
+      .anyOf(trackedEntities)
+      .toArray();
 
     result.instances = toDhis2TrackedEntities(teis);
 
@@ -339,7 +340,10 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, program, ou
   }
 };
 
-export const getTrackedEntityInstanceById = async ({ trackedEntity, program }) => {
+export const getTrackedEntityInstanceById = async ({
+  trackedEntity,
+  program,
+}) => {
   const events = await db.event
     .where("trackedEntity")
     .equals(trackedEntity)
@@ -352,7 +356,9 @@ export const getTrackedEntityInstanceById = async ({ trackedEntity, program }) =
     .and((enr) => enr.program === program)
     .first();
 
-  const tei = toDhis2TrackedEntity(await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray());
+  const tei = toDhis2TrackedEntity(
+    await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray()
+  );
 
   if (enr) {
     tei.enrollments = toDhis2Enrollments([enr], toDhis2Events(events));
@@ -371,7 +377,9 @@ export const getTrackedEntityInstances = async ({ orgUnit, filters }) => {
       // example: 'attribute=gv9xX5w4kKt:EQ:EzwtyXwTVzq' => ['attribute', 'gv9xX5w4kKt', 'EQ', 'EzwtyXwTVzq']
 
       if (operator === "EQ") {
-        queryBuilder = queryBuilder.and((teiValue) => teiValue[attribute] === field).and((teiValue) => teiValue["value"] === value);
+        queryBuilder = queryBuilder
+          .and((teiValue) => teiValue[attribute] === field)
+          .and((teiValue) => teiValue["value"] === value);
       }
     });
   }
@@ -387,7 +395,10 @@ export const getTrackedEntityInstances = async ({ orgUnit, filters }) => {
   };
 };
 
-export const getTrackedEntityInstancesByIDs = async ({ program, trackedEntities }) => {
+export const getTrackedEntityInstancesByIDs = async ({
+  program,
+  trackedEntities,
+}) => {
   const enrs = await db.enrollment
     .where("trackedEntity")
     .anyOf(trackedEntities)
@@ -404,7 +415,9 @@ export const getTrackedEntityInstancesByIDs = async ({ program, trackedEntities 
     enr.events = toDhis2Events(events);
   }
 
-  const teis = toDhis2TrackedEntities(await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities).toArray());
+  const teis = toDhis2TrackedEntities(
+    await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities).toArray()
+  );
 
   for (const tei of teis) {
     const teiEnr = enrs.find((enr) => enr.trackedEntity === tei.trackedEntity);
@@ -438,7 +451,9 @@ export const deleteTrackedEntityInstances = async ({ trackedEntities }) => {
 
       if (trackedEntity.enrollments.length > 0) {
         // DELETE ENROLLMENT
-        const enrollment = JSON.parse(JSON.stringify(trackedEntity.enrollments[0]));
+        const enrollment = JSON.parse(
+          JSON.stringify(trackedEntity.enrollments[0])
+        );
         await db.enrollment.where("trackedEntity").anyOf(teiId).delete();
 
         // UPDATE EVENTS

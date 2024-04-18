@@ -45,7 +45,9 @@ export const getEventsRawData = async (pager, org, program) => {
 };
 
 export const getEventsAnalyticsTable = async (pager, org, program) => {
-  const dataElementIds = program.programStages[0].dataElements.map((de) => de.id);
+  const dataElementIds = program.programStages[0].dataElements.map(
+    (de) => de.id
+  );
 
   return await dataApi.get(
     `/api/analytics/events/query/${program.id}`,
@@ -62,32 +64,68 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
   );
 };
 
-export const firstPull = (programs, organisationUnits) => async () => {
+export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
   try {
+    // Delete the table
     await db[TABLE_NAME].clear();
-    const pages = [];
+    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
+    const programs = await programManager.getPrograms();
+    const { organisationUnits } = await meManager.getMe();
 
     for (const org of organisationUnits) {
-      for (let program of programs) {
-        const totalPages = await pull(org, program, 1)();
-        pages.push({ program, org, totalPages });
+      for (let i = 0; i < programs.length; i++) {
+        const program = programs[i];
+        let totalPages = 0;
+
+        try {
+          for (let page = 1; ; page++) {
+            if (totalPages && page > totalPages) {
+              break;
+            }
+
+            const result = await getEventsAnalyticsTable(
+              {
+                paging: true,
+                totalPages: true,
+                pageSize: 200,
+                page,
+              },
+              org,
+              program
+            );
+
+            if (
+              !result.rows ||
+              result.rows.length === 0 ||
+              page > result.metaData.pager.pageCount
+            ) {
+              break;
+            }
+
+            console.log(
+              `EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`
+            );
+
+            if (handleDispatchCurrentOfflineLoading) {
+              handleDispatchCurrentOfflineLoading({
+                id: "event",
+                percent:
+                  ((page / result.metaData.pager.pageCount + i) * 100) /
+                  programs.length,
+              });
+            }
+
+            await persist(await beforePersistAnalyticsData(result, program));
+
+            // Update total pages
+            totalPages = result.metaData.pager.pageCount;
+          }
+        } catch (error) {
+          console.log("Event:pull", error);
+          continue;
+        }
       }
     }
-
-    return pages;
-  } catch (error) {
-    console.log("Enrollment:pull", error);
-  }
-};
-
-export const pull = (org, program, page) => async () => {
-  try {
-    const result = await getEventsAnalyticsTable({ paging: true, totalPages: true, pageSize: 200, page }, org, program);
-
-    if (!result.rows || result.rows.length === 0) return;
-
-    await persist(await beforePersistAnalyticsData(result, program));
-    return result.metaData.pager.pageCount;
   } catch (error) {
     console.log("Event:pull", error);
   }
@@ -117,7 +155,9 @@ const findOffline = async () => {
 };
 
 const markOnline = async (eventIds) => {
-  return await db[TABLE_NAME].where("event").anyOf(eventIds).modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("event")
+    .anyOf(eventIds)
+    .modify({ isOnline: 1 });
 };
 
 const pushAndMarkOnline = async (events) => {
@@ -224,7 +264,14 @@ const findHeaderIndex = (headers, name) => {
   return headers.findIndex((header) => header.name === name);
 };
 
-export const getEventsByQuery = async ({ program, programStage, orgUnit, filters, startDate, endDate }) => {
+export const getEventsByQuery = async ({
+  program,
+  programStage,
+  orgUnit,
+  filters,
+  startDate,
+  endDate,
+}) => {
   let queryBuilder = db[TABLE_NAME].where("orgUnit").equals(orgUnit);
 
   if (filters && filters.length > 0) {
@@ -233,7 +280,9 @@ export const getEventsByQuery = async ({ program, programStage, orgUnit, filters
       // example: 'attribute=gv9xX5w4kKt:EQ:EzwtyXwTVzq' => ['attribute', 'gv9xX5w4kKt', 'EQ', 'EzwtyXwTVzq']
 
       if (operator === "EQ") {
-        queryBuilder = queryBuilder.and((teiValue) => teiValue["dataElement"] === field).and((teiValue) => teiValue["value"] === value);
+        queryBuilder = queryBuilder
+          .and((teiValue) => teiValue["dataElement"] === field)
+          .and((teiValue) => teiValue["value"] === value);
       }
     });
   }
@@ -279,7 +328,9 @@ const beforePersistAnalyticsData = async (result, program) => {
     return objects;
   }
 
-  const dataElementIds = program.programStages[0].dataElements.map((de) => de.id);
+  const dataElementIds = program.programStages[0].dataElements.map(
+    (de) => de.id
+  );
 
   for (const ev of events) {
     const event = {

@@ -1,7 +1,10 @@
 import { Modal, Typography, Progress } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setOfflineStatus, setOfflineLoadingStatus } from "@/redux/actions/common";
+import {
+  setOfflineStatus,
+  setOfflineLoadingStatus,
+} from "@/redux/actions/common";
 import { useEffect } from "react";
 
 const downloadMapping = [
@@ -16,7 +19,11 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
   const { currentOfflineLoading } = useSelector((state) => state.common);
 
   useEffect(() => {
-    if (currentOfflineLoading.id === downloadMapping[downloadMapping.length - 1].id && currentOfflineLoading.percent >= 100) {
+    if (
+      currentOfflineLoading.id ===
+        downloadMapping[downloadMapping.length - 1].id &&
+      currentOfflineLoading.percent >= 100
+    ) {
       dispatch(setOfflineLoadingStatus(false));
       dispatch(setOfflineStatus(true));
       onClose();
@@ -34,7 +41,9 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
       okButtonProps={{ style: { display: "none" } }}
     >
       {downloadMapping.map(({ label }, step) => {
-        const currentStep = downloadMapping.findIndex(({ id }) => id === currentOfflineLoading.id);
+        const currentStep = downloadMapping.findIndex(
+          ({ id }) => id === currentOfflineLoading.id
+        );
 
         let percent = 0;
         if (currentStep > -1) {
@@ -43,7 +52,7 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
         }
 
         return (
-          <div>
+          <div key={label}>
             <Typography>{label}</Typography>
             <Progress percent={percent} />
           </div>

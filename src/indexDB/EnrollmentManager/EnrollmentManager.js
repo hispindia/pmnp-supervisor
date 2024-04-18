@@ -1,63 +1,92 @@
+import db from "../db";
 import { TABLE_NAME } from ".";
 import { dataApi } from "@/api";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
+import moment from "moment";
 import { toDhis2Enrollments } from "../data/enrollment";
 import { chunk } from "lodash";
-import moment from "moment";
-import db from "../db";
 
-export const firstPull = (programs, organisationUnits) => async () => {
+export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
   try {
     await db[TABLE_NAME].clear();
-    const pages = [];
+    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
+    const programs = await programManager.getPrograms();
+    const { organisationUnits } = await meManager.getMe();
 
     for (const org of organisationUnits) {
-      for (let program of programs) {
-        const totalPages = await pull(org, program, 1)();
-        pages.push({ program, org, totalPages });
+      for (let i = 0; i < programs.length; i++) {
+        const program = programs[i];
+        let totalPages = 0;
+
+        try {
+          for (let page = 1; ; page++) {
+            if (totalPages && page > totalPages) {
+              break;
+            }
+
+            const result = await dataApi.get(
+              "/api/tracker/enrollments",
+              {
+                paging: true,
+                totalPages: true,
+                pageSize: 200,
+                page,
+              },
+              [
+                `orgUnit=${org.id}`,
+                `program=${program.id}`,
+                `ouMode=DESCENDANTS`,
+                `includeDeleted=true`,
+                // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
+                `fields=${[
+                  "enrollment",
+                  "updatedAt",
+                  "trackedEntityType",
+                  "trackedEntity",
+                  "program",
+                  "status",
+                  "orgUnit",
+                  "enrolledAt",
+                  "incidentDate",
+                  "followup",
+                ].join(",")}`,
+              ]
+            );
+
+            if (
+              !result.instances ||
+              result.instances.length === 0 ||
+              page > result.pageCount
+            ) {
+              break;
+            }
+
+            console.log(
+              `ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`
+            );
+
+            if (handleDispatchCurrentOfflineLoading) {
+              handleDispatchCurrentOfflineLoading({
+                id: "enr",
+                percent:
+                  ((page / result.pageCount + i) * 100) / programs.length,
+              });
+            }
+
+            const resultEnrollments = {
+              ...result,
+              enrollments: result.instances,
+            };
+
+            await persist(await beforePersist([resultEnrollments], program.id));
+          }
+        } catch (error) {
+          console.log("Enrollment:pull", error);
+          continue;
+        }
       }
     }
-
-    return pages;
-  } catch (error) {
-    console.log("Enrollment:pull", error);
-  }
-};
-
-export const pull = (org, program, page) => async () => {
-  try {
-    const result = await dataApi.get(
-      "/api/tracker/enrollments",
-      {
-        paging: true,
-        totalPages: true,
-        pageSize: 200,
-        page,
-      },
-      [
-        `orgUnit=${org.id}`,
-        `program=${program.id}`,
-        `ouMode=DESCENDANTS`,
-        `includeDeleted=true`,
-        // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
-        `fields=${[
-          "enrollment",
-          "updatedAt",
-          "trackedEntityType",
-          "trackedEntity",
-          "program",
-          "status",
-          "orgUnit",
-          "enrolledAt",
-          "incidentDate",
-          "followup",
-        ].join(",")}`,
-      ]
-    );
-
-    const resultEnrollments = { ...result, enrollments: result.instances };
-    await persist(await beforePersist([resultEnrollments], program.id));
-
-    return result.pageCount;
   } catch (error) {
     console.log("Enrollment:pull", error);
   }
@@ -92,7 +121,9 @@ const findOffline = async () => {
 };
 
 const markOnline = async (enrollmentIds) => {
-  return await db[TABLE_NAME].where("enrollment").anyOf(enrollmentIds).modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("enrollment")
+    .anyOf(enrollmentIds)
+    .modify({ isOnline: 1 });
 };
 
 const pushAndMarkOnline = async (enrollments) => {

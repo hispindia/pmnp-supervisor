@@ -11,7 +11,7 @@ import "./index.css";
 import locale from "./locale";
 
 import { Provider } from "react-redux";
-import configureStore, { history } from "./redux/store";
+import configureStore, { history, mainStore } from "./redux/store";
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import { ConnectedRouter } from "connected-react-router";
@@ -40,11 +40,11 @@ i18n.use(initReactI18next).init({
   },
 });
 
-const store = configureStore();
+// export const store = configureStore();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Provider store={store}>
+    <Provider store={mainStore}>
       <ConnectedRouter history={history}>
         <Layout>
           <AppContainer />
