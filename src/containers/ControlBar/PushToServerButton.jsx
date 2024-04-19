@@ -1,43 +1,49 @@
-import { pushToServer } from "@/redux/actions/common";
+import { pushToServer, resetCurrentOfflineLoading } from "@/redux/actions/common";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import PrepareOfflineModal from "./PrepareOfflineModal";
+import { useDispatch } from "react-redux";
 
-const downloadMapping = [
-  { id: "tei", label: "Push tracked entities" },
-  { id: "enr", label: "Push enrollments" },
-  { id: "event", label: "Push events" },
-];
+import PushModal, { pushMapping } from "./PushModal";
+import { findChangedData } from "./OfflineModeButton";
+import { toDhis2Enrollments } from "@/indexDB/data/enrollment";
+import { toDhis2Events } from "@/indexDB/data/event";
+import { toDhis2TrackedEntities } from "@/indexDB/data/trackedEntity";
 
 const PushToServerButton = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [prepareModalOpen, setPrepareModalOpen] = useState(false);
 
-  const handleCancelOffline = () => {
-    setPrepareModalOpen(false);
+  const [pushModalOpen, setPushModalOpen] = useState(false);
+  const [pushData, setPushData] = useState(pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {}));
+
+  const handleCancelPush = () => {
+    setPushModalOpen(false);
   };
 
-  const handleClose = () => {
-    setPrepareModalOpen(false);
+  const handlePushClose = () => {
+    setPushModalOpen(false);
+  };
+
+  const handlePush = async () => {
+    if (Object.values(pushData).find(Boolean)) dispatch(pushToServer());
   };
 
   return (
     <>
-      <PrepareOfflineModal
-        downloadMapping={downloadMapping}
-        open={prepareModalOpen}
-        onCancel={handleCancelOffline}
-        onClose={handleClose}
-      />
-
+      <PushModal pushData={pushData} open={pushModalOpen} onCancel={handleCancelPush} onClose={handlePushClose} onOk={handlePush} />
       <Button
-        onClick={() => {
-          dispatch(pushToServer());
-          setPrepareModalOpen(true);
+        onClick={async () => {
+          const results = await findChangedData();
+          const enrs = toDhis2Enrollments(results[0]);
+          const events = toDhis2Events(results[1]);
+          const teis = toDhis2TrackedEntities(results[2]);
+
+          setPushData({ enr: enrs.length, event: events.length, tei: teis.length });
+
+          dispatch(resetCurrentOfflineLoading());
+          setPushModalOpen(true);
         }}
         style={{
           marginRight: "10px",

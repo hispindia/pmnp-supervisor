@@ -1,24 +1,19 @@
 import { useState } from "react";
-import { Switch } from "antd";
+import { Switch, notification } from "antd";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
+import { resetCurrentOfflineLoading, setOfflineLoadingStatus, setOfflineStatus } from "@/redux/actions/common";
 import PrepareOfflineModal from "./PrepareOfflineModal";
-import {
-  setOfflineLoadingStatus,
-  setOfflineStatus,
-} from "@/redux/actions/common";
+import db from "@/indexDB/db";
 
-const downloadMapping = [
-  { id: "metadata", label: "Download metadata" },
-  { id: "tei", label: "Download tracked entities" },
-  { id: "enr", label: "Download enrollments" },
-  { id: "event", label: "Download events" },
-];
+export const findOffline = (TABLE_NAME) => db[TABLE_NAME].where("isOnline").anyOf(0).toArray();
+export const findChangedData = () => Promise.all([findOffline("enrollment"), findOffline("event"), findOffline("trackedEntity")]);
 
 const OfflineModeButton = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
   const { offlineStatus } = useSelector((state) => state.common);
 
   const [prepareModalOpen, setPrepareModalOpen] = useState(false);
@@ -28,28 +23,34 @@ const OfflineModeButton = () => {
     dispatch(setOfflineStatus(false));
   };
 
-  const handleClose = () => {
+  const handleOfflineClose = () => {
     setPrepareModalOpen(false);
   };
 
   return (
     <>
-      <PrepareOfflineModal
-        downloadMapping={downloadMapping}
-        open={prepareModalOpen}
-        onCancel={handleCancelOffline}
-        onClose={handleClose}
-      />
+      <PrepareOfflineModal open={prepareModalOpen} onCancel={handleCancelOffline} onClose={handleOfflineClose} />
       <Switch
         checkedChildren={t("offline")}
         unCheckedChildren={t("online")}
         checked={offlineStatus}
-        onChange={(checked) => {
+        onChange={async (checked) => {
           if (checked) {
+            dispatch(resetCurrentOfflineLoading());
             dispatch(setOfflineLoadingStatus(true));
             setPrepareModalOpen(true);
           } else {
-            dispatch(setOfflineStatus(false));
+            const results = await findChangedData();
+
+            const found = results.find((r) => r.length > 0);
+            if (!found) return dispatch(setOfflineStatus(false));
+
+            notification.warning({
+              message: "Warning",
+              description: "Please push changed data!",
+              placement: "bottomRight",
+              duration: 10,
+            });
           }
         }}
         style={{
