@@ -36,10 +36,12 @@ const PushToServerButton = () => {
       <Button
         onClick={async () => {
           const results = await findChangedData();
+          const found = results.find((r) => r.length > 0);
+          if (!found) return;
+
           const enrs = toDhis2Enrollments(results[0]);
           const events = toDhis2Events(results[1]);
           const teis = toDhis2TrackedEntities(results[2]);
-
           setPushData({ enr: enrs.length, event: events.length, tei: teis.length });
 
           dispatch(resetCurrentOfflineLoading());
