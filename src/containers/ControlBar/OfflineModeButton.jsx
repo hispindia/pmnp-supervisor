@@ -46,8 +46,8 @@ const OfflineModeButton = () => {
             if (!found) return dispatch(setOfflineStatus(false));
 
             notification.warning({
-              message: "Warning",
-              description: "Please push changed data!",
+              message: t("warning"),
+              description: t("pleasePushChangedData"),
               placement: "bottomRight",
               duration: 10,
             });

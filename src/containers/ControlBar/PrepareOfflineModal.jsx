@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setOfflineStatus, setOfflineLoadingStatus } from "@/redux/actions/common";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const downloadMapping = [
   { id: "metadata", label: "Download metadata" },
@@ -13,6 +14,7 @@ const downloadMapping = [
 
 const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { currentOfflineLoading } = useSelector((state) => state.common);
 
   useEffect(() => {
@@ -25,7 +27,7 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
 
   return (
     <Modal
-      title="Preparing for offline mode"
+      title={t("preparingForOfflineMode")}
       open={open}
       centered
       closeIcon={null}

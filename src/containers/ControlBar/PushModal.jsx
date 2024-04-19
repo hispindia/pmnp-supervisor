@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setOfflineStatus } from "@/redux/actions/common";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export const pushMapping = [
   { id: "tei", label: "Push tracked entities" },
@@ -12,6 +13,7 @@ export const pushMapping = [
 
 const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { currentOfflineLoading } = useSelector((state) => state.common);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
   }, [open && currentOfflineLoading.id, currentOfflineLoading.percent]);
 
   return (
-    <Modal title="Push changed data" open={open} centered closeIcon={null} maskClosable={false} onCancel={onCancel} onOk={onOk} okText="Push">
+    <Modal title={t("pushChangedData")} open={open} centered closeIcon={null} maskClosable={false} onCancel={onCancel} onOk={onOk} okText={t("push")}>
       {pushMapping.map(({ label, id }, step) => {
         const currentStep = pushMapping.findIndex(({ id }) => id === currentOfflineLoading.id);
 
