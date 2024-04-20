@@ -144,11 +144,16 @@ export const push = async () => {
     for (const result of results) {
       console.log(result.status);
     }
+
+    return results;
   }
 
   console.timeEnd("Event::push");
   var end = performance.now();
-  return "Event::push - " + (end - start);
+  // return "Event::push - " + (end - start);
+  return {
+    status: "OK",
+  };
 };
 
 const findOffline = async () => {

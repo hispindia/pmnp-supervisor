@@ -107,11 +107,16 @@ export const push = async () => {
     for (const result of results) {
       console.log(result.status);
     }
+
+    return results;
   }
 
   console.timeEnd("TrackedEntity::push");
   var end = performance.now();
-  return "TrackedEntity::push - " + (end - start);
+  return {
+    status: "OK",
+  };
+  // return "TrackedEntity::push - " + (end - start);
 };
 
 export const findOffline = async () => {
@@ -139,6 +144,8 @@ export const pushAndMarkOnline = async (trackedEntities) => {
 
       if (result.status === "OK") {
         await markOnline(partition.map((te) => te.trackedEntity));
+      } else {
+        throw new Error("Failed to push trackedEntity");
       }
 
       results.push(result);

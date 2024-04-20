@@ -3,12 +3,22 @@ import { Switch, notification } from "antd";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import { resetCurrentOfflineLoading, setOfflineLoadingStatus, setOfflineStatus } from "@/redux/actions/common";
+import {
+  resetCurrentOfflineLoading,
+  setOfflineLoadingStatus,
+  setOfflineStatus,
+} from "@/redux/actions/common";
 import PrepareOfflineModal from "./PrepareOfflineModal";
 import db from "@/indexDB/db";
 
-export const findOffline = (TABLE_NAME) => db[TABLE_NAME].where("isOnline").anyOf(0).toArray();
-export const findChangedData = () => Promise.all([findOffline("enrollment"), findOffline("event"), findOffline("trackedEntity")]);
+export const findOffline = (TABLE_NAME) =>
+  db[TABLE_NAME].where("isOnline").anyOf(0).toArray();
+export const findChangedData = () =>
+  Promise.all([
+    findOffline("enrollment"),
+    findOffline("event"),
+    findOffline("trackedEntity"),
+  ]);
 
 const OfflineModeButton = () => {
   const { t } = useTranslation();
@@ -29,7 +39,11 @@ const OfflineModeButton = () => {
 
   return (
     <>
-      <PrepareOfflineModal open={prepareModalOpen} onCancel={handleCancelOffline} onClose={handleOfflineClose} />
+      <PrepareOfflineModal
+        open={prepareModalOpen}
+        onCancel={handleCancelOffline}
+        onClose={handleOfflineClose}
+      />
       <Switch
         checkedChildren={t("offline")}
         unCheckedChildren={t("online")}

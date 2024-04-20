@@ -104,11 +104,15 @@ export const push = async () => {
     for (const result of results) {
       console.log(result.status);
     }
+
+    return results;
   }
 
   console.timeEnd("Enrollment::push");
   var end = performance.now();
-  return "Enrollment::push - " + (end - start);
+  return {
+    status: "OK",
+  };
 };
 
 const persist = async (enrollments) => {

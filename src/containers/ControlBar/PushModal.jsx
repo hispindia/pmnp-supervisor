@@ -17,16 +17,32 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
   const { currentOfflineLoading } = useSelector((state) => state.common);
 
   useEffect(() => {
-    if (open && currentOfflineLoading.id === pushMapping[pushMapping.length - 1].id && currentOfflineLoading.percent >= 100) {
-      dispatch(setOfflineStatus(false));
+    if (
+      open &&
+      currentOfflineLoading.id === pushMapping[pushMapping.length - 1].id &&
+      currentOfflineLoading.percent >= 100
+    ) {
+      // Dont dispatch this action here because Pushing data might occur some errors
+      // dispatch(setOfflineStatus(false));
       onClose();
     }
   }, [open && currentOfflineLoading.id, currentOfflineLoading.percent]);
 
   return (
-    <Modal title={t("pushChangedData")} open={open} centered closeIcon={null} maskClosable={false} onCancel={onCancel} onOk={onOk} okText={t("push")}>
+    <Modal
+      title={t("pushChangedData")}
+      open={open}
+      centered
+      closeIcon={null}
+      maskClosable={false}
+      onCancel={onCancel}
+      onOk={onOk}
+      okText={t("push")}
+    >
       {pushMapping.map(({ label, id }, step) => {
-        const currentStep = pushMapping.findIndex(({ id }) => id === currentOfflineLoading.id);
+        const currentStep = pushMapping.findIndex(
+          ({ id }) => id === currentOfflineLoading.id
+        );
 
         let percent = 0;
         if (currentStep > -1) {

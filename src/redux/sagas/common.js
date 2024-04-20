@@ -1,7 +1,11 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 
-import { PUSH_TO_SERVER, SET_OFFLINE_LOADING_STATUS, SET_OFFLINE_STATUS } from "@/redux/actions/common/type";
-import { loadTei } from "@/redux/actions/data/tei";
+import {
+  PUSH_TO_SERVER,
+  SET_OFFLINE_LOADING_STATUS,
+  SET_OFFLINE_STATUS,
+} from "@/redux/actions/common/type";
+import { notification } from "antd";
 
 import * as meManager from "@/indexDB/MeManager/MeManager";
 import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
@@ -12,7 +16,11 @@ import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManage
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 import { mainStore } from "@/redux/store";
-import { setCurrentOfflineLoading, setOfflineStatus } from "@/redux/actions/common";
+import {
+  setCurrentOfflineLoading,
+  setOfflineStatus,
+} from "@/redux/actions/common";
+import { useTranslation } from "react-i18next";
 
 function handleDispatchCurrentOfflineLoading({ id, percent }) {
   mainStore.dispatch(setCurrentOfflineLoading({ id, percent }));
@@ -64,13 +72,44 @@ function* handlePushToServer() {
     /**
      * push data to server by order
      */
-    yield call(trackedEntityManager.push);
+
+    // push tracked entities
+    const teiPushResults = yield call(trackedEntityManager.push);
+    if (teiPushResults?.length > 0 && teiPushResults.status != "OK") {
+      if (teiPushResults.some((result) => result.status != "OK")) {
+        throw new Error("Push tracked entities failed!");
+      }
+    }
     yield put(setCurrentOfflineLoading({ id: "tei", percent: 100 }));
-    yield call(enrollmentManager.push);
+
+    // push enrollments
+    const enrPushResults = yield call(enrollmentManager.push);
+    if (enrPushResults?.length > 0 && teiPushResults.status != "OK") {
+      if (enrPushResults.some((result) => result.status != "OK")) {
+        throw new Error("Push enrollments failed!");
+      }
+    }
     yield put(setCurrentOfflineLoading({ id: "enr", percent: 100 }));
-    yield call(eventManager.push);
+
+    // push events
+    const eventPushRetuls = yield call(eventManager.push);
+    if (eventPushRetuls?.length > 0 && teiPushResults.status != "OK") {
+      if (eventPushRetuls.some((result) => result.status != "OK")) {
+        throw new Error("Push events failed!");
+      }
+    }
     yield put(setCurrentOfflineLoading({ id: "event", percent: 100 }));
+
+    // if there is no error, set offline status to false
+    yield put(setOfflineStatus(false));
   } catch (error) {
+    notification.warning({
+      message: "Warning",
+      description: "Sync data to server failed!",
+      placement: "bottomRight",
+      duration: 5,
+    });
+
     console.log("handlePushToServer - error", error);
   } finally {
     console.log("handlePushToServer - finally");
@@ -79,6 +118,9 @@ function* handlePushToServer() {
 
 export default function* commonSaga() {
   yield takeLatest(SET_OFFLINE_STATUS, handleOfflineStatusChange);
-  yield takeLatest(SET_OFFLINE_LOADING_STATUS, handleOfflineLoadingStatusChange);
+  yield takeLatest(
+    SET_OFFLINE_LOADING_STATUS,
+    handleOfflineLoadingStatusChange
+  );
   yield takeLatest(PUSH_TO_SERVER, handlePushToServer);
 }
