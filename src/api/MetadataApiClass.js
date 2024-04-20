@@ -74,6 +74,7 @@ export default class MetadataApiClass extends BaseApiClass {
         "fields=id,code,displayName,path,children[id,code,displayName,path]",
       ]
     );
+    console.log({ orgUnits });
     const me = await pull(
       this.baseUrl,
       this.username,
@@ -82,6 +83,7 @@ export default class MetadataApiClass extends BaseApiClass {
       { paging: false },
       []
     );
+    console.log({ orgUnits });
     let data = {};
     data.tree = orgUnits.organisationUnits.reduce((accumulator, currentOu) => {
       // accumulator[`organisationUnits/${currentOu.id}`] = async () => {

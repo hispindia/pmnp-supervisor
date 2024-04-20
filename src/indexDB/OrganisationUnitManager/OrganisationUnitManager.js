@@ -1,7 +1,8 @@
 import db from "../db";
-import { groupBy } from "lodash";
+import { get, groupBy } from "lodash";
 import { metadataApi } from "@/api";
 import { TABLE_NAME } from ".";
+import * as meManager from "@/indexDB/MeManager/MeManager";
 
 export const pull = async () => {
   try {
@@ -49,10 +50,45 @@ export const getUserOrgs = async () => {
       .equals(1)
       .toArray();
 
+    // With children
+    orgs.forEach(async (org) => {
+      const childrenOrgs = await db[TABLE_NAME].where("path")
+        .startsWith(org.path + "/")
+        .toArray();
+
+      org.children = childrenOrgs;
+    });
+
     return { organisationUnits: orgs };
   } catch (error) {
     console.error(`Failed to get user org`, error);
   }
+};
+
+export const getOrgUnitSelectorData = async (filter) => {
+  const orgUnits = await getUserOrgs();
+  const me = await meManager.getMe();
+
+  let data = {};
+  data.tree = orgUnits.organisationUnits.reduce((accumulator, currentOu) => {
+    currentOu.children = currentOu.children.sort(function (a, b) {
+      var nameA = a.displayName.toUpperCase();
+      var nameB = b.displayName.toUpperCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+    accumulator[`organisationUnits/${currentOu.id}`] = currentOu;
+    return accumulator;
+  }, {});
+
+  data.roots = me.organisationUnits.map((ou) => ou.id);
+
+  return data;
 };
 
 export const addOrgs = async (orgUnits) => {

@@ -1,8 +1,5 @@
-import React from "react";
 import { Button, Col, Popover, Row } from "antd";
-
 import OrgUnitSelector from "@/components/OrgUnitSelector/OrgUnitSelector.component";
-import { max } from "lodash";
 
 const OrgUnit = ({
   selectedOrgUnit,
