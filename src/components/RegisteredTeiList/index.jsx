@@ -136,42 +136,6 @@ const RegisteredTeiList = ({
 
   return (
     <Table
-      // antTableProps={{
-      //   onRow: (record, rowIndex) => {
-      //     return {
-      //       onClick: (event) => {
-      //         onRowClick(record, rowIndex, event);
-      //       },
-      //     };
-      //   },
-      //   sticky: true,
-      //   columns: [deleteColumn].concat(createColumns()),
-      //   dataSource: createDataSource(),
-      //   scroll: { y: "calc(100vh - 268px)" },
-      //   bordered: true,
-
-      //   pagination: {
-      //     position: ["bottomCenter"],
-      //     showSizeChanger: true,
-      //     current: page,
-      //     pageSize: pageSize,
-      //     total: total,
-      //     onChange: onChangePage,
-      //   },
-      //   onChangePage: onChangePage,
-      //   onChange: (
-      //     pagination,
-      //     filters,
-      //     sorter,
-      //     { currentDataSource: [], action }
-      //   ) => {
-      //     if (action === "sort") {
-      //       onSort(sorter);
-      //     }
-      //   },
-      // }}
-      // mobileBreakPoint={768}
-
       onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {

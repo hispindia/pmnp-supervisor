@@ -332,8 +332,11 @@ export const find = async ({
     result.instances = toDhis2TrackedEntities(teis);
 
     if (paging) {
-      result.pager = pager;
+      result.page = pager.page;
+      result.pageSize = pager.pageSize;
+      result.total = pager.total;
     }
+
     return result;
   } catch (error) {
     console.error(`Failed to get trackedEntity`, error);
