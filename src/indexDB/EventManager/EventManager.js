@@ -56,6 +56,7 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
     },
     [
       `dimension=ou:${org.id}`,
+      `ouMode=DESCENDANTS`,
       `startDate=2019-01-01`,
       `endDate=${moment().format("YYYY-MM-DD")}`,
       // `dimension=dx:${dataElementIds.map((de) => de).join(';')}`,
@@ -87,7 +88,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
               {
                 paging: true,
                 totalPages: true,
-                pageSize: 200,
+                pageSize: 1200, // using 1200 because, if getting 200 will be missing some data - DHIS2 bug
                 page,
               },
               org,

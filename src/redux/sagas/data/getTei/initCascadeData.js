@@ -40,6 +40,9 @@ function* initCascadeDataFromTEIsEvents(payload) {
   // const programStages = yield select(
   //     (state) => state.metadata.programMetadata.programStages
   // );
+
+  console.log("initCascadeDataFromTEIsEvents", { payload });
+
   let currentCascade = {};
 
   const currentEvents = yield select(

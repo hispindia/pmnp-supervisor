@@ -270,8 +270,6 @@ const CascadeTable = (props) => {
 
     initFunction && initFunction(cloneMetadata, dataRows);
     setMetadata([...Object.values(cloneMetadata)]);
-
-    console.log("Cascade table", { metadata });
   }, [JSON.stringify(metadata)]);
 
   const columnsC = [
