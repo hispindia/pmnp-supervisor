@@ -11,6 +11,7 @@ import withOrgUnitRequired from "../../hocs/withOrgUnitRequired";
 import withSkeletonLoading from "../../hocs/withSkeletonLoading";
 import { useEvent } from "../../hooks";
 import FIForm from "../../skeletons/TeiList";
+import { getEventByYearAndHalt6Month } from "@/utils/event";
 
 const LoadingFamilyMemberForm = withSkeletonLoading(FIForm)(FamilyMemberForm);
 
@@ -20,7 +21,11 @@ const FamilyMemberFormContainer = () => {
   const tei = useSelector((state) => state.data.tei);
   const selectedYear = useSelector((state) => state.data.tei.selectedYear);
 
-  const eventsData = events[selectedYear.index];
+  const eventData = getEventByYearAndHalt6Month(
+    events,
+    selectedYear.year,
+    selectedYear.selected6Month
+  );
 
   const {
     event,
@@ -31,11 +36,7 @@ const FamilyMemberFormContainer = () => {
     changeEventDataValue,
     setEventDirty,
     transformEvent,
-  } = useEvent(
-    eventsData && eventsData.length > 0
-      ? JSON.parse(JSON.stringify(events[selectedYear.index]))
-      : []
-  );
+  } = useEvent(eventData ? JSON.parse(JSON.stringify(eventData)) : []);
 
   const dispatch = useDispatch();
 
@@ -45,16 +46,11 @@ const FamilyMemberFormContainer = () => {
   }, [JSON.stringify(event)]);
 
   useEffect(() => {
-    console.log(
-      "update selected year",
-      events,
-      selectedYear,
-      events[selectedYear.index]
-    );
+    console.log("update selected year", events, selectedYear, eventData);
     // https://dhis2.asia/laomembers/api/trackedEntityInstances/query.json?attribute=gv9xX5w4kKt:EQ:yAHVhPxHorS&ou=Y9PhSNpBvg0&attribute=tASKWHyRolc&attribute=NLth2WTyo7M&attribute=tJrT8GIy477&attribute=BaiVwt8jVfg&attribute=IBLkiaYRRL3&attribute=bIzDI9HJCB0&attribute=IEE2BMhfoSc&attribute=tQeFLjYbqzv&attribute=DmuazFb368B&attribute=ck9h7CokxQE
 
-    if (events && events.length > 0 && events?.[selectedYear.index]) {
-      initEvent(JSON.parse(JSON.stringify(events?.[selectedYear.index])));
+    if (events && events.length > 0 && eventData) {
+      initEvent(JSON.parse(JSON.stringify(eventData)));
     }
   }, [selectedYear, JSON.stringify(events)]);
 

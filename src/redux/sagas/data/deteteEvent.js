@@ -4,6 +4,7 @@ import { getTei } from "../../actions/data/tei";
 import { getTeisErrorMessage, getTeisSuccessMessage } from "../../actions/teis";
 import { DELETE_EVENT, DELETE_FAMILY_EVENT } from "../../types/data/tei";
 import * as eventManager from "../../../indexDB/EventManager/EventManager";
+import { getEventsByYear } from "@/utils/event";
 
 export default function* deleteEventSaga() {
   yield takeEvery(DELETE_EVENT, handleDeleteEvent);
@@ -36,8 +37,14 @@ function* handleDeleteEvent({ eventId }) {
 function* handleDeleteFamilyEvent({ eventId }) {
   const { offlineStatus } = yield select((state) => state.common);
 
-  const { currentTei } = yield select((state) => state.data.tei.data);
-  const { index, year } = yield select((state) => state.data.tei.selectedYear);
+  const { currentTei, currentEvents } = yield select(
+    (state) => state.data.tei.data
+  );
+  const { year } = yield select((state) => state.data.tei.selectedYear);
+
+  const eventsByYear = getEventsByYear(currentEvents, year);
+  const eventIds = eventsByYear.map((e) => e.event);
+  console.log({ eventsByYear });
 
   try {
     let memberEventsIds = [];
@@ -64,7 +71,7 @@ function* handleDeleteFamilyEvent({ eventId }) {
       memberEventsIds = memberEventsByYear.rows.map((e) => e[0]);
     }
 
-    const payload = eventsIdToDeletePayload([eventId, ...memberEventsIds]);
+    const payload = eventsIdToDeletePayload([...eventIds, ...memberEventsIds]);
 
     console.log("handleDeleteFamilyEvent", {
       payload,

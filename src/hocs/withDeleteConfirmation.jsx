@@ -15,9 +15,7 @@ const withDeleteConfirmation =
       onClick && onClick(event);
     };
 
-    const handleClose = (e) => {
-      setAnchorEl(null);
-    };
+    const handleClose = (e) => {};
 
     return (
       <div onClick={(e) => e.stopPropagation()}>

@@ -160,23 +160,39 @@ function* handleCloneEvent({ year }) {
     }
   }
 
-  // init new event
-  let newFamilyEvent = {
-    _isDirty: false,
-    _isCloned: true,
-    event: generateUid(),
-    trackedEntity: currentTei.trackedEntity,
-    orgUnit: selectedOrgUnit.id,
-    program: programMetadata.id,
-    programStage: "vY4mlqYfJEH",
-    enrollment: currentEnrollment.enrollment,
-    occurredAt: `${year}-12-31`,
-    dueDate: `${year}-12-31`,
-    status: "ACTIVE",
-    dataValues: payloadTransformed?.dataValues || [], // payloadTransformed.dataValues,
-  };
+  // init new pair of family events
+  let newFamilyEvents = [
+    {
+      _isDirty: false,
+      _isCloned: true,
+      event: generateUid(),
+      trackedEntity: currentTei.trackedEntity,
+      orgUnit: selectedOrgUnit.id,
+      program: programMetadata.id,
+      programStage: "vY4mlqYfJEH",
+      enrollment: currentEnrollment.enrollment,
+      occurredAt: `${year}-06-30`,
+      dueDate: `${year}-06-30`,
+      status: "ACTIVE",
+      dataValues: payloadTransformed?.dataValues || [], // payloadTransformed.dataValues,
+    },
+    {
+      _isDirty: false,
+      _isCloned: true,
+      event: generateUid(),
+      trackedEntity: currentTei.trackedEntity,
+      orgUnit: selectedOrgUnit.id,
+      program: programMetadata.id,
+      programStage: "vY4mlqYfJEH",
+      enrollment: currentEnrollment.enrollment,
+      occurredAt: `${year}-12-31`,
+      dueDate: `${year}-12-31`,
+      status: "ACTIVE",
+      dataValues: payloadTransformed?.dataValues || [], // payloadTransformed.dataValues,
+    },
+  ];
 
-  console.log({ newFamilyEvent });
+  console.log({ newFamilyEvents });
   // yield call(dataApi.pushEvents, {
   //     events: [{ ...newEv, dataValues: payloadTransformed.dataValues }],
   // });
@@ -187,25 +203,28 @@ function* handleCloneEvent({ year }) {
     if (offlineStatus) {
       // create new event of family - this is used for the new Family dont have any data.
       // for offline database - event need at least 1 dataValue in order to be saved
-      if (newFamilyEvent.dataValues.length == 0) {
-        // IDz3cuoy2Ix is a the chosen dataElement for this case
-        newFamilyEvent.dataValues.push({
-          dataElement: "IDz3cuoy2Ix",
-          value: "",
-          dontClear: true,
-        });
-      }
 
-      yield call(eventManager.setEvents, { events: [newFamilyEvent] });
+      newFamilyEvents.forEach((newFamilyEvent) => {
+        if (newFamilyEvent.dataValues.length == 0) {
+          // IDz3cuoy2Ix is a the chosen dataElement for this case
+          newFamilyEvent.dataValues.push({
+            dataElement: "IDz3cuoy2Ix",
+            value: "",
+            dontClear: true,
+          });
+        }
+      });
+
+      yield call(eventManager.setEvents, { events: newFamilyEvents });
     } else {
       yield call(dataApi.pushEvents, {
-        events: [newFamilyEvent],
+        events: newFamilyEvents,
       });
     }
 
     yield put(getTeiSuccessMessage(`Updated successfully`));
     // update newFamilyEvent to REDUX store
-    yield put(updateEvents([...currentEvents, newFamilyEvent]));
+    yield put(updateEvents([...currentEvents, newFamilyEvents]));
 
     // Clone member events
     // get Members TEI
@@ -235,6 +254,8 @@ function* handleCloneEvent({ year }) {
       }
       console.log({ memberTEIsEvents });
       if (memberTEIsEvents) {
+        const newFamilyEvent = newFamilyEvents[0];
+
         const memberTEIsWithEvents = memberTEIsEvents
           ? memberTEIsEvents.instances
           : [];

@@ -1,3 +1,4 @@
+import { getEventByYearAndHalt6Month } from "@/utils/event";
 import moment from "moment";
 import queryString from "query-string";
 import { call, select } from "redux-saga/effects";
@@ -28,15 +29,14 @@ export function* getCurrentEvent() {
     (state) => state.data.tei.data.currentEvents
   );
 
-  // cannot be used anymor because familyEvents structure has been changed
-  const currentEventIndex = yield select(
-    (state) => state.data.tei.selectedYear.index
+  const { year, selected6Month } = yield select(
+    (state) => state.data.tei.selectedYear
   );
-  const currentYear = yield select((state) => state.data.tei.selectedYear.year);
 
-  // get current event by year
-  const currentEvent = currentEvents.find(
-    (e) => moment(e.occurredAt).year() == currentYear
+  const currentEvent = getEventByYearAndHalt6Month(
+    currentEvents,
+    year,
+    selected6Month
   );
 
   return currentEvent;
@@ -60,10 +60,8 @@ export function* makeNewCurrentEvents(dataValues) {
     (state) => state.data.tei.data.currentEvents
   );
   const newCurrentEvents = JSON.parse(JSON.stringify(currentEvents));
-  const currentEventIndex = yield select(
-    (state) => state.data.tei.selectedYear.index
-  );
-  newCurrentEvents.splice(currentEventIndex, 1, newCurrentEvent);
+
+  newCurrentEvents.push(newCurrentEvent);
   return newCurrentEvents;
 }
 
