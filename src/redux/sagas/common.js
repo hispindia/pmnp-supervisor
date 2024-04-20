@@ -5,7 +5,7 @@ import {
   SET_OFFLINE_LOADING_STATUS,
   SET_OFFLINE_STATUS,
 } from "@/redux/actions/common/type";
-import { notification } from "antd";
+import { message, notification } from "antd";
 
 import * as meManager from "@/indexDB/MeManager/MeManager";
 import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
@@ -67,37 +67,38 @@ function* handleOfflineStatusChange({ offlineStatus }) {
   localStorage.setItem("offlineStatus", offlineStatus);
 }
 
+function handlePushResult(result, message) {
+  if (result?.length > 0 && result.status != "OK") {
+    if (result.some((result) => result.status != "OK")) {
+      throw new Error(message);
+    }
+  }
+}
+
 function* handlePushToServer() {
   try {
     /**
      * push data to server by order
      */
 
+    // Check internet connection
+    if (!navigator.onLine) {
+      throw new Error("No internet connection!");
+    }
+
     // push tracked entities
     const teiPushResults = yield call(trackedEntityManager.push);
-    if (teiPushResults?.length > 0 && teiPushResults.status != "OK") {
-      if (teiPushResults.some((result) => result.status != "OK")) {
-        throw new Error("Push tracked entities failed!");
-      }
-    }
+    handlePushResult(teiPushResults, "Push tracked entities failed!");
     yield put(setCurrentOfflineLoading({ id: "tei", percent: 100 }));
 
     // push enrollments
     const enrPushResults = yield call(enrollmentManager.push);
-    if (enrPushResults?.length > 0 && teiPushResults.status != "OK") {
-      if (enrPushResults.some((result) => result.status != "OK")) {
-        throw new Error("Push enrollments failed!");
-      }
-    }
+    handlePushResult(enrPushResults, "Push enrollments failed!");
     yield put(setCurrentOfflineLoading({ id: "enr", percent: 100 }));
 
     // push events
     const eventPushRetuls = yield call(eventManager.push);
-    if (eventPushRetuls?.length > 0 && teiPushResults.status != "OK") {
-      if (eventPushRetuls.some((result) => result.status != "OK")) {
-        throw new Error("Push events failed!");
-      }
-    }
+    handlePushResult(eventPushRetuls, "Push events failed!");
     yield put(setCurrentOfflineLoading({ id: "event", percent: 100 }));
 
     // if there is no error, set offline status to false
@@ -105,7 +106,7 @@ function* handlePushToServer() {
   } catch (error) {
     notification.warning({
       message: "Warning",
-      description: "Sync data to server failed!",
+      description: error ? error.message : "Sync data to server failed!",
       placement: "bottomRight",
       duration: 5,
     });

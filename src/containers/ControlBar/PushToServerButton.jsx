@@ -1,4 +1,7 @@
-import { pushToServer, resetCurrentOfflineLoading } from "@/redux/actions/common";
+import {
+  pushToServer,
+  resetCurrentOfflineLoading,
+} from "@/redux/actions/common";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { useState } from "react";
@@ -10,13 +13,16 @@ import { findChangedData } from "./OfflineModeButton";
 import { toDhis2Enrollments } from "@/indexDB/data/enrollment";
 import { toDhis2Events } from "@/indexDB/data/event";
 import { toDhis2TrackedEntities } from "@/indexDB/data/trackedEntity";
+import { notification } from "antd";
 
 const PushToServerButton = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const [pushModalOpen, setPushModalOpen] = useState(false);
-  const [pushData, setPushData] = useState(pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {}));
+  const [pushData, setPushData] = useState(
+    pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {})
+  );
 
   const handleCancelPush = () => {
     setPushModalOpen(false);
@@ -32,17 +38,35 @@ const PushToServerButton = () => {
 
   return (
     <>
-      <PushModal pushData={pushData} open={pushModalOpen} onCancel={handleCancelPush} onClose={handlePushClose} onOk={handlePush} />
+      <PushModal
+        pushData={pushData}
+        open={pushModalOpen}
+        onCancel={handleCancelPush}
+        onClose={handlePushClose}
+        onOk={handlePush}
+      />
       <Button
         onClick={async () => {
           const results = await findChangedData();
           const found = results.find((r) => r.length > 0);
-          if (!found) return;
+          if (!found) {
+            notification.info({
+              message: "No data to push",
+              description: "There is no data to push to the server",
+              placement: "bottomRight",
+              duration: 5,
+            });
+            return;
+          }
 
           const enrs = toDhis2Enrollments(results[0]);
           const events = toDhis2Events(results[1]);
           const teis = toDhis2TrackedEntities(results[2]);
-          setPushData({ enr: enrs.length, event: events.length, tei: teis.length });
+          setPushData({
+            enr: enrs.length,
+            event: events.length,
+            tei: teis.length,
+          });
 
           dispatch(resetCurrentOfflineLoading());
           setPushModalOpen(true);

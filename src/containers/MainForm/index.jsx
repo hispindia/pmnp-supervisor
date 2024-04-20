@@ -52,8 +52,6 @@ const FormContainer = () => {
     history.push("/list");
   };
 
-  console.log("error", { error });
-
   return (
     <LoadingFormContainer
       successMessage={success}
