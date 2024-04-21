@@ -22,6 +22,7 @@ import { updateCascade } from "../../actions/data/tei/currentCascade";
 import { updateEvents } from "../../actions/data/tei/currentEvent";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import { getEventsByYear } from "@/utils/event";
 
 function* handleSubmitEventDataValues({ dataValues }) {
   console.log("handleSubmitEventDataValues", { dataValues });
@@ -33,31 +34,35 @@ function* handleSubmitEventDataValues({ dataValues }) {
   const { programMetadataMember } = yield select((state) => state.metadata);
 
   // data
-  const { index, year } = yield select((state) => state.data.tei.selectedYear);
+  const { year, selected6Month } = yield select(
+    (state) => state.data.tei.selectedYear
+  );
 
   const { currentTei, currentEvents, currentCascade } = yield select(
     (state) => state.data.tei.data
   );
   const { selectedMember } = yield select((state) => state.data.tei);
 
-  // going to delete JSON format completely
-  // const cascadeByYear = dataValues.oC9jreyd9SD
-  //     ? JSON.parse(JSON.stringify(dataValues.oC9jreyd9SD))
-  //     : null;
-
   process.env.NODE_ENV && console.log({ dataValues });
-  process.env.NODE_ENV && console.log("selectedYear", { index, year });
+  process.env.NODE_ENV && console.log("selectedYear", { year, selected6Month });
 
   const newCurrentEvent = yield call(makeNewCurrentEvent, dataValues);
   const newCurrentEventPayload = yield call(
     makeNewCurrentEventPayload,
     dataValues
   );
+
   const newCurrentEvents = yield call(makeNewCurrentEvents, dataValues);
+  const newCurrentEventsByYear = getEventsByYear(newCurrentEvents, year);
+  const newCurrentEventsPayload = yield call(
+    makeNewCurrentEventsPayload,
+    newCurrentEventsByYear
+  );
 
   process.env.NODE_ENV && console.log({ currentTei });
   process.env.NODE_ENV && console.log({ newCurrentEvent });
   process.env.NODE_ENV && console.log({ newCurrentEventPayload });
+  process.env.NODE_ENV && console.log({ newCurrentEventsPayload });
   process.env.NODE_ENV && console.log({ newCurrentEvents });
   process.env.NODE_ENV && console.log({ currentCascade });
 
@@ -66,11 +71,11 @@ function* handleSubmitEventDataValues({ dataValues }) {
     // OFFLINE MODE
     if (offlineStatus) {
       yield call(eventManager.setEvents, {
-        events: [newCurrentEventPayload],
+        events: newCurrentEventsPayload,
       });
     } else {
       yield call(dataApi.pushEvents, {
-        events: [newCurrentEventPayload],
+        events: newCurrentEventsPayload,
       });
     }
 
@@ -297,6 +302,25 @@ function* makeNewCurrentEventPayload(dataValues) {
     ...newCurrentEvent,
     dataValues: payloadTransformed.dataValues,
   };
+}
+
+function* makeNewCurrentEventsPayload(currentEvents) {
+  const { year } = yield select((state) => state.data.tei.selectedYear);
+  let eventsByYear = getEventsByYear(currentEvents, year);
+
+  let transformedEvents = [];
+  for (let event of eventsByYear) {
+    let payloadTransformed = yield call(transformEvent, {
+      dataValues: { ...event.dataValues },
+    });
+
+    transformedEvents.push({
+      ...event,
+      dataValues: payloadTransformed.dataValues,
+    });
+  }
+
+  return transformedEvents;
 }
 
 export default function* submitAttributes() {

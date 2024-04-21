@@ -1,7 +1,8 @@
-import { getEventByYearAndHalt6Month } from "@/utils/event";
+import { getEventByYearAndHalt6Month, getEventsByYear } from "@/utils/event";
 import moment from "moment";
 import queryString from "query-string";
 import { call, select } from "redux-saga/effects";
+import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
 
 export function* getTeiId() {
   const searchString = yield select((state) => state.router.location.search);
@@ -44,6 +45,7 @@ export function* getCurrentEvent() {
 
 export function* makeNewCurrentEvent(dataValues) {
   const currentEvent = yield call(getCurrentEvent);
+
   return {
     ...currentEvent,
     dataValues: {
@@ -53,21 +55,74 @@ export function* makeNewCurrentEvent(dataValues) {
   };
 }
 
+// clone calculateDataElements for all events of the year of Family
+export function* makeNewCurrentEventsWithCalculatedDataElements(
+  currentEvents,
+  dataValues
+) {
+  const { year } = yield select((state) => state.data.tei.selectedYear);
+  let eventsByYear = getEventsByYear(currentEvents, year);
+
+  // get all dataValues in the list calculateDataElements
+  const calculatedDataValues = Object.entries(dataValues).reduce(
+    (acc, [key, value]) => {
+      if (calculateDataElements.includes(key)) {
+        acc[key] = value;
+      }
+      return acc;
+    },
+    {}
+  );
+
+  eventsByYear = eventsByYear.reduce((acc, event) => {
+    acc.push({
+      ...event,
+      dataValues: {
+        ...event.dataValues,
+        ...calculatedDataValues,
+      },
+    });
+    return acc;
+  }, []);
+
+  console.log("makeNewCurrentEventsWithCalculatedDataElements", {
+    eventsByYear,
+  });
+
+  return eventsByYear;
+}
+
 export function* makeNewCurrentEvents(dataValues) {
   const newCurrentEvent = yield call(makeNewCurrentEvent, dataValues);
   newCurrentEvent._isDirty = false;
   const currentEvents = yield select(
     (state) => state.data.tei.data.currentEvents
   );
-  const newCurrentEvents = JSON.parse(JSON.stringify(currentEvents));
 
-  newCurrentEvents.push(newCurrentEvent);
+  const newCurrentEvents = JSON.parse(JSON.stringify(currentEvents));
+  const currentEventIndex = newCurrentEvents.findIndex(
+    (e) => e.event === newCurrentEvent.event
+  );
+
+  newCurrentEvents.splice(currentEventIndex, 1, newCurrentEvent);
+
+  const newCurrentEventsWithCalculatedDataElements = yield call(
+    makeNewCurrentEventsWithCalculatedDataElements,
+    newCurrentEvents,
+    dataValues
+  );
+
+  newCurrentEventsWithCalculatedDataElements.forEach((event) => {
+    const index = newCurrentEvents.findIndex((e) => e.event === event.event);
+
+    newCurrentEvents.splice(index, 1, event);
+  });
+
   return newCurrentEvents;
 }
 
 export function* transformEvent(event) {
   const transformed = { ...event };
-  console.log({ transformed });
   transformed.dataValues = Object.keys(transformed.dataValues).map(
     (dataElement) => {
       const dv = {

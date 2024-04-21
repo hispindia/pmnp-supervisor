@@ -71,6 +71,40 @@ const calcAgeFromDOB = (dateOfBirth, birthYear, age, curEvent, t) => {
   }
   return returnResult;
 };
+const calculateDataElements = [
+  "bXy7dRTxSUN",
+  "Pwttxh8qzbh",
+  "qMEd4h2s2jA",
+  "SyPLRSV1NCn",
+  "Oov8I1ZmXo3",
+  "C2zynun5YMh",
+  "fqdxmeIjMGq",
+  "HJCjFyZe3fd",
+  "ueeqalP1NnB",
+  "NnsZ7Yq0ZMl",
+  "AZULo0fgAPA",
+  "jObBjI31SHJ",
+  "Eqi1288N8Nd",
+  "eDwcbrF4Qsr",
+  "hx5FKOqT18B",
+  "xllqsmDiexq",
+  "cz6oa275ize",
+  "DG9EvDsL801",
+  "S91BBc2Op9Z",
+  "qaAsAc4DBlE",
+  "yHQ9LbhuLPh",
+  "CCtvT9h1yB4",
+  "osp7h6GLyV8",
+  "Gf8F7hQqygz",
+  "GTEknIuyEiO",
+  "AI5nHnkf5WR",
+  "y9zGBpMBAhQ",
+  "dE6mw0hXdAt",
+  "SHCRzRWFaii",
+  "PFwymX0Io0y",
+  "Va3FC8Io1b0",
+];
+
 const calculateAgeGroup = (metadata, data, currentEvent) => {
   var mapping = {
     [`value["ethnicity"] ==="ລາວ" ||value["ethnicity"] ==="ຜູ້ໄທ" ||value["ethnicity"] ==="ໄຕ" ||value["ethnicity"] ==="ລື້" ||value["ethnicity"] ==="ຍວນ" ||value["ethnicity"] ==="ຢັ້ງ" ||value["ethnicity"] ==="ແຊກ" ||value["ethnicity"] ==="ໄທເໜືອ" ||value["ethnicity"] ==="Lao" ||value["ethnicity"] ==="Phouthai" ||value["ethnicity"] ==="Tai" ||value["ethnicity"] ==="Lue" ||value["ethnicity"] ==="Nyouan" ||value["ethnicity"] ==="Nyung" ||value["ethnicity"] ==="Sek" ||value["ethnicity"] ==="Thai-nua"`]:
@@ -129,41 +163,10 @@ const calculateAgeGroup = (metadata, data, currentEvent) => {
     true: "Va3FC8Io1b0",
   };
 
-  var tempValues = {
-    bXy7dRTxSUN: 0,
-    Pwttxh8qzbh: 0,
-    qMEd4h2s2jA: 0,
-    SyPLRSV1NCn: 0,
-    Oov8I1ZmXo3: 0,
-    C2zynun5YMh: 0,
-    fqdxmeIjMGq: 0,
-
-    HJCjFyZe3fd: 0,
-    ueeqalP1NnB: 0,
-    NnsZ7Yq0ZMl: 0,
-    AZULo0fgAPA: 0,
-    jObBjI31SHJ: 0,
-
-    Eqi1288N8Nd: 0,
-    eDwcbrF4Qsr: 0,
-    hx5FKOqT18B: 0,
-    xllqsmDiexq: 0,
-    cz6oa275ize: 0,
-    DG9EvDsL801: 0,
-    S91BBc2Op9Z: 0,
-    qaAsAc4DBlE: 0,
-    yHQ9LbhuLPh: 0,
-    CCtvT9h1yB4: 0,
-    osp7h6GLyV8: 0,
-    Gf8F7hQqygz: 0,
-    GTEknIuyEiO: 0,
-    AI5nHnkf5WR: 0,
-    y9zGBpMBAhQ: 0,
-    dE6mw0hXdAt: 0,
-    SHCRzRWFaii: 0,
-    PFwymX0Io0y: 0,
-    Va3FC8Io1b0: 0,
-  };
+  var tempValues = calculateDataElements.reduce((acc, value) => {
+    acc[value] = 0;
+    return acc;
+  }, {});
 
   data.forEach((value) => {
     // Calculate from dob
@@ -191,4 +194,9 @@ const calculateAgeGroup = (metadata, data, currentEvent) => {
   return tempValues;
 };
 
-export { calculateAgeGroup, calculateAge, calcAgeFromDOB };
+export {
+  calculateAgeGroup,
+  calculateAge,
+  calcAgeFromDOB,
+  calculateDataElements,
+};

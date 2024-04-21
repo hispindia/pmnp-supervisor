@@ -15,10 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeMember, clear } from "../../redux/actions/data/tei";
 
 // Import utils
-import {
-  calcAgeFromDOB,
-  calculateAgeGroup,
-} from "../FormContainer/FormCalculationUtils";
+import { calcAgeFromDOB, calculateAgeGroup } from "./FormCalculationUtils";
 
 // Styles
 import "../../index.css";
