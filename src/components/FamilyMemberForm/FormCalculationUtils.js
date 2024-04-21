@@ -105,7 +105,7 @@ const calculateDataElements = [
   "Va3FC8Io1b0",
 ];
 
-const calculateAgeGroup = (metadata, data, currentEvent) => {
+const calculateAgeGroup = (data, currentEvent) => {
   var mapping = {
     [`value["ethnicity"] ==="ລາວ" ||value["ethnicity"] ==="ຜູ້ໄທ" ||value["ethnicity"] ==="ໄຕ" ||value["ethnicity"] ==="ລື້" ||value["ethnicity"] ==="ຍວນ" ||value["ethnicity"] ==="ຢັ້ງ" ||value["ethnicity"] ==="ແຊກ" ||value["ethnicity"] ==="ໄທເໜືອ" ||value["ethnicity"] ==="Lao" ||value["ethnicity"] ==="Phouthai" ||value["ethnicity"] ==="Tai" ||value["ethnicity"] ==="Lue" ||value["ethnicity"] ==="Nyouan" ||value["ethnicity"] ==="Nyung" ||value["ethnicity"] ==="Sek" ||value["ethnicity"] ==="Thai-nua"`]:
       "HJCjFyZe3fd",
@@ -167,7 +167,7 @@ const calculateAgeGroup = (metadata, data, currentEvent) => {
     acc[value] = 0;
     return acc;
   }, {});
-
+  console.log("test", { tempValues, data });
   data.forEach((value) => {
     // Calculate from dob
     let res = calcAgeFromDOB(

@@ -55,7 +55,6 @@ function* initCascadeDataFromTEIsEvents(payload) {
     payload &&
     currentEvents.reduce((res, ce) => {
       let year = moment(ce.occurredAt).year();
-      process.env.NODE_ENV && console.log(year);
 
       let cascadeByYear = memberTEIsWithEvents.reduce((cas, tei) => {
         const enr = tei.enrollments[0];

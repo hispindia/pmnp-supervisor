@@ -278,11 +278,8 @@ const FamilyMemberForm = ({
     }
     // FOR ALL ROWS
     // Calculate Age Group
-    let tempValues = calculateAgeGroup(
-      metadata,
-      dataRows["rows"],
-      currentEvent
-    );
+    let tempValues = calculateAgeGroup(dataRows["rows"], currentEvent);
+    console.log("calculateAgeGroup", dataRows["rows"], tempValues);
     Object.entries(tempValues).forEach((v) => {
       if (v[1] === 0) {
         v[1] = "";

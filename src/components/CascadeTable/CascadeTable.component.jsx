@@ -199,13 +199,14 @@ const CascadeTable = (props) => {
 
     setMetadata([...updatedMetadata]);
 
-    if (currentEvent._isDirty) {
-      let dataRows = {
-        rows: transformedData,
-      };
+    // REMOVE THIS - to fix bug losing calculated data
+    // if (currentEvent._isDirty) {
+    //   let dataRows = {
+    //     rows: transformedData,
+    //   };
 
-      callbackFunction && callbackFunction(metadata, dataRows);
-    }
+    //   callbackFunction && callbackFunction(metadata, dataRows);
+    // }
   }, [JSON.stringify(props.data)]);
 
   useEffect(() => {
