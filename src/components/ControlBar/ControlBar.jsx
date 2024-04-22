@@ -4,7 +4,7 @@ import styles from "./ControlBar.module.css";
 /* REDUX */
 import { Button, Dropdown } from "antd";
 import { connect } from "react-redux";
-import OrgUnit from "../../containers/ControlBar/OrgUnit";
+import OrgUnitContainer from "../../containers/ControlBar/OrgUnit";
 import ReportButtonContainer from "../../containers/ControlBar/ReportButton";
 import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButtons";
 import { setSelectedOrgUnit } from "../../redux/actions/metadata";
@@ -35,7 +35,7 @@ const ControlBar = () => {
       <div className={controlBarContainer}>
         <div className="d-flex">
           <div className="mr-3">
-            <OrgUnit />
+            <OrgUnitContainer />
           </div>
 
           <div className="d-md-none">

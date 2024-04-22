@@ -29,6 +29,7 @@ const LoadingRegisteredTeiList = compose(
 const RegisteredTeiListContainer = () => {
   const dispatch = useDispatch();
   const onDeleteTei = (record) => dispatch(deleteTei(record.teiId));
+  const { selectedOrgUnit } = useSelector((state) => state.metadata);
   const trackedEntityAttributes = useSelector(
     (state) => state.metadata.programMetadata.trackedEntityAttributes
   );
@@ -41,15 +42,13 @@ const RegisteredTeiListContainer = () => {
   } = useSelector((state) => state.teis);
   const history = useHistory();
 
-  console.log({ trackedEntityAttributes });
-
   useEffect(() => {
     dispatch(getTeis());
     return () => {
       dispatch(getTeisSuccessMessage(null));
       dispatch(getTeisErrorMessage(null));
     };
-  }, []);
+  }, [selectedOrgUnit]);
 
   const onSort = (sorter) => {
     dispatch(tableSort(sorter));
