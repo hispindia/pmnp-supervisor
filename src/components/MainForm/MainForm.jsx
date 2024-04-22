@@ -1,10 +1,9 @@
-import React from "react";
+import { CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Tabs } from "antd";
-import ProfileFormContainer from "../../containers/ProfileForm";
-import FMLayoutContainer from "../../containers/FMLayout";
-import { BarChartOutlined, CloseOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import CensusDetailFormContainer from "../../containers/CensusDetailForm";
+import CensusDetailFormContainer from "../../containers/CensusDetailFormContainer";
+import FMLayoutContainer from "../../containers/FMLayout";
+import ProfileFormContainer from "../../containers/ProfileForm";
 
 const { TabPane } = Tabs;
 

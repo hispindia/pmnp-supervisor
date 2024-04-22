@@ -26,7 +26,7 @@ const CensusDetailForm = ({
     () => withDhis2FormItem(dataElements)(CFormControl),
     [dataElements]
   );
-
+  console.log({ values });
   useEffect(() => {
     form.resetFields();
     form.setFieldsValue(values);
@@ -51,7 +51,6 @@ const CensusDetailForm = ({
       dataIndex: "input1",
       key: "input1",
       render: (value, row, index) => {
-        // console.log({ value, row, index });
         return {
           children: value,
           props: {
