@@ -103,7 +103,6 @@ const ProfileForm = ({
       name="familyRegistration"
       onFinish={(fieldsValue) => {
         // onSubmit(cleanFormData(fieldsValue));
-        console.log({ fieldsValue });
         onSubmit(fieldsValue);
       }}
     >

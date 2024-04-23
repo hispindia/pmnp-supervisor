@@ -39,6 +39,7 @@ const InputField = ({
       </Select>
     );
   }
+  console.log({ valueType, id: props.id });
   switch (valueType) {
     case "INTEGER_POSITIVE":
     case "INTEGER_NEGATIVE":
@@ -46,6 +47,7 @@ const InputField = ({
     case "PERCENTAGE":
     case "NUMBER":
     case "INTEGER":
+    case "PHONE_NUMBER":
       return (
         <Input
           onKeyDown={(e) => {
@@ -65,7 +67,6 @@ const InputField = ({
       );
 
     case "TEXT":
-    case "PHONE_NUMBER":
     case "EMAIL":
       return (
         <Input

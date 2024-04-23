@@ -720,8 +720,8 @@ const originMetadata = [
     name: "Police Number",
     id: "PYgXM3R2TQd",
     disable: false,
-    valueType: "TEXT",
-    // pattern: /^[a-zA-Z\s]+$/,
+    valueType: "MASK",
+    pattern: /^\d+$/,
     valueSet: null,
     sort: null,
     translations: {
@@ -967,7 +967,7 @@ const originMetadata = [
         unique: false,
         multiple: ["Divorce"],
         translations: {
-          lo: "ຢ່າຮ້າງ/ແຍກກັນຢູ່",
+          lo: "ຢ່າຮ້າງ",
         },
       },
       {
@@ -977,7 +977,7 @@ const originMetadata = [
         unique: false,
         multiple: ["Separated"],
         translations: {
-          lo: "ຢ່າຮ້າງ/ແຍກກັນຢູ່",
+          lo: "ແຍກກັນຢູ່",
         },
       },
       {
