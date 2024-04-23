@@ -50,8 +50,11 @@ function* getTeis(newPayload = {}) {
         program: programMetadata.id,
         pageSize: nextPayload.pageSize,
         page: nextPayload.page,
+        filters: [returnFilterString(nextPayload.filters).replace(/&/g, "")],
         ouMode: "DESCENDANTS",
       });
+
+      console.log("getTrackedEntityInstanceListByQuery", { instanceList });
     } else {
       instanceList = yield call(
         dataApi.getTrackedEntityInstanceListByQuery,

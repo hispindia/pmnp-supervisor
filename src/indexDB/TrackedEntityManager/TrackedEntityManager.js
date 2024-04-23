@@ -260,6 +260,41 @@ const beforePersist = async (result, isOnline = 1) => {
   return objects;
 };
 
+const filterQueryBuilder = (query, filters) => {
+  if (filters && filters.length > 0) {
+    let queryBuilder = query;
+
+    queryBuilder = queryBuilder.filter((teiValue) => {
+      let passes = true;
+
+      filters.forEach((filter) => {
+        // example: 'attribute=gv9xX5w4kKt:EQ:EzwtyXwTVzq' => ['attribute', 'gv9xX5w4kKt', 'EQ', 'EzwtyXwTVzq']
+        const [attribute, field, operator, value] = filter.split(/[:=]/);
+
+        if (operator === "EQ") {
+          passes =
+            passes &&
+            teiValue[attribute] === field &&
+            teiValue["value"] === value;
+        }
+
+        if (operator === "LIKE") {
+          passes =
+            passes &&
+            teiValue[attribute] === field &&
+            teiValue["value"].includes(value);
+        }
+      });
+
+      return passes;
+    });
+
+    return queryBuilder;
+  }
+
+  return query;
+};
+
 export const findOne = async (trackedEntity) => {
   try {
     const tei = await db[TABLE_NAME].where("trackedEntity")
@@ -277,6 +312,7 @@ export const find = async ({
   pageSize,
   page,
   orgUnit,
+  filters,
   program,
   ouMode = "SELECTED",
 }) => {
@@ -310,6 +346,26 @@ export const find = async ({
       queryBuilder = queryBuilder.and((enr) => enr.orgUnit === orgUnit);
     }
 
+    if (filters && filters.length > 0 && Boolean(filters[0])) {
+      let teisFilterQueryBuilder = await db[TABLE_NAME];
+
+      teisFilterQueryBuilder = filterQueryBuilder(
+        teisFilterQueryBuilder,
+        filters
+      );
+
+      const teisMatchFilter = await teisFilterQueryBuilder.toArray();
+      const teisMatchFilterIds = teisMatchFilter.map(
+        (tei) => tei.trackedEntity
+      );
+
+      console.log({ teisMatchFilterIds });
+
+      queryBuilder = queryBuilder.and((enr) =>
+        teisMatchFilterIds.includes(enr.trackedEntity)
+      );
+    }
+
     let pager = {};
     if (paging && pageSize && page) {
       const total = await queryBuilder.count();
@@ -332,13 +388,15 @@ export const find = async ({
 
     const trackedEntities = enrs.map((enr) => enr.trackedEntity);
 
-    const teis = await db[TABLE_NAME].where("trackedEntity")
-      .anyOf(trackedEntities)
-      .toArray();
+    let teisQueryBuilder = await db[TABLE_NAME].where("trackedEntity").anyOf(
+      trackedEntities
+    );
+
+    const teis = await teisQueryBuilder.toArray();
 
     result.instances = toDhis2TrackedEntities(teis);
 
-    if (paging) {
+    if (paging && pager) {
       result.page = pager.page;
       result.pageSize = pager.pageSize;
       result.total = pager.total;
