@@ -40,9 +40,6 @@ function* getTeis(newPayload = {}) {
     );
     let instanceList = {};
 
-    // console.log(returnFilterString(nextPayload.filters));
-    // console.log(nextPayload.orderString);
-
     // OFFLINE MODE
     if (offlineStatus) {
       instanceList = yield call(trackedEntityManager.find, {
@@ -50,7 +47,9 @@ function* getTeis(newPayload = {}) {
         program: programMetadata.id,
         pageSize: nextPayload.pageSize,
         page: nextPayload.page,
-        filters: [returnFilterString(nextPayload.filters).replace(/&/g, "")],
+        filters: returnFilterString(nextPayload.filters)
+          .split("&")
+          .filter(Boolean),
         ouMode: "DESCENDANTS",
       });
 

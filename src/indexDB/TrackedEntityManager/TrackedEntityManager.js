@@ -261,6 +261,8 @@ const beforePersist = async (result, isOnline = 1) => {
 };
 
 const filterQueryBuilder = (query, filters) => {
+  console.log(filters);
+
   if (filters && filters.length > 0) {
     let queryBuilder = query;
 
@@ -320,6 +322,8 @@ export const find = async ({
     const result = {
       instances: [],
     };
+
+    console.log(filters, orgUnit, program, ouMode);
 
     // get child orgUnits
     const selectedOrgUnit = await orgUnitManager.getOrgWithChildren(orgUnit);
