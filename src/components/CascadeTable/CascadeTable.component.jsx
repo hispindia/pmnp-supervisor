@@ -15,6 +15,8 @@ import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
+import { useDispatch } from "react-redux";
+import { updateCascade } from "@/redux/actions/data/tei/currentCascade";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -36,14 +38,17 @@ const CascadeTable = (props) => {
     originMetadata,
     metadata,
     setMetadata,
+    setData,
+    data,
     ...other
   } = props;
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
+  const dispatch = useDispatch();
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
   );
-  const [data, setData] = useState(props.data);
+  // const [data, setData] = useState(props.data);
 
   const [showData, setShowData] = useState(
     transformData(metadata, props.data, dataValuesTranslate, locale)
@@ -78,14 +83,18 @@ const CascadeTable = (props) => {
     };
     callbackFunction && callbackFunction(metadata, dataRows, rowIndex, "edit");
 
-    changeEventDataValue(
-      "oC9jreyd9SD",
-      JSON.stringify({ dataVals: dataRows["rows"] })
-    );
+    // changeEventDataValue(
+    //   "oC9jreyd9SD",
+    //   JSON.stringify({ dataVals: dataRows["rows"] })
+    // );
+
     setData([...dataRows["rows"]]);
 
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
-    console.log("handleEditRow", { updatedMetadata });
+    console.log("handleEditRow", { updatedMetadata, dataRows });
+
+    dispatch(updateCascade(dataRows["rows"]));
+
     setMetadata([...updatedMetadata]);
 
     setFormStatus(FORM_ACTION_TYPES.NONE);
@@ -110,6 +119,7 @@ const CascadeTable = (props) => {
 
     callbackFunction &&
       callbackFunction(metadata, dataRows, dataRows["rows"].length - 1, "add");
+
     changeEventDataValue(
       "oC9jreyd9SD",
       JSON.stringify({ dataVals: dataRows["rows"] })

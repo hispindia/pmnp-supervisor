@@ -27,7 +27,7 @@ const teiMapping = {
 };
 
 const eventMapping = {
-  DOB: "PzzayUNGasj",
+  // DOB: "PzzayUNGasj", DOB of event ( do not use this )
   relation: "u0Ke4EXsIKZ",
   education: "Z9a4Vim1cuJ",
   insurance: "vbBhehiwNLV",

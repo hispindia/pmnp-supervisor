@@ -85,10 +85,6 @@ export function* makeNewCurrentEventsWithCalculatedDataElements(
     return acc;
   }, []);
 
-  console.log("makeNewCurrentEventsWithCalculatedDataElements", {
-    eventsByYear,
-  });
-
   return eventsByYear;
 }
 
@@ -154,7 +150,7 @@ const teiMapping = {
 };
 const enrMapping = {};
 const eventMapping = {
-  PzzayUNGasj: "DOB",
+  // PzzayUNGasj: "DOB",
   Z9a4Vim1cuJ: "education",
   hV0pAEbJqZj: "status",
   it3Ih0CVTV1: "age",
@@ -197,7 +193,7 @@ const convertValueBack = (valueType, value) => {
     case "AGE":
       return value ? moment(value).format("YYYY-MM-DD") : value;
     default:
-      return null;
+      return "";
   }
 };
 
@@ -240,8 +236,9 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     value: family.trackedEntity,
   });
 
+  // Should not clear be cause it will be used to remove the attribute
   // clear all empty attributes
-  tei.attributes = tei.attributes.filter((attr) => attr.value);
+  // tei.attributes = tei.attributes.filter((attr) => attr.value);
 
   // ENR
   let enrollmentPayload = {

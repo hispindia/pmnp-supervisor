@@ -60,15 +60,14 @@ const FamilyMemberForm = ({
   const classes = useStyles();
 
   const { year } = useSelector((state) => state.data.tei.selectedYear);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
 
   const currentCascade = useSelector(
     (state) => state.data.tei.data.currentCascade
   );
-
-  const [data, setData] = useState([]);
 
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
 
@@ -81,6 +80,10 @@ const FamilyMemberForm = ({
       // setData([]);
     };
   }, []);
+
+  useEffect(() => {
+    console.log("checking data", { data });
+  }, [data]);
 
   const getCascadeData = () => {
     let cascadeData = [];
@@ -335,6 +338,7 @@ const FamilyMemberForm = ({
             calcAgeFromDOB={calcAgeFromDOB}
             originMetadata={originMetadata}
             setMetadata={setMetadata}
+            setData={setData}
             t={t}
             externalComponents={externalComponents}
             maxDate={`${year}-12-31`}

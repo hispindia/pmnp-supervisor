@@ -17,7 +17,7 @@ function* handleDeleteMember({ teiId }) {
   // metadata
   const { programMetadataMember } = yield select((state) => state.metadata);
   // data
-  const { index, year } = yield select((state) => state.data.tei.selectedYear);
+  const { year } = yield select((state) => state.data.tei.selectedYear);
 
   let memberTEI = null;
 
