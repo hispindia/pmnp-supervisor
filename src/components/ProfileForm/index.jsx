@@ -103,6 +103,7 @@ const ProfileForm = ({
       name="familyRegistration"
       onFinish={(fieldsValue) => {
         // onSubmit(cleanFormData(fieldsValue));
+        console.log({ fieldsValue });
         onSubmit(fieldsValue);
       }}
     >
@@ -183,7 +184,6 @@ const ProfileForm = ({
           <div className="row">
             <div className="col-lg-4">
               <Dhis2FormItem
-                id="CKQuSLAY0Xf"
                 displayFormName={t("tempBookNumber")}
                 dependentFields={[
                   "rzGghDo5ipI",
@@ -208,10 +208,12 @@ const ProfileForm = ({
                     houseNumber,
                     temporaryBookNumber,
                   ]);
+
                   return {
                     CKQuSLAY0Xf: generatedValue,
                   };
                 }}
+                id="CKQuSLAY0Xf"
               >
                 <InputField size="large" disabled={true} />
               </Dhis2FormItem>
