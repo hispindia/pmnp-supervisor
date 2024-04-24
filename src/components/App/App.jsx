@@ -1,13 +1,8 @@
-import { lazy, Suspense } from "react";
 import { Route, Switch } from "react-router-dom";
 import RegisteredTeiListContainer from "../../containers/RegisteredTeiList";
 import ControlBar from "../ControlBar/ControlBar";
-
 import MainForm from "../../containers/MainForm";
-import withOrgUnitRequired from "../../hocs/withOrgUnitRequired";
-import OrgUnitRequired from "../../skeletons/OrgUnitRequired";
-
-const Report = lazy(() => import("../../modules/Report/containers/Layout"));
+import ReportContainer from "./ReportContainer";
 
 const App = () => {
   return (
@@ -23,14 +18,7 @@ const App = () => {
         {/*  path="/form"*/}
         {/*  render={() => <FormContainer programMetadata={programMetadata} />}*/}
         {/*/>*/}
-        <Route
-          path="/report"
-          component={
-            <Suspense fallback={<div>Loading...</div>}>
-              {withOrgUnitRequired(OrgUnitRequired)(<Report />)}
-            </Suspense>
-          }
-        />
+        <Route path="/report" component={ReportContainer} />
       </Switch>
     </>
   );
