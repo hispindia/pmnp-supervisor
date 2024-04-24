@@ -39,7 +39,7 @@ const InputField = ({
       </Select>
     );
   }
-  console.log({ valueType, id: props.id });
+
   switch (valueType) {
     case "INTEGER_POSITIVE":
     case "INTEGER_NEGATIVE":

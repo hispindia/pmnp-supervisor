@@ -309,10 +309,19 @@ function* makeNewCurrentEventPayload(dataValues) {
 function* getSelectedMemberData() {
   const { selectedMember } = yield select((state) => state.data.tei);
   const { currentCascade } = yield select((state) => state.data.tei.data);
+  const { year } = yield select((state) => state.data.tei.selectedYear);
 
   let selectedMemberData = null;
-  if (currentCascade) {
-    selectedMemberData = currentCascade.find((m) => m.id === selectedMember.id);
+
+  console.log({ currentCascade });
+  if (
+    currentCascade &&
+    currentCascade[year] &&
+    currentCascade[year].length > 0
+  ) {
+    selectedMemberData = currentCascade[year].find(
+      (m) => m.id === selectedMember.id
+    );
   }
 
   return selectedMemberData;

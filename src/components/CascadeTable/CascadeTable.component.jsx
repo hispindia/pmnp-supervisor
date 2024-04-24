@@ -2,6 +2,7 @@ import { generateUid } from "@/utils";
 import { useEffect, useState } from "react";
 import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
+import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES } from "../constants";
 
 // Icon
@@ -10,13 +11,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { transformData, transformMetadataToColumns } from "./utils";
 
+import { updateCascade } from "@/redux/actions/data/tei/currentCascade";
 import _ from "lodash";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
-import { useDispatch } from "react-redux";
-import { updateCascade } from "@/redux/actions/data/tei/currentCascade";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -44,6 +44,8 @@ const CascadeTable = (props) => {
   } = props;
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
+  const { year } = useSelector((state) => state.data.tei.selectedYear);
+  const { currentCascade } = useSelector((state) => state.data.tei.data);
   const dispatch = useDispatch();
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
@@ -93,10 +95,14 @@ const CascadeTable = (props) => {
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
     console.log("handleEditRow", { updatedMetadata, dataRows });
 
-    dispatch(updateCascade(dataRows["rows"]));
+    // update new currentCascade
+    const updatedCurrentCascade = {
+      ...currentCascade,
+      [year]: dataRows["rows"],
+    };
+    dispatch(updateCascade(updatedCurrentCascade));
 
     setMetadata([...updatedMetadata]);
-
     setFormStatus(FORM_ACTION_TYPES.NONE);
   };
 
@@ -128,6 +134,13 @@ const CascadeTable = (props) => {
     setData([...dataRows["rows"]]);
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
 
+    // update new currentCascade
+    const updatedCurrentCascade = {
+      ...currentCascade,
+      [year]: dataRows["rows"],
+    };
+    dispatch(updateCascade(updatedCurrentCascade));
+
     console.log("handleAddNewRow", { updatedMetadata, dataRows });
 
     setMetadata([...updatedMetadata]);
@@ -154,6 +167,14 @@ const CascadeTable = (props) => {
     );
     setData([...dataRows["rows"]]);
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
+
+    // update new currentCascade
+    const updatedCurrentCascade = {
+      ...currentCascade,
+      [year]: dataRows["rows"],
+    };
+    dispatch(updateCascade(updatedCurrentCascade));
+
     setMetadata([...updatedMetadata]);
   };
 
