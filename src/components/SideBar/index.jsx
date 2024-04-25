@@ -40,6 +40,12 @@ const SideBar = () => {
     if (!existedYear.includes(year)) {
       setWarningText(null);
       dispatch(cloneFamily(year));
+      const currentItemSize = currentEvents.reduce((years, event) => {
+        const year = moment(event.occurredAt).format("YYYY");
+        if (!years.includes(year)) years.push(year);
+        return years;
+      }, []).length;
+      dispatch(changeEventFamily(currentItemSize, year, 0));
       childRef.current.close();
     } else {
       setWarningText(`${year} ${"already exists."}`);
@@ -57,6 +63,8 @@ const SideBar = () => {
   //         setWarningText(`${year} ${'already exists.'}`);
   //     }
   // };
+
+  console.log({ selectedYear });
 
   return (
     <React.Fragment>
