@@ -121,7 +121,7 @@ const ProfileForm = ({
         </div>
       </div>
       <div className="row col-lg-12">
-        <div className="col-lg-3">
+        {/* <div className="col-lg-3">
           <FormNoInputContainer
             id="G9KYJZ8dW76"
             initialValue={profile.attributes.G9KYJZ8dW76}
@@ -129,7 +129,7 @@ const ProfileForm = ({
             size="large"
             form={form}
           />
-        </div>
+        </div> */}
         <div className="col-lg-3">
           <Dhis2FormItem id="xbwURy2jG2K" displayFormName={t("unitOfVillage")}>
             <InputField size="large" disabled={!isEdit} />
@@ -323,7 +323,7 @@ const ProfileForm = ({
             <CFormControl
               dependentFields={[
                 "BUEzQEErqa7",
-                "G9KYJZ8dW76",
+                // "G9KYJZ8dW76",
                 "xbwURy2jG2K",
                 "W8WZcI1SUjC",
                 "rzGghDo5ipI",
