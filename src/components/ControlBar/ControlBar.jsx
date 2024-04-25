@@ -21,10 +21,14 @@ const items = [
   },
   {
     key: "2",
-    label: <OfflineModeButton />,
+    label: <ReportButtonContainer />,
   },
   {
     key: "3",
+    label: <OfflineModeButton />,
+  },
+  {
+    key: "4",
     label: <PushToServerButton />,
   },
 ];
@@ -60,7 +64,7 @@ const ControlBar = () => {
             <AddNewFamilyButtonContainer />
           </div>
 
-          <div className="d-none d-lg-block">
+          <div className="d-none d-md-block">
             <ReportButtonContainer />
           </div>
         </div>

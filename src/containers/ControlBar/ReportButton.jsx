@@ -1,12 +1,19 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import ReportButton from "../../components/ControlBar/ReportButton";
 import withOrgUnitRequired from "../../hocs/withOrgUnitRequired";
-import { useHistory } from "react-router-dom";
 
 const ReportButtonContainer = () => {
   const { t } = useTranslation();
   const history = useHistory();
+
+  const { offlineStatus } = useSelector((state) => state.common);
+
+  if (offlineStatus) {
+    return null;
+  }
+
   return (
     <ReportButton
       variant="contained"
