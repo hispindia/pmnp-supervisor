@@ -77,7 +77,6 @@ const CensusDetailFormContainer = () => {
     }
   };
 
-  console.log({ currentEvent, tempCurrentEvent });
   return (
     <CensusDetailForm
       values={currentEvent?.dataValues || {}}

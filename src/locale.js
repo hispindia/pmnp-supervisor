@@ -17,11 +17,11 @@ const locale = {
   },
   familyMembers: {
     en: "Family Members",
-    lo: "ສະມາຊິກຄອບຄົວ",
+    lo: "ສະມາຊິກຄອບຄົວ (ບ 1 ກ)",
   },
   censusDetails: {
     en: "Census Details",
-    lo: "ລາຍລະອຽດການສຳຫຼວດ",
+    lo: "ລາຍລະອຽດການສຳຫຼວດ (ບ 1 ຂ)",
   },
   complete: {
     en: "Complete",
@@ -173,10 +173,11 @@ const locale = {
     en: "7. How many children age 5 to 19 years died?",
     lo: "7. ໃນຄອບຄົວຂອງທ່ານ ມີຄົນ ອາຍຸແຕ່ 5 ຫາ 19 ປີ ຕາຍຈັກຄົນ ?",
   },
-  "How many women died due to pregnancy, delivery or within 42 days after giving birth?": {
-    en: "8. How many women died due to pregnancy, delivery or within 42 days after giving birth?",
-    lo: "8. ໃນຄອບຄົວທ່ານມີແມ່ຍິງທີ່ເສຍຊີວິດ(ແມ່ຕາຍ) ຍ້ອນການຖືພາ, ການເກີດລູກ ຫຼື ພາຍໃນ 42 ມື້ ຫລັງເກີດລູກຈັກຄົນ ?",
-  },
+  "How many women died due to pregnancy, delivery or within 42 days after giving birth?":
+    {
+      en: "8. How many women died due to pregnancy, delivery or within 42 days after giving birth?",
+      lo: "8. ໃນຄອບຄົວທ່ານມີແມ່ຍິງທີ່ເສຍຊີວິດ(ແມ່ຕາຍ) ຍ້ອນການຖືພາ, ການເກີດລູກ ຫຼື ພາຍໃນ 42 ມື້ ຫລັງເກີດລູກຈັກຄົນ ?",
+    },
 
   "How many people died in total in the family?": {
     en: "9. How many people died in total in the family?",
@@ -221,10 +222,11 @@ const locale = {
     en: "12.1. Number of women(15-49) in the family who need family plaining",
     lo: "12.1. ຈໍານວນແມ່ຍິງ  (15-49 ປີ) ໃນຄອບຄົວທີ່ມີຄວາມຕ້ອງການໃຊ້ການວາງແຜນຄອບຄົວ?",
   },
-  "How many women(15-49 years) currently using family planning and main method?": {
-    en: "10.1. How many women(15-49 years) currently using family planning and main method?",
-    lo: "10.1. ຈຳນວນແມ່ຍິງ (15-49 ປີ) ຫຼືຄູ່ຄອງທີ່ກຳລັງໃຊ້ວິທີການວາງແຜນຄອບຄົວຢູ່ ແລະ ປະເພດໃດທີ່ໃຊ້ເປັນຫຼັກ?",
-  },
+  "How many women(15-49 years) currently using family planning and main method?":
+    {
+      en: "10.1. How many women(15-49 years) currently using family planning and main method?",
+      lo: "10.1. ຈຳນວນແມ່ຍິງ (15-49 ປີ) ຫຼືຄູ່ຄອງທີ່ກຳລັງໃຊ້ວິທີການວາງແຜນຄອບຄົວຢູ່ ແລະ ປະເພດໃດທີ່ໃຊ້ເປັນຫຼັກ?",
+    },
 
   "contraceptive pill": {
     en: "1. contraceptive pill",
@@ -290,10 +292,11 @@ const locale = {
   },
 
   // 11
-  "What is the primary source of drinking water does the family use and it is within 30min of reach?": {
-    en: "11. What is the primary source of drinking water does the family use and it is within 30min of reach?",
-    lo: "11. ແຫລ່ງນໍ້າໃຊ້ ແລະ ນ້ຳດື່ມ ໃນຄອບຄົວ ທີ່ສາມາດຫາໄດ້ ພາຍໃນ 30 ນາທີ?",
-  },
+  "What is the primary source of drinking water does the family use and it is within 30min of reach?":
+    {
+      en: "11. What is the primary source of drinking water does the family use and it is within 30min of reach?",
+      lo: "11. ແຫລ່ງນໍ້າໃຊ້ ແລະ ນ້ຳດື່ມ ໃນຄອບຄົວ ທີ່ສາມາດຫາໄດ້ ພາຍໃນ 30 ນາທີ?",
+    },
   "Pied water": {
     en: "1. Pied water",
     lo: "1. ນໍ້າປະປາ",

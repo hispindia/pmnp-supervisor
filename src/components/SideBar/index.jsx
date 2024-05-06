@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -63,8 +63,9 @@ const SideBar = () => {
   //         setWarningText(`${year} ${'already exists.'}`);
   //     }
   // };
-
-  console.log({ selectedYear });
+  useEffect(() => {
+    console.log({ selectedYear });
+  }, [selectedYear]);
 
   return (
     <React.Fragment>
