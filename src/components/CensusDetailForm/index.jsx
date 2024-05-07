@@ -90,6 +90,43 @@ const CensusDetailForm = ({
     return type === "title" ? 0 : uid ? (isFirstInput ? 3 : 0) : 1;
   };
 
+  const dependenciesOf = (target) => {
+    return {
+      skFDIWZmgTC: {
+        dependentFields: ["skFDIWZmgTC"],
+        // showFieldFunc: ([skFDIWZmgTC]) => skFDIWZmgTC != 0,
+        setValuesFunc: ([skFDIWZmgTC]) => {
+          if (skFDIWZmgTC <= 0) {
+            return {
+              [target]: "",
+            };
+          }
+        },
+        childPropsFunc: ([skFDIWZmgTC]) => {
+          return {
+            disabled: skFDIWZmgTC <= 0,
+          };
+        },
+      },
+      ztDjhjZoEGe: {
+        dependentFields: ["ztDjhjZoEGe"],
+        // showFieldFunc: ([ztDjhjZoEGe]) => ztDjhjZoEGe != 0,
+        setValuesFunc: ([ztDjhjZoEGe]) => {
+          if (ztDjhjZoEGe <= 0) {
+            return {
+              [target]: "",
+            };
+          }
+        },
+        childPropsFunc: ([ztDjhjZoEGe]) => {
+          return {
+            disabled: ztDjhjZoEGe <= 0,
+          };
+        },
+      },
+    };
+  };
+
   const tableRenderData = [
     {
       type: "data",
@@ -112,6 +149,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Home?"),
       uid: "jxfyOMxkbIw",
+      ...dependenciesOf("jxfyOMxkbIw")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -120,6 +158,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Health Center?"),
       uid: "XM59B0Lw2Md",
+      ...dependenciesOf("XM59B0Lw2Md")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -128,6 +167,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("District Hospital"),
       uid: "y3h4wxW3w50",
+      ...dependenciesOf("y3h4wxW3w50")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -136,6 +176,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Provincial Hospital"),
       uid: "ispm3X8fxSY",
+      ...dependenciesOf("ispm3X8fxSY")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -144,6 +185,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Central Hospital"),
       uid: "U4fdHCMef6x",
+      ...dependenciesOf("U4fdHCMef6x")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -152,6 +194,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Private clinic/Private hospital"),
       uid: "SJ0Cvi4jeGy",
+      ...dependenciesOf("SJ0Cvi4jeGy")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -160,6 +203,7 @@ const CensusDetailForm = ({
       type: "data",
       name: `7. ${t("Overseas")}`,
       uid: "DZqf1SBDDqv",
+      ...dependenciesOf("DZqf1SBDDqv")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -168,6 +212,7 @@ const CensusDetailForm = ({
       type: "data",
       name: `8. ${t("Other")}`,
       uid: "w19F9i9XORa",
+      ...dependenciesOf("w19F9i9XORa")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -181,6 +226,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Self (No assistance)"),
       uid: "hRlVw3IeQ45",
+      ...dependenciesOf("hRlVw3IeQ45")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -189,6 +235,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Husband or relative"),
       uid: "c8E0s3lqCmD",
+      ...dependenciesOf("c8E0s3lqCmD")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -197,6 +244,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Village health volunteer"),
       uid: "iYpP9mXDw1W",
+      ...dependenciesOf("iYpP9mXDw1W")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -205,6 +253,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Skilled birth attendant (Nurse, Mid wife, Doctor)"),
       uid: "FOTKm0DKO4Q",
+      ...dependenciesOf("FOTKm0DKO4Q")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -213,6 +262,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Other than specify above"),
       uid: "YIg4eMjDYLg",
+      ...dependenciesOf("YIg4eMjDYLg")["skFDIWZmgTC"],
       styles: {
         paddingLeft: "50px",
       },
@@ -273,6 +323,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("contraceptive pill"),
       uid: "w73XYMu84K1",
+      ...dependenciesOf("w73XYMu84K1")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -281,6 +332,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("depose(injectable)"),
       uid: "W5hvU3H2QY5",
+      ...dependenciesOf("W5hvU3H2QY5")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -289,6 +341,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("condom(male/female)"),
       uid: "S1WAIB8yKgF",
+      ...dependenciesOf("S1WAIB8yKgF")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -297,6 +350,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Implant"),
       uid: "ZXOAIBtP7ag",
+      ...dependenciesOf("ZXOAIBtP7ag")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -305,6 +359,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("IUD"),
       uid: "nZWuXN9NcOB",
+      ...dependenciesOf("nZWuXN9NcOB")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -313,6 +368,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("emergency pill"),
       uid: "gFg12NU3oJu",
+      ...dependenciesOf("gFg12NU3oJu")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -321,6 +377,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("sterilization(men&women)"),
       uid: "TcsUpke05hG",
+      ...dependenciesOf("TcsUpke05hG")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -329,6 +386,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("other modern contraceptive"),
       uid: "iR1xbBp4DbI",
+      ...dependenciesOf("iR1xbBp4DbI")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -337,6 +395,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("other traditional methods"),
       uid: "q8XozNLbeO9",
+      ...dependenciesOf("q8XozNLbeO9")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -349,11 +408,13 @@ const CensusDetailForm = ({
         "How many women(15-49 years) currently using family planning and where?"
       ),
       uid: "IDz3cuoy2Ix",
+      ...dependenciesOf("IDz3cuoy2Ix")["ztDjhjZoEGe"],
     },
     {
       type: "data",
       name: t("in public facility"),
       uid: "rHsyapbYSIW",
+      ...dependenciesOf("rHsyapbYSIW")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -362,6 +423,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("at private clinic/pharmacy"),
       uid: "ne55arYhEDv",
+      ...dependenciesOf("ne55arYhEDv")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -370,6 +432,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("from outreach/VHV"),
       uid: "zqlgoNuekvJ",
+      ...dependenciesOf("zqlgoNuekvJ")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -378,6 +441,7 @@ const CensusDetailForm = ({
       type: "data",
       name: `4. ${t("Overseas")}`,
       uid: "jt51JNITRf8",
+      ...dependenciesOf("jt51JNITRf8")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -386,6 +450,7 @@ const CensusDetailForm = ({
       type: "data",
       name: `5. ${t("Other")}`,
       uid: "tCPGWfB5BXA",
+      ...dependenciesOf("tCPGWfB5BXA")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -639,7 +704,19 @@ const CensusDetailForm = ({
   const dependentFields = tableRenderData.map((d) => d.uid);
 
   const dataSource = tableRenderData.map((row, index) => {
-    const { uid, some, alot, thirdRowTitle, thirdRowId, name, type } = row;
+    const {
+      uid,
+      some,
+      alot,
+      thirdRowTitle,
+      thirdRowId,
+      name,
+      type,
+      dependentFields = [],
+      setValuesFunc = () => {},
+      showFieldFunc = () => true,
+      childPropsFunc = () => {},
+    } = row;
     switch (type) {
       case "title": {
         return {
@@ -655,7 +732,14 @@ const CensusDetailForm = ({
             key: index,
             label: name,
             input1: (
-              <Dhis2FormItem noStyle id={uid}>
+              <Dhis2FormItem
+                noStyle
+                id={uid}
+                dependentFields={dependentFields}
+                setValuesFunc={setValuesFunc}
+                showFieldFunc={showFieldFunc}
+                childPropsFunc={childPropsFunc}
+              >
                 <InputField size="small" style={{ minWidth: 120 }} />
               </Dhis2FormItem>
             ),

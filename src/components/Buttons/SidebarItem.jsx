@@ -38,6 +38,7 @@ const SidebarItem = ({
         Object.keys(itemsByYear).map((year, idx) => {
           return (
             <ListItem
+              key={year}
               button
               selected={selectedItem.year === year}
               onClick={() => onChangeFamily(idx, year, 0)}

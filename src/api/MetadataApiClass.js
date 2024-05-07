@@ -305,8 +305,6 @@ export default class MetadataApiClass extends BaseApiClass {
       return programStage;
     });
 
-    console.log({ programMetadata });
-
     programMetadata.programRules = programRules.programRules;
     programMetadata.programRuleVariables = p.programRuleVariables;
 

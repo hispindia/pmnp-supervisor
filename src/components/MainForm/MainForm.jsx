@@ -14,6 +14,27 @@ const MainForm = ({
   isEditingAttributes,
 }) => {
   const { t } = useTranslation();
+
+  const items = [
+    {
+      label: t("familyRegistration"),
+      key: "1",
+      children: <ProfileFormContainer />,
+    },
+    {
+      label: t("familyMembers"),
+      key: "2",
+      children: <FMLayoutContainer />,
+      disabled: isEditingAttributes,
+    },
+    {
+      label: t("censusDetails"),
+      key: "3",
+      children: <CensusDetailFormContainer />,
+      disabled: isEditingAttributes,
+    },
+  ];
+
   return (
     <Card size="small">
       <Tabs
@@ -36,25 +57,8 @@ const MainForm = ({
             </div>
           ),
         }}
-      >
-        <TabPane tab={t("familyRegistration")} key="1">
-          <ProfileFormContainer />
-        </TabPane>
-        <TabPane
-          tab={t("familyMembers")}
-          disabled={isEditingAttributes}
-          key="2"
-        >
-          <FMLayoutContainer />
-        </TabPane>
-        <TabPane
-          tab={t("censusDetails")}
-          disabled={isEditingAttributes}
-          key="3"
-        >
-          <CensusDetailFormContainer />
-        </TabPane>
-      </Tabs>
+        items={items}
+      />
     </Card>
   );
 };

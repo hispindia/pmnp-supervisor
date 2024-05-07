@@ -75,7 +75,7 @@ const CFormControl = ({
                 valueType={valueType}
                 valueSet={valueSet}
                 form={form}
-                // {...childProps}
+                {...childProps}
               />
             </Form.Item>
           ) : (
