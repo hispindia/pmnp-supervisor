@@ -54,6 +54,7 @@ import { useSnackbar } from "notistack";
 const numOfStep = 2;
 
 import { useApi, useEvent, useProfile } from "hooks";
+import { useSelector } from "react-redux";
 
 const {
   formContainer,
@@ -80,9 +81,10 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
   const [isYearPickerOpen, setIsYearPickerOpen] = useState(false);
   const [isYearEditPickerOpen, setIsYearEditPickerOpen] = useState(false);
   const [selectedEditRowYear, setSelectedEditRowYear] = useState(null);
-  const { tei, orgUnit, program, minDate, maxDate } = useContext(AppContext);
+  const { minDate, maxDate } = useSelector((state) => state.metadata);
+  const { tei, orgUnit, program } = useContext(AppContext);
   const [selectedYearPicker, setSelectedYearPicker] = useState(
-    moment(`01/01/${maxDate}`, "DD/MM/YYYY").endOf("year").format("YYYY-MM-DD")
+    moment(`${maxDate}`, "DD/MM/YYYY").endOf("year").format("YYYY-MM-DD")
   );
 
   const [currentTei, setCurrentTei] = useState(null);
@@ -450,7 +452,9 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
         if (dataValues && dataValues.length > 0) {
           let cascadeData = JSON.parse(dataValues[0].value);
           cascadeData = cascadeData.dataVals.filter(
-            (e) => e["Status"] != "Dead" && e["Status"] != "Transferred"
+            (e) =>
+              (e["status"] != "Dead" || e["status"] != "dead") &&
+              (e["status"] != "Transferred" || e["status"] == "transfer-out")
           );
 
           // Add data of CascadeTable
@@ -628,7 +632,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
                 // clearLabel={React.createElement("span", null, "Limpar")}
                 // cancelLabel={React.createElement("span", null, "Cancelar")}
                 minDate={new Date(profile.enrollment.enrolledAt)}
-                maxDate={new Date(`${maxDate}-12-31`)}
+                maxDate={new Date(`${maxDate}`)}
               />
               {warningText && <Alert severity="error">{warningText}</Alert>}
             </>
@@ -842,7 +846,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
                     // )}
                     // cancelLabel={React.createElement("span", null, t("cancel"))}
                     minDate={new Date(profile.enrollment.enrolledAt)}
-                    maxDate={new Date(`${maxDate}-12-31`)}
+                    maxDate={new Date(`${maxDate}`)}
                   />
                   {warningText && <Alert severity="error">{warningText}</Alert>}
                 </>

@@ -167,7 +167,7 @@ const calculateAgeGroup = (data, currentEvent) => {
     acc[value] = 0;
     return acc;
   }, {});
-  console.log("test", { tempValues, data });
+
   data.forEach((value) => {
     // Calculate from dob
     let res = calcAgeFromDOB(
@@ -181,9 +181,15 @@ const calculateAgeGroup = (data, currentEvent) => {
     Object.entries(mapping).forEach((m) => {
       if (
         eval(
-          ` let value = ${JSON.stringify(
+          `let value = ${JSON.stringify(
             value
-          )} ; let evalValue = ${JSON.stringify(evalValue1)};` + m[0]
+          )} ; let evalValue = ${JSON.stringify(evalValue1)};` +
+            m[0] +
+            `&& value["status"] !== "dead"`
+        ) &&
+        // Skip all if member is dead
+        eval(
+          `let value = ${JSON.stringify(value)};` + `value["status"] !== "dead"`
         )
       ) {
         tempValues[m[1]] = tempValues[m[1]] + 1;

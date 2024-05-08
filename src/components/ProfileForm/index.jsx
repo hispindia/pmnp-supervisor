@@ -1,3 +1,4 @@
+import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
 import {
   CloseOutlined,
   EditOutlined,
@@ -5,15 +6,12 @@ import {
   SaveOutlined,
 } from "@ant-design/icons";
 import { Button, Form, Space } from "antd";
-import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
 import { isEqual } from "lodash";
 import moment from "moment";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import FormNoInputContainer from "../../containers/ProfileForm/FormNoInput.container";
 import withDhis2FormItem from "../../hocs/withDhis2Field";
-import { AppContext } from "../App/App.context";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
 
@@ -26,7 +24,7 @@ const ProfileForm = ({
 }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { tei, orgUnit, program, minDate, maxDate } = useContext(AppContext);
+  const { minDate, maxDate } = useSelector((state) => state.metadata);
   const {
     selectedOrgUnit,
     programMetadata: {

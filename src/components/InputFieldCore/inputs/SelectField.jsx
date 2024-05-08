@@ -6,7 +6,7 @@ const SelectField = (
   props
 ) => {
   // const { disabled = false, ...other } = props;
-  console.log({ valueSet });
+
   const options = valueSet.map((e) => {
     e.label = locale
       ? locale != "en"
