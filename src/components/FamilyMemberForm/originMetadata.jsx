@@ -802,21 +802,31 @@ const originMetadata = [
         },
       },
       {
-        value: "high-school",
-        label: "Secondary or High school",
+        value: "secondary-school",
+        label: "Secondary School",
         isDisabled: false,
         unique: false,
-        multiple: ["Secondary or High school"],
+        multiple: ["Secondary School"],
         translations: {
-          lo: "ມັດທະຍົມ",
+          lo: "ມັດທະຍົມຕົ້ນ",
+        },
+      },
+      {
+        value: "high-school",
+        label: "High School",
+        isDisabled: false,
+        unique: false,
+        multiple: ["High School"],
+        translations: {
+          lo: "ມັດທະຍົມປາຍ",
         },
       },
       {
         value: "vocational",
-        label: "Vocational training or Higher",
+        label: "Vocational or higher",
         isDisabled: false,
         unique: false,
-        multiple: ["Vocational training or Higher"],
+        multiple: ["Vocational or higher"],
         translations: {
           lo: "ວິຊາຊີບຊັ້ນກາງ ຫຼື ຊັ້ນສູງ",
         },
@@ -828,7 +838,7 @@ const originMetadata = [
         unique: false,
         multiple: ["Bachelor degree or Higher"],
         translations: {
-          lo: "ປະລີນຍາຕີ ຫຼື ສູງກ່ວາ",
+          lo: "ປະລິນຍາຕີ ຫຼື ສູງກວ່າ",
         },
       },
       {
@@ -838,7 +848,7 @@ const originMetadata = [
         unique: false,
         multiple: ["None Education"],
         translations: {
-          lo: "ບໍ່ມີການສືກສາ",
+          lo: "ບໍ່ມີການສຶກສາ",
         },
       },
     ],
@@ -857,13 +867,23 @@ const originMetadata = [
     compulsory: true,
     valueSet: [
       {
-        value: "a",
-        label: "SASS/SSO",
+        value: "a1",
+        label: "SASS",
         isDisabled: false,
         unique: false,
-        multiple: ["SASS/SSO"],
+        multiple: ["SASS"],
         translations: {
-          lo: "ອປລ/ອປສ",
+          lo: "ປະກັນສັງຄົມພາກລັດຖະກອນ (ອປລ)",
+        },
+      },
+      {
+        value: "a2",
+        label: "SSO",
+        isDisabled: false,
+        unique: false,
+        multiple: ["SSO"],
+        translations: {
+          lo: "ປະກັນສັງຄົມພາກເອກະຊົນ (ອປສ)",
         },
       },
       {
@@ -873,17 +893,17 @@ const originMetadata = [
         unique: false,
         multiple: ["Military/Police Scheme"],
         translations: {
-          lo: "ປະກັນສັງຄົມຂອງທະຫານ/ຕຳຫຼວດ",
+          lo: "ປະກັນສັງຄົມຂອງທະຫານ (ພາກ ກປຊ)/ປະກັນສັງຄົມຂອງທະຫານ (ພາກ ກປສ)",
         },
       },
       {
         value: "c",
-        label: "National Health Insurance (NHI)",
+        label: "National Health Insurance",
         isDisabled: false,
         unique: false,
-        multiple: ["National Health Insurance (NHI)"],
+        multiple: ["National Health Insurance"],
         translations: {
-          lo: "ປະກັນສຸຂະພາບແຫ່ງຊາດ (NHI)",
+          lo: "ປະກັນສຸຂະພາບແຫ່ງຊາດ/NHI (ກປຊ)",
         },
       },
       {
@@ -893,19 +913,19 @@ const originMetadata = [
         unique: false,
         multiple: ["Community-based Health Insurance"],
         translations: {
-          lo: "ກປສຊ",
+          lo: "ກອງທຶນປະກັນສຸຂະພາບຊຸມຊົນ (ຄປສຊ)",
         },
       },
-      {
-        value: "e",
-        label: "Private Health Insurance",
-        isDisabled: false,
-        unique: false,
-        multiple: ["Private Health Insurance"],
-        translations: {
-          lo: "ປະກັນສຸຂະພາບເອກະຊົນ",
-        },
-      },
+      // {
+      //   value: "e",
+      //   label: "Private Health Insurance",
+      //   isDisabled: false,
+      //   unique: false,
+      //   multiple: ["Private Health Insurance"],
+      //   translations: {
+      //     lo: "ປະກັນສຸຂະພາບເອກະຊົນ",
+      //   },
+      // },
       {
         value: "f",
         label: "Dont have",

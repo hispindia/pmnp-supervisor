@@ -273,6 +273,13 @@ const CensusDetailForm = ({
       uid: "AB4m6KuUXF8",
       styles: {},
     },
+    // 5
+    {
+      type: "data",
+      name: t("How many people died in total in the family?"),
+      uid: "QteYoL0Yy6K",
+      styles: {},
+    },
     {
       type: "data",
       name: t("How many children under one year died in family?"),
@@ -299,12 +306,6 @@ const CensusDetailForm = ({
       uid: "LmGX6VpLkIX",
       styles: {},
     },
-    {
-      type: "data",
-      name: t("How many people died in total in the family?"),
-      uid: "QteYoL0Yy6K",
-      styles: {},
-    },
 
     {
       type: "title",
@@ -314,9 +315,17 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "How many women(15-49 years) currently using family planning and main method?"
+        "Number of women (15-49 years) in the family who need to use family planning?"
       ),
       uid: "ztDjhjZoEGe",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: t(
+        "How many women (15-49 years) or their partners are using family planning and what types are they using?"
+      ),
+      uid: "FnkNunC3Yzx",
       styles: {},
     },
     {
@@ -401,11 +410,11 @@ const CensusDetailForm = ({
       },
     },
 
-    // 10.2. How many women(15-49 years) currently using family planning and where?
+    // 10.3. How many women (15-49 years old) use family planning services at which location?
     {
       type: "data",
       name: t(
-        "How many women(15-49 years) currently using family planning and where?"
+        "How many women (15-49 years old) use family planning services at which location?"
       ),
       uid: "IDz3cuoy2Ix",
       ...dependenciesOf("IDz3cuoy2Ix")["ztDjhjZoEGe"],
@@ -430,25 +439,35 @@ const CensusDetailForm = ({
     },
     {
       type: "data",
-      name: t("from outreach/VHV"),
-      uid: "zqlgoNuekvJ",
-      ...dependenciesOf("zqlgoNuekvJ")["ztDjhjZoEGe"],
+      name: t("Mobile Service Unit and Village health volunteer"),
+      uid: "OWhICvMs71C",
+      ...dependenciesOf("OWhICvMs71C")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
     },
+
+    // {
+    //   type: "data",
+    //   name: t("from outreach/VHV"),
+    //   uid: "zqlgoNuekvJ",
+    //   ...dependenciesOf("zqlgoNuekvJ")["ztDjhjZoEGe"],
+    //   styles: {
+    //     paddingLeft: "50px",
+    //   },
+    // },
+    // {
+    //   type: "data",
+    //   name: `4. ${t("Overseas")}`,
+    //   uid: "jt51JNITRf8",
+    //   ...dependenciesOf("jt51JNITRf8")["ztDjhjZoEGe"],
+    //   styles: {
+    //     paddingLeft: "50px",
+    //   },
+    // },
     {
       type: "data",
-      name: `4. ${t("Overseas")}`,
-      uid: "jt51JNITRf8",
-      ...dependenciesOf("jt51JNITRf8")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: `5. ${t("Other")}`,
+      name: `4. ${t("Other")}`,
       uid: "tCPGWfB5BXA",
       ...dependenciesOf("tCPGWfB5BXA")["ztDjhjZoEGe"],
       styles: {
@@ -460,7 +479,7 @@ const CensusDetailForm = ({
     {
       type: "title",
       name: t(
-        "What is the primary source of drinking water does the family use and it is within 30min of reach?"
+        "The main source of drinking water and water for family use that can be found within 30 minutes"
       ),
     },
     {
