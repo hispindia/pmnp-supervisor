@@ -1058,16 +1058,19 @@ const originMetadata = [
           lo: "ປີເກີດ",
         },
       },
-      {
-        value: "age",
-        label: "Age in years",
-        isDisabled: false,
-        unique: false,
-        multiple: ["Age in years"],
-        translations: {
-          lo: "ອາຍຸ(ປີ)",
-        },
-      },
+      /**
+       * Temp turn off to avoid user enter this data, it hard to auto age increment
+       *  */
+      // {
+      //   value: "age",
+      //   label: "Age in years",
+      //   isDisabled: false,
+      //   unique: false,
+      //   multiple: ["Age in years"],
+      //   translations: {
+      //     lo: "ອາຍຸ(ປີ)",
+      //   },
+      // },
     ],
     sort: null,
     translations: {
@@ -1143,7 +1146,7 @@ const originMetadata = [
     name: "Status",
     id: "K9UdB29DZnl",
     disable: false,
-    hidden: true,
+    hidden: false,
     valueType: "TEXT",
     defaultValue: "Active",
     valueSet: [

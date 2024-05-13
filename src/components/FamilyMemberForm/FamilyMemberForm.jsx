@@ -145,12 +145,12 @@ const FamilyMemberForm = ({
         return obj;
       }, {});
 
-      // Show STATUS when number of events > 2
-      if (events && events.length > 1) {
-        cloneMetadata["status"].hidden = false;
-      } else {
-        cloneMetadata["status"].hidden = true;
-      }
+      // // Show STATUS when number of events > 2
+      // if (events && events.length > 1) {
+      //   cloneMetadata["status"].hidden = false;
+      // } else {
+      //   cloneMetadata["status"].hidden = true;
+      // }
 
       setMetadata([...Object.values(cloneMetadata)]);
     }
