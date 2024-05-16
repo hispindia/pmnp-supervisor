@@ -326,6 +326,7 @@ const CensusDetailForm = ({
         "How many women (15-49 years) or their partners are using family planning and what types are they using?"
       ),
       uid: "FnkNunC3Yzx",
+      ...dependenciesOf("FnkNunC3Yzx")["ztDjhjZoEGe"],
       styles: {},
     },
     {
