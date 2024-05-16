@@ -54,25 +54,11 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
               ]
             );
 
-            if (
-              !result.instances ||
-              result.instances.length === 0 ||
-              page > result.pageCount
-            ) {
+            if (!result.instances || result.instances.length === 0 || page > result.pageCount) {
               break;
             }
 
-            console.log(
-              `ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`
-            );
-
-            if (handleDispatchCurrentOfflineLoading) {
-              handleDispatchCurrentOfflineLoading({
-                id: "enr",
-                percent:
-                  ((page / result.pageCount + i) * 100) / programs.length,
-              });
-            }
+            console.log(`ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`);
 
             const resultEnrollments = {
               ...result,
@@ -80,6 +66,13 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
             };
 
             await persist(await beforePersist([resultEnrollments], program.id));
+
+            if (handleDispatchCurrentOfflineLoading) {
+              handleDispatchCurrentOfflineLoading({
+                id: "enr",
+                percent: ((page / result.pageCount + i) * 100) / programs.length,
+              });
+            }
           }
         } catch (error) {
           console.log("Enrollment:pull", error);
@@ -125,9 +118,7 @@ const findOffline = async () => {
 };
 
 const markOnline = async (enrollmentIds) => {
-  return await db[TABLE_NAME].where("enrollment")
-    .anyOf(enrollmentIds)
-    .modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("enrollment").anyOf(enrollmentIds).modify({ isOnline: 1 });
 };
 
 const pushAndMarkOnline = async (enrollments) => {

@@ -45,9 +45,7 @@ export const getEventsRawData = async (pager, org, program) => {
 };
 
 export const getEventsAnalyticsTable = async (pager, org, program) => {
-  const dataElementIds = program.programStages[0].dataElements.map(
-    (de) => de.id
-  );
+  const dataElementIds = program.programStages[0].dataElements.map((de) => de.id);
 
   return await dataApi.get(
     `/api/analytics/events/query/${program.id}`,
@@ -95,28 +93,20 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
               program
             );
 
-            if (
-              !result.rows ||
-              result.rows.length === 0 ||
-              page > result.metaData.pager.pageCount
-            ) {
+            if (!result.rows || result.rows.length === 0 || page > result.metaData.pager.pageCount) {
               break;
             }
 
-            console.log(
-              `EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`
-            );
+            console.log(`EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`);
+
+            await persist(await beforePersistAnalyticsData(result, program));
 
             if (handleDispatchCurrentOfflineLoading) {
               handleDispatchCurrentOfflineLoading({
                 id: "event",
-                percent:
-                  ((page / result.metaData.pager.pageCount + i) * 100) /
-                  programs.length,
+                percent: ((page / result.metaData.pager.pageCount + i) * 100) / programs.length,
               });
             }
-
-            await persist(await beforePersistAnalyticsData(result, program));
 
             // Update total pages
             totalPages = result.metaData.pager.pageCount;
@@ -161,9 +151,7 @@ const findOffline = async () => {
 };
 
 const markOnline = async (eventIds) => {
-  return await db[TABLE_NAME].where("event")
-    .anyOf(eventIds)
-    .modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("event").anyOf(eventIds).modify({ isOnline: 1 });
 };
 
 const pushAndMarkOnline = async (events) => {
@@ -252,14 +240,7 @@ const findHeaderIndex = (headers, name) => {
   return headers.findIndex((header) => header.name === name);
 };
 
-export const getEventsByQuery = async ({
-  program,
-  programStage,
-  orgUnit,
-  filters,
-  startDate,
-  endDate,
-}) => {
+export const getEventsByQuery = async ({ program, programStage, orgUnit, filters, startDate, endDate }) => {
   let queryBuilder = db[TABLE_NAME].where("orgUnit").equals(orgUnit);
 
   if (filters && filters.length > 0) {
@@ -268,9 +249,7 @@ export const getEventsByQuery = async ({
       // example: 'attribute=gv9xX5w4kKt:EQ:EzwtyXwTVzq' => ['attribute', 'gv9xX5w4kKt', 'EQ', 'EzwtyXwTVzq']
 
       if (operator === "EQ") {
-        queryBuilder = queryBuilder
-          .and((teiValue) => teiValue["dataElement"] === field)
-          .and((teiValue) => teiValue["value"] === value);
+        queryBuilder = queryBuilder.and((teiValue) => teiValue["dataElement"] === field).and((teiValue) => teiValue["value"] === value);
       }
     });
   }
@@ -316,9 +295,7 @@ const beforePersistAnalyticsData = async (result, program) => {
     return objects;
   }
 
-  const dataElementIds = program.programStages[0].dataElements.map(
-    (de) => de.id
-  );
+  const dataElementIds = program.programStages[0].dataElements.map((de) => de.id);
 
   for (const ev of events) {
     const event = {
