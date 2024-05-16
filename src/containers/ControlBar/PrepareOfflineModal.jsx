@@ -1,7 +1,10 @@
 import { Modal, Typography, Progress } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setOfflineStatus, setOfflineLoadingStatus } from "@/redux/actions/common";
+import {
+  setOfflineStatus,
+  setOfflineLoadingStatus,
+} from "@/redux/actions/common";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -16,12 +19,18 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { currentOfflineLoading } = useSelector((state) => state.common);
+  const { offlineLoading } = useSelector((state) => state.common);
 
   useEffect(() => {
-    if (open && currentOfflineLoading.id === downloadMapping[downloadMapping.length - 1].id && currentOfflineLoading.percent >= 100) {
+    if (
+      open &&
+      currentOfflineLoading.id ===
+        downloadMapping[downloadMapping.length - 1].id &&
+      currentOfflineLoading.percent >= 100
+    ) {
       dispatch(setOfflineLoadingStatus(false));
       dispatch(setOfflineStatus(true));
-      onClose();
+      // onClose();
     }
   }, [open, currentOfflineLoading.id, currentOfflineLoading.percent]);
 
@@ -32,11 +41,20 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
       centered
       closeIcon={null}
       maskClosable={false}
+      okText={"OK"}
       onCancel={onCancel}
-      okButtonProps={{ style: { display: "none" } }}
+      onOk={() => {
+        window.location.reload();
+        onClose();
+      }}
+      okButtonProps={{
+        style: { display: !offlineLoading ? "inline-block" : "none" },
+      }}
     >
       {downloadMapping.map(({ label }, step) => {
-        const currentStep = downloadMapping.findIndex(({ id }) => id === currentOfflineLoading.id);
+        const currentStep = downloadMapping.findIndex(
+          ({ id }) => id === currentOfflineLoading.id
+        );
 
         let percent = 0;
         if (currentStep > -1) {
@@ -47,7 +65,10 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
         return (
           <div key={label}>
             <Typography>{label}</Typography>
-            <Progress percent={percent} />
+            <Progress
+              percent={percent}
+              format={() => `${percent.toFixed(0)}%`}
+            />
           </div>
         );
       })}

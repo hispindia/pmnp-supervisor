@@ -327,7 +327,7 @@ const CascadeTable = (props) => {
           extraData,
           t
         );
-        console.log({ res });
+
         return res;
       },
       formatExtraData: currentEvent,
