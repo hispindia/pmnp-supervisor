@@ -65,6 +65,10 @@ function* handleOfflineLoadingStatusChange({ offlineLoading }) {
 
 function* handleOfflineStatusChange({ offlineStatus }) {
   localStorage.setItem("offlineStatus", offlineStatus);
+
+  if (!offlineStatus) {
+    window.location.reload();
+  }
 }
 
 function handlePushResult(result, message) {
