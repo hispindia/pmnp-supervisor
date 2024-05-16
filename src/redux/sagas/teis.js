@@ -85,7 +85,13 @@ function* getTeis(newPayload = {}) {
       getTeisSuccessMessage("Get tracked entity instances successfully")
     );
   } catch (e) {
-    yield put(getTeisErrorMessage(e.message));
+    const result = yield e.json();
+
+    if (result.message) {
+      yield put(getTeisErrorMessage(result.message));
+    } else {
+      yield put(getTeisErrorMessage(e.message));
+    }
   } finally {
     yield put(loadTeis(false));
   }
