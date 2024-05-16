@@ -30,7 +30,7 @@ const calcAgeFromDOB = (dateOfBirth, birthYear, age, curEvent, t) => {
   let yrText = t ? t("year") : "yr";
   let monthText = t ? t("month") : "month";
 
-  if (dateOfBirth != "" && dateOfBirth != null) {
+  if (dateOfBirth) {
     var raw = null;
     for (var dateFormat of allowedDateFormats) {
       if (moment(dateOfBirth, dateFormat, true).isValid()) {
@@ -51,9 +51,11 @@ const calcAgeFromDOB = (dateOfBirth, birthYear, age, curEvent, t) => {
     if (data.months > 0) {
       result += data.months + " " + monthText + " ";
     }
-    returnResult = result;
+
+    return result;
   }
-  if (birthYear != "" && birthYear != null) {
+
+  if (birthYear) {
     var data = calculateAge(birthYear, "01", "01", curEvent);
     var result = "";
     // Age
@@ -62,13 +64,17 @@ const calcAgeFromDOB = (dateOfBirth, birthYear, age, curEvent, t) => {
     if (data.months > 0) {
       result += data.months + " " + monthText + " ";
     }
-    returnResult = result;
+
+    return result;
   }
+
+  // Legacy code, should be removed
   if (age != "" && age != null) {
     var result = "";
     result += age + " " + yrText + " ";
-    returnResult = result;
+    return result;
   }
+
   return returnResult;
 };
 const calculateDataElements = [

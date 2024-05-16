@@ -1,6 +1,6 @@
+import CascadeTable from "@/components/CascadeTable";
 import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import CascadeTable from "@/components/CascadeTable";
 import i18n from "i18next";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -12,10 +12,10 @@ import originMetadata from "./originMetadata.jsx";
 import { useDispatch, useSelector } from "react-redux";
 
 /* SELECTOR */
-import { changeMember, clear } from "../../redux/actions/data/tei";
+import { changeMember } from "../../redux/actions/data/tei";
 
 // Import utils
-import { calcAgeFromDOB, calculateAgeGroup } from "./FormCalculationUtils";
+import { calculateAgeGroup } from "./FormCalculationUtils";
 
 // Styles
 import "../../index.css";
@@ -335,7 +335,6 @@ const FamilyMemberForm = ({
             initFunction={initFunction}
             editRowCallback={editRowCallback}
             callbackFunction={callbackFunction}
-            calcAgeFromDOB={calcAgeFromDOB}
             originMetadata={originMetadata}
             setMetadata={setMetadata}
             setData={setData}

@@ -11,7 +11,10 @@ import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
 import { chunk } from "lodash";
 import { toDhis2Enrollments } from "../data/enrollment";
 import { toDhis2Events } from "../data/event";
-import { toDhis2TrackedEntities, toDhis2TrackedEntity } from "../data/trackedEntity";
+import {
+  toDhis2TrackedEntities,
+  toDhis2TrackedEntity,
+} from "../data/trackedEntity";
 
 export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
   try {
@@ -49,11 +52,17 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
               ]
             );
 
-            if (!result.instances || result.instances.length === 0 || page > result.pageCount) {
+            if (
+              !result.instances ||
+              result.instances.length === 0 ||
+              page > result.pageCount
+            ) {
               break;
             }
 
-            console.log(`TEI = (page=${page}/${result.pageCount}, count=${result.instances.length})`);
+            console.log(
+              `TEI = (page=${page}/${result.pageCount}, count=${result.instances.length})`
+            );
 
             const resultTrackEntities = {
               ...result,
@@ -65,7 +74,8 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
             if (handleDispatchCurrentOfflineLoading) {
               handleDispatchCurrentOfflineLoading({
                 id: "tei",
-                percent: ((page / result.pageCount + i) * 100) / programs.length,
+                percent:
+                  ((page / result.pageCount + i) * 100) / programs.length,
               });
             }
 
@@ -90,7 +100,9 @@ export const push = async () => {
   const trackedEntities = await findOffline();
 
   if (trackedEntities?.length > 0) {
-    const results = await pushAndMarkOnline(toDhis2TrackedEntities(trackedEntities));
+    const results = await pushAndMarkOnline(
+      toDhis2TrackedEntities(trackedEntities)
+    );
 
     for (const result of results) {
       console.log(result.status);
@@ -147,7 +159,9 @@ export const pushAndMarkOnline = async (trackedEntities) => {
 };
 
 const markOnline = async (trackedEntityIds) => {
-  return await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntityIds).modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("trackedEntity")
+    .anyOf(trackedEntityIds)
+    .modify({ isOnline: 1 });
 };
 
 export const setTrackedEntityInstance = async ({ trackedEntity }) => {
@@ -160,7 +174,9 @@ export const setTrackedEntityInstance = async ({ trackedEntity }) => {
 
     if (trackedEntity.enrollments.length > 0) {
       // UPDATE ENROLLMENT
-      const enrollment = JSON.parse(JSON.stringify(trackedEntity.enrollments[0]));
+      const enrollment = JSON.parse(
+        JSON.stringify(trackedEntity.enrollments[0])
+      );
 
       await enrollmentManager.setEnrollment({
         enrollment,
@@ -258,11 +274,17 @@ const filterQueryBuilder = (query, filters) => {
         const [attribute, field, operator, value] = filter.split(/[:=]/);
 
         if (operator === "EQ") {
-          passes = passes && teiValue[attribute] === field && teiValue["value"] === value;
+          passes =
+            passes &&
+            teiValue[attribute] === field &&
+            teiValue["value"] === value;
         }
 
         if (operator === "LIKE") {
-          passes = passes && teiValue[attribute] === field && teiValue["value"].includes(value);
+          passes =
+            passes &&
+            teiValue[attribute] === field &&
+            teiValue["value"].includes(value);
         }
       });
 
@@ -277,7 +299,9 @@ const filterQueryBuilder = (query, filters) => {
 
 export const findOne = async (trackedEntity) => {
   try {
-    const tei = await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray();
+    const tei = await db[TABLE_NAME].where("trackedEntity")
+      .equals(trackedEntity)
+      .toArray();
 
     return toDhis2TrackedEntity(tei);
   } catch (error) {
@@ -285,7 +309,15 @@ export const findOne = async (trackedEntity) => {
   }
 };
 
-export const find = async ({ paging = true, pageSize, page, orgUnit, filters, program, ouMode = "SELECTED" }) => {
+export const find = async ({
+  paging = true,
+  pageSize,
+  page,
+  orgUnit,
+  filters,
+  program,
+  ouMode = "SELECTED",
+}) => {
   try {
     const result = {
       instances: [],
@@ -296,19 +328,24 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, filters, pr
     // get child orgUnits
     const selectedOrgUnit = await orgUnitManager.getOrgWithChildren(orgUnit);
 
-    const selectedOrgUnitIds = selectedOrgUnit?.children.map((ou) => ou.id) || [];
+    const selectedOrgUnitIds =
+      selectedOrgUnit?.children.map((ou) => ou.id) || [];
 
     let query = {
       program,
     };
 
     // filter out undefined values
-    Object.keys(query).forEach((key) => query[key] === undefined && delete query[key]);
+    Object.keys(query).forEach(
+      (key) => query[key] === undefined && delete query[key]
+    );
 
     let queryBuilder = db.enrollment.where(query);
 
     if (ouMode === "DESCENDANTS" && selectedOrgUnitIds.length > 0) {
-      queryBuilder = queryBuilder.and((enr) => selectedOrgUnitIds.includes(enr.orgUnit));
+      queryBuilder = queryBuilder.and((enr) =>
+        selectedOrgUnitIds.includes(enr.orgUnit)
+      );
     } else {
       queryBuilder = queryBuilder.and((enr) => enr.orgUnit === orgUnit);
     }
@@ -316,14 +353,21 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, filters, pr
     if (filters && filters.length > 0 && Boolean(filters[0])) {
       let teisFilterQueryBuilder = await db[TABLE_NAME];
 
-      teisFilterQueryBuilder = filterQueryBuilder(teisFilterQueryBuilder, filters);
+      teisFilterQueryBuilder = filterQueryBuilder(
+        teisFilterQueryBuilder,
+        filters
+      );
 
       const teisMatchFilter = await teisFilterQueryBuilder.toArray();
-      const teisMatchFilterIds = teisMatchFilter.map((tei) => tei.trackedEntity);
+      const teisMatchFilterIds = teisMatchFilter.map(
+        (tei) => tei.trackedEntity
+      );
 
       console.log({ teisMatchFilterIds });
 
-      queryBuilder = queryBuilder.and((enr) => teisMatchFilterIds.includes(enr.trackedEntity));
+      queryBuilder = queryBuilder.and((enr) =>
+        teisMatchFilterIds.includes(enr.trackedEntity)
+      );
     }
 
     let pager = {};
@@ -348,7 +392,9 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, filters, pr
 
     const trackedEntities = enrs.map((enr) => enr.trackedEntity);
 
-    let teisQueryBuilder = await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities);
+    let teisQueryBuilder = await db[TABLE_NAME].where("trackedEntity").anyOf(
+      trackedEntities
+    );
 
     const teis = await teisQueryBuilder.toArray();
 
@@ -366,7 +412,10 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, filters, pr
   }
 };
 
-export const getTrackedEntityInstanceById = async ({ trackedEntity, program }) => {
+export const getTrackedEntityInstanceById = async ({
+  trackedEntity,
+  program,
+}) => {
   const events = await db.event
     .where("trackedEntity")
     .equals(trackedEntity)
@@ -379,12 +428,14 @@ export const getTrackedEntityInstanceById = async ({ trackedEntity, program }) =
     .and((enr) => enr.program === program)
     .first();
 
-  const tei = toDhis2TrackedEntity(await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray());
+  const tei = toDhis2TrackedEntity(
+    await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray()
+  );
 
   if (enr) {
     tei.enrollments = toDhis2Enrollments([enr], toDhis2Events(events));
   }
-  console.log("getTrackedEntityInstanceById", { tei });
+  console.log("getTrackedEntityInstanceById", { tei, trackedEntity });
 
   return tei;
 };
@@ -398,7 +449,9 @@ export const getTrackedEntityInstances = async ({ orgUnit, filters }) => {
       // example: 'attribute=gv9xX5w4kKt:EQ:EzwtyXwTVzq' => ['attribute', 'gv9xX5w4kKt', 'EQ', 'EzwtyXwTVzq']
 
       if (operator === "EQ") {
-        queryBuilder = queryBuilder.and((teiValue) => teiValue[attribute] === field).and((teiValue) => teiValue["value"] === value);
+        queryBuilder = queryBuilder
+          .and((teiValue) => teiValue[attribute] === field)
+          .and((teiValue) => teiValue["value"] === value);
       }
     });
   }
@@ -414,7 +467,10 @@ export const getTrackedEntityInstances = async ({ orgUnit, filters }) => {
   };
 };
 
-export const getTrackedEntityInstancesByIDs = async ({ program, trackedEntities }) => {
+export const getTrackedEntityInstancesByIDs = async ({
+  program,
+  trackedEntities,
+}) => {
   const enrs = await db.enrollment
     .where("trackedEntity")
     .anyOf(trackedEntities)
@@ -431,7 +487,9 @@ export const getTrackedEntityInstancesByIDs = async ({ program, trackedEntities 
     enr.events = toDhis2Events(events);
   }
 
-  const teis = toDhis2TrackedEntities(await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities).toArray());
+  const teis = toDhis2TrackedEntities(
+    await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities).toArray()
+  );
 
   for (const tei of teis) {
     const teiEnr = enrs.find((enr) => enr.trackedEntity === tei.trackedEntity);
@@ -465,7 +523,9 @@ export const deleteTrackedEntityInstances = async ({ trackedEntities }) => {
 
       if (trackedEntity.enrollments.length > 0) {
         // DELETE ENROLLMENT
-        const enrollment = JSON.parse(JSON.stringify(trackedEntity.enrollments[0]));
+        const enrollment = JSON.parse(
+          JSON.stringify(trackedEntity.enrollments[0])
+        );
         await db.enrollment.where("trackedEntity").anyOf(teiId).delete();
 
         // UPDATE EVENTS

@@ -4,6 +4,7 @@ import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES } from "../constants";
+import { calcAgeFromDOB } from "../FamilyMemberForm/FormCalculationUtils";
 
 // Icon
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -29,7 +30,6 @@ const CascadeTable = (props) => {
     editRowCallback = null,
     callbackFunction = null,
     initFunction = null,
-    calcAgeFromDOB,
     externalComponents,
     components = <div>Working...</div>,
     uiLocale,
@@ -327,6 +327,7 @@ const CascadeTable = (props) => {
           extraData,
           t
         );
+        console.log({ res });
         return res;
       },
       formatExtraData: currentEvent,
