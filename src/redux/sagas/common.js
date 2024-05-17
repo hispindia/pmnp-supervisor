@@ -79,6 +79,8 @@ function handlePushResult(result, message) {
   }
 }
 
+// testt
+
 function* handlePushToServer() {
   try {
     /**
