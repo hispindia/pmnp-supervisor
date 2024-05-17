@@ -1,3 +1,4 @@
+import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
 import {
   CloseOutlined,
   EditOutlined,
@@ -5,15 +6,12 @@ import {
   SaveOutlined,
 } from "@ant-design/icons";
 import { Button, Form, Space } from "antd";
-import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
 import { isEqual } from "lodash";
 import moment from "moment";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import FormNoInputContainer from "../../containers/ProfileForm/FormNoInput.container";
 import withDhis2FormItem from "../../hocs/withDhis2Field";
-import { AppContext } from "../App/App.context";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
 
@@ -26,7 +24,7 @@ const ProfileForm = ({
 }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { tei, orgUnit, program, minDate, maxDate } = useContext(AppContext);
+  const { minDate, maxDate } = useSelector((state) => state.metadata);
   const {
     selectedOrgUnit,
     programMetadata: {
@@ -121,7 +119,7 @@ const ProfileForm = ({
         </div>
       </div>
       <div className="row col-lg-12">
-        <div className="col-lg-3">
+        {/* <div className="col-lg-3">
           <FormNoInputContainer
             id="G9KYJZ8dW76"
             initialValue={profile.attributes.G9KYJZ8dW76}
@@ -129,7 +127,7 @@ const ProfileForm = ({
             size="large"
             form={form}
           />
-        </div>
+        </div> */}
         <div className="col-lg-3">
           <Dhis2FormItem id="xbwURy2jG2K" displayFormName={t("unitOfVillage")}>
             <InputField size="large" disabled={!isEdit} />
@@ -183,7 +181,6 @@ const ProfileForm = ({
           <div className="row">
             <div className="col-lg-4">
               <Dhis2FormItem
-                id="CKQuSLAY0Xf"
                 displayFormName={t("tempBookNumber")}
                 dependentFields={[
                   "rzGghDo5ipI",
@@ -208,10 +205,12 @@ const ProfileForm = ({
                     houseNumber,
                     temporaryBookNumber,
                   ]);
+
                   return {
                     CKQuSLAY0Xf: generatedValue,
                   };
                 }}
+                id="CKQuSLAY0Xf"
               >
                 <InputField size="large" disabled={true} />
               </Dhis2FormItem>
@@ -322,7 +321,7 @@ const ProfileForm = ({
             <CFormControl
               dependentFields={[
                 "BUEzQEErqa7",
-                "G9KYJZ8dW76",
+                // "G9KYJZ8dW76",
                 "xbwURy2jG2K",
                 "W8WZcI1SUjC",
                 "rzGghDo5ipI",

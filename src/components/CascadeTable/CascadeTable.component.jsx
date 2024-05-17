@@ -2,7 +2,9 @@ import { generateUid } from "@/utils";
 import { useEffect, useState } from "react";
 import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
+import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES } from "../constants";
+import { calcAgeFromDOB } from "../FamilyMemberForm/FormCalculationUtils";
 
 // Icon
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { transformData, transformMetadataToColumns } from "./utils";
 
+import { updateCascade } from "@/redux/actions/data/tei/currentCascade";
 import _ from "lodash";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
@@ -27,7 +30,6 @@ const CascadeTable = (props) => {
     editRowCallback = null,
     callbackFunction = null,
     initFunction = null,
-    calcAgeFromDOB,
     externalComponents,
     components = <div>Working...</div>,
     uiLocale,
@@ -36,14 +38,19 @@ const CascadeTable = (props) => {
     originMetadata,
     metadata,
     setMetadata,
+    setData,
+    data,
     ...other
   } = props;
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
+  const { year } = useSelector((state) => state.data.tei.selectedYear);
+  const { currentCascade } = useSelector((state) => state.data.tei.data);
+  const dispatch = useDispatch();
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
   );
-  const [data, setData] = useState(props.data);
+  // const [data, setData] = useState(props.data);
 
   const [showData, setShowData] = useState(
     transformData(metadata, props.data, dataValuesTranslate, locale)
@@ -78,16 +85,24 @@ const CascadeTable = (props) => {
     };
     callbackFunction && callbackFunction(metadata, dataRows, rowIndex, "edit");
 
-    changeEventDataValue(
-      "oC9jreyd9SD",
-      JSON.stringify({ dataVals: dataRows["rows"] })
-    );
+    // changeEventDataValue(
+    //   "oC9jreyd9SD",
+    //   JSON.stringify({ dataVals: dataRows["rows"] })
+    // );
+
     setData([...dataRows["rows"]]);
 
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
-    console.log("handleEditRow", { updatedMetadata });
-    setMetadata([...updatedMetadata]);
+    console.log("handleEditRow", { updatedMetadata, dataRows });
 
+    // update new currentCascade
+    const updatedCurrentCascade = {
+      ...currentCascade,
+      [year]: dataRows["rows"],
+    };
+    dispatch(updateCascade(updatedCurrentCascade));
+
+    setMetadata([...updatedMetadata]);
     setFormStatus(FORM_ACTION_TYPES.NONE);
   };
 
@@ -110,6 +125,7 @@ const CascadeTable = (props) => {
 
     callbackFunction &&
       callbackFunction(metadata, dataRows, dataRows["rows"].length - 1, "add");
+
     changeEventDataValue(
       "oC9jreyd9SD",
       JSON.stringify({ dataVals: dataRows["rows"] })
@@ -117,6 +133,13 @@ const CascadeTable = (props) => {
 
     setData([...dataRows["rows"]]);
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
+
+    // update new currentCascade
+    const updatedCurrentCascade = {
+      ...currentCascade,
+      [year]: dataRows["rows"],
+    };
+    dispatch(updateCascade(updatedCurrentCascade));
 
     console.log("handleAddNewRow", { updatedMetadata, dataRows });
 
@@ -144,6 +167,14 @@ const CascadeTable = (props) => {
     );
     setData([...dataRows["rows"]]);
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
+
+    // update new currentCascade
+    const updatedCurrentCascade = {
+      ...currentCascade,
+      [year]: dataRows["rows"],
+    };
+    dispatch(updateCascade(updatedCurrentCascade));
+
     setMetadata([...updatedMetadata]);
   };
 
@@ -199,13 +230,14 @@ const CascadeTable = (props) => {
 
     setMetadata([...updatedMetadata]);
 
-    if (currentEvent._isDirty) {
-      let dataRows = {
-        rows: transformedData,
-      };
+    // REMOVE THIS - to fix bug losing calculated data
+    // if (currentEvent._isDirty) {
+    //   let dataRows = {
+    //     rows: transformedData,
+    //   };
 
-      callbackFunction && callbackFunction(metadata, dataRows);
-    }
+    //   callbackFunction && callbackFunction(metadata, dataRows);
+    // }
   }, [JSON.stringify(props.data)]);
 
   useEffect(() => {
@@ -270,8 +302,6 @@ const CascadeTable = (props) => {
 
     initFunction && initFunction(cloneMetadata, dataRows);
     setMetadata([...Object.values(cloneMetadata)]);
-
-    console.log("Cascade table", { metadata });
   }, [JSON.stringify(metadata)]);
 
   const columnsC = [
@@ -297,6 +327,7 @@ const CascadeTable = (props) => {
           extraData,
           t
         );
+
         return res;
       },
       formatExtraData: currentEvent,
@@ -387,10 +418,11 @@ const CascadeTable = (props) => {
 
         {/* <hr className="mb-4" /> */}
         <div className="row">
-          <div className="col-md-4 order-md-4 mb-4">
+          <div className="mb-4 mr-auto mr-sm-0">
             <Button
               type="button"
               size="sm"
+              style={{ width: 160 }}
               className="btn btn-success"
               onClick={() => handleBeforeAddNewRow()}
               aria-controls="collapseExample"
@@ -399,12 +431,12 @@ const CascadeTable = (props) => {
               {uiLocale.addNewMember}
             </Button>
           </div>
-          <div className="col-md-4 order-md-4 mb-4">
+          {/* <div className="col-md-4 order-md-4 mb-4">
             <div>{externalComponents && externalComponents["nextButton"]}</div>
-          </div>
+          </div> */}
         </div>
         <div className="row">
-          <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto">
+          <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive pl-0">
             <BootstrapTable
               keyField="id"
               data={showData}

@@ -1,9 +1,7 @@
-import db from "./db";
+import db from "../db";
 import { metadataApi } from "@/api";
 
-export const TABLE_FIELDS =
-  "id, lastUpdated, created, name, displayName, externalAccess, surname, lastCheckedInterpretations, firstName, favorite, access, userCredentials, sharing, settings, favorites, teiSearchOrganisationUnits, translations, organisationUnits, dataViewOrganisationUnits, userGroupAccesses, attributeValues, userGroups, userAccesses, authorities, programs, dataSets";
-const TABLE_NAME = "me";
+import { TABLE_NAME } from ".";
 
 export const pull = async () => {
   try {

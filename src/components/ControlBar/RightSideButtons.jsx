@@ -21,8 +21,10 @@ const RightSideButtons = ({
 
   return (
     <div className={barContainer}>
-      <OfflineModeButton />
-      <PushToServerButton />
+      <div className="d-none d-md-block">
+        <OfflineModeButton />
+        <PushToServerButton />
+      </div>
 
       {shouldShowExit ? (
         <>

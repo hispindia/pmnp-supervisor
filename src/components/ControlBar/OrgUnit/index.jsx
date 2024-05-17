@@ -1,8 +1,5 @@
-import React from "react";
 import { Button, Col, Popover, Row } from "antd";
-
 import OrgUnitSelector from "@/components/OrgUnitSelector/OrgUnitSelector.component";
-import { max } from "lodash";
 
 const OrgUnit = ({
   selectedOrgUnit,
@@ -13,7 +10,7 @@ const OrgUnit = ({
 }) => {
   return (
     <Row justify="center" align="middle">
-      <Col>
+      <Col className="d-none d-sm-block">
         <div
           style={{
             paddingRight: 8,

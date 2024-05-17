@@ -1,7 +1,6 @@
-import { Input, Radio, Checkbox, DatePicker, Select } from "antd";
-import moment from "moment";
 import { onKeyDown } from "@/utils";
-import React from "react";
+import { Checkbox, DatePicker, Input, Radio, Select } from "antd";
+import dayjs from "dayjs";
 
 import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
 const { TextArea } = Input;
@@ -39,6 +38,7 @@ const InputField = ({
       </Select>
     );
   }
+
   switch (valueType) {
     case "INTEGER_POSITIVE":
     case "INTEGER_NEGATIVE":
@@ -46,6 +46,7 @@ const InputField = ({
     case "PERCENTAGE":
     case "NUMBER":
     case "INTEGER":
+    case "PHONE_NUMBER":
       return (
         <Input
           onKeyDown={(e) => {
@@ -65,7 +66,6 @@ const InputField = ({
       );
 
     case "TEXT":
-    case "PHONE_NUMBER":
     case "EMAIL":
       return (
         <Input
@@ -106,13 +106,10 @@ const InputField = ({
         <DatePicker
           picker="year"
           {...props}
-          value={
-            props.value &&
-            moment({
-              year: props.value,
-            })
-          }
-          onChange={(date, dateString) => props.onChange(dateString)}
+          value={props.value ? dayjs(props.value) : ""}
+          onChange={(date, dateString) => {
+            props.onChange(dateString);
+          }}
         />
       );
     case "DATETIME":

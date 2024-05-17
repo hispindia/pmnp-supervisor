@@ -31,11 +31,6 @@ const OrgUnitContainer = () => {
     console.log(visible);
   };
 
-  // useEffect(() => {
-  //     console.log({ orgUnits });
-  //     // addOrgs(orgUnits);
-  // }, []);
-
   return (
     <OrgUnit
       orgUnitSelectorFilter={orgUnits}

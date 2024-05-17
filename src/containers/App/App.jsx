@@ -16,13 +16,13 @@ import {
   setSelectedOrgUnit,
 } from "@/redux/actions/metadata";
 
-import * as meManager from "@/indexDB/MeManager";
-import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager";
-import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager";
-import * as programManager from "@/indexDB/ProgramManager";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
-import * as enrollmentManager from "@/indexDB/EnrollmentManager";
-import * as eventManager from "@/indexDB/EventManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
+import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
+import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
+import * as eventManager from "@/indexDB/EventManager/EventManager";
 import { getMetadataSet } from "@/utils/offline";
 
 const AppSkeletonLoading = withSkeletonLoading(AppSkeleton)(App);
@@ -124,11 +124,11 @@ const AppContainer = () => {
       // TODO
       // console.log(await enrollmentManager.findOne('o69vgj9q3x0'));
       // console.log(
-      //     await trackedEntityInstanceManager.findOne('APbHHVQxFWy')
+      //     await trackedEntityManager.findOne('APbHHVQxFWy')
       // );
       // console.log(await eventManager.findOne('sLKnpFaCJU9'));
       // console.log(
-      //     await trackedEntityInstanceManager.find({
+      //     await trackedEntityManager.find({
       //         paging: false,
       //         program: 'L0EgY4EomHv',
       //         page: true,

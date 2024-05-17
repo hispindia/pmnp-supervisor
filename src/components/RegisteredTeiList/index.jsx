@@ -1,11 +1,8 @@
-import React from "react";
-import { Button, Popconfirm, Table } from "antd";
-import "./index.css";
-import { TableColumn, TableFilter } from "../../utils";
 import { DeleteTwoTone } from "@ant-design/icons";
+import { Button, Popconfirm, Table } from "antd";
 import { useTranslation } from "react-i18next";
-
-/* Components */
+import { TableColumn, TableFilter } from "../../utils";
+import "./index.css";
 
 const RegisteredTeiList = ({
   teis,
@@ -21,26 +18,32 @@ const RegisteredTeiList = ({
 }) => {
   const { t } = useTranslation();
   const deleteColumn = {
-    width: 72,
-    render: (text, record, index) => {
-      return (
-        <div onClick={(e) => e.stopPropagation()}>
-          <Popconfirm
-            placement="bottomLeft"
-            title={t("deleteDialogTitle")}
-            onConfirm={() => onDeleteTei(record)}
-            okText={t("yes")}
-            cancelText={t("no")}
-          >
-            <Button
-              icon={<DeleteTwoTone twoToneColor="#cf1322" />}
-              type="text"
-              danger
-            />
-          </Popconfirm>
-        </div>
-      );
-    },
+    width: 56,
+    key: "deleteKey",
+    render: (text, record, index) => (
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: "20px",
+          height: "20px",
+        }}
+      >
+        <Popconfirm
+          placement="bottomLeft"
+          title={t("deleteDialogTitle")}
+          onConfirm={() => onDeleteTei(record)}
+          okText={t("yes")}
+          cancelText={t("no")}
+        >
+          <Button
+            icon={<DeleteTwoTone twoToneColor="#cf1322" />}
+            type="text"
+            size="small"
+            danger
+          />
+        </Popconfirm>
+      </div>
+    ),
   };
 
   const createColumns = () => {
@@ -61,12 +64,13 @@ const RegisteredTeiList = ({
           ),
           render: (value) => <TableColumn metadata={tea} value={value} />,
         };
+
         return teaObject;
       });
     const lastUpdatedObject = {
       title: t("lastUpdated"),
-      dataIndex: "lastupdated",
-      key: "lastupdated",
+      dataIndex: "occurredAt",
+      key: "occurredAt",
       sorter: true,
       // filterDropdown: TableFilter(null, onFilter, {
       //   name: "lastupdated",
@@ -75,7 +79,7 @@ const RegisteredTeiList = ({
       render: (value) => (
         <TableColumn
           metadata={null}
-          external={{ name: "lastupdated", type: "DATE" }}
+          external={{ name: "occurredAt", type: "DATE" }}
           value={value}
         />
       ),
@@ -139,11 +143,11 @@ const RegisteredTeiList = ({
           },
         };
       }}
-      sticky
-      tableLayout={"fixed"}
+      // sticky
+      // tableLayout={"fixed"}
       columns={[deleteColumn].concat(createColumns())}
       dataSource={createDataSource()}
-      scroll={{ y: "calc(100vh - 268px)" }}
+      scroll={{ /*y: "calc(100vh - 268px)",*/ x: 900 }}
       bordered={true}
       pagination={{
         position: ["bottomCenter"],

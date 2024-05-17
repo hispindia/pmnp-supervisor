@@ -1,7 +1,6 @@
-import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -15,19 +14,7 @@ import {
 import AddYearButton from "@/components/Buttons/AddYearButton.jsx";
 import SidebarItem from "@/components/Buttons/SidebarItem.jsx";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    marginBottom: "5px",
-  },
-}));
-
 const SideBar = () => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [warningText, setWarningText] = useState(null);
 
@@ -48,11 +35,17 @@ const SideBar = () => {
   };
 
   const handleAddSelectedYear = (year) => {
-    let existedYear = currentEvents.map((e) => moment(e.eventDate).year());
+    let existedYear = currentEvents.map((e) => moment(e.occurredAt).year());
     console.log({ existedYear });
     if (!existedYear.includes(year)) {
       setWarningText(null);
       dispatch(cloneFamily(year));
+      const currentItemSize = currentEvents.reduce((years, event) => {
+        const year = moment(event.occurredAt).format("YYYY");
+        if (!years.includes(year)) years.push(year);
+        return years;
+      }, []).length;
+      dispatch(changeEventFamily(currentItemSize, year, 0));
       childRef.current.close();
     } else {
       setWarningText(`${year} ${"already exists."}`);
@@ -61,7 +54,7 @@ const SideBar = () => {
 
   // dont use
   // const handleEditEventDate = (year) => {
-  //     let existedYear = currentEvents.map((e) => moment(e.eventDate).year());
+  //     let existedYear = currentEvents.map((e) => moment(e.occurredAt).year());
   //     if (!existedYear.includes(year)) {
   //         setWarningText(null);
   //         // update event date
@@ -70,10 +63,22 @@ const SideBar = () => {
   //         setWarningText(`${year} ${'already exists.'}`);
   //     }
   // };
+  useEffect(() => {
+    console.log({ selectedYear });
+  }, [selectedYear]);
 
   return (
     <React.Fragment>
-      <Paper className={classes.paper} variant="outlined" square>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          // alignItems: "center",
+          border: "1px solid #f0f0f0",
+          padding: "0",
+        }}
+      >
         <AddYearButton
           ref={childRef}
           selectedYear={selectedYear.year}
@@ -83,9 +88,7 @@ const SideBar = () => {
           warningText={warningText}
           setWarningText={setWarningText}
         />
-      </Paper>
 
-      <Paper className={classes.paper} variant="outlined" square>
         <SidebarItem
           events={currentEvents}
           maxDate={maxDate}
@@ -97,7 +100,7 @@ const SideBar = () => {
           warningText={warningText}
           setWarningText={setWarningText}
         />
-      </Paper>
+      </div>
     </React.Fragment>
   );
 };

@@ -1,10 +1,9 @@
-import React from "react";
+import { CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Tabs } from "antd";
-import ProfileFormContainer from "../../containers/ProfileForm";
-import FMLayoutContainer from "../../containers/FMLayout";
-import { BarChartOutlined, CloseOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import CensusDetailFormContainer from "../../containers/CensusDetailForm";
+import CensusDetailFormContainer from "../../containers/CensusDetailFormContainer";
+import FMLayoutContainer from "../../containers/FMLayout";
+import ProfileFormContainer from "../../containers/ProfileForm";
 
 const { TabPane } = Tabs;
 
@@ -15,6 +14,27 @@ const MainForm = ({
   isEditingAttributes,
 }) => {
   const { t } = useTranslation();
+
+  const items = [
+    {
+      label: t("familyRegistration"),
+      key: "1",
+      children: <ProfileFormContainer />,
+    },
+    {
+      label: t("familyMembers"),
+      key: "2",
+      children: <FMLayoutContainer />,
+      disabled: isEditingAttributes,
+    },
+    {
+      label: t("censusDetails"),
+      key: "3",
+      children: <CensusDetailFormContainer />,
+      disabled: isEditingAttributes,
+    },
+  ];
+
   return (
     <Card size="small">
       <Tabs
@@ -31,35 +51,14 @@ const MainForm = ({
                 marginBottom: 10,
               }}
             >
-              <Button type="primary">
-                <BarChartOutlined />
-              </Button>
               <Button type="text">
                 <CloseOutlined onClick={onCloseClick} />
               </Button>
             </div>
           ),
         }}
-      >
-        <TabPane tab={t("familyRegistration")} key="1">
-          <ProfileFormContainer />
-        </TabPane>
-        <TabPane
-          tab={t("familyMembers")}
-          disabled={isEditingAttributes}
-          key="2"
-        >
-          <FMLayoutContainer />
-          <div>FMLayoutContainer</div>
-        </TabPane>
-        <TabPane
-          tab={t("censusDetails")}
-          disabled={isEditingAttributes}
-          key="3"
-        >
-          <CensusDetailFormContainer />
-        </TabPane>
-      </Tabs>
+        items={items}
+      />
     </Card>
   );
 };

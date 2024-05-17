@@ -1,14 +1,11 @@
-import db from "./db";
+import db from "../db";
+import { TABLE_NAME } from ".";
 import { dataApi } from "@/api";
-import * as programManager from "@/indexDB/ProgramManager";
-import * as meManager from "@/indexDB/MeManager";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
 import moment from "moment";
 import { chunk } from "lodash";
-import { toDhis2Events } from "./data/event";
-
-export const TABLE_FIELDS =
-  "++id, event, lastUpdated, orgUnit, program, programStage, eventStatus, enrollment, enrollmentStatus, trackedEntityInstance, attributeCategoryOptions, attributeOptionCombo, dueDate, eventDate, isFollowUp, isDeleted, isOnline, dataElement, value, isProvidedElsewhere";
-export const TABLE_NAME = "event";
+import { toDhis2Events } from "../data/event";
 
 export const getEventsRawData = async (pager, org, program) => {
   return await dataApi.get(
@@ -24,14 +21,14 @@ export const getEventsRawData = async (pager, org, program) => {
       `ouMode=DESCENDANTS`,
       `program=${program.id}`,
       `includeDeleted=true`,
-      // `lastUpdatedStartDate=${lastUpdated}`, // Need to get all data
+      // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
       `fields=${[
         "event",
-        "lastUpdated",
+        "updatedAt",
         "dueDate",
-        "eventDate",
+        "occurredAt",
         "orgUnit",
-        "trackedEntityInstance",
+        "trackedEntity",
         "program",
         "programStage",
         "status",
@@ -59,7 +56,8 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
     },
     [
       `dimension=ou:${org.id}`,
-      `startDate=2019-01-01`,
+      `ouMode=DESCENDANTS`,
+      `startDate=2018-01-01`,
       `endDate=${moment().format("YYYY-MM-DD")}`,
       // `dimension=dx:${dataElementIds.map((de) => de).join(';')}`,
       dataElementIds.map((de) => `dimension=${de}`).join("&"),
@@ -67,16 +65,19 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
   );
 };
 
-export const pull = async () => {
+export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
   try {
     // Delete the table
     await db[TABLE_NAME].clear();
-    // const lastUpdated = moment().subtract(3, 'months').format('YYYY-MM-DD');
+    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
     const { organisationUnits } = await meManager.getMe();
 
-    for (const org of organisationUnits) {
-      for (let program of programs) {
+    for (let j = 0; j < organisationUnits.length; j++) {
+      const org = organisationUnits[j];
+
+      for (let i = 0; i < programs.length; i++) {
+        const program = programs[i];
         let totalPages = 0;
 
         try {
@@ -89,7 +90,7 @@ export const pull = async () => {
               {
                 paging: true,
                 totalPages: true,
-                pageSize: 200,
+                pageSize: 600, // using 1200 because, if getting 200 will be missing some data - DHIS2 bug
                 page,
               },
               org,
@@ -118,6 +119,13 @@ export const pull = async () => {
           continue;
         }
       }
+
+      if (handleDispatchCurrentOfflineLoading) {
+        handleDispatchCurrentOfflineLoading({
+          id: "event",
+          percent: ((j + 1) / organisationUnits.length) * 100,
+        });
+      }
     }
   } catch (error) {
     console.log("Event:pull", error);
@@ -136,11 +144,16 @@ export const push = async () => {
     for (const result of results) {
       console.log(result.status);
     }
+
+    return results;
   }
 
   console.timeEnd("Event::push");
   var end = performance.now();
-  return "Event::push - " + (end - start);
+  // return "Event::push - " + (end - start);
+  return {
+    status: "OK",
+  };
 };
 
 const findOffline = async () => {
@@ -163,7 +176,7 @@ const pushAndMarkOnline = async (events) => {
   const partitions = chunk(events, 20);
 
   for (const partition of partitions) {
-    console.log(partition);
+    console.log("pushEvents", { partition });
 
     try {
       const result = await dataApi.pushEvents({
@@ -174,7 +187,7 @@ const pushAndMarkOnline = async (events) => {
 
       results.push(result);
 
-      if (result.httpStatusCode === 200) {
+      if (result.status === "OK") {
         await markOnline(partition.map((en) => en.event));
       }
     } catch (error) {
@@ -182,24 +195,6 @@ const pushAndMarkOnline = async (events) => {
       results.push(error);
     }
   }
-
-  // for (const trackedEntity of trackedEntities) {
-  //     try {
-  //         const result = await dataApi.post(
-  //             '/api/trackedEntityInstances',
-  //             trackedEntity
-  //         );
-
-  //         if (result.status === 200) {
-  //             trackedEntity.isOnline = true;
-  //             await db[TABLE_NAME].put(trackedEntity);
-  //         }
-
-  //         results.push(result);
-  //     } catch (error) {
-  //         console.error(`Failed to push trackedEntityInstance`, error);
-  //     }
-  // }
 
   return results;
 };
@@ -221,17 +216,17 @@ export const beforePersist = async (result) => {
   for (const ev of events) {
     const event = {
       event: ev.event,
-      lastUpdated: ev.lastUpdated,
+      updatedAt: ev.updatedAt,
       program: ev.program,
       programStage: ev.programStage,
       orgUnit: ev.orgUnit,
       eventStatus: ev.status,
       enrollment: ev.enrollment,
       enrollmentStatus: ev.enrollmentStatus,
-      trackedEntityInstance: ev.trackedEntityInstance,
+      trackedEntity: ev.trackedEntity,
       attributeOptionCombo: ev.attributeOptionCombo,
       dueDate: ev.dueDate,
-      eventDate: ev.eventDate,
+      occurredAt: ev.occurredAt,
       isOnline: 1,
       isFollowUp: ev.followup ? 1 : 0,
       isDeleted: ev.deleted ? 1 : 0,
@@ -290,12 +285,12 @@ export const getEventsByQuery = async ({
 
   if (startDate) {
     queryBuilder = queryBuilder.and((env) => {
-      return moment(env.eventDate, "YYYY-MM-DD").isSameOrAfter(startDate);
+      return moment(env.occurredAt, "YYYY-MM-DD").isSameOrAfter(startDate);
     });
   }
   if (endDate) {
     queryBuilder = queryBuilder.and((env) => {
-      return moment(env.eventDate, "YYYY-MM-DD").isSameOrBefore(endDate);
+      return moment(env.occurredAt, "YYYY-MM-DD").isSameOrBefore(endDate);
     });
   }
 
@@ -328,17 +323,17 @@ const beforePersistAnalyticsData = async (result, program) => {
   for (const ev of events) {
     const event = {
       event: ev[findHeaderIndex(result.headers, "psi")],
-      lastUpdated: ev[findHeaderIndex(result.headers, "eventdate")], //ev.lastUpdated,
+      updatedAt: ev[findHeaderIndex(result.headers, "eventdate")], //ev.updatedAt,
       program: program.id,
       programStage: ev[findHeaderIndex(result.headers, "ps")],
       orgUnit: ev[findHeaderIndex(result.headers, "ou")],
       eventStatus: `ACTIVE`, //ev.status,
       enrollment: ev[findHeaderIndex(result.headers, "pi")],
       enrollmentStatus: `ACTIVE`, //ev.enrollmentStatus,
-      trackedEntityInstance: ev[findHeaderIndex(result.headers, "tei")],
+      trackedEntity: ev[findHeaderIndex(result.headers, "tei")],
       attributeOptionCombo: `HllvX50cXC0`, // ev.attributeOptionCombo,
       dueDate: ev[findHeaderIndex(result.headers, "eventdate")], // ev.dueDate,
-      eventDate: ev[findHeaderIndex(result.headers, "eventdate")],
+      occurredAt: ev[findHeaderIndex(result.headers, "eventdate")],
       isOnline: 1,
       isFollowUp: 0, // ev.followup || false,
       isDeleted: 0, // ev.deleted || false,
@@ -391,7 +386,7 @@ const setEvent = async (ev) => {
 
     const event = {
       event: ev.event,
-      lastUpdated: moment().format("YYYY-MM-DD HH:mm:ss"),
+      updatedAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       program: ev.program,
       programStage: ev.programStage,
       orgUnit: ev.orgUnit,
@@ -399,10 +394,10 @@ const setEvent = async (ev) => {
       eventStatus: ev.eventStatus || ev.status,
       enrollment: ev.enrollment,
       enrollmentStatus: ev.status || ev.enrollmentStatus,
-      trackedEntityInstance: ev.trackedEntityInstance,
+      trackedEntity: ev.trackedEntity,
       attributeOptionCombo: ev.attributeOptionCombo || "HllvX50cXC0",
       dueDate: ev.dueDate,
-      eventDate: ev.eventDate,
+      occurredAt: ev.occurredAt,
       isOnline: 0,
       isFollowUp: ev.followup ? 1 : 0,
       isDeleted: ev.deleted ? 1 : 0,
@@ -439,18 +434,18 @@ const setEvent = async (ev) => {
 
 /**
 event	INTEGER	NO	NULL	
-lastUpdated	date	NO	NULL	
+updatedAt	date	NO	NULL	
 orgUnit	varchar(11)	NO	NULL	
 program	varchar(11)	NO	NULL	
 programStage	varchar(11)	NO	NULL	
 eventStatus	TEXT	NO	NULL	
 enrollment	varchar(11)	YES	NULL	
 enrollmentStatus	TEXT	YES	NULL	
-trackedEntityInstance	varchar(11)	YES	NULL	
+trackedEntity	varchar(11)	YES	NULL	
 attributeCategoryOptions	varchar(11)	YES	NULL	
 attributeOptionCombo	varchar(11)	YES	NULL	
 dueDate	date	YES	NULL	
-eventDate	date	YES	NULL	
+occurredAt	date	YES	NULL	
 isFollowUp	boolean	NO	NULL	
 isDeleted	boolean	NO	NULL	
 isOnline	boolean	NO	NULL	

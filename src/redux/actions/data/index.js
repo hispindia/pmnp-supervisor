@@ -49,15 +49,15 @@ export const initNewData = () => ({
   type: INIT_NEW_DATA,
 });
 
-export const initData = (trackedEntityInstance) => ({
+export const initData = (trackedEntity) => ({
   type: INIT_DATA,
-  trackedEntityInstance,
+  trackedEntity,
 });
 
-export const initDataMember = (trackedEntityInstance, programMetadata) => ({
+export const initDataMember = (trackedEntity, programMetadata) => ({
   type: INIT_DATA_MEMBER,
   payload: {
-    trackedEntityInstance,
+    trackedEntity,
     programMetadata,
   },
 });

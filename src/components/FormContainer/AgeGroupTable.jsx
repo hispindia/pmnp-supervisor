@@ -23,7 +23,7 @@ const AgeGroupTable = ({ transformedEvents }) => {
           </td>
           <td>{t("gender")}</td>
           {transformedEvents.map((e) => (
-            <td>{moment(e.eventDate).format("YYYY")}</td>
+            <td>{moment(e.occurredAt).format("YYYY")}</td>
           ))}
         </tr>
 

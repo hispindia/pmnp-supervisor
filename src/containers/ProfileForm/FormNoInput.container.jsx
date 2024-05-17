@@ -4,7 +4,7 @@ import withSkeletonLoading from "../../hocs/withSkeletonLoading";
 import FormNoInput from "../../components/ProfileForm/FormNoInput";
 import { useTranslation } from "react-i18next";
 import { useApi } from "../../hooks";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 const LoadingFormNoInput = withSkeletonLoading()(FormNoInput);
 
@@ -28,7 +28,7 @@ const FormNoInputContainer = ({ id, initialValue, ...props }) => {
     let findTei = null;
 
     if (offlineStatus) {
-      findTei = trackedEntityInstanceManager.getTrackedEntityInstances({
+      findTei = trackedEntityManager.getTrackedEntityInstances({
         orgUnit: selectedOrgUnit.id,
         filters: [`attribute=${id}:EQ:${value}`],
       });

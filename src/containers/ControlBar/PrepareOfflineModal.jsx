@@ -1,0 +1,80 @@
+import { Modal, Typography, Progress } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  setOfflineStatus,
+  setOfflineLoadingStatus,
+} from "@/redux/actions/common";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+
+const downloadMapping = [
+  { id: "metadata", label: "Download metadata" },
+  { id: "tei", label: "Download tracked entities" },
+  { id: "enr", label: "Download enrollments" },
+  { id: "event", label: "Download events" },
+];
+
+const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const { currentOfflineLoading } = useSelector((state) => state.common);
+  const { offlineLoading } = useSelector((state) => state.common);
+
+  useEffect(() => {
+    if (
+      open &&
+      currentOfflineLoading.id ===
+        downloadMapping[downloadMapping.length - 1].id &&
+      currentOfflineLoading.percent >= 100
+    ) {
+      dispatch(setOfflineLoadingStatus(false));
+      dispatch(setOfflineStatus(true));
+      // onClose();
+    }
+  }, [open, currentOfflineLoading.id, currentOfflineLoading.percent]);
+
+  return (
+    <Modal
+      title={t("preparingForOfflineMode")}
+      open={open}
+      centered
+      closeIcon={null}
+      maskClosable={false}
+      okText={"OK"}
+      onCancel={onCancel}
+      onOk={() => {
+        window.location.reload();
+        onClose();
+      }}
+      okButtonProps={{
+        style: { display: !offlineLoading ? "inline-block" : "none" },
+      }}
+    >
+      {downloadMapping.map(({ label }, step) => {
+        const currentStep = downloadMapping.findIndex(
+          ({ id }) => id === currentOfflineLoading.id
+        );
+
+        let percent = 0;
+        if (currentStep > -1) {
+          if (currentStep > step) percent = 100;
+          if (currentStep === step) percent = currentOfflineLoading.percent;
+        }
+
+        return (
+          <div key={label}>
+            <Typography>{label}</Typography>
+            <Progress
+              percent={percent}
+              format={() => `${percent.toFixed(0)}%`}
+            />
+          </div>
+        );
+      })}
+      <div style={{ marginBottom: 24 }}></div>
+    </Modal>
+  );
+};
+
+export default PrepareOfflineModal;

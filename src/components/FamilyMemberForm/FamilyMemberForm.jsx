@@ -1,6 +1,6 @@
+import CascadeTable from "@/components/CascadeTable";
 import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import CascadeTable from "@/components/CascadeTable";
 import i18n from "i18next";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -12,13 +12,10 @@ import originMetadata from "./originMetadata.jsx";
 import { useDispatch, useSelector } from "react-redux";
 
 /* SELECTOR */
-import { changeMember, clear } from "../../redux/actions/data/tei";
+import { changeMember } from "../../redux/actions/data/tei";
 
 // Import utils
-import {
-  calcAgeFromDOB,
-  calculateAgeGroup,
-} from "../FormContainer/FormCalculationUtils";
+import { calculateAgeGroup } from "./FormCalculationUtils";
 
 // Styles
 import "../../index.css";
@@ -63,15 +60,14 @@ const FamilyMemberForm = ({
   const classes = useStyles();
 
   const { year } = useSelector((state) => state.data.tei.selectedYear);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
 
   const currentCascade = useSelector(
     (state) => state.data.tei.data.currentCascade
   );
-
-  const [data, setData] = useState([]);
 
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
 
@@ -84,6 +80,10 @@ const FamilyMemberForm = ({
       // setData([]);
     };
   }, []);
+
+  useEffect(() => {
+    console.log("checking data", { data });
+  }, [data]);
 
   const getCascadeData = () => {
     let cascadeData = [];
@@ -145,12 +145,12 @@ const FamilyMemberForm = ({
         return obj;
       }, {});
 
-      // Show STATUS when number of events > 2
-      if (events && events.length > 1) {
-        cloneMetadata["status"].hidden = false;
-      } else {
-        cloneMetadata["status"].hidden = true;
-      }
+      // // Show STATUS when number of events > 2
+      // if (events && events.length > 1) {
+      //   cloneMetadata["status"].hidden = false;
+      // } else {
+      //   cloneMetadata["status"].hidden = true;
+      // }
 
       setMetadata([...Object.values(cloneMetadata)]);
     }
@@ -281,11 +281,8 @@ const FamilyMemberForm = ({
     }
     // FOR ALL ROWS
     // Calculate Age Group
-    let tempValues = calculateAgeGroup(
-      metadata,
-      dataRows["rows"],
-      currentEvent
-    );
+    let tempValues = calculateAgeGroup(dataRows["rows"], currentEvent);
+    console.log("calculateAgeGroup", dataRows["rows"], tempValues);
     Object.entries(tempValues).forEach((v) => {
       if (v[1] === 0) {
         v[1] = "";
@@ -338,9 +335,9 @@ const FamilyMemberForm = ({
             initFunction={initFunction}
             editRowCallback={editRowCallback}
             callbackFunction={callbackFunction}
-            calcAgeFromDOB={calcAgeFromDOB}
             originMetadata={originMetadata}
             setMetadata={setMetadata}
+            setData={setData}
             t={t}
             externalComponents={externalComponents}
             maxDate={`${year}-12-31`}

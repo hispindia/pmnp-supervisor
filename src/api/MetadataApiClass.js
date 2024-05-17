@@ -74,6 +74,7 @@ export default class MetadataApiClass extends BaseApiClass {
         "fields=id,code,displayName,path,children[id,code,displayName,path]",
       ]
     );
+    console.log({ orgUnits });
     const me = await pull(
       this.baseUrl,
       this.username,
@@ -82,6 +83,7 @@ export default class MetadataApiClass extends BaseApiClass {
       { paging: false },
       []
     );
+    console.log({ orgUnits });
     let data = {};
     data.tree = orgUnits.organisationUnits.reduce((accumulator, currentOu) => {
       // accumulator[`organisationUnits/${currentOu.id}`] = async () => {
@@ -146,19 +148,17 @@ export default class MetadataApiClass extends BaseApiClass {
   };
 
   getUserOrgUnits = async () => {
-    return process.env.NODE_ENV !== "development"
-      ? dev_data.organisationUnits
-      : pull(
-          this.baseUrl,
-          this.username,
-          this.password,
-          "/api/organisationUnits",
-          { paging: false },
-          [
-            "withinUserHierarchy=true",
-            "fields=id,code,path,displayName,level,parent,translations",
-          ]
-        );
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      "/api/organisationUnits",
+      { paging: false },
+      [
+        "withinUserHierarchy=true",
+        "fields=id,code,path,displayName,level,parent,translations",
+      ]
+    );
   };
 
   getProgramMetadataTest = async (program) => {
@@ -218,8 +218,18 @@ export default class MetadataApiClass extends BaseApiClass {
       [`filter=program.id:eq:${p.id}`, `fields=*,programRuleActions[*]`]
     );
 
-    let optionSets = JSON.parse(localStorage.getItem("optionSets"));
-    if (optionSets) {
+    const expirationDate = new Date();
+    expirationDate.setHours(expirationDate.getHours() + 1); // Set the expiration time to 1 hour from now
+
+    const cacheOptions = JSON.parse(localStorage.getItem("optionSets"));
+
+    let optionSets = null;
+    if (
+      cacheOptions &&
+      cacheOptions.expiration &&
+      new Date().getTime() < cacheOptions.expiration
+    ) {
+      optionSets = cacheOptions.value;
     } else {
       optionSets = await pull(
         this.baseUrl,
@@ -229,7 +239,13 @@ export default class MetadataApiClass extends BaseApiClass {
         { paging: false },
         ["fields=id,displayName,options[id,displayName,code,sortOrder]"]
       );
-      localStorage.setItem("optionSets", JSON.stringify(optionSets));
+
+      const newCacheOptions = {
+        value: optionSets,
+        expiration: expirationDate.getTime(),
+      };
+
+      localStorage.setItem("optionSets", JSON.stringify(newCacheOptions));
     }
 
     const programMetadata = {};
@@ -259,6 +275,7 @@ export default class MetadataApiClass extends BaseApiClass {
         }
         return tea;
       });
+
     programMetadata.programStages = p.programStages.map((ps) => {
       const programStage = {
         id: ps.id,
@@ -287,8 +304,10 @@ export default class MetadataApiClass extends BaseApiClass {
       };
       return programStage;
     });
+
     programMetadata.programRules = programRules.programRules;
     programMetadata.programRuleVariables = p.programRuleVariables;
+
     return programMetadata;
   };
 

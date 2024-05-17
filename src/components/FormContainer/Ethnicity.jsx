@@ -21,7 +21,7 @@ const Ethnicity = ({ transformedEvents }) => {
             <strong>{t("ethnicity")}</strong>
           </td>
           {transformedEvents.map((e) => (
-            <td>{moment(e.eventDate).format("YYYY")}</td>
+            <td>{moment(e.occurredAt).format("YYYY")}</td>
           ))}
         </tr>
         <tr>

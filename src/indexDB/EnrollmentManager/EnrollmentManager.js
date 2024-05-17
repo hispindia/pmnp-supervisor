@@ -1,24 +1,22 @@
-import db from "./db";
+import db from "../db";
+import { TABLE_NAME } from ".";
 import { dataApi } from "@/api";
-import * as programManager from "@/indexDB/ProgramManager";
-import * as meManager from "@/indexDB/MeManager";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
 import moment from "moment";
-import { toDhis2Enrollments } from "./data/enrollment";
+import { toDhis2Enrollments } from "../data/enrollment";
 import { chunk } from "lodash";
 
-export const TABLE_FIELDS =
-  "++id, enrollment, lastUpdated, orgUnit, trackedEntityType, program, enrollmentStatus, trackedEntityInstance, enrollmentDate, incidentDate, isFollowUp, isDeleted, isOnline, attribute, value";
-export const TABLE_NAME = "enrollment";
-
-export const pull = async () => {
+export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
   try {
     await db[TABLE_NAME].clear();
-    // const lastUpdated = moment().subtract(3, 'months').format('YYYY-MM-DD');
+    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
     const { organisationUnits } = await meManager.getMe();
 
     for (const org of organisationUnits) {
-      for (let program of programs) {
+      for (let i = 0; i < programs.length; i++) {
+        const program = programs[i];
         let totalPages = 0;
 
         try {
@@ -28,7 +26,7 @@ export const pull = async () => {
             }
 
             const result = await dataApi.get(
-              "/api/enrollments",
+              "/api/tracker/enrollments",
               {
                 paging: true,
                 totalPages: true,
@@ -40,35 +38,41 @@ export const pull = async () => {
                 `program=${program.id}`,
                 `ouMode=DESCENDANTS`,
                 `includeDeleted=true`,
-                // `lastUpdatedStartDate=${lastUpdated}`, // Need to get all data
+                // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
                 `fields=${[
                   "enrollment",
-                  "lastUpdated",
+                  "updatedAt",
                   "trackedEntityType",
-                  "trackedEntityInstance",
+                  "trackedEntity",
                   "program",
                   "status",
                   "orgUnit",
-                  "enrollmentDate",
+                  "enrolledAt",
                   "incidentDate",
                   "followup",
                 ].join(",")}`,
               ]
             );
 
-            if (
-              !result.enrollments ||
-              result.enrollments.length === 0 ||
-              page > result.pager.pageCount
-            ) {
+            if (!result.instances || result.instances.length === 0 || page > result.pageCount) {
               break;
             }
 
-            console.log(
-              `ENROLLMENT = ${program.id} (page=${page}/${result.pager.pageCount}, count=${result.enrollments.length})`
-            );
+            console.log(`ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`);
 
-            await persist(await beforePersist([result], program.id));
+            const resultEnrollments = {
+              ...result,
+              enrollments: result.instances,
+            };
+
+            await persist(await beforePersist([resultEnrollments], program.id));
+
+            if (handleDispatchCurrentOfflineLoading) {
+              handleDispatchCurrentOfflineLoading({
+                id: "enr",
+                percent: ((page / result.pageCount + i) * 100) / programs.length,
+              });
+            }
           }
         } catch (error) {
           console.log("Enrollment:pull", error);
@@ -93,14 +97,19 @@ export const push = async () => {
     for (const result of results) {
       console.log(result.status);
     }
+
+    return results;
   }
 
   console.timeEnd("Enrollment::push");
   var end = performance.now();
-  return "Enrollment::push - " + (end - start);
+  return {
+    status: "OK",
+  };
 };
 
 const persist = async (enrollments) => {
+  console.log("persist", { enrollments });
   await db[TABLE_NAME].bulkPut(enrollments);
 };
 
@@ -109,9 +118,7 @@ const findOffline = async () => {
 };
 
 const markOnline = async (enrollmentIds) => {
-  return await db[TABLE_NAME].where("enrollment")
-    .anyOf(enrollmentIds)
-    .modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("enrollment").anyOf(enrollmentIds).modify({ isOnline: 1 });
 };
 
 const pushAndMarkOnline = async (enrollments) => {
@@ -124,7 +131,7 @@ const pushAndMarkOnline = async (enrollments) => {
   const partitions = chunk(enrollments, 20);
 
   for (const partition of partitions) {
-    console.log(partition);
+    console.log("pushEnrollment", { partition });
 
     try {
       const result = await dataApi.pushEnrollment({
@@ -135,7 +142,7 @@ const pushAndMarkOnline = async (enrollments) => {
 
       results.push(result);
 
-      if (result.httpStatusCode === 200) {
+      if (result.status === "OK") {
         await markOnline(partition.map((en) => en.enrollment));
       }
     } catch (error) {
@@ -161,13 +168,13 @@ const beforePersist = async (result, program, isOnline = 1) => {
     for (const en of enrollments) {
       const enrollment = {
         enrollment: en.enrollment,
-        lastUpdated: en.lastUpdated || moment().format("YYYY-MM-DD"),
+        updatedAt: en.updatedAt || moment().format("YYYY-MM-DD"),
         program: program,
         orgUnit: en.orgUnit,
         enrollmentStatus: en.status,
         trackedEntityType: en.trackedEntityType,
-        trackedEntityInstance: en.trackedEntityInstance,
-        enrollmentDate: en.enrollmentDate,
+        trackedEntity: en.trackedEntity,
+        enrolledAt: en.enrolledAt,
         incidentDate: en.incidentDate,
         isOnline,
         isFollowUp: en.followup ? 1 : 0,

@@ -1,10 +1,11 @@
 import CensusDetailForm from "@/components/CensusDetailForm";
-import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
 import { changeEventFamily } from "@/redux/actions/data/tei";
 import { submitEvent } from "@/redux/actions/data/tei/currentEvent";
 import { generateUid } from "@/utils";
 import { transformEvent } from "@/utils/event";
+import moment from "moment";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const getHalfYear = (selected6Month, year) => {
   const startMonth = selected6Month === 1 ? "01" : "07";
@@ -26,8 +27,13 @@ const CensusDetailFormContainer = () => {
   const { startDate, endDate } = getHalfYear(selected6Month, year);
 
   const currentEvent = currentEvents.find((event) =>
-    moment(event.eventDate).isBetween(startDate, endDate, null, "[]")
+    moment(event.occurredAt).isBetween(startDate, endDate, null, "[]")
   );
+
+  const [tempCurrentEvent, setTempCurrentEvent] = useState({
+    ...currentEvent,
+    dataValues: currentEvent?.dataValues || {},
+  });
 
   const onTabChange = (tabIndex) => {
     dispatch(changeEventFamily(index, year, tabIndex));
@@ -49,7 +55,7 @@ const CensusDetailFormContainer = () => {
             ...cloneEvent,
             _isDirty: true,
             event: generateUid(),
-            eventDate: `${endDate}`,
+            occurredAt: `${endDate}`,
             dueDate: `${endDate}`,
             status: "ACTIVE",
             dataValues: eventDataValues,
@@ -73,7 +79,7 @@ const CensusDetailFormContainer = () => {
 
   return (
     <CensusDetailForm
-      values={currentEvent?.dataValues || []}
+      values={currentEvent?.dataValues || {}}
       selected6Month={selected6Month}
       onTabChange={onTabChange}
       onSubmit={onSubmit}

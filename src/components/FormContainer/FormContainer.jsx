@@ -54,6 +54,7 @@ import { useSnackbar } from "notistack";
 const numOfStep = 2;
 
 import { useApi, useEvent, useProfile } from "hooks";
+import { useSelector } from "react-redux";
 
 const {
   formContainer,
@@ -80,9 +81,10 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
   const [isYearPickerOpen, setIsYearPickerOpen] = useState(false);
   const [isYearEditPickerOpen, setIsYearEditPickerOpen] = useState(false);
   const [selectedEditRowYear, setSelectedEditRowYear] = useState(null);
-  const { tei, orgUnit, program, minDate, maxDate } = useContext(AppContext);
+  const { minDate, maxDate } = useSelector((state) => state.metadata);
+  const { tei, orgUnit, program } = useContext(AppContext);
   const [selectedYearPicker, setSelectedYearPicker] = useState(
-    moment(`01/01/${maxDate}`, "DD/MM/YYYY").endOf("year").format("YYYY-MM-DD")
+    moment(`${maxDate}`, "DD/MM/YYYY").endOf("year").format("YYYY-MM-DD")
   );
 
   const [currentTei, setCurrentTei] = useState(null);
@@ -141,20 +143,20 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
       setEditable(false);
       if (profile.isNew) {
         changeEnrollment(
-          "enrollmentDate",
-          `${moment(profile.enrollment.enrollmentDate).year()}-12-31`
+          "enrolledAt",
+          `${moment(profile.enrollment.enrolledAt).year()}-12-31`
         );
         changeEnrollment(
           "incidentDate",
-          `${moment(profile.enrollment.enrollmentDate).year()}-12-31`
+          `${moment(profile.enrollment.enrolledAt).year()}-12-31`
         );
         await dataApi.pushTrackedEntityInstance(
           transformProfile(),
           program.selectedProgram
         );
         // TODO
-        //Auto generate eventDate correspond to enrollmentDate
-        handleAddSelectedYear(moment(profile.enrollment.enrollmentDate).year());
+        //Auto generate occurredAt correspond to enrolledAt
+        handleAddSelectedYear(moment(profile.enrollment.enrolledAt).year());
 
         changeProfile("isNew", false);
         !saveInBackground &&
@@ -290,16 +292,16 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
     } else {
       initProfile({
         isNew: true,
-        trackedEntityInstance: tei.selectedTei,
+        trackedEntity: tei.selectedTei,
         orgUnit: orgUnit.selectedOrgUnit.id,
         trackedEntityType: programMetadata.trackedEntityType,
         enrollments: [
           {
             enrollment: enrollmentId,
-            trackedEntityInstance: tei.selectedTei,
+            trackedEntity: tei.selectedTei,
             orgUnit: orgUnit.selectedOrgUnit.id,
             program: program.selectedProgram,
-            enrollmentDate: moment().subtract(2, "year").format("YYYY-MM-DD"),
+            enrolledAt: moment().subtract(2, "year").format("YYYY-MM-DD"),
             incidentDate: moment().subtract(2, "year").format("YYYY-MM-DD"),
           },
         ],
@@ -314,12 +316,12 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
     } else {
       initEvent({
         event: generateUid(),
-        trackedEntityInstance: tei.selectedTei,
+        trackedEntity: tei.selectedTei,
         orgUnit: orgUnit.selectedOrgUnit.id,
         program: program.selectedProgram,
         programStage: "vY4mlqYfJEH",
         enrollment: enrollmentId,
-        eventDate: moment().format("YYYY-MM-DD"),
+        occurredAt: moment().format("YYYY-MM-DD"),
         dueDate: moment().format("YYYY-MM-DD"),
         dataValues: [],
       });
@@ -428,7 +430,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
 
     //
     updateCurrentEventToEventList();
-    let existedYear = events.map((e) => moment(e.eventDate).year());
+    let existedYear = events.map((e) => moment(e.occurredAt).year());
 
     if (!existedYear.includes(year)) {
       setSelectedYearPicker(`${year}-12-31`);
@@ -450,7 +452,9 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
         if (dataValues && dataValues.length > 0) {
           let cascadeData = JSON.parse(dataValues[0].value);
           cascadeData = cascadeData.dataVals.filter(
-            (e) => e["Status"] != "Dead" && e["Status"] != "Transferred"
+            (e) =>
+              (e["status"] != "Dead" || e["status"] != "dead") &&
+              (e["status"] != "Transferred" || e["status"] == "transfer-out")
           );
 
           // Add data of CascadeTable
@@ -464,12 +468,12 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
       let newEv = {
         _isDirty: true,
         event: generateUid(),
-        trackedEntityInstance: tei.selectedTei,
+        trackedEntity: tei.selectedTei,
         orgUnit: orgUnit.selectedOrgUnit.id,
         program: program.selectedProgram,
         programStage: "vY4mlqYfJEH",
         enrollment: currentErn,
-        eventDate: `${year}-12-31`,
+        occurredAt: `${year}-12-31`,
         dueDate: `${year}-12-31`,
         status: "ACTIVE",
         dataValues: dataValues && dataValues.length > 0 ? dataValues : [],
@@ -488,8 +492,8 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
     let tempEvents = paramEvents ? paramEvents : events;
     let listEvents = _.clone(
       tempEvents.sort(function (a, b) {
-        var keyA = new Date(a.eventDate),
-          keyB = new Date(b.eventDate);
+        var keyA = new Date(a.occurredAt),
+          keyB = new Date(b.occurredAt);
         // Compare the 2 dates
         if (keyA < keyB) return -1;
         if (keyA > keyB) return 1;
@@ -500,9 +504,9 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
   };
 
   const handleEditEventDate = async (eventID, year) => {
-    let existedYear = events.map((e) => moment(e.eventDate).year());
+    let existedYear = events.map((e) => moment(e.occurredAt).year());
     if (!existedYear.includes(year)) {
-      changeEvent("eventDate", `${year}-12-31`);
+      changeEvent("occurredAt", `${year}-12-31`);
 
       let indexOfObject = events.findIndex((x) => x.event == eventID);
       let updatedEvents = _.clone(events);
@@ -627,8 +631,8 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
                 // cancelLabel={React.createElement("span", null, t("cancel"))}
                 // clearLabel={React.createElement("span", null, "Limpar")}
                 // cancelLabel={React.createElement("span", null, "Cancelar")}
-                minDate={new Date(profile.enrollment.enrollmentDate)}
-                maxDate={new Date(`${maxDate}-12-31`)}
+                minDate={new Date(profile.enrollment.enrolledAt)}
+                maxDate={new Date(`${maxDate}`)}
               />
               {warningText && <Alert severity="error">{warningText}</Alert>}
             </>
@@ -828,7 +832,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
                     variant="static"
                     views={["year"]}
                     label="Year only"
-                    value={moment(event.eventDate)}
+                    value={moment(event.occurredAt)}
                     onChange={(date) =>
                       handleEditEventDate(
                         selectedEditRowYear,
@@ -841,15 +845,15 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
                     //   t("resetFilter")
                     // )}
                     // cancelLabel={React.createElement("span", null, t("cancel"))}
-                    minDate={new Date(profile.enrollment.enrollmentDate)}
-                    maxDate={new Date(`${maxDate}-12-31`)}
+                    minDate={new Date(profile.enrollment.enrolledAt)}
+                    maxDate={new Date(`${maxDate}`)}
                   />
                   {warningText && <Alert severity="error">{warningText}</Alert>}
                 </>
               </MuiPickersUtilsProvider>
             </Dialog>
             {events.map((event, index) => {
-              const year = moment(event.eventDate).format("YYYY");
+              const year = moment(event.occurredAt).format("YYYY");
 
               return (
                 <div
@@ -900,7 +904,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
             />
           </>
         )}
-        {activeStep === 2 && event.eventDate && (
+        {activeStep === 2 && event.occurredAt && (
           <CensusDetailForm
             currentEvent={event}
             blockEntry={event.status != "ACTIVE"}
@@ -909,7 +913,7 @@ const FormContainer = ({ programMetadata, data: json, setIsLoading }) => {
             programMetadata={programMetadata}
           />
         )}
-        {activeStep === 3 && event.eventDate && (
+        {activeStep === 3 && event.occurredAt && (
           <>
             <div className={summaryContainer}>
               <Grid container spacing={2}>

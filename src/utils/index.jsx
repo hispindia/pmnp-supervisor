@@ -108,9 +108,9 @@ export const generateDhis2Payload = (data, programMetadata) => {
       };
     }
   );
-  currentEnrollment.enrollmentDate = moment(
-    currentEnrollment.enrollmentDate
-  ).format("YYYY-MM-DD");
+  currentEnrollment.enrolledAt = moment(currentEnrollment.enrolledAt).format(
+    "YYYY-MM-DD"
+  );
   currentEnrollment.incidentDate = moment(
     currentEnrollment.incidentDate
   ).format("YYYY-MM-DD");
@@ -132,7 +132,7 @@ export const generateDhis2Payload = (data, programMetadata) => {
         ),
       };
     });
-    event.eventDate = moment(event.eventDate).format("YYYY-MM-DD");
+    event.occurredAt = moment(event.occurredAt).format("YYYY-MM-DD");
     event.dueDate = moment(event.dueDate).format("YYYY-MM-DD");
     return event;
   });

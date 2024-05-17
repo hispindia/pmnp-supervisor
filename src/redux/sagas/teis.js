@@ -16,7 +16,7 @@ import {
   sort,
 } from "../actions/teis";
 import { returnFilterString } from "../../utils";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 function* getTeis(newPayload = {}) {
   const { offlineStatus } = yield select((state) => state.common);
@@ -40,18 +40,20 @@ function* getTeis(newPayload = {}) {
     );
     let instanceList = {};
 
-    // console.log(returnFilterString(nextPayload.filters));
-    // console.log(nextPayload.orderString);
-
     // OFFLINE MODE
     if (offlineStatus) {
-      instanceList = yield call(trackedEntityInstanceManager.find, {
+      instanceList = yield call(trackedEntityManager.find, {
         orgUnit: selectedOrgUnit.id,
         program: programMetadata.id,
         pageSize: nextPayload.pageSize,
         page: nextPayload.page,
+        filters: returnFilterString(nextPayload.filters)
+          .split("&")
+          .filter(Boolean),
         ouMode: "DESCENDANTS",
       });
+
+      console.log("getTrackedEntityInstanceListByQuery", { instanceList });
     } else {
       instanceList = yield call(
         dataApi.getTrackedEntityInstanceListByQuery,
@@ -70,13 +72,26 @@ function* getTeis(newPayload = {}) {
     yield all([
       put(filter(nextPayload.filters)),
       put(sort(nextPayload.orderString)),
-      put(changePager(instanceList.pager)),
+      put(
+        changePager({
+          page: instanceList.page,
+          pageSize: instanceList.pageSize,
+          total: instanceList.total,
+          pageCount: instanceList.pageCount,
+        })
+      ),
     ]);
     yield put(
       getTeisSuccessMessage("Get tracked entity instances successfully")
     );
   } catch (e) {
-    yield put(getTeisErrorMessage(e.message));
+    const result = yield e.json();
+
+    if (result.message) {
+      yield put(getTeisErrorMessage(result.message));
+    } else {
+      yield put(getTeisErrorMessage(e.message));
+    }
   } finally {
     yield put(loadTeis(false));
   }

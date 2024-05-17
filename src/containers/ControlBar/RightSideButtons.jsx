@@ -2,7 +2,7 @@ import React from "react";
 import RightSideButtons from "../../components/ControlBar/RightSideButtons";
 import { useTranslation } from "react-i18next";
 
-const RightSideButtonsContainer = () => {
+const RightSideButtonsContainer = ({ className }) => {
   const { t } = useTranslation();
   const onClickHelp = () => {
     window.open("./FamilyInformationManual.pdf", "_blank");
@@ -21,6 +21,7 @@ const RightSideButtonsContainer = () => {
       helpLabel={t("help")}
       exitLabel={t("exit")}
     />
+
     // <div className={barContainer}>
     //     <div className={helpBtn}>
     //         <Tooltip title={t("help")} placement="left">

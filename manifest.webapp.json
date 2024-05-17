@@ -5,7 +5,7 @@
   "background_color": "#5a0fc8",
   "theme_color": "#5a0fc8",
   "display": "standalone",
-  "version": "1.0.35",
+  "version": "1.0.54",
   "icons": [
     {
       "src": "./assets/icon-maskable.png",
@@ -19,11 +19,6 @@
       "type": "image/png"
     },
     {
-      "src": "./assets/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
       "src": "./assets/icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png"
@@ -34,18 +29,8 @@
       "type": "image/png"
     },
     {
-      "src": "./assets/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png"
-    },
-    {
       "src": "./assets/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "./assets/icon-384x384.png",
-      "sizes": "384x384",
       "type": "image/png"
     },
     {

@@ -27,7 +27,7 @@ const teiMapping = {
 };
 
 const eventMapping = {
-  DOB: "PzzayUNGasj",
+  // DOB: "PzzayUNGasj", DOB of event ( do not use this )
   relation: "u0Ke4EXsIKZ",
   education: "Z9a4Vim1cuJ",
   insurance: "vbBhehiwNLV",
@@ -40,6 +40,9 @@ function* initCascadeDataFromTEIsEvents(payload) {
   // const programStages = yield select(
   //     (state) => state.metadata.programMetadata.programStages
   // );
+
+  console.log("initCascadeDataFromTEIsEvents", { payload });
+
   let currentCascade = {};
 
   const currentEvents = yield select(
@@ -51,14 +54,13 @@ function* initCascadeDataFromTEIsEvents(payload) {
   currentCascade =
     payload &&
     currentEvents.reduce((res, ce) => {
-      let year = moment(ce.eventDate).year();
-      process.env.NODE_ENV && console.log(year);
+      let year = moment(ce.occurredAt).year();
 
       let cascadeByYear = memberTEIsWithEvents.reduce((cas, tei) => {
         const enr = tei.enrollments[0];
         const events = enr.events;
         const eventByYear = _.filter(events, function (n) {
-          return moment(n.eventDate).isBetween(
+          return moment(n.occurredAt).isBetween(
             `${year}-01-01`,
             `${year}-12-31`,
             undefined,
@@ -121,7 +123,7 @@ function* initCascadeData(payload) {
   currentCascade =
     payload &&
     currentEvents.reduce((res, ce) => {
-      let year = moment(ce.eventDate).year();
+      let year = moment(ce.occurredAt).year();
 
       const cascadeByYear = JSON.parse(ce.dataValues.oC9jreyd9SD);
 

@@ -1,30 +1,88 @@
-import { Button } from "antd";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  pushToServer,
+  resetCurrentOfflineLoading,
+} from "@/redux/actions/common";
 import { UploadOutlined } from "@ant-design/icons";
-import { pushToServer } from "@/redux/actions/common";
+import { Button } from "antd";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+
+import PushModal, { pushMapping } from "./PushModal";
+import { findChangedData } from "./OfflineModeButton";
+import { toDhis2Enrollments } from "@/indexDB/data/enrollment";
+import { toDhis2Events } from "@/indexDB/data/event";
+import { toDhis2TrackedEntities } from "@/indexDB/data/trackedEntity";
+import { notification } from "antd";
 
 const PushToServerButton = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { offlineStatus } = useSelector((state) => state.common);
+
+  const [pushModalOpen, setPushModalOpen] = useState(false);
+  const [pushData, setPushData] = useState(
+    pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {})
+  );
+
+  const handleCancelPush = () => {
+    setPushModalOpen(false);
+  };
+
+  const handlePushClose = () => {
+    setPushModalOpen(false);
+  };
+
+  const handlePush = async () => {
+    if (Object.values(pushData).find(Boolean)) dispatch(pushToServer());
+  };
 
   return (
-    <Button
-      onClick={() => {
-        dispatch(pushToServer());
-      }}
-      style={{
-        marginRight: "10px",
-        backgroundColor: "green",
-      }}
-      shape="round"
-      size="small"
-      type="primary"
-      icon={<UploadOutlined />}
-    >
-      {t("push")}
-    </Button>
+    <>
+      <PushModal
+        pushData={pushData}
+        open={pushModalOpen}
+        onCancel={handleCancelPush}
+        onClose={handlePushClose}
+        onOk={handlePush}
+      />
+      <Button
+        onClick={async () => {
+          const results = await findChangedData();
+          const found = results.find((r) => r.length > 0);
+          if (!found) {
+            notification.info({
+              message: "No data to push",
+              description: "There is no data to push to the server",
+              placement: "bottomRight",
+              duration: 5,
+            });
+            return;
+          }
+
+          const enrs = toDhis2Enrollments(results[0]);
+          const events = toDhis2Events(results[1]);
+          const teis = toDhis2TrackedEntities(results[2]);
+          setPushData({
+            enr: enrs.length,
+            event: events.length,
+            tei: teis.length,
+          });
+
+          dispatch(resetCurrentOfflineLoading());
+          setPushModalOpen(true);
+        }}
+        style={{
+          marginRight: "10px",
+          backgroundColor: "green",
+        }}
+        shape="round"
+        size="small"
+        type="primary"
+        icon={<UploadOutlined />}
+      >
+        {t("push")}
+      </Button>
+    </>
   );
 };
 

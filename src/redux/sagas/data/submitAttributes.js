@@ -15,8 +15,8 @@ import { editingAttributes } from "../../actions/data";
 import { getTeiId } from "./utils";
 import moment from "moment";
 import { push } from "connected-react-router";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
-import * as enrollmentManager from "@/indexDB/EnrollmentManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 
 function* handleSubmitAttributes({ attributes }) {
   const { offlineStatus } = yield select((state) => state.common);
@@ -49,7 +49,7 @@ function* handleSubmitAttributes({ attributes }) {
       });
       yield put(
         getTeiSuccessMessage(
-          `Created new tracked entity instance: ${currentTei.trackedEntityInstance} successfully`
+          `Created new tracked entity instance: ${currentTei.trackedEntity} successfully`
         )
       );
     }
@@ -82,17 +82,25 @@ function* makePayload(attributes) {
 }
 
 function* putTeiToServer({ currentTei, currentEnrollment, attributes }) {
+  console.log("putTeiToServer");
   const { offlineStatus } = yield select((state) => state.common);
   const programMetadataId = yield select(
     (state) => state.metadata.programMetadata.id
   );
 
   if (offlineStatus) {
-    yield call(trackedEntityInstanceManager.setTrackedEntityInstance, {
-      trackedEntityInstance: currentTei,
+    yield call(trackedEntityManager.setTrackedEntityInstance, {
+      trackedEntity: currentTei,
     });
   } else {
-    yield call(dataApi.putTrackedEntityInstance, currentTei, programMetadataId);
+    // yield call(dataApi.putTrackedEntityInstance, currentTei, programMetadataId);
+    yield call(
+      dataApi.postTrackedEntityInstances,
+      {
+        trackedEntities: [currentTei],
+      },
+      programMetadataId
+    );
   }
 }
 
@@ -103,9 +111,7 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
   );
   const newEnrollment = {
     ...currentEnrollment,
-    enrollmentDate: moment([+attributes.BUEzQEErqa7, 11, 31]).format(
-      "YYYY-MM-DD"
-    ),
+    enrolledAt: moment([+attributes.BUEzQEErqa7, 11, 31]).format("YYYY-MM-DD"),
     incidentDate: moment([+attributes.BUEzQEErqa7, 11, 31]).format(
       "YYYY-MM-DD"
     ),
@@ -124,19 +130,27 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
 
     console.log(teiWithEnrollment);
 
-    yield call(trackedEntityInstanceManager.setTrackedEntityInstance, {
-      trackedEntityInstance: teiWithEnrollment,
+    yield call(trackedEntityManager.setTrackedEntityInstance, {
+      trackedEntity: teiWithEnrollment,
     });
   } else {
     yield call(
       dataApi.pushTrackedEntityInstance,
-      currentTei,
+      {
+        trackedEntities: [currentTei],
+      },
       programMetadataId
     );
-    yield call(dataApi.pushEnrollment, newEnrollment, programMetadataId);
+    yield call(
+      dataApi.pushEnrollment,
+      {
+        enrollments: [newEnrollment],
+      },
+      programMetadataId
+    );
   }
 
-  yield put(push(`/form?tei=${currentTei.trackedEntityInstance}`));
+  yield put(push(`/form?tei=${currentTei.trackedEntity}`));
 }
 
 export default function* submitAttributes() {

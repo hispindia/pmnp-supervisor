@@ -6,7 +6,7 @@ import {
   getTeisErrorMessage,
   getTeisSuccessMessage,
 } from "../../actions/teis";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 export default function* deleteTeiSaga() {
   yield takeEvery(DELETE_TEI, handleDeleteTei);
@@ -19,8 +19,8 @@ function* handleDeleteTei({ teiId }) {
     const payload = teiIdToDeletePayload(teiId);
 
     if (offlineStatus) {
-      yield call(trackedEntityInstanceManager.deleteTrackedEntityInstances, {
-        trackedEntityInstances: payload.trackedEntityInstances,
+      yield call(trackedEntityManager.deleteTrackedEntityInstances, {
+        trackedEntities: payload.trackedEntities,
       });
     } else {
       yield call(dataApi.deleteTei, payload);
@@ -38,9 +38,9 @@ function* handleDeleteTei({ teiId }) {
 
 const teiIdToDeletePayload = (teiId) => {
   return {
-    trackedEntityInstances: [
+    trackedEntities: [
       {
-        trackedEntityInstance: teiId,
+        trackedEntity: teiId,
       },
     ],
   };

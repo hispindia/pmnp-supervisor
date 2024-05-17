@@ -17,11 +17,11 @@ const locale = {
   },
   familyMembers: {
     en: "Family Members",
-    lo: "ສະມາຊິກຄອບຄົວ",
+    lo: "ສະມາຊິກຄອບຄົວ (ບ 1 ກ)",
   },
   censusDetails: {
     en: "Census Details",
-    lo: "ລາຍລະອຽດການສຳຫຼວດ",
+    lo: "ລາຍລະອຽດການສຳຫຼວດ (ບ 1 ຂ)",
   },
   complete: {
     en: "Complete",
@@ -101,87 +101,87 @@ const locale = {
   },
   "Home?": {
     en: "1. Home?",
-    lo: "1. ມີເດັກຈັກຄົນທີ່ເກີດຢູ່ເຮືອນ?",
+    lo: "ກ. ຢູ່ເຮືອນ?",
   },
   "Health Center?": {
     en: "2. Health Center?",
-    lo: "2. ມີເດັກຈັກຄົນທີ່ເກີດຢູ່ໂຮງໝໍນ້ອຍ?",
+    lo: "ຂ. ສຸກສາລາ (ໂຮງໝໍນ້ອຍ)?",
   },
   "District Hospital": {
     en: "3. District Hospital",
-    lo: "3. ມີເດັກຈັກຄົນທີ່ເກີດຢູ່ໂຮງໝໍເມືອງ (ຊຸມຊົນ)?",
+    lo: "ຄ. ໂຮງໝໍເມືອງ?",
   },
   "Provincial Hospital": {
     en: "4. Provincial Hospital",
-    lo: "4. ມີເດັກຈັກຄົນທີ່ເກີດຢູ່ໂຮງໝໍແຂວງ?",
+    lo: "ງ. ໂຮງໝໍແຂວງ?",
   },
   "Central Hospital": {
     en: "5. Central Hospital",
-    lo: "5. ມີເດັກຈັກຄົນທີ່ເກີດຢູ່ໂຮງໝໍສູນກາງ?",
+    lo: "ຈ. ໂຮງໝໍສູນກາງ?",
   },
   "Private clinic/Private hospital": {
     en: "6. Private clinic/Private hospital",
-    lo: "6. ມີເດັກຈັກຄົນທີ່ເກີດຢູ່ຄຣີນິກເອກະຊົນ?",
+    lo: "ສ. ຄຣີນິກເອກະຊົນ/ໂຮງໝໍເອກະຊົນ?",
   },
   Overseas: {
     en: "7. Overseas",
-    lo: "7. ມີເດັກຈັກຄົນທີ່ເກີດຢູ່ຕ່າງປະເທດ?",
+    lo: "ຊ. ຢູ່ຕ່າງປະເທດ?",
   },
   Other: {
     en: "8. Other",
-    lo: "8. ມີເດັກຈັກຄົນທີ່ເກີດຢູ່ບ່ອນອື່ນໆ?",
+    lo: "ຍ. ຢູ່ບ່ອນອື່ນໆ?",
   },
 
   "Who assisted the birth(s)?": {
     en: "3. Who assisted the birth(s)?",
-    lo: "3. ໄລຍະແຕ່ເດືອນ ມັງກອນ ຫາ ເດືອນທັນ ໃນຄອບຄົວຂອງທ່ານ ແມ່ນໃຜເປັນຜູ້ຊ່ວຍເກີດໃນການເກີດລູກ?",
+    lo: "3. ແມ່ນໃຜເປັນຜູ້ຊ່ວຍໃນການເກີດລູກ ຂອງທ່ານ?",
   },
   "Self (No assistance)": {
     en: "1. Self (No assistance)",
-    lo: "1. ມີຈັກຄົນທີ່ເກີດລູກດ້ວຍຕົນເອງ?",
+    lo: "ກ. ເກີດເອງ (ບໍ່ມີຜູ້ຊ່ວຍເກີດ)",
   },
   "Husband or relative": {
     en: "Husband or relative",
-    lo: "2. ມີຈັກຄົນທີ່ຜົວ ຫຼື ພີ່ນ້ອງຊ່ວຍເກີດ?",
+    lo: "ຂ. ຜົວ ຫຼື ພີ່ນ້ອງຊ່ວຍເກີດ",
   },
   "Village health volunteer": {
     en: "3. Village health volunteer",
-    lo: "3. ມີຈັກຄົນທີ່ແມ່ນໝໍຕຳແຍ ຫຼື ອສບ ຊ່ວຍເກີດ?",
+    lo: "ຄ. ໝໍຕຳແຍ ຫຼື ອສບ ບ້ານ",
   },
   "Skilled birth attendant (Nurse, Mid wife, Doctor)": {
     en: "4. Skilled birth attendant (Nurse, Mid wife, Doctor)",
-    lo: "4. ມີຈັກຄົນທີ່ແມ່ນ ແພດທີ່ໄດ້ຜ່ານການອົບຮົມຊ່ວຍເກີດ?",
+    lo: "ງ. ແພດທີ່ໄດ້ຜ່ານການອົບຮົມຊ່ວຍເກີດ (ພະຍາບານ, ຜະດຸງຄັນ, ທ່ານໝໍ)",
   },
   "Other than specify above": {
     en: "5. Other than specify above",
-    lo: "5. ມີຈັກຄົນທີ່ເກີດໂດຍອື່ນ (ນອກຈາກ 4 ຂໍ້ຂ້າງເທິງ)?",
+    lo: "ຈ. ອື່ນໆ (ນອກຈາກ 4 ຂໍ້ຂ້າງເທິງ)",
   },
 
   "How many babies born dead (stillbirth) from in the family?": {
     en: "4. How many babies born dead (stillbirth) from in the family?",
-    lo: "4. ໃນຄອບຄົວຂອງທ່ານມີເດັກຕາຍມາແຕ່ໃນທ້ອງ(ຕາຍເກີດ)ຈັກຄົນ?",
+    lo: "4. ໃນຄອບຄົວຂອງທ່ານມີເດັກເສຍຊີວິດມາແຕ່ໃນທ້ອງ (ຕາຍເກີດ) ຈັກຄົນ?",
   },
   "How many children under one year died in family?": {
-    en: "5. How many children under one year died in family?",
-    lo: "5. ໃນຄອບຄົວຂອງທ່ານມີເດັກລຸ່ມ 1 ປີຕາຍຈັກຄົນ?",
+    en: "6. How many children under one year died in family?",
+    lo: "6. ໃນຄອບຄົວຂອງທ່ານມີເດັກລຸ່ມ 1 ປີເສຍຊີວິດຈັກຄົນ?",
   },
   "How many children age one to 4 years died?": {
-    en: "6. How many children age one to 4 years died?",
-    lo: "6. ໃນຄອບຄົວຂອງທ່ານ ມີເດັກລຸ່ມ 5 ປີ (1 ຫາ ລຸ່ມ 5 ປີ) ຕາຍຈັກຄົນ ?",
+    en: "7. How many children age one to 4 years died?",
+    lo: "7. ໃນຄອບຄົວຂອງທ່ານມີເດັກລຸ່ມ 5 ປີ (1 ຫາ ລຸ່ມ 5 ປີ) ເສຍຊີວິດຈັກຄົນ?)",
   },
   "How many children age 5 to 19 years died?": {
-    en: "7. How many children age 5 to 19 years died?",
-    lo: "7. ໃນຄອບຄົວຂອງທ່ານ ມີຄົນ ອາຍຸແຕ່ 5 ຫາ 19 ປີ ຕາຍຈັກຄົນ ?",
+    en: "8. How many children age 5 to 19 years died?",
+    lo: "8. ໃນຄອບຄົວຂອງທ່ານ ມີຄົນອາຍຸແຕ່ 5 – 19 ປີ ເສຍຊີວິດຈັກຄົນ?",
   },
   "How many women died due to pregnancy, delivery or within 42 days after giving birth?":
     {
-      en: "8. How many women died due to pregnancy, delivery or within 42 days after giving birth?",
-      lo: "8. ໃນຄອບຄົວທ່ານມີແມ່ຍິງທີ່ເສຍຊີວິດ(ແມ່ຕາຍ) ຍ້ອນການຖືພາ, ການເກີດລູກ ຫຼື ພາຍໃນ 42 ມື້ ຫລັງເກີດລູກຈັກຄົນ ?",
+      en: "9. How many women died due to pregnancy, delivery or within 42 days after giving birth?",
+      lo: "9. ໃນຄອບຄົວທ່ານມີແມ່ຍິງທີ່ເສຍຊີວິດຍ້ອນການຖືພາ, ການເກີດລູກ ຫຼື ພາຍໃນ 42 ມື້ ຫລັງເກີດລູກຈັກຄົນ?)",
     },
 
   "How many people died in total in the family?": {
-    en: "9. How many people died in total in the family?",
-    lo: "9. ໃນຄອບຄົວຂອງທ່ານມີຄົນເສຍຊີວິດ ລວມທັງໝົດຈັກຄົນ?",
+    en: "5. How many people died in total in the family?",
+    lo: "5. ໃນຄອບຄົວຂອງທ່ານມີຄົນເສຍຊີວິດ ລວມທັງໝົດຈັກຄົນ?",
   },
 
   "What kind of toilet is used by the family?": {
@@ -222,12 +222,16 @@ const locale = {
     en: "12.1. Number of women(15-49) in the family who need family plaining",
     lo: "12.1. ຈໍານວນແມ່ຍິງ  (15-49 ປີ) ໃນຄອບຄົວທີ່ມີຄວາມຕ້ອງການໃຊ້ການວາງແຜນຄອບຄົວ?",
   },
-  "How many women(15-49 years) currently using family planning and main method?":
+  "Number of women (15-49 years) in the family who need to use family planning?":
     {
-      en: "10.1. How many women(15-49 years) currently using family planning and main method?",
-      lo: "10.1. ຈຳນວນແມ່ຍິງ (15-49 ປີ) ຫຼືຄູ່ຄອງທີ່ກຳລັງໃຊ້ວິທີການວາງແຜນຄອບຄົວຢູ່ ແລະ ປະເພດໃດທີ່ໃຊ້ເປັນຫຼັກ?",
+      en: "10.1 Number of women (15-49 years) in the family who need to use family planning?",
+      lo: "10.1 ຈໍານວນແມ່ຍິງ (15-49 ປີ) ໃນຄອບຄົວທີ່ມີຄວາມຕ້ອງການໃຊ້ການວາງແຜນຄອບຄົວ?)",
     },
-
+  "How many women (15-49 years) or their partners are using family planning and what types are they using?":
+    {
+      en: "10.2 How many women (15-49 years) or their partners are using family planning and what types are they using?",
+      lo: "10.2 ຈຳນວນແມ່ຍິງ (15-49 ປີ) ຫຼື ຄູ່ຄອງທີ່ກຳລັງນຳໃຊ້ການວາງແຜນຄອບຄົວຢູ່ ແລະ ປະເພດໃດເເດ່ທີ່ໃຊ້ເປັນຫຼັກ?",
+    },
   "contraceptive pill": {
     en: "1. contraceptive pill",
     lo: "1. ຢາຄຸມຊະນິດກິນ?",
@@ -265,22 +269,27 @@ const locale = {
     lo: "9. ອື່ນໆ (ພື້ນເມືອງທຸກປະເພດ)?",
   },
 
-  // 10.2
-  "How many women(15-49 years) currently using family planning and where?": {
-    en: "10.2. How many women(15-49 years) currently using family planning and where?",
-    lo: "10.2. ຈໍານວນແມ່ຍິງ(15-49ປີ) ທັງໝົດຂ້າງເທີງນັ້ນກໍາລັງໃຊ້ວິທີການວາງແຜນຄອບຄົວຢູ່ສະຖານທີ່ໃດ?",
-  },
+  // 10.3
+  "How many women (15-49 years old) use family planning services at which location?":
+    {
+      en: "10.3. How many women (15-49 years old) use family planning services at which location?",
+      lo: "10.3. ຈຳນວນແມ່ຍິງ (15-49 ປີ) ໃຊ້ບໍລິການວາງແຜນຄອບຄົວຢູ່ສະຖານທີໃດ?",
+    },
   "in public facility": {
     en: "1. in public facility",
-    lo: "1. ຢູ່ສະຖານທີ່ບໍລິການຂອງລັດ",
+    lo: "ກ. ຢູ່ສະຖານທີ່ບໍລິການຂອງລັດ",
   },
   "at private clinic/pharmacy": {
-    en: "2. at private clinic/pharmacy",
-    lo: "2. ຢູ່ຄຣີນິກເອກະຊົນ/ຮ້ານຂາຍຢາ",
+    en: "2. At a private clinic/private hospital/pharmacy/at a foreign hospital",
+    lo: "ຂ. ຢູ່ຄຣີນິກເອກະຊົນ/ໂຮງໝໍເອກະຊົນ/ຮ້ານຂາຍຢາ/ຢູ່ໂຮງໝໍຕ່າງປະເທດ",
   },
   "from outreach/VHV": {
     en: "3. from outreach/VHV",
     lo: "3. ນໍາໜ່ວຍບໍລິການເຄື່ອນທີ່ ແລະ ອສບ",
+  },
+  "Mobile Service Unit and Village health volunteer": {
+    en: "3. Mobile Service Unit and Village health volunteer",
+    lo: "ຄ. ໜ່ວຍບໍລິການເຄື່ອນທີ່ ແລະ ອສບ",
   },
   Overseas: {
     en: "Overseas",
@@ -288,14 +297,14 @@ const locale = {
   },
   Other: {
     en: "Other",
-    lo: "ຢູ່ບ່ອນອື່ນໆ",
+    lo: "ງ. ຢູ່ບ່ອນອື່ນໆ",
   },
 
   // 11
-  "What is the primary source of drinking water does the family use and it is within 30min of reach?":
+  "The main source of drinking water and water for family use that can be found within 30 minutes":
     {
-      en: "11. What is the primary source of drinking water does the family use and it is within 30min of reach?",
-      lo: "11. ແຫລ່ງນໍ້າໃຊ້ ແລະ ນ້ຳດື່ມ ໃນຄອບຄົວ ທີ່ສາມາດຫາໄດ້ ພາຍໃນ 30 ນາທີ?",
+      en: "11. The main source of drinking water and water for family use that can be found within 30 minutes",
+      lo: "11. ແຫລ່ງນໍ້າຫລັກທີ່ໃຊ້ດື່ມ ແລະ ນ້ຳໃຊ້ ໃນຄອບຄົວ ທີ່ສາມາດຫາໄດ້ ພາຍໃນ 30 ນາທີ?",
     },
   "Pied water": {
     en: "1. Pied water",
@@ -420,7 +429,7 @@ const locale = {
     en: "Form no. {{number}} already existing for the village {{orgName}}. Enter a different Form No.",
     lo: "ຟອມເລກທີ {{number}} ໄດ້ຖືກລົງທະບຽນໃນ {{orgName}} ໄປແລ້ວ, ກະລຸນາກວດຄືນ ຫຼື ລົງທະບຽນເລກທີຟອມໃໝ່.",
   },
-  addYear: { en: "ADD YEAR", lo: "ເພີ່ມປີ" },
+  addYear: { en: "Add Year", lo: "ເພີ່ມປີ" },
   addNewMember: { en: "Add New Member", lo: "ເພີ່ມສະມາຊິກໃໝ່" },
   number: { en: "No.", lo: "ລຳດັບ" },
   relationWithHead: {
@@ -721,6 +730,22 @@ const locale = {
   totalPopulation: {
     en: "Total Population",
     lo: "ປະຊາກອນທັງໝົດ",
+  },
+  pushChangedData: {
+    en: "Push changed data",
+    lo: "ສົ່ງຂໍ້ມູນ",
+  },
+  pleasePushChangedData: {
+    en: "Please push changed data.",
+    lo: "ແຈ້ງເຕືອນ.",
+  },
+  preparingForOfflineMode: {
+    en: "Preparing for offline mode",
+    lo: "ກຳລັງກຽມຄວາມພ້ອມເພື່ອໃຊ້ແບບບໍ່ຕ້ອງການເນັດ",
+  },
+  warning: {
+    en: "Warning",
+    lo: "ແຈ້ງເຕືອນ",
   },
   push: {
     en: "PUSH",

@@ -5,7 +5,7 @@ import { dataApi } from "../../../api";
 import { deleteTei, deleteEvent } from "../../actions/data/tei";
 import _ from "lodash";
 import moment from "moment";
-import * as trackedEntityInstanceManager from "@/indexDB/TrackedEntityInstanceManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 export default function* deleteMemberSaga() {
   yield takeEvery(DELETE_MEMBER, handleDeleteMember);
@@ -17,18 +17,15 @@ function* handleDeleteMember({ teiId }) {
   // metadata
   const { programMetadataMember } = yield select((state) => state.metadata);
   // data
-  const { index, year } = yield select((state) => state.data.tei.selectedYear);
+  const { year } = yield select((state) => state.data.tei.selectedYear);
 
   let memberTEI = null;
 
   if (offlineStatus) {
-    memberTEI = yield call(
-      trackedEntityInstanceManager.getTrackedEntityInstanceById,
-      {
-        trackedEntityInstance: selectedMember.id,
-        program: programMetadataMember.id,
-      }
-    );
+    memberTEI = yield call(trackedEntityManager.getTrackedEntityInstanceById, {
+      trackedEntity: selectedMember.id,
+      program: programMetadataMember.id,
+    });
   } else {
     memberTEI = yield call(
       dataApi.getTrackedEntityInstanceById,
@@ -56,7 +53,7 @@ function* handleDeleteMember({ teiId }) {
         let eventByYear = _.filter(
           memberTEI.enrollments[0].events,
           function (n) {
-            return moment(n.eventDate).isBetween(
+            return moment(n.occurredAt).isBetween(
               `${year}-01-01`,
               `${year}-12-31`,
               undefined,
