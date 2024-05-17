@@ -1,10 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 
-import {
-  PUSH_TO_SERVER,
-  SET_OFFLINE_LOADING_STATUS,
-  SET_OFFLINE_STATUS,
-} from "@/redux/actions/common/type";
+import { PUSH_TO_SERVER, SET_OFFLINE_LOADING_STATUS, SET_OFFLINE_STATUS } from "@/redux/actions/common/type";
 import { message, notification } from "antd";
 
 import * as meManager from "@/indexDB/MeManager/MeManager";
@@ -16,10 +12,7 @@ import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManage
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 import { mainStore } from "@/redux/store";
-import {
-  setCurrentOfflineLoading,
-  setOfflineStatus,
-} from "@/redux/actions/common";
+import { setCurrentOfflineLoading, setOfflineStatus } from "@/redux/actions/common";
 import { useTranslation } from "react-i18next";
 
 function handleDispatchCurrentOfflineLoading({ id, percent }) {
@@ -27,6 +20,7 @@ function handleDispatchCurrentOfflineLoading({ id, percent }) {
 }
 
 function* handleOfflineLoadingStatusChange({ offlineLoading }) {
+  const { offlineStatus } = yield select((state) => state.common);
   try {
     if (offlineLoading) {
       /**
@@ -125,9 +119,6 @@ function* handlePushToServer() {
 
 export default function* commonSaga() {
   yield takeLatest(SET_OFFLINE_STATUS, handleOfflineStatusChange);
-  yield takeLatest(
-    SET_OFFLINE_LOADING_STATUS,
-    handleOfflineLoadingStatusChange
-  );
+  yield takeLatest(SET_OFFLINE_LOADING_STATUS, handleOfflineLoadingStatusChange);
   yield takeLatest(PUSH_TO_SERVER, handlePushToServer);
 }

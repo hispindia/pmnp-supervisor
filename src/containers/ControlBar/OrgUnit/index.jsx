@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 /* REDUX */
 import { useDispatch, useSelector } from "react-redux";
@@ -8,13 +8,19 @@ import OrgUnit from "../../../components/ControlBar/OrgUnit";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-const OrgUnitContainer = () => {
+const OrgUnitContainer = ({ singleSelection = true, limit }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const dispatch = useDispatch();
-  const {
-    metadata: { programMetadata, selectedOrgUnit, orgUnits },
-  } = useSelector((state) => state);
+  const { selectedOrgUnit, orgUnits } = useSelector((state) => state.metadata);
+
+  const buttonLabel = useMemo(() => {
+    if (singleSelection || !orgUnits || !selectedOrgUnit.selected.length) return selectedOrgUnit ? <b>{selectedOrgUnit.displayName} </b> : t("select");
+    return selectedOrgUnit.selected
+      .map((path) => orgUnits.find((ou) => ou.id === path.split("/").pop()))
+      .map(({ displayName }) => displayName || "")
+      .join(", ");
+  }, [selectedOrgUnit, orgUnits]);
 
   const handleSelectOrgUnit = (orgUnit) => {
     const selectedOrgUnit = {
@@ -33,19 +39,13 @@ const OrgUnitContainer = () => {
 
   return (
     <OrgUnit
+      limit={limit}
+      singleSelection={singleSelection}
       orgUnitSelectorFilter={orgUnits}
       orgUnitLabel={t("enrollingVillage")}
       handleSelectOrgUnit={handleSelectOrgUnit}
       onVisibleChange={onVisibleChange}
-      buttonLabel={
-        selectedOrgUnit ? (
-          <>
-            <b>{selectedOrgUnit.displayName} </b>
-          </>
-        ) : (
-          t("select")
-        )
-      }
+      buttonLabel={buttonLabel}
       selectedOrgUnit={selectedOrgUnit}
     />
   );

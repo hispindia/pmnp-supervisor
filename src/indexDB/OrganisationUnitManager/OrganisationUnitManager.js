@@ -17,10 +17,7 @@ export const pull = async () => {
 
     const orgsByUser = await metadataApi.getUserOrgUnits();
 
-    if (
-      orgsByUser.organisationUnits &&
-      orgsByUser.organisationUnits.length > 0
-    ) {
+    if (orgsByUser.organisationUnits && orgsByUser.organisationUnits.length > 0) {
       const addWithinUserHierarchy = orgsByUser.organisationUnits.map((org) => {
         org.withinUserHierarchy = 1;
         return org;
@@ -46,9 +43,7 @@ export const addOrgsPath = async (orgs) => {
 
 export const getUserOrgs = async () => {
   try {
-    const orgs = await db[TABLE_NAME].where("withinUserHierarchy")
-      .equals(1)
-      .toArray();
+    const orgs = await db[TABLE_NAME].where("withinUserHierarchy").equals(1).toArray();
 
     // With children
     orgs.forEach(async (org) => {
@@ -65,12 +60,12 @@ export const getUserOrgs = async () => {
   }
 };
 
-export const getOrgUnitSelectorData = async (filter) => {
-  const orgUnits = await getUserOrgs();
+export const getOrgUnitSelectorData = async ({ orgUnits, filter }) => {
+  // const orgUnits = await getUserOrgs();
   const me = await meManager.getMe();
 
   let data = {};
-  data.tree = orgUnits.organisationUnits.reduce((accumulator, currentOu) => {
+  data.tree = orgUnits.reduce((accumulator, currentOu) => {
     currentOu.children = currentOu.children.sort(function (a, b) {
       var nameA = a.displayName.toUpperCase();
       var nameB = b.displayName.toUpperCase();
