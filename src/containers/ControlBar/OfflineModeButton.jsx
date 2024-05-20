@@ -3,11 +3,7 @@ import { Switch, notification } from "antd";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  resetCurrentOfflineLoading,
-  setOfflineLoadingStatus,
-  setOfflineStatus,
-} from "@/redux/actions/common";
+import { setOfflineStatus } from "@/redux/actions/common";
 import PrepareOfflineModal from "./PrepareOfflineModal";
 import db from "@/indexDB/db";
 
@@ -50,8 +46,6 @@ const OfflineModeButton = () => {
         checked={offlineStatus}
         onChange={async (checked) => {
           if (checked) {
-            dispatch(resetCurrentOfflineLoading());
-            dispatch(setOfflineLoadingStatus(true));
             setPrepareModalOpen(true);
           } else {
             const results = await findChangedData();

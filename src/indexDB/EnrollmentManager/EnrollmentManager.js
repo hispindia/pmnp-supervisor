@@ -7,14 +7,17 @@ import moment from "moment";
 import { toDhis2Enrollments } from "../data/enrollment";
 import { chunk } from "lodash";
 
-export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
+export const pull = async ({
+  handleDispatchCurrentOfflineLoading,
+  offlineSelectedOrgUnits,
+}) => {
   try {
     await db[TABLE_NAME].clear();
     // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
-    const { organisationUnits } = await meManager.getMe();
 
-    for (const org of organisationUnits) {
+    for (let j = 0; j < offlineSelectedOrgUnits.length; j++) {
+      const org = offlineSelectedOrgUnits[j];
       for (let i = 0; i < programs.length; i++) {
         const program = programs[i];
         let totalPages = 0;
@@ -51,14 +54,20 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
                   "incidentDate",
                   "followup",
                 ].join(",")}`,
-              ]
+              ],
             );
 
-            if (!result.instances || result.instances.length === 0 || page > result.pageCount) {
+            if (
+              !result.instances ||
+              result.instances.length === 0 ||
+              page > result.pageCount
+            ) {
               break;
             }
 
-            console.log(`ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`);
+            console.log(
+              `ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`,
+            );
 
             const resultEnrollments = {
               ...result,
@@ -66,18 +75,18 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
             };
 
             await persist(await beforePersist([resultEnrollments], program.id));
-
-            if (handleDispatchCurrentOfflineLoading) {
-              handleDispatchCurrentOfflineLoading({
-                id: "enr",
-                percent: ((page / result.pageCount + i) * 100) / programs.length,
-              });
-            }
           }
         } catch (error) {
           console.log("Enrollment:pull", error);
           continue;
         }
+      }
+
+      if (handleDispatchCurrentOfflineLoading) {
+        handleDispatchCurrentOfflineLoading({
+          id: "enr",
+          percent: ((j + 1) / offlineSelectedOrgUnits.length) * 100,
+        });
       }
     }
   } catch (error) {
@@ -118,7 +127,9 @@ const findOffline = async () => {
 };
 
 const markOnline = async (enrollmentIds) => {
-  return await db[TABLE_NAME].where("enrollment").anyOf(enrollmentIds).modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("enrollment")
+    .anyOf(enrollmentIds)
+    .modify({ isOnline: 1 });
 };
 
 const pushAndMarkOnline = async (enrollments) => {

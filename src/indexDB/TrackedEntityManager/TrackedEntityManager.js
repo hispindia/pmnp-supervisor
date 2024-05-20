@@ -16,14 +16,17 @@ import {
   toDhis2TrackedEntity,
 } from "../data/trackedEntity";
 
-export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
+export const pull = async ({
+  handleDispatchCurrentOfflineLoading,
+  offlineSelectedOrgUnits,
+}) => {
   try {
     await db[TABLE_NAME].clear();
-    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
-    const { organisationUnits } = await meManager.getMe();
 
-    for (const org of organisationUnits) {
+    for (let j = 0; j < offlineSelectedOrgUnits.length; j++) {
+      const org = offlineSelectedOrgUnits[j];
+
       for (let i = 0; i < programs.length; i++) {
         const program = programs[i];
         let totalPages = 0;
@@ -49,7 +52,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
                 `includeDeleted=true`,
                 // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
                 `fields=trackedEntity,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType]`,
-              ]
+              ],
             );
 
             if (
@@ -61,7 +64,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
             }
 
             console.log(
-              `TEI = (page=${page}/${result.pageCount}, count=${result.instances.length})`
+              `TEI = (page=${page}/${result.pageCount}, count=${result.instances.length})`,
             );
 
             const resultTrackEntities = {
@@ -71,14 +74,6 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
 
             await persist(await beforePersist(resultTrackEntities));
 
-            if (handleDispatchCurrentOfflineLoading) {
-              handleDispatchCurrentOfflineLoading({
-                id: "tei",
-                percent:
-                  ((page / result.pageCount + i) * 100) / programs.length,
-              });
-            }
-
             // Update total pages
             totalPages = result.pageCount;
           }
@@ -86,6 +81,13 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
           console.log("TrackedEntity:pull", error);
           continue;
         }
+      }
+
+      if (handleDispatchCurrentOfflineLoading) {
+        handleDispatchCurrentOfflineLoading({
+          id: "tei",
+          percent: ((j + 1) / offlineSelectedOrgUnits.length) * 100,
+        });
       }
     }
   } catch (error) {
@@ -101,7 +103,7 @@ export const push = async () => {
 
   if (trackedEntities?.length > 0) {
     const results = await pushAndMarkOnline(
-      toDhis2TrackedEntities(trackedEntities)
+      toDhis2TrackedEntities(trackedEntities),
     );
 
     for (const result of results) {
@@ -175,7 +177,7 @@ export const setTrackedEntityInstance = async ({ trackedEntity }) => {
     if (trackedEntity.enrollments.length > 0) {
       // UPDATE ENROLLMENT
       const enrollment = JSON.parse(
-        JSON.stringify(trackedEntity.enrollments[0])
+        JSON.stringify(trackedEntity.enrollments[0]),
       );
 
       await enrollmentManager.setEnrollment({
@@ -337,14 +339,14 @@ export const find = async ({
 
     // filter out undefined values
     Object.keys(query).forEach(
-      (key) => query[key] === undefined && delete query[key]
+      (key) => query[key] === undefined && delete query[key],
     );
 
     let queryBuilder = db.enrollment.where(query);
 
     if (ouMode === "DESCENDANTS" && selectedOrgUnitIds.length > 0) {
       queryBuilder = queryBuilder.and((enr) =>
-        selectedOrgUnitIds.includes(enr.orgUnit)
+        selectedOrgUnitIds.includes(enr.orgUnit),
       );
     } else {
       queryBuilder = queryBuilder.and((enr) => enr.orgUnit === orgUnit);
@@ -355,18 +357,18 @@ export const find = async ({
 
       teisFilterQueryBuilder = filterQueryBuilder(
         teisFilterQueryBuilder,
-        filters
+        filters,
       );
 
       const teisMatchFilter = await teisFilterQueryBuilder.toArray();
       const teisMatchFilterIds = teisMatchFilter.map(
-        (tei) => tei.trackedEntity
+        (tei) => tei.trackedEntity,
       );
 
       console.log({ teisMatchFilterIds });
 
       queryBuilder = queryBuilder.and((enr) =>
-        teisMatchFilterIds.includes(enr.trackedEntity)
+        teisMatchFilterIds.includes(enr.trackedEntity),
       );
     }
 
@@ -392,9 +394,8 @@ export const find = async ({
 
     const trackedEntities = enrs.map((enr) => enr.trackedEntity);
 
-    let teisQueryBuilder = await db[TABLE_NAME].where("trackedEntity").anyOf(
-      trackedEntities
-    );
+    let teisQueryBuilder =
+      await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities);
 
     const teis = await teisQueryBuilder.toArray();
 
@@ -429,7 +430,7 @@ export const getTrackedEntityInstanceById = async ({
     .first();
 
   const tei = toDhis2TrackedEntity(
-    await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray()
+    await db[TABLE_NAME].where("trackedEntity").equals(trackedEntity).toArray(),
   );
 
   if (enr) {
@@ -488,7 +489,9 @@ export const getTrackedEntityInstancesByIDs = async ({
   }
 
   const teis = toDhis2TrackedEntities(
-    await db[TABLE_NAME].where("trackedEntity").anyOf(trackedEntities).toArray()
+    await db[TABLE_NAME].where("trackedEntity")
+      .anyOf(trackedEntities)
+      .toArray(),
   );
 
   for (const tei of teis) {
@@ -524,7 +527,7 @@ export const deleteTrackedEntityInstances = async ({ trackedEntities }) => {
       if (trackedEntity.enrollments.length > 0) {
         // DELETE ENROLLMENT
         const enrollment = JSON.parse(
-          JSON.stringify(trackedEntity.enrollments[0])
+          JSON.stringify(trackedEntity.enrollments[0]),
         );
         await db.enrollment.where("trackedEntity").anyOf(teiId).delete();
 

@@ -39,7 +39,7 @@ const ControlBar = () => {
       <div className={controlBarContainer}>
         <div className="d-flex">
           <div className="mr-3">
-            <OrgUnitContainer singleSelection={false} limit={3} />
+            <OrgUnitContainer />
           </div>
 
           <div className="d-md-none">

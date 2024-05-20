@@ -1,9 +1,17 @@
 import { Button, Col, Popover, Row } from "antd";
 import OrgUnitSelector from "@/components/OrgUnitSelector/OrgUnitSelector.component";
 
-const OrgUnit = ({ limit, selectedOrgUnit, orgUnitSelectorFilter, orgUnitLabel, handleSelectOrgUnit, buttonLabel, singleSelection }) => {
+const OrgUnit = ({
+  limit,
+  selectedOrgUnit,
+  orgUnitSelectorFilter,
+  orgUnitLabel,
+  handleSelectOrgUnit,
+  buttonLabel,
+  singleSelection,
+}) => {
   return (
-    <Row justify="center" align="middle">
+    <Row justify="left" align="middle">
       <Col className="d-none d-sm-block">
         <div
           style={{
@@ -15,6 +23,7 @@ const OrgUnit = ({ limit, selectedOrgUnit, orgUnitSelectorFilter, orgUnitLabel, 
       </Col>
       {
         <Popover
+          placement="bottomLeft"
           overlayInnerStyle={{
             maxHeight: "80vh",
             overflowY: "auto",

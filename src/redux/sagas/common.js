@@ -1,7 +1,11 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 
-import { PUSH_TO_SERVER, SET_OFFLINE_LOADING_STATUS, SET_OFFLINE_STATUS } from "@/redux/actions/common/type";
-import { message, notification } from "antd";
+import {
+  PUSH_TO_SERVER,
+  SET_OFFLINE_LOADING_STATUS,
+  SET_OFFLINE_STATUS,
+} from "@/redux/actions/common/type";
+import { notification } from "antd";
 
 import * as meManager from "@/indexDB/MeManager/MeManager";
 import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
@@ -12,15 +16,19 @@ import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManage
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 import { mainStore } from "@/redux/store";
-import { setCurrentOfflineLoading, setOfflineStatus } from "@/redux/actions/common";
-import { useTranslation } from "react-i18next";
+import {
+  setCurrentOfflineLoading,
+  setOfflineLoadingStatus,
+  setOfflineStatus,
+} from "@/redux/actions/common";
 
 function handleDispatchCurrentOfflineLoading({ id, percent }) {
   mainStore.dispatch(setCurrentOfflineLoading({ id, percent }));
 }
 
 function* handleOfflineLoadingStatusChange({ offlineLoading }) {
-  const { offlineStatus } = yield select((state) => state.common);
+  const { offlineSelectedOrgUnits } = yield select((state) => state.common);
+
   try {
     if (offlineLoading) {
       /**
@@ -41,13 +49,19 @@ function* handleOfflineLoadingStatusChange({ offlineLoading }) {
        * */
       yield call(trackedEntityManager.pull, {
         handleDispatchCurrentOfflineLoading,
+        offlineSelectedOrgUnits,
       });
       yield call(enrollmentManager.pull, {
         handleDispatchCurrentOfflineLoading,
+        offlineSelectedOrgUnits,
       });
       yield call(eventManager.pull, {
         handleDispatchCurrentOfflineLoading,
+        offlineSelectedOrgUnits,
       });
+
+      yield put(setOfflineStatus(true));
+      yield put(setOfflineLoadingStatus(false));
     }
   } catch (error) {
     yield put(setOfflineStatus(false));
@@ -119,6 +133,9 @@ function* handlePushToServer() {
 
 export default function* commonSaga() {
   yield takeLatest(SET_OFFLINE_STATUS, handleOfflineStatusChange);
-  yield takeLatest(SET_OFFLINE_LOADING_STATUS, handleOfflineLoadingStatusChange);
+  yield takeLatest(
+    SET_OFFLINE_LOADING_STATUS,
+    handleOfflineLoadingStatusChange,
+  );
   yield takeLatest(PUSH_TO_SERVER, handlePushToServer);
 }

@@ -8,6 +8,7 @@ import {
   SET_CURRENT_OFFLINE_LOADING,
   GET_CURRENT_OFFLINE_LOADING,
   RESET_CURRENT_OFFLINE_LOADING,
+  SET_OFFLINE_SELECTED_ORGUNITS,
 } from "@/redux/actions/common/type";
 
 const savedOfflineStatus = localStorage.getItem("offlineStatus");
@@ -45,6 +46,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         currentOfflineLoading: initialState.currentOfflineLoading,
+      };
+    }
+    case SET_OFFLINE_SELECTED_ORGUNITS: {
+      return {
+        ...state,
+        offlineSelectedOrgUnits: action.offlineSelectedOrgUnits,
       };
     }
     default:

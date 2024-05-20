@@ -767,6 +767,14 @@ const locale = {
     en: "Mrs",
     lo: "ນາງ",
   },
+  download: {
+    en: "Download",
+    lo: "ດາວໂຫຼດ",
+  },
+  downloadOfflineHelper: {
+    en: "Please select orgUnits to use offline then click download.",
+    lo: "ກະລຸນາເລືອກໂຄງຮ່າງການຈັດຕັ້ງເພື່ອນຳໃຊ້ໃນໂຫມດອອບລາຍ, ຫລັງຈາກນັ້ນຄິກໃສ່ປຸ່ມດາວໂຫຼດ.",
+  },
 };
 
 export default locale;

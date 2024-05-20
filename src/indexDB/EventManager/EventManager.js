@@ -40,13 +40,13 @@ export const getEventsRawData = async (pager, org, program) => {
         "followup",
         "dataValues[dataElement,providedElsewhere,value]",
       ].join(",")}`,
-    ]
+    ],
   );
 };
 
 export const getEventsAnalyticsTable = async (pager, org, program) => {
   const dataElementIds = program.programStages[0].dataElements.map(
-    (de) => de.id
+    (de) => de.id,
   );
 
   return await dataApi.get(
@@ -61,20 +61,22 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
       `endDate=${moment().format("YYYY-MM-DD")}`,
       // `dimension=dx:${dataElementIds.map((de) => de).join(';')}`,
       dataElementIds.map((de) => `dimension=${de}`).join("&"),
-    ]
+    ],
   );
 };
 
-export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
+export const pull = async ({
+  handleDispatchCurrentOfflineLoading,
+  offlineSelectedOrgUnits,
+}) => {
   try {
     // Delete the table
     await db[TABLE_NAME].clear();
     // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
-    const { organisationUnits } = await meManager.getMe();
 
-    for (let j = 0; j < organisationUnits.length; j++) {
-      const org = organisationUnits[j];
+    for (let j = 0; j < offlineSelectedOrgUnits.length; j++) {
+      const org = offlineSelectedOrgUnits[j];
 
       for (let i = 0; i < programs.length; i++) {
         const program = programs[i];
@@ -94,7 +96,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
                 page,
               },
               org,
-              program
+              program,
             );
 
             if (
@@ -106,7 +108,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
             }
 
             console.log(
-              `EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`
+              `EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`,
             );
 
             await persist(await beforePersistAnalyticsData(result, program));
@@ -123,7 +125,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading }) => {
       if (handleDispatchCurrentOfflineLoading) {
         handleDispatchCurrentOfflineLoading({
           id: "event",
-          percent: ((j + 1) / organisationUnits.length) * 100,
+          percent: ((j + 1) / offlineSelectedOrgUnits.length) * 100,
         });
       }
     }
@@ -317,7 +319,7 @@ const beforePersistAnalyticsData = async (result, program) => {
   }
 
   const dataElementIds = program.programStages[0].dataElements.map(
-    (de) => de.id
+    (de) => de.id,
   );
 
   for (const ev of events) {
