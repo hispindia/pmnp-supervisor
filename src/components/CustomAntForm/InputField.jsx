@@ -3,6 +3,7 @@ import { Checkbox, DatePicker, Input, Radio, Select } from "antd";
 import dayjs from "dayjs";
 
 import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
+import { useTranslation } from "react-i18next";
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -18,6 +19,8 @@ const InputField = ({
   // inputRef,
   ...props
 }) => {
+  const { t } = useTranslation();
+
   if (valueSet) {
     return (
       <Select
@@ -126,10 +129,10 @@ const InputField = ({
           {...props}
         >
           <Radio value="true" style={{ fontSize: "13.5px" }}>
-            Yes
+            {t("yes")}
           </Radio>
           <Radio value="false" style={{ fontSize: "13.5px" }}>
-            No
+            {t("no")}
           </Radio>
         </Radio.Group>
       );

@@ -97,7 +97,7 @@ const locale = {
   },
   "Location of birth (Including alive and stillbith)": {
     en: "2. Location of birth (Including alive and stillbith)",
-    lo: "2. ເດັກເກີດຢູ່ໃສ? (ລວມທັງເກີດມີຊີວິດ ແລະ ຕາຍເກີດ)",
+    lo: "2. ເດັກເກີດຢູ່ໃສ?",
   },
   "Home?": {
     en: "1. Home?",
@@ -121,7 +121,7 @@ const locale = {
   },
   "Private clinic/Private hospital": {
     en: "6. Private clinic/Private hospital",
-    lo: "ສ. ຄຣີນິກເອກະຊົນ/ໂຮງໝໍເອກະຊົນ?",
+    lo: "ສ. ໂຮງໝໍເອກະຊົນ?",
   },
   Overseas: {
     en: "7. Overseas",
@@ -291,12 +291,12 @@ const locale = {
     en: "3. Mobile Service Unit and Village health volunteer",
     lo: "ຄ. ໜ່ວຍບໍລິການເຄື່ອນທີ່ ແລະ ອສບ",
   },
-  Overseas: {
-    en: "Overseas",
-    lo: "ຢູ່ຕ່າງປະເທດ ",
-  },
-  Other: {
-    en: "Other",
+  // Overseas: {
+  //   en: "Overseas",
+  //   lo: "ຢູ່ຕ່າງປະເທດ ",
+  // // },
+  Other10_3: {
+    en: "4. Other",
     lo: "ງ. ຢູ່ບ່ອນອື່ນໆ",
   },
 
@@ -418,8 +418,8 @@ const locale = {
   titleShowColumn: { en: "Show Columns", lo: "ສະແດງຖັນ" },
   noMatchFilter: { en: "No Family Recorded", lo: "ບໍ່ທັນມີຄອບຄົວໃນບ້ານນີ້" },
   next: { en: "NEXT", lo: "ຕໍ່ໄປ" },
-  yes: { en: "Yes", lo: "ແມ່ນ" },
-  no: { en: "No", lo: "ບໍ່ແມ່ນ" },
+  yes: { en: "Yes", lo: "ມີ" },
+  no: { en: "No", lo: "ບໍ່ມີ" },
   select: { en: "Select", lo: "ເລືອກ" },
   thisFieldIsRequired: {
     en: "This field is required",

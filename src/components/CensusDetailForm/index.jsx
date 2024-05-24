@@ -19,12 +19,12 @@ const CensusDetailForm = ({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const dataElements = useSelector(
-    (state) => state.metadata.programMetadata.programStages[0].dataElements
+    (state) => state.metadata.programMetadata.programStages[0].dataElements,
   );
 
   const Dhis2FormItem = useMemo(
     () => withDhis2FormItem(dataElements)(CFormControl),
-    [dataElements]
+    [dataElements],
   );
 
   useEffect(() => {
@@ -201,7 +201,7 @@ const CensusDetailForm = ({
     },
     {
       type: "data",
-      name: `7. ${t("Overseas")}`,
+      name: `${t("Overseas")}`,
       uid: "DZqf1SBDDqv",
       ...dependenciesOf("DZqf1SBDDqv")["skFDIWZmgTC"],
       styles: {
@@ -210,7 +210,7 @@ const CensusDetailForm = ({
     },
     {
       type: "data",
-      name: `8. ${t("Other")}`,
+      name: `${t("Other", { n: 8 })}`,
       uid: "w19F9i9XORa",
       ...dependenciesOf("w19F9i9XORa")["skFDIWZmgTC"],
       styles: {
@@ -301,7 +301,7 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "How many women died due to pregnancy, delivery or within 42 days after giving birth?"
+        "How many women died due to pregnancy, delivery or within 42 days after giving birth?",
       ),
       uid: "LmGX6VpLkIX",
       styles: {},
@@ -315,7 +315,7 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "Number of women (15-49 years) in the family who need to use family planning?"
+        "Number of women (15-49 years) in the family who need to use family planning?",
       ),
       uid: "ztDjhjZoEGe",
       styles: {},
@@ -323,7 +323,7 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "How many women (15-49 years) or their partners are using family planning and what types are they using?"
+        "How many women (15-49 years) or their partners are using family planning and what types are they using?",
       ),
       uid: "FnkNunC3Yzx",
       ...dependenciesOf("FnkNunC3Yzx")["ztDjhjZoEGe"],
@@ -415,7 +415,7 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "How many women (15-49 years old) use family planning services at which location?"
+        "How many women (15-49 years old) use family planning services at which location?",
       ),
       uid: "IDz3cuoy2Ix",
       ...dependenciesOf("IDz3cuoy2Ix")["ztDjhjZoEGe"],
@@ -468,7 +468,7 @@ const CensusDetailForm = ({
     // },
     {
       type: "data",
-      name: `4. ${t("Other")}`,
+      name: `${t("Other10_3")}`,
       uid: "tCPGWfB5BXA",
       ...dependenciesOf("tCPGWfB5BXA")["ztDjhjZoEGe"],
       styles: {
@@ -480,7 +480,7 @@ const CensusDetailForm = ({
     {
       type: "title",
       name: t(
-        "The main source of drinking water and water for family use that can be found within 30 minutes"
+        "The main source of drinking water and water for family use that can be found within 30 minutes",
       ),
     },
     {
