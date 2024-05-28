@@ -192,14 +192,15 @@ const FamilyMemberForm = ({
       metadata["birthyear"].compulsory = false;
     }
 
-    // Hide Highest Education if it's not Head of Family
-    if (data["relation"] != "head") {
-      metadata["education"].hidden = true;
-      metadata["education"].compulsory = false;
-    } else {
-      metadata["education"].hidden = false;
-      metadata["education"].compulsory = true;
-    }
+    // No longer needed
+    // // Hide Highest Education if it's not Head of Family
+    // if (data["relation"] != "head") {
+    //   metadata["education"].hidden = true;
+    //   metadata["education"].compulsory = false;
+    // } else {
+    //   metadata["education"].hidden = false;
+    //   metadata["education"].compulsory = true;
+    // }
 
     // UPDATE DATA
     if (code == "DOB") {
