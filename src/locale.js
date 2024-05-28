@@ -58,7 +58,7 @@ const locale = {
   },
   residenceStatus: {
     en: "Residence Status",
-    lo: "ປະເພດການພັກເຊົາ",
+    lo: "ສະພາວະປະຊາກອນ",
   },
   specifyresidentdetails: { en: "Specify the details", lo: "ລະບຸລາຍລະອຽດ" },
   firstName: {
