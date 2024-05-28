@@ -19,7 +19,8 @@ const initialState = {
   orgUnitLevels: null,
   orgUnits: null,
   minDate: "2021-01-01",
-  maxDate: moment().subtract(1, "years").endOf("year").format("YYYY-MM-DD"),
+  maxDate: moment().endOf("year").format("YYYY-MM-DD"),
+  // subtract(1, "years")
 };
 
 export default function (state = initialState, action) {
