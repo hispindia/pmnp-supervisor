@@ -8,7 +8,13 @@ import villages from "../../villages/villageOptions.json";
 /* REDUX */
 import withSkeletonLoading from "@/hocs/withSkeletonLoading";
 import { useDispatch, useSelector } from "react-redux";
-import { setOrgUnitLevels, setOrgUnits, setProgramMetadata, setProgramMetadataMember, setSelectedOrgUnit } from "@/redux/actions/metadata";
+import {
+  setOrgUnitLevels,
+  setOrgUnits,
+  setProgramMetadata,
+  setProgramMetadataMember,
+  setSelectedOrgUnit,
+} from "@/redux/actions/metadata";
 
 import * as meManager from "@/indexDB/MeManager/MeManager";
 import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
@@ -49,8 +55,14 @@ const AppContainer = () => {
 
     villages.forEach((village) => {
       const coordinates = findAttribute(village.attributeValues, "E4BKRTaQKot");
-      const provinceCode = findAttribute(village.attributeValues, "REMLxBe9c4w");
-      const districtCode = findAttribute(village.attributeValues, "GabcHXoJJWG");
+      const provinceCode = findAttribute(
+        village.attributeValues,
+        "REMLxBe9c4w"
+      );
+      const districtCode = findAttribute(
+        village.attributeValues,
+        "GabcHXoJJWG"
+      );
       const province = orgUnits.find((ou) => ou.code === provinceCode);
       const district = orgUnits.find((ou) => ou.code === districtCode);
       if (!province || !district) return;
@@ -142,41 +154,46 @@ const AppContainer = () => {
     (async () => {
       setLoading(true);
 
-      if (!navigator.onLine) {
-        // When offline, get data from IndexedDB
-      } else {
-        Promise.all(getMetadataSet(isOfflineMode)).then(async (results) => {
-          const programMetadata = {
-            villageHierarchy: createVillageHierachy(villages, results[1]),
-            ...results[0],
-          };
+      console.log("AppContainer", { isOfflineMode });
 
-          console.log({ programMetadata });
+      Promise.all(getMetadataSet(isOfflineMode)).then(async (results) => {
+        const programMetadata = {
+          villageHierarchy: createVillageHierachy(villages, results[1]),
+          ...results[0],
+        };
 
-          dispatch(setProgramMetadata(programMetadata));
-          dispatch(setProgramMetadataMember(results[4]));
-          dispatch(setOrgUnitLevels(results[3].organisationUnitLevels));
-          const savedSelectedOrgUnit = sessionStorage.getItem("selectedOrgUnit");
-          i18n.changeLanguage(results[2].settings.keyUiLocale);
-          if (savedSelectedOrgUnit) {
-            let orgUnitJsonData = null;
-            try {
-              orgUnitJsonData = JSON.parse(savedSelectedOrgUnit);
-            } catch (e) {
-              console.log(e);
-            }
-            dispatch(setSelectedOrgUnit(orgUnitJsonData));
-            // history.push("/list");
+        console.log({ programMetadata });
+
+        dispatch(setProgramMetadata(programMetadata));
+        dispatch(setProgramMetadataMember(results[4]));
+        dispatch(setOrgUnitLevels(results[3].organisationUnitLevels));
+        const savedSelectedOrgUnit = sessionStorage.getItem("selectedOrgUnit");
+        i18n.changeLanguage(results[2].settings.keyUiLocale);
+        if (savedSelectedOrgUnit) {
+          let orgUnitJsonData = null;
+          try {
+            orgUnitJsonData = JSON.parse(savedSelectedOrgUnit);
+          } catch (e) {
+            console.log(e);
           }
+          dispatch(setSelectedOrgUnit(orgUnitJsonData));
+          // history.push("/list");
+        }
 
-          dispatch(setOrgUnits(results[5].organisationUnits));
-          setLoading(false);
-          setLoaded(true);
-        });
-      }
+        dispatch(setOrgUnits(results[5].organisationUnits));
+        setLoading(false);
+        setLoaded(true);
+      });
     })();
   }, []);
 
-  return <AppSkeletonLoading loading={loading} loaded={loaded} mask={true} metadata={metadata} />;
+  return (
+    <AppSkeletonLoading
+      loading={loading}
+      loaded={loaded}
+      mask={true}
+      metadata={metadata}
+    />
+  );
 };
 export default AppContainer;

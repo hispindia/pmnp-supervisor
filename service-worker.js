@@ -15,13 +15,18 @@
  */
 
 // import { offlineFallback } from "workbox-recipes";
-import { setDefaultHandler, registerRoute } from "workbox-routing";
-import { CacheFirst, NetworkFirst } from "workbox-strategies";
+import { registerRoute } from "workbox-routing";
+import { NetworkFirst } from "workbox-strategies";
+import { clientsClaim } from "workbox-core";
 import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 
 // Asset hashes to see if content has changed.
 const assetHashes = self.__WB_MANIFEST;
 console.log("assetHashes", assetHashes);
+
+// Sets a default Network Only handler, but consider writing your own handlers, too!
+// setDefaultHandler(new NetworkFirst());
+registerRoute(({ request }) => request.method === "GET", new NetworkFirst());
 
 //cleanup Outdated Caches
 cleanupOutdatedCaches();
@@ -29,12 +34,10 @@ cleanupOutdatedCaches();
 // pre cache And Route
 precacheAndRoute(assetHashes);
 
-// Sets a default Network Only handler, but consider writing your own handlers, too!
-// setDefaultHandler(new NetworkFirst());
-registerRoute(({ request }) => request.method === "GET", new NetworkFirst());
-
-//skipWaiting
+// Helps the new service worker immediately take control of all windows and tabs without waiting for any further events.
 self.skipWaiting();
+clientsClaim();
+console.log("end sw set up!");
 
 // HTML to serve when the site is offline
 // offlineFallback({
