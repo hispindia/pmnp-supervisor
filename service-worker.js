@@ -16,24 +16,27 @@
 
 // import { offlineFallback } from "workbox-recipes";
 import { setDefaultHandler, registerRoute } from "workbox-routing";
-import { NetworkFirst } from "workbox-strategies";
+import { CacheFirst, NetworkFirst } from "workbox-strategies";
 import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 
 // Asset hashes to see if content has changed.
 const assetHashes = self.__WB_MANIFEST;
 console.log("assetHashes", assetHashes);
 
-// Sets a default Network Only handler, but consider writing your own handlers, too!
-// setDefaultHandler(new NetworkFirst());
-registerRoute(({ request }) => request.method === "GET", new NetworkFirst());
-
-// HTML to serve when the site is offline
-// offlineFallback({
-//   pageFallback: "/offline.html",
-// });
-
 //cleanup Outdated Caches
 cleanupOutdatedCaches();
 
 // pre cache And Route
 precacheAndRoute(assetHashes);
+
+// Sets a default Network Only handler, but consider writing your own handlers, too!
+// setDefaultHandler(new NetworkFirst());
+registerRoute(({ request }) => request.method === "GET", new NetworkFirst());
+
+//skipWaiting
+self.skipWaiting();
+
+// HTML to serve when the site is offline
+// offlineFallback({
+//   pageFallback: "/offline.html",
+// });
