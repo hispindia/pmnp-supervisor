@@ -4,13 +4,14 @@ import styles from "./ControlBar.module.css";
 /* REDUX */
 import { Button, Dropdown } from "antd";
 import { connect } from "react-redux";
+import { setSelectedOrgUnit } from "../../redux/actions/metadata";
+import { MenuOutlined } from "@ant-design/icons";
 import OrgUnitContainer from "../../containers/ControlBar/OrgUnit";
 import ReportButtonContainer from "../../containers/ControlBar/ReportButton";
 import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButtons";
-import { setSelectedOrgUnit } from "../../redux/actions/metadata";
 import OfflineModeButton from "@/containers/ControlBar/OfflineModeButton";
 import PushToServerButton from "@/containers/ControlBar/PushToServerButton";
-import { MenuOutlined } from "@ant-design/icons";
+import ListButtonContainer from "@/containers/ControlBar/ListButton";
 
 const { controlBarContainer } = styles;
 
@@ -22,6 +23,10 @@ const items = [
   {
     key: "2",
     label: <ReportButtonContainer />,
+  },
+  {
+    key: "5",
+    label: <ListButtonContainer />,
   },
   {
     key: "3",
@@ -64,8 +69,12 @@ const ControlBar = () => {
             <AddNewFamilyButtonContainer />
           </div>
 
-          <div className="d-none d-md-block">
+          <div className="mr-3 d-none d-md-block">
             <ReportButtonContainer />
+          </div>
+
+          <div className="d-none d-md-block">
+            <ListButtonContainer />
           </div>
         </div>
 

@@ -771,6 +771,10 @@ const locale = {
     en: "Download",
     lo: "ດາວໂຫຼດ",
   },
+  list: {
+    en: "List",
+    lo: "ໂຫຼດລາຍຊື່ຄືນໃໝ່",
+  },
   downloadOfflineHelper: {
     en: "Please select orgUnits to use offline then click download.",
     lo: "ກະລຸນາເລືອກໂຄງຮ່າງການຈັດຕັ້ງເພື່ອນຳໃຊ້ໃນໂຫມດອອບລາຍ, ຫລັງຈາກນັ້ນຄິກໃສ່ປຸ່ມດາວໂຫຼດ.",
