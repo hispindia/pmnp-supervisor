@@ -21,16 +21,16 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { currentOfflineLoading, offlineLoading, offlineStatus } = useSelector(
-    (state) => state.common,
+    (state) => state.common
   );
   const { programMetadata, orgUnits } = useSelector((state) => state.metadata);
 
   const userOrgUnits = useMemo(
     () =>
       programMetadata.organisationUnits.filter(({ path }) =>
-        orgUnits.find(({ id }) => path.includes(id)),
+        orgUnits.find(({ id }) => path.includes(id))
       ),
-    [programMetadata],
+    [programMetadata]
   );
 
   const [selectedOrgUnits, setSelectedOrgUnit] = useState({ selected: [] });
@@ -63,10 +63,17 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
       }}
       okButtonProps={{ disabled: !offlineStatus }}
     >
-      <div style={{ display: "flex", gap: 8 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
         <OrgUnitContainer
-          singleSelection={false}
           limit={3}
+          singleSelection={false}
           onChange={handleSelectOrgUnit}
           value={selectedOrgUnits}
         />
@@ -80,14 +87,17 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
           {t("download")}
         </Button>
       </div>
-      <Typography style={{ color: "#0277bd", fontWeight: "bold" }}>
+      <Typography
+        className="mt-2"
+        style={{ color: "#0277bd", fontWeight: "bold" }}
+      >
         {t("downloadOfflineHelper")}
       </Typography>
       <div style={{ marginTop: 8, marginBottom: 24 }}>
         {(offlineLoading || offlineStatus) &&
           downloadMapping.map(({ label }, step) => {
             const currentStep = downloadMapping.findIndex(
-              ({ id }) => id === currentOfflineLoading.id,
+              ({ id }) => id === currentOfflineLoading.id
             );
 
             let percent = 0;

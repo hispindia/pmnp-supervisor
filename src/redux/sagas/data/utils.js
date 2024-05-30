@@ -18,11 +18,20 @@ export function* getHeaderIndexes(payload) {
 }
 
 export function* getSelectedOrgUnitByOuId(ouId) {
-  const orgUnits = yield select(
-    (state) => state.metadata.programMetadata.organisationUnits
+  const useOrgUnits = yield select((state) => state.metadata.orgUnits);
+  const maxLevel = useOrgUnits.reduce(
+    (max, { level }) => (level < max ? level : max),
+    useOrgUnits[0].level
   );
-  const ou = orgUnits.find((o) => o.id === ouId);
-  return { ...ou, selected: [ou.path] } || null;
+
+  const ou = useOrgUnits.find((o) => o.id === ouId);
+  const splittedPath = ou.path.split("/");
+  // [0] is ""
+  const selectedPath = [splittedPath[0]]
+    .concat(splittedPath.slice(maxLevel, splittedPath.length))
+    .join("/");
+
+  return { ...ou, selected: [selectedPath] } || null;
 }
 
 export function* getCurrentEvent() {
