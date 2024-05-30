@@ -44,6 +44,7 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
     const listId = selectedOrgUnits.selected.map((path) => ({
       id: path.split("/").pop(),
     }));
+    dispatch(resetCurrentOfflineLoading());
     dispatch(setOfflineSelectedOrgUnits(listId));
     dispatch(setOfflineLoadingStatus(true));
   };
@@ -57,10 +58,7 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
       maskClosable={false}
       okText={t("OK")}
       onCancel={onCancel}
-      onOk={() => {
-        dispatch(resetCurrentOfflineLoading());
-        window.location.reload();
-      }}
+      onOk={() => window.location.reload()}
       okButtonProps={{ disabled: !offlineStatus }}
     >
       <div
