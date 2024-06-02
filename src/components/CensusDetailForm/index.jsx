@@ -19,12 +19,12 @@ const CensusDetailForm = ({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const dataElements = useSelector(
-    (state) => state.metadata.programMetadata.programStages[0].dataElements,
+    (state) => state.metadata.programMetadata.programStages[0].dataElements
   );
 
   const Dhis2FormItem = useMemo(
     () => withDhis2FormItem(dataElements)(CFormControl),
-    [dataElements],
+    [dataElements]
   );
 
   useEffect(() => {
@@ -301,9 +301,40 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "How many women died due to pregnancy, delivery or within 42 days after giving birth?",
+        "How many women died due to pregnancy, delivery or within 42 days after giving birth?"
       ),
       uid: "LmGX6VpLkIX",
+      styles: {},
+    },
+
+    // Family Drinking Water Source
+    {
+      type: "title",
+      name: t(
+        "The main source of drinking water and water for family use that can be found within 30 minutes"
+      ),
+    },
+    {
+      type: "data",
+      name: t("Drinking"),
+      uid: "p2P8g0MnDBK",
+      styles: {
+        paddingLeft: "50px",
+      },
+    },
+    {
+      type: "data",
+      name: t("Using"),
+      uid: "okAPcV5WhBR",
+      styles: {
+        paddingLeft: "50px",
+      },
+    },
+    // Family Toilet
+    {
+      type: "data",
+      name: t("What kind of toilet is used by the family?"),
+      uid: "BDi5vJcbiMv",
       styles: {},
     },
 
@@ -315,7 +346,7 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "Number of women (15-49 years) in the family who need to use family planning?",
+        "Number of women (15-49 years) in the family who need to use family planning?"
       ),
       uid: "ztDjhjZoEGe",
       styles: {},
@@ -323,7 +354,7 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "How many women (15-49 years) or their partners are using family planning and what types are they using?",
+        "How many women (15-49 years) or their partners are using family planning and what types are they using?"
       ),
       uid: "FnkNunC3Yzx",
       ...dependenciesOf("FnkNunC3Yzx")["ztDjhjZoEGe"],
@@ -415,7 +446,7 @@ const CensusDetailForm = ({
     {
       type: "data",
       name: t(
-        "How many women (15-49 years old) use family planning services at which location?",
+        "How many women (15-49 years old) use family planning services at which location?"
       ),
       uid: "IDz3cuoy2Ix",
       ...dependenciesOf("IDz3cuoy2Ix")["ztDjhjZoEGe"],
@@ -476,30 +507,6 @@ const CensusDetailForm = ({
       },
     },
 
-    // Family Drinking Water Source
-    {
-      type: "title",
-      name: t(
-        "The main source of drinking water and water for family use that can be found within 30 minutes",
-      ),
-    },
-    {
-      type: "data",
-      name: t("Drinking"),
-      uid: "p2P8g0MnDBK",
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Using"),
-      uid: "okAPcV5WhBR",
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-
     // {
     //     type: 'data',
     //     name: t('Pied water'),
@@ -539,13 +546,6 @@ const CensusDetailForm = ({
     //     styles: { paddingLeft: '50px' },
     // },
 
-    // Family Toilet
-    {
-      type: "data",
-      name: t("What kind of toilet is used by the family?"),
-      uid: "BDi5vJcbiMv",
-      styles: {},
-    },
     // {
     //     type: 'data',
     //     name: t('Dry latrine(including dig and cover)'),

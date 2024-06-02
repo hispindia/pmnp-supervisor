@@ -185,8 +185,8 @@ const locale = {
   },
 
   "What kind of toilet is used by the family?": {
-    en: "12. What kind of toilet is used by the family?",
-    lo: "12. ປະເພດຂອງວິດທີ່ໃຊ້ໃນຄອບຄົວແມ່ນເພດໃດ?",
+    en: "11. What kind of toilet is used by the family?",
+    lo: "11. ປະເພດຂອງວິດທີ່ໃຊ້ໃນຄອບຄົວແມ່ນເພດໃດ?",
   },
   "Dry latrine(including dig and cover)": {
     en: "1. Dry latrine(including dig and cover)",
@@ -215,8 +215,8 @@ const locale = {
 
   // Family Planning
   "Family Planning": {
-    en: "10. Family Planning",
-    lo: "10. ການວາງແຜນຄອບຄົວ",
+    en: "12. Family Planning",
+    lo: "12. ການວາງແຜນຄອບຄົວ",
   },
   CensusDetailFormRow25: {
     en: "12.1. Number of women(15-49) in the family who need family plaining",
@@ -224,13 +224,13 @@ const locale = {
   },
   "Number of women (15-49 years) in the family who need to use family planning?":
     {
-      en: "10.1 Number of women (15-49 years) in the family who need to use family planning?",
-      lo: "10.1 ຈໍານວນແມ່ຍິງ (15-49 ປີ) ໃນຄອບຄົວທີ່ມີຄວາມຕ້ອງການໃຊ້ການວາງແຜນຄອບຄົວ?)",
+      en: "12.1 Number of women (15-49 years) in the family who need to use family planning?",
+      lo: "12.1 ຈໍານວນແມ່ຍິງ (15-49 ປີ) ໃນຄອບຄົວທີ່ມີຄວາມຕ້ອງການໃຊ້ການວາງແຜນຄອບຄົວ?)",
     },
   "How many women (15-49 years) or their partners are using family planning and what types are they using?":
     {
-      en: "10.2 How many women (15-49 years) or their partners are using family planning and what types are they using?",
-      lo: "10.2 ຈຳນວນແມ່ຍິງ (15-49 ປີ) ຫຼື ຄູ່ຄອງທີ່ກຳລັງນຳໃຊ້ການວາງແຜນຄອບຄົວຢູ່ ແລະ ປະເພດໃດເເດ່ທີ່ໃຊ້ເປັນຫຼັກ?",
+      en: "12.2 How many women (15-49 years) or their partners are using family planning and what types are they using?",
+      lo: "12.2 ຈຳນວນແມ່ຍິງ (15-49 ປີ) ຫຼື ຄູ່ຄອງທີ່ກຳລັງນຳໃຊ້ການວາງແຜນຄອບຄົວຢູ່ ແລະ ປະເພດໃດເເດ່ທີ່ໃຊ້ເປັນຫຼັກ?",
     },
   "contraceptive pill": {
     en: "1. contraceptive pill",
@@ -269,11 +269,11 @@ const locale = {
     lo: "9. ອື່ນໆ (ພື້ນເມືອງທຸກປະເພດ)?",
   },
 
-  // 10.3
+  // 12.3
   "How many women (15-49 years old) use family planning services at which location?":
     {
-      en: "10.3. How many women (15-49 years old) use family planning services at which location?",
-      lo: "10.3. ຈຳນວນແມ່ຍິງ (15-49 ປີ) ໃຊ້ບໍລິການວາງແຜນຄອບຄົວຢູ່ສະຖານທີໃດ?",
+      en: "12.3. How many women (15-49 years old) use family planning services at which location?",
+      lo: "12.3. ຈຳນວນແມ່ຍິງ (15-49 ປີ) ໃຊ້ບໍລິການວາງແຜນຄອບຄົວຢູ່ສະຖານທີໃດ?",
     },
   "in public facility": {
     en: "1. in public facility",
@@ -300,11 +300,11 @@ const locale = {
     lo: "ງ. ຢູ່ບ່ອນອື່ນໆ",
   },
 
-  // 11
+  // 10
   "The main source of drinking water and water for family use that can be found within 30 minutes":
     {
-      en: "11. The main source of drinking water and water for family use that can be found within 30 minutes",
-      lo: "11. ແຫລ່ງນໍ້າຫລັກທີ່ໃຊ້ດື່ມ ແລະ ນ້ຳໃຊ້ ໃນຄອບຄົວ ທີ່ສາມາດຫາໄດ້ ພາຍໃນ 30 ນາທີ?",
+      en: "10. The main source of drinking water and water for family use that can be found within 30 minutes",
+      lo: "10. ແຫລ່ງນໍ້າຫລັກທີ່ໃຊ້ດື່ມ ແລະ ນ້ຳໃຊ້ ໃນຄອບຄົວ ທີ່ສາມາດຫາໄດ້ ພາຍໃນ 30 ນາທີ?",
     },
   "Pied water": {
     en: "1. Pied water",

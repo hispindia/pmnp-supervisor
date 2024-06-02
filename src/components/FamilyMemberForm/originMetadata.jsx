@@ -832,13 +832,23 @@ const originMetadata = [
         },
       },
       {
-        value: "bachelor-high",
-        label: "Bachelor degree or Higher",
+        value: "bachelor",
+        label: "Bachelor degree",
         isDisabled: false,
         unique: false,
-        multiple: ["Bachelor degree or Higher"],
+        multiple: ["Bachelor degree"],
         translations: {
-          lo: "ປະລິນຍາຕີ ຫຼື ສູງກວ່າ",
+          lo: "ປະລິນຍາຕີ",
+        },
+      },
+      {
+        value: "bachelor-high",
+        label: "Higher bachelor degree",
+        isDisabled: false,
+        unique: false,
+        multiple: ["Higher bachelor degree"],
+        translations: {
+          lo: "ເໜືອປະລິນຍາຕີ",
         },
       },
       {
@@ -927,16 +937,6 @@ const originMetadata = [
       //   },
       // },
       {
-        value: "f",
-        label: "Dont have",
-        isDisabled: false,
-        unique: false,
-        multiple: ["Dont have"],
-        translations: {
-          lo: "ບໍ່ໄດ້ເຂົ້າປະກັນສຸຂະພາບ",
-        },
-      },
-      {
         value: "g",
         label: "Dont Know",
         isDisabled: false,
@@ -944,6 +944,16 @@ const originMetadata = [
         multiple: ["Dont Know"],
         translations: {
           lo: "ບໍ່ຮູ້",
+        },
+      },
+      {
+        value: "f",
+        label: "Dont have",
+        isDisabled: false,
+        unique: false,
+        multiple: ["Dont have"],
+        translations: {
+          lo: "ບໍ່ໄດ້ເຂົ້າປະກັນສຸຂະພາບ",
         },
       },
     ],
