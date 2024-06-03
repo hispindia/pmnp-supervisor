@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { setSelectedOrgUnit } from "@/redux/actions/metadata";
 import { useDispatch, useSelector } from "react-redux";
+import { filter } from "@/redux/actions/teis";
 import ReportButton from "../../components/ControlBar/ReportButton";
 import withOrgUnitRequired from "../../hocs/withOrgUnitRequired";
 
@@ -18,6 +19,8 @@ const ListButtonContainer = () => {
       onClick={() => {
         if (history.location.pathname === "/list") {
           dispatch(setSelectedOrgUnit({ ...selectedOrgUnit }));
+          dispatch(filter([]));
+          // window.location.reload();
         }
 
         history.replace(`/list`);
