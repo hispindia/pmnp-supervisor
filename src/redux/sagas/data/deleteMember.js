@@ -1,11 +1,14 @@
-import { put, takeEvery, call, all, select } from "redux-saga/effects";
-import { DELETE_MEMBER } from "../../types/data/tei";
-import { dataApi } from "../../../api";
-
-import { deleteTei, deleteEvent } from "../../actions/data/tei";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import _ from "lodash";
 import moment from "moment";
-import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import { call, put, select, takeEvery } from "redux-saga/effects";
+import { dataApi } from "../../../api";
+import {
+  deleteEvent,
+  deleteTei,
+  getTeiErrorMessage,
+} from "../../actions/data/tei";
+import { DELETE_MEMBER } from "../../types/data/tei";
 
 export default function* deleteMemberSaga() {
   yield takeEvery(DELETE_MEMBER, handleDeleteMember);
@@ -35,7 +38,10 @@ function* handleDeleteMember({ teiId }) {
     );
   }
 
-  console.log("handleDeleteMember", { memberTEI });
+  if (memberTEI && memberTEI.isOnline == 1) {
+    yield put(getTeiErrorMessage("Can't delete Online data"));
+    return;
+  }
 
   // find ENR
   if (memberTEI) {

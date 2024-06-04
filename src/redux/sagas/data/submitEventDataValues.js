@@ -138,8 +138,8 @@ function* handleSubmitEventDataValues({ dataValues }) {
           process.env.NODE_ENV && console.log({ year, eventByYear });
 
           if (selectedMember.isDelete) {
-            // TODO offline
             yield put(deleteMember({}));
+
             return;
           }
           process.env.NODE_ENV && console.log({ selectedMember });
