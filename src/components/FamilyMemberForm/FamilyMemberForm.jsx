@@ -257,6 +257,7 @@ const FamilyMemberForm = ({
     // set selected member is about to be deleted
     if (actionType === "delete_member_selected") {
       const memberData = JSON.parse(JSON.stringify(dataRows)); // only for delete case
+      console.log({ memberData });
       dispatch(changeMember({ ...memberData, isDelete: true })); // only for data
       console.log("callbackFunction rowIndex delete", rowIndex, actionType);
       return;

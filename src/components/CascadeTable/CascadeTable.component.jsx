@@ -10,6 +10,9 @@ import { calcAgeFromDOB } from "../FamilyMemberForm/FormCalculationUtils";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+/* SELECTOR */
+import { changeMember } from "../../redux/actions/data/tei";
+
 import { transformData, transformMetadataToColumns } from "./utils";
 
 import { updateCascade } from "@/redux/actions/data/tei/currentCascade";
@@ -352,13 +355,15 @@ const CascadeTable = (props) => {
             onClick={(e) => {
               e.stopPropagation();
               console.log("DeleteConfirmationButton", row, rowIndex);
-              callbackFunction &&
-                callbackFunction(
-                  metadata,
-                  row,
-                  rowIndex,
-                  "delete_member_selected"
-                );
+              dispatch(changeMember({ ...row, isDelete: true }));
+
+              // callbackFunction &&
+              //   callbackFunction(
+              //     metadata,
+              //     row,
+              //     rowIndex,
+              //     "delete_member_selected"
+              //   );
             }}
             onCancel={(e) => {
               callbackFunction(metadata, row, rowIndex, "clean");

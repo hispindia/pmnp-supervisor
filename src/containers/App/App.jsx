@@ -154,8 +154,6 @@ const AppContainer = () => {
     (async () => {
       setLoading(true);
 
-      console.log("AppContainer", { isOfflineMode });
-
       Promise.all(getMetadataSet(isOfflineMode)).then(async (results) => {
         const programMetadata = {
           villageHierarchy: createVillageHierachy(villages, results[1]),

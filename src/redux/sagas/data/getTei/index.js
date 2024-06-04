@@ -111,7 +111,7 @@ function* initExistedDataSaga() {
       `xvzrp56zKvI`
     );
   }
-  console.log({ memberTEIs });
+
   // const headerIndexes = yield call(getHeaderIndexes, memberTEIs);
   const memberTEIsUid = memberTEIs.instances.map((tei) => tei.trackedEntity);
 

@@ -42,11 +42,10 @@ function* handleSubmitEventDataValues({ dataValues }) {
     (state) => state.data.tei.data
   );
   const { selectedMember } = yield select((state) => state.data.tei);
-  const selectedMemberData = yield call(getSelectedMemberData);
+  // const selectedMemberData = yield call(getSelectedMemberData);
 
   process.env.NODE_ENV && console.log({ dataValues });
   process.env.NODE_ENV && console.log({ selectedMember });
-  process.env.NODE_ENV && console.log({ selectedMemberData });
   process.env.NODE_ENV && console.log("selectedYear", { year, selected6Month });
 
   const newCurrentEvent = yield call(makeNewCurrentEvent, dataValues);
@@ -104,7 +103,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
         memberTEI = yield call(
           trackedEntityManager.getTrackedEntityInstanceById,
           {
-            trackedEntity: selectedMemberData.id,
+            trackedEntity: selectedMember.id,
             program: programMetadataMember.id,
           }
         );
@@ -112,12 +111,12 @@ function* handleSubmitEventDataValues({ dataValues }) {
         // In Online mode - if cannot find TEI -> catch errors
         memberTEI = yield call(
           dataApi.getTrackedEntityInstanceById,
-          selectedMemberData.id,
+          selectedMember.id,
           programMetadataMember.id
         );
       }
 
-      process.env.NODE_ENV && console.log({ memberTEI });
+      process.env.NODE_ENV && console.log({ memberTEI, selectedMember });
 
       // find ENR
       if (memberTEI) {
@@ -156,7 +155,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
                     family: currentTei,
                     memberEnrollment: memberTEI.enrollments[0],
                     memberEvent: eventByYear[0],
-                    memberDetails: selectedMemberData,
+                    memberDetails: selectedMember,
                   },
                   programMetadataMember
                 );
@@ -183,7 +182,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
                     family: currentTei,
                     memberEnrollment: memberTEI.enrollments[0],
                     memberEvent: newEvent,
-                    memberDetails: selectedMemberData,
+                    memberDetails: selectedMember,
                   },
                   programMetadataMember
                 );
@@ -215,7 +214,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
                 family: currentTei,
                 memberEnrollment: newEnrollment,
                 memberEvent: newEvent,
-                memberDetails: selectedMemberData,
+                memberDetails: selectedMember,
               },
               programMetadataMember
             );
@@ -253,7 +252,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
               family: currentTei,
               memberEnrollment: newEnrollment,
               memberEvent: newEvent,
-              memberDetails: selectedMemberData,
+              memberDetails: selectedMember,
             },
             programMetadataMember
           );
@@ -313,7 +312,6 @@ function* getSelectedMemberData() {
 
   let selectedMemberData = null;
 
-  console.log({ currentCascade });
   if (
     currentCascade &&
     currentCascade[year] &&

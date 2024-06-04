@@ -12,6 +12,7 @@ export default function* deleteMemberSaga() {
 }
 
 function* handleDeleteMember({ teiId }) {
+  console.log("handleDeleteMember");
   const { offlineStatus } = yield select((state) => state.common);
   const { selectedMember } = yield select((state) => state.data.tei);
   // metadata
