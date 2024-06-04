@@ -23,6 +23,7 @@ import { generateUid } from "@/utils";
 import moment from "moment";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
 
 const teiMapping = {
   firstname: "IEE2BMhfoSc",
@@ -133,6 +134,18 @@ function* handleCloneEvent({ year }) {
   if (previousEvent) {
     // Clone object
     // dataValues = JSON.parse(JSON.stringify(previousEvent.dataValues));
+
+    // only pick dataValues that is in calculateDataElements
+    previousEvent.dataValues = Object.entries(previousEvent.dataValues).reduce(
+      (acc, [key, value]) => {
+        if (calculateDataElements.includes(key)) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+
     payloadTransformed = yield call(transformEvent, {
       dataValues: { ...previousEvent.dataValues },
     });
