@@ -5,7 +5,7 @@
   "background_color": "#5a0fc8",
   "theme_color": "#5a0fc8",
   "display": "standalone",
-  "version": "1.0.54",
+  "version": "1.0.56",
   "icons": [
     {
       "src": "./assets/icon-maskable.png",
