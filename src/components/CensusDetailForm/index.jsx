@@ -124,6 +124,22 @@ const CensusDetailForm = ({
           };
         },
       },
+      QteYoL0Yy6K: {
+        dependentFields: ["QteYoL0Yy6K"],
+        // showFieldFunc: ([QteYoL0Yy6K]) => QteYoL0Yy6K != 0,
+        setValuesFunc: ([QteYoL0Yy6K]) => {
+          if (QteYoL0Yy6K <= 0) {
+            return {
+              [target]: "",
+            };
+          }
+        },
+        childPropsFunc: ([QteYoL0Yy6K]) => {
+          return {
+            disabled: QteYoL0Yy6K <= 0,
+          };
+        },
+      },
     };
   };
 
@@ -284,18 +300,21 @@ const CensusDetailForm = ({
       type: "data",
       name: t("How many children under one year died in family?"),
       uid: "m5y4aLbmIOO",
+      ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
       styles: {},
     },
     {
       type: "data",
       name: t("How many children age one to 4 years died?"),
       uid: "akAYIsCrRwV",
+      ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
       styles: {},
     },
     {
       type: "data",
       name: t("How many children age 5 to 19 years died?"),
       uid: "mPTyd0nP5Xx",
+      ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
       styles: {},
     },
     {
@@ -304,6 +323,7 @@ const CensusDetailForm = ({
         "How many women died due to pregnancy, delivery or within 42 days after giving birth?"
       ),
       uid: "LmGX6VpLkIX",
+      ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
       styles: {},
     },
 
