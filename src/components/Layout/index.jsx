@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { SnackbarProvider } from "notistack";
 import AppContextProvider from "../App/App.context";
 import styles from "../../components/App/App.module.css";
 
 import HeaderBar from "@/components/HeaderBar/HeaderBar.component";
+import { useDisableSwipeDownRefresh, useIsPwa } from "@/hooks";
 const { app, headerBarContainer } = styles;
 
 const theme = createTheme({
@@ -16,13 +17,8 @@ const theme = createTheme({
 });
 
 const Layout = ({ children }) => {
-  const isPwa = window.matchMedia("(display-mode: standalone)").matches;
-
-  useEffect(() => {
-    window.addEventListener("appinstalled", () => {
-      location.reload();
-    });
-  }, []);
+  const isPwa = useIsPwa();
+  useDisableSwipeDownRefresh();
 
   return (
     <SnackbarProvider maxSnack={3}>
