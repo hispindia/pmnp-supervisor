@@ -12,6 +12,7 @@ import {
 } from "../services/hightchart";
 import { useTranslation } from "react-i18next";
 import html2canvas from "html2canvas";
+import "./fonts/Phetsarath-normal";
 
 const PADDING_BOT = 5;
 const PAGE_MARGIN = 10;
@@ -52,14 +53,14 @@ function ExportPdfButton({ forwardingRefs, selectedOrgUnit, year }) {
                 startY: offsetY,
                 useCss: true,
                 styles: {
-                  halign: "left",
+                  align: "left",
                   font: "Phetsarath",
                 },
                 tableWidth: "auto",
                 columnStyles: {
                   text: { cellWidth: "auto" },
                   id: {
-                    halign: "right",
+                    align: "right",
                   },
                   0: {
                     cellWidth: 100,
