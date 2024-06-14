@@ -3,6 +3,7 @@ import { Switch, notification } from "antd";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useIsPwa } from "../../hooks";
 import { setOfflineStatus } from "@/redux/actions/common";
 import PrepareOfflineModal from "./PrepareOfflineModal";
 import db from "@/indexDB/db";
@@ -19,6 +20,7 @@ export const findChangedData = () =>
 const OfflineModeButton = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const isPwa = useIsPwa();
 
   const { offlineStatus } = useSelector((state) => state.common);
 
@@ -45,21 +47,29 @@ const OfflineModeButton = () => {
         unCheckedChildren={t("online")}
         checked={offlineStatus}
         onChange={async (checked) => {
-          if (checked) {
-            setPrepareModalOpen(true);
-          } else {
-            const results = await findChangedData();
-
-            const found = results.find((r) => r.length > 0);
-            if (!found) return dispatch(setOfflineStatus(false));
-
+          if (checked && !isPwa) {
             notification.warning({
               message: t("warning"),
-              description: t("pleasePushChangedData"),
+              description: t("pleaseInstallApp"),
               placement: "bottomRight",
               duration: 10,
             });
+            return;
           }
+
+          if (checked) return setPrepareModalOpen(true);
+
+          const results = await findChangedData();
+
+          const found = results.find((r) => r.length > 0);
+          if (!found) return dispatch(setOfflineStatus(false));
+
+          notification.warning({
+            message: t("warning"),
+            description: t("pleasePushChangedData"),
+            placement: "bottomRight",
+            duration: 10,
+          });
         }}
         style={{
           marginRight: "10px",

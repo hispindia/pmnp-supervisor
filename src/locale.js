@@ -739,6 +739,10 @@ const locale = {
     en: "Please push changed data.",
     lo: "ແຈ້ງເຕືອນ.",
   },
+  pleaseInstallApp: {
+    en: "Please install app to use this function.",
+    lo: "Please install app to use this function.",
+  },
   preparingForOfflineMode: {
     en: "Preparing for offline mode",
     lo: "ກຳລັງກຽມຄວາມພ້ອມເພື່ອໃຊ້ແບບບໍ່ຕ້ອງການເນັດ",
