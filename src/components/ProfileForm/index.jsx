@@ -232,15 +232,18 @@ const ProfileForm = ({
                     };
                   } else {
                     newValues = {
-                      utW5gK4ihvz: "",
-                      BgKZvUxweKO: "",
-                      XwnHdecsbvz: "",
+                      utW5gK4ihvz: profile.attributes["utW5gK4ihvz"] || "",
+                      BgKZvUxweKO: profile.attributes["BgKZvUxweKO"] || "",
+                      XwnHdecsbvz: profile.attributes["XwnHdecsbvz"] || "",
                     };
                   }
+
                   const currentProvince = newValues["BgKZvUxweKO"];
                   const currentDistrict = newValues["utW5gK4ihvz"];
                   const currentVillage = newValues["XwnHdecsbvz"];
-                  // form.setFieldsValue(newValues);
+
+                  form.setFieldsValue(newValues);
+
                   return {
                     config: {
                       labels: [

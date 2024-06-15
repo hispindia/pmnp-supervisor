@@ -159,45 +159,46 @@ const InputField = ({
       );
     case "VILLAGE": {
       console.log("onChange", props.onChange);
-      return (
-        <>
-          <HierachySelector
-          // config={
-          //   {
-          //     // labels: [
-          //     //   "Please select province / ກະລຸນາເລຶອກແຂວງ",
-          //     //   "Please select district / ກະລຸນາເລຶອກເມືອງ",
-          //     //   "Please select village / ກະລຸນາເລຶອກບ້ານ",
-          //     // ],
-          //     // hierachy: programMetadata.villageHierarchy,
-          //     // initSelections: [
-          //     //     currentProvince,
-          //     //     currentDistrict,
-          //     //     currentVillage,
-          //     // ],
-          //     // disabled: disableVillageSelector,
-          //     // select: (selections) => {
-          //     //   const teas = [
-          //     //     "BgKZvUxweKO",
-          //     //     "utW5gK4ihvz",
-          //     //     "XwnHdecsbvz",
-          //     //   ];
-          //     //   for (let i = 0; i <= 2; i++) {
-          //     //     if (selections[i]) {
-          //     //       changeProfileAttributeValue(
-          //     //           teas[i],
-          //     //           selections[i].value
-          //     //       );
-          //     //     } else {
-          //     //       changeProfileAttributeValue(teas[i], "");
-          //     //     }
-          //     //   }
-          //     // },
-          //   }
-          // }
-          />
-        </>
-      );
+      return null;
+      // return (
+      //   <>
+      //     <HierachySelector
+      //     // config={
+      //     //   {
+      //     //     // labels: [
+      //     //     //   "Please select province / ກະລຸນາເລຶອກແຂວງ",
+      //     //     //   "Please select district / ກະລຸນາເລຶອກເມືອງ",
+      //     //     //   "Please select village / ກະລຸນາເລຶອກບ້ານ",
+      //     //     // ],
+      //     //     // hierachy: programMetadata.villageHierarchy,
+      //     //     // initSelections: [
+      //     //     //     currentProvince,
+      //     //     //     currentDistrict,
+      //     //     //     currentVillage,
+      //     //     // ],
+      //     //     // disabled: disableVillageSelector,
+      //     //     // select: (selections) => {
+      //     //     //   const teas = [
+      //     //     //     "BgKZvUxweKO",
+      //     //     //     "utW5gK4ihvz",
+      //     //     //     "XwnHdecsbvz",
+      //     //     //   ];
+      //     //     //   for (let i = 0; i <= 2; i++) {
+      //     //     //     if (selections[i]) {
+      //     //     //       changeProfileAttributeValue(
+      //     //     //           teas[i],
+      //     //     //           selections[i].value
+      //     //     //       );
+      //     //     //     } else {
+      //     //     //       changeProfileAttributeValue(teas[i], "");
+      //     //     //     }
+      //     //     //   }
+      //     //     // },
+      //     //   }
+      //     // }
+      //     />
+      //   </>
+      // );
     }
     default:
       return <span>UNSUPPORTED VALUE TYPE</span>;
