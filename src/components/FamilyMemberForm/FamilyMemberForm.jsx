@@ -216,12 +216,13 @@ const FamilyMemberForm = ({
       data["DOB"] = null;
     }
 
-    // Remove Highest Education if it is not Head of family
-    if (code == "relation") {
-      if (data["relation"] != "head") {
-        data["education"] = "";
-      }
-    }
+    // No longer needed
+    // // Remove Highest Education if it is not Head of family
+    // if (code == "relation") {
+    //   if (data["relation"] != "head") {
+    //     data["education"] = "";
+    //   }
+    // }
 
     // Automatically select Femail if it's Wife
     if (code == "relation") {

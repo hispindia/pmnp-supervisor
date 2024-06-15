@@ -19,15 +19,18 @@ import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEnt
 import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 
 function* handleSubmitAttributes({ attributes }) {
-  const { offlineStatus } = yield select((state) => state.common);
-
   yield put(loadTei(true));
 
   const teiId = yield call(getTeiId);
 
   const { currentTei, currentEnrollment } = yield call(makePayload, attributes);
 
-  console.log({ teiId, attributes, currentTei, currentEnrollment });
+  console.log("handleSubmitAttributes", {
+    teiId,
+    attributes,
+    currentTei,
+    currentEnrollment,
+  });
 
   try {
     if (teiId) {

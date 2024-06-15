@@ -9,6 +9,8 @@ import {
   transformEvent,
 } from "./utils";
 
+import { submitAttributes as submitFamilyTeiAttributes } from "../../actions/data";
+
 import _ from "lodash";
 import moment from "moment";
 import { dataApi } from "@/api";
@@ -146,6 +148,18 @@ function* handleSubmitEventDataValues({ dataValues }) {
 
           if (selectedMember.isNew || selectedMember.isUpdate) {
             process.env.NODE_ENV && console.log({ eventByYear });
+
+            // Update Family TEI - firstname + lastname
+            if (selectedMember && selectedMember.relation == "head") {
+              const newFamilyAttributes = {
+                ...currentTei.attributes,
+                IEE2BMhfoSc: selectedMember.firstname,
+                IBLkiaYRRL3: selectedMember.lastname,
+              };
+
+              yield put(submitFamilyTeiAttributes(newFamilyAttributes));
+            }
+
             if (eventByYear.length > 0) {
               // Generate member payload - UPDATE
               try {
