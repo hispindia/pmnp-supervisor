@@ -18,7 +18,7 @@ const theme = createTheme({
 
 const Layout = ({ children }) => {
   const isPwa = useIsPwa();
-  useDisableSwipeDownRefresh();
+  // useDisableSwipeDownRefresh();
 
   return (
     <SnackbarProvider maxSnack={3}>

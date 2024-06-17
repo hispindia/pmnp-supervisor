@@ -11,7 +11,10 @@ const useDisableSwipeDownRefresh = () => {
 
     const onTouchMove = (e) => {
       touchEndY.current = e.touches[0].clientY;
-      if (touchStartY.current < e.touches[0].clientY && window.scrollY === 0) {
+      const isScrollingDown = touchStartY.current < e.touches[0].clientY;
+      // const isBody = e.target === document.body;
+      console.log(e);
+      if (isScrollingDown && window.scrollY === 0) {
         e.preventDefault();
       }
     };
