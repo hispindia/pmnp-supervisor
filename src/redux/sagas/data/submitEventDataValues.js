@@ -247,6 +247,17 @@ function* handleSubmitEventDataValues({ dataValues }) {
       // not exist TEI
       // CREATE whole new TEI
       if (selectedMember.isNew) {
+        // Update Family TEI - firstname + lastname
+        if (selectedMember && selectedMember.relation == "head") {
+          const newFamilyAttributes = {
+            ...currentTei.attributes,
+            IEE2BMhfoSc: selectedMember.firstname,
+            IBLkiaYRRL3: selectedMember.lastname,
+          };
+
+          yield put(submitFamilyTeiAttributes(newFamilyAttributes));
+        }
+
         try {
           let newEnrollment = {
             enrollment: generateUid(),
