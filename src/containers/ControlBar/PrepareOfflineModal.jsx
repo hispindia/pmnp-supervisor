@@ -53,7 +53,7 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
     <Modal
       title={t("preparingForOfflineMode")}
       open={open}
-      centered
+      // centered
       closeIcon={null}
       maskClosable={false}
       okText={t("OK")}

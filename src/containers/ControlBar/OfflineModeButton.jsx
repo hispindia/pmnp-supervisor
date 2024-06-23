@@ -1,12 +1,14 @@
-import { useState } from "react";
 import { Switch, notification } from "antd";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useIsPwa } from "../../hooks";
-import { setOfflineStatus } from "@/redux/actions/common";
-import PrepareOfflineModal from "./PrepareOfflineModal";
 import db from "@/indexDB/db";
+import { setOfflineStatus } from "@/redux/actions/common";
+import { useIsPwa } from "../../hooks";
+import PrepareOfflineModal from "./PrepareOfflineModal";
+
+const { VITE_MODE } = import.meta.env;
 
 export const findOffline = (TABLE_NAME) =>
   db[TABLE_NAME].where("isOnline").anyOf(0).toArray();
@@ -47,7 +49,7 @@ const OfflineModeButton = () => {
         unCheckedChildren={t("online")}
         checked={offlineStatus}
         onChange={async (checked) => {
-          if (checked && !isPwa) {
+          if (checked && !isPwa && VITE_MODE === "production") {
             notification.warning({
               message: t("warning"),
               description: t("pleaseInstallApp"),
