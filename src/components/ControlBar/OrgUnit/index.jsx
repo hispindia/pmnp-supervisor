@@ -25,7 +25,7 @@ const OrgUnit = ({
         <Popover
           placement="bottomLeft"
           overlayInnerStyle={{
-            maxHeight: "80vh",
+            maxHeight: "70vh",
             overflowY: "auto",
           }}
           trigger="click"
