@@ -90,6 +90,23 @@ const CensusDetailForm = ({
     return type === "title" ? 0 : uid ? (isFirstInput ? 3 : 0) : 1;
   };
 
+  const sumOf = (target, fields) => {
+    return {
+      dependentFields: fields,
+      setValuesFunc: (values) => {
+        const sum = values.reduce((acc, curr) => acc + (Number(curr) || 0), 0);
+        return {
+          [target]: sum,
+        };
+      },
+      childPropsFunc: ([]) => {
+        return {
+          disabled: true,
+        };
+      },
+    };
+  };
+
   const dependenciesOf = (target) => {
     return {
       skFDIWZmgTC: {
@@ -294,27 +311,33 @@ const CensusDetailForm = ({
       type: "data",
       name: t("How many people died in total in the family?"),
       uid: "QteYoL0Yy6K",
+      ...sumOf("QteYoL0Yy6K", [
+        "m5y4aLbmIOO",
+        "akAYIsCrRwV",
+        "mPTyd0nP5Xx",
+        "LmGX6VpLkIX",
+      ]),
       styles: {},
     },
     {
       type: "data",
       name: t("How many children under one year died in family?"),
       uid: "m5y4aLbmIOO",
-      ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
+      // ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
       styles: {},
     },
     {
       type: "data",
       name: t("How many children age one to 4 years died?"),
       uid: "akAYIsCrRwV",
-      ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
+      // ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
       styles: {},
     },
     {
       type: "data",
       name: t("How many children age 5 to 19 years died?"),
       uid: "mPTyd0nP5Xx",
-      ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
+      // ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
       styles: {},
     },
     {
@@ -323,7 +346,7 @@ const CensusDetailForm = ({
         "How many women died due to pregnancy, delivery or within 42 days after giving birth?"
       ),
       uid: "LmGX6VpLkIX",
-      ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
+      // ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
       styles: {},
     },
 
@@ -371,20 +394,33 @@ const CensusDetailForm = ({
       uid: "ztDjhjZoEGe",
       styles: {},
     },
+
+    // 12.2 How many women (15-49 years) or their partners are using family planning and what types are they using?
     {
       type: "data",
       name: t(
         "How many women (15-49 years) or their partners are using family planning and what types are they using?"
       ),
       uid: "FnkNunC3Yzx",
-      ...dependenciesOf("FnkNunC3Yzx")["ztDjhjZoEGe"],
+      // ...dependenciesOf("FnkNunC3Yzx")["ztDjhjZoEGe"],
+      ...sumOf("FnkNunC3Yzx", [
+        "w73XYMu84K1",
+        "W5hvU3H2QY5",
+        "S1WAIB8yKgF",
+        "ZXOAIBtP7ag",
+        "nZWuXN9NcOB",
+        "gFg12NU3oJu",
+        "TcsUpke05hG",
+        "iR1xbBp4DbI",
+        "q8XozNLbeO9",
+      ]),
       styles: {},
     },
     {
       type: "data",
       name: t("contraceptive pill"),
       uid: "w73XYMu84K1",
-      ...dependenciesOf("w73XYMu84K1")["ztDjhjZoEGe"],
+      // ...dependenciesOf("w73XYMu84K1")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -393,7 +429,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("depose(injectable)"),
       uid: "W5hvU3H2QY5",
-      ...dependenciesOf("W5hvU3H2QY5")["ztDjhjZoEGe"],
+      // ...dependenciesOf("W5hvU3H2QY5")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -402,7 +438,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("condom(male/female)"),
       uid: "S1WAIB8yKgF",
-      ...dependenciesOf("S1WAIB8yKgF")["ztDjhjZoEGe"],
+      // ...dependenciesOf("S1WAIB8yKgF")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -411,7 +447,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Implant"),
       uid: "ZXOAIBtP7ag",
-      ...dependenciesOf("ZXOAIBtP7ag")["ztDjhjZoEGe"],
+      // ...dependenciesOf("ZXOAIBtP7ag")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -420,7 +456,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("IUD"),
       uid: "nZWuXN9NcOB",
-      ...dependenciesOf("nZWuXN9NcOB")["ztDjhjZoEGe"],
+      // ...dependenciesOf("nZWuXN9NcOB")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -429,7 +465,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("emergency pill"),
       uid: "gFg12NU3oJu",
-      ...dependenciesOf("gFg12NU3oJu")["ztDjhjZoEGe"],
+      // ...dependenciesOf("gFg12NU3oJu")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -438,7 +474,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("sterilization(men&women)"),
       uid: "TcsUpke05hG",
-      ...dependenciesOf("TcsUpke05hG")["ztDjhjZoEGe"],
+      // ...dependenciesOf("TcsUpke05hG")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -447,7 +483,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("other modern contraceptive"),
       uid: "iR1xbBp4DbI",
-      ...dependenciesOf("iR1xbBp4DbI")["ztDjhjZoEGe"],
+      // ...dependenciesOf("iR1xbBp4DbI")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -456,7 +492,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("other traditional methods"),
       uid: "q8XozNLbeO9",
-      ...dependenciesOf("q8XozNLbeO9")["ztDjhjZoEGe"],
+      // ...dependenciesOf("q8XozNLbeO9")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -469,13 +505,19 @@ const CensusDetailForm = ({
         "How many women (15-49 years old) use family planning services at which location?"
       ),
       uid: "IDz3cuoy2Ix",
-      ...dependenciesOf("IDz3cuoy2Ix")["ztDjhjZoEGe"],
+      // ...dependenciesOf("IDz3cuoy2Ix")["ztDjhjZoEGe"],
+      ...sumOf("IDz3cuoy2Ix", [
+        "rHsyapbYSIW",
+        "ne55arYhEDv",
+        "OWhICvMs71C",
+        "tCPGWfB5BXA",
+      ]),
     },
     {
       type: "data",
       name: t("in public facility"),
       uid: "rHsyapbYSIW",
-      ...dependenciesOf("rHsyapbYSIW")["ztDjhjZoEGe"],
+      // ...dependenciesOf("rHsyapbYSIW")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -484,7 +526,7 @@ const CensusDetailForm = ({
       type: "data",
       name: t("at private clinic/pharmacy"),
       uid: "ne55arYhEDv",
-      ...dependenciesOf("ne55arYhEDv")["ztDjhjZoEGe"],
+      // ...dependenciesOf("ne55arYhEDv")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
@@ -493,30 +535,11 @@ const CensusDetailForm = ({
       type: "data",
       name: t("Mobile Service Unit and Village health volunteer"),
       uid: "OWhICvMs71C",
-      ...dependenciesOf("OWhICvMs71C")["ztDjhjZoEGe"],
+      // ...dependenciesOf("OWhICvMs71C")["ztDjhjZoEGe"],
       styles: {
         paddingLeft: "50px",
       },
     },
-
-    // {
-    //   type: "data",
-    //   name: t("from outreach/VHV"),
-    //   uid: "zqlgoNuekvJ",
-    //   ...dependenciesOf("zqlgoNuekvJ")["ztDjhjZoEGe"],
-    //   styles: {
-    //     paddingLeft: "50px",
-    //   },
-    // },
-    // {
-    //   type: "data",
-    //   name: `4. ${t("Overseas")}`,
-    //   uid: "jt51JNITRf8",
-    //   ...dependenciesOf("jt51JNITRf8")["ztDjhjZoEGe"],
-    //   styles: {
-    //     paddingLeft: "50px",
-    //   },
-    // },
     {
       type: "data",
       name: `${t("Other10_3")}`,
@@ -526,219 +549,6 @@ const CensusDetailForm = ({
         paddingLeft: "50px",
       },
     },
-
-    // {
-    //     type: 'data',
-    //     name: t('Pied water'),
-    //     uid: 'vbeBy5pTcsh',
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('Tube-well/borehole'),
-    //     uid: 'DOJ1KXBIaHJ',
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('Protected well/spring'),
-    //     uid: 'c3VITy8MoRr',
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('Bottled water'),
-    //     uid: 'ymrnL6wFesR',
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('River/lake or other source'),
-    //     uid: 'KO8EZJGbBcK',
-    //     styles: { paddingLeft: '50px' },
-    // },
-
-    // {
-    //     type: 'data',
-    //     name: t('Dry latrine(including dig and cover)'),
-    //     uid: 'qxeroTrT6i0',
-    //     styles: { paddingLeft: '50px' },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('Pour-flush into open drain'),
-    //     uid: 'FLYIWIldscU',
-    //     styles: { paddingLeft: '50px' },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('Pour-flush into the system'),
-    //     uid: 'QXvfmgXP35s',
-    //     styles: { paddingLeft: '50px' },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('There is a toilet but not using'),
-    //     uid: 'Uk1QRspFIKO',
-    //     styles: { paddingLeft: '50px' },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('Shared toilet'),
-    //     uid: 'PQaXSiUfEeT',
-    //     styles: { paddingLeft: '50px' },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('Open defecation'),
-    //     uid: 'uB1AkpztVHH',
-    //     styles: { paddingLeft: '50px' },
-    // },
-
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow42'),
-    //     uid: 'j7cW1UaMa63',
-    //     styles: {},
-    // },
-
-    // {
-    //     type: 'title',
-    //     name: t('CensusDetailFormRow43'),
-    //     styles: {},
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow44'),
-    //     some: 'Gxezw4UQoXw',
-    //     alot: 'wIzDqcKjmkN',
-    //     thirdRowTitle: t('CantSeeAtAll'),
-    //     thirdRowId: 'YEU5VICXNwZ',
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'title',
-    //     name: t('CensusDetailFormRow45'),
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow46'),
-    //     some: 'x93PtyuyJ6P',
-    //     alot: 'Fjhjy1sAfoH',
-    //     thirdRowTitle: t('CantHear'),
-    //     thirdRowId: 'GHiu2Bv4pB2',
-    //     styles: {
-    //         paddingLeft: '75px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow47'),
-    //     some: 'SFtjfOMOqhC',
-    //     alot: 'huimFcUSvAj',
-    //     thirdRowTitle: t('CantSpeak'),
-    //     thirdRowId: 'jKCzLrcr7N1',
-    //     styles: {
-    //         paddingLeft: '75px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow48'),
-    //     some: 'A6wiJF60Dxq',
-    //     alot: 'kgDUjmHDJtD',
-    //     thirdRowTitle: t('CantDoAtAll'),
-    //     thirdRowId: 'PtedVjCU0X6',
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow49'),
-    //     some: 'Hyaa1lln5gc',
-    //     alot: 'W4oKLRaCF0w',
-    //     thirdRowTitle: t('CantDoAtAll'),
-    //     thirdRowId: 'Zd72t9Bu4le',
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'title',
-    //     name: t('CensusDetailFormRow50'),
-    //     styles: {
-    //         paddingLeft: '50px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow51'),
-    //     some: 'V1lWBXRaFOl',
-    //     alot: 'UzQ1LqhXavz',
-    //     thirdRowTitle: t('CantDoAtAll'),
-    //     thirdRowId: 'uQHuVw0nNpf',
-    //     styles: {
-    //         paddingLeft: '75px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow52'),
-    //     some: 'PpmAQlkz248',
-    //     alot: 'k1kP5jCQNLv',
-    //     thirdRowTitle: t('CantDoAtAll'),
-    //     thirdRowId: 'dwAJpsKxrAo',
-    //     styles: {
-    //         paddingLeft: '75px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow53'),
-    //     some: 'ZXUtPf4bF6q',
-    //     alot: 'qhC2MsiSSKF',
-    //     thirdRowTitle: t('CantDoAtAll'),
-    //     thirdRowId: 'mLCpxxrrc9z',
-    //     styles: {
-    //         paddingLeft: '75px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow54'),
-    //     some: 'bUcwd5hJBV8',
-    //     alot: 'SAnc2g0SP9n',
-    //     thirdRowTitle: t('CantDoAtAll'),
-    //     thirdRowId: 'zbBfUQI4mbt',
-    //     styles: {
-    //         paddingLeft: '75px',
-    //     },
-    // },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow55'),
-    //     some: 'C54AYCGZ4yz',
-    //     alot: 'TbO68eaqTma',
-    //     thirdRowTitle: t('CantDoAtAll'),
-    //     thirdRowId: 'DTGiBP2EZbm',
-    //     styles: {
-    //         paddingLeft: '75px',
-    //     },
-    // },
   ];
 
   const dependentFields = tableRenderData.map((d) => d.uid);
