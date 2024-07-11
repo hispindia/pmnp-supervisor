@@ -1,12 +1,9 @@
-import React from "react";
 import Select from "react-select";
 
 const SelectField = (
   { valueSet, value, handleChange, handleBlur, locale, uiLocale, disabled },
   props
 ) => {
-  // const { disabled = false, ...other } = props;
-
   const options = valueSet.map((e) => {
     e.label = locale
       ? locale != "en"
@@ -20,9 +17,16 @@ const SelectField = (
     <Select
       value={value}
       isDisabled={disabled}
+      isClearable={true}
       options={options}
       placeholder={value ? value : uiLocale && uiLocale.select}
       onChange={(selected) => {
+        if (!selected) {
+          handleChange(null);
+          handleBlur && handleBlur(null);
+          return;
+        }
+
         handleChange(selected.value);
         handleBlur && handleBlur(selected.value);
       }}
