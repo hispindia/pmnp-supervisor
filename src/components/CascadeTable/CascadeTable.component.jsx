@@ -21,6 +21,7 @@ import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
+import { isImmutableYear } from "@/utils/event";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -48,6 +49,7 @@ const CascadeTable = (props) => {
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
   const { year } = useSelector((state) => state.data.tei.selectedYear);
+  const { immutableYear } = useSelector((state) => state.metadata);
   const { currentCascade } = useSelector((state) => state.data.tei.data);
   const dispatch = useDispatch();
   const [columns, setColumns] = useState(
@@ -344,7 +346,10 @@ const CascadeTable = (props) => {
           <DeleteConfirmationButton
             variant="outline-danger"
             size="sm"
-            disabled={extraData !== FORM_ACTION_TYPES.NONE}
+            disabled={
+              extraData !== FORM_ACTION_TYPES.NONE ||
+              isImmutableYear(year, immutableYear)
+            }
             title={uiLocale.delete}
             onDelete={(e) => {
               handleDeleteRow(e, row);

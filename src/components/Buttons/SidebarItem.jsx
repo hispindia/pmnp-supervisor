@@ -10,6 +10,8 @@ import {
   ListItemText,
   ListItemSecondaryAction,
 } from "@material-ui/core";
+import { useSelector } from "react-redux";
+import { isImmutableYear } from "@/utils/event.js";
 
 const SidebarItem = ({
   events,
@@ -22,6 +24,8 @@ const SidebarItem = ({
   maxDate,
   minDate,
 }) => {
+  const { immutableYear } = useSelector((state) => state.metadata);
+
   const itemsByYear = events.reduce((items, event) => {
     const year = moment(event.occurredAt).format("YYYY");
 
@@ -44,14 +48,15 @@ const SidebarItem = ({
               onClick={() => onChangeFamily(idx, year, 0)}
             >
               <ListItemText primary={year} />
-              {selectedItem.year === year && (
+              {selectedItem.year === year &&
+              !isImmutableYear(year, immutableYear) ? (
                 <ListItemSecondaryAction>
                   <DeleteButton
                     event={itemsByYear[year]}
                     onHandleDelete={onDeleteEventFamily}
                   />
                 </ListItemSecondaryAction>
-              )}
+              ) : null}
             </ListItem>
           );
         })

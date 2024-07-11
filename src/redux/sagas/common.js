@@ -87,8 +87,6 @@ function handlePushResult(result, message) {
   }
 }
 
-// testt2222333 mergeasdasd
-
 function* handlePushToServer() {
   try {
     /**
@@ -135,7 +133,7 @@ export default function* commonSaga() {
   yield takeLatest(SET_OFFLINE_STATUS, handleOfflineStatusChange);
   yield takeLatest(
     SET_OFFLINE_LOADING_STATUS,
-    handleOfflineLoadingStatusChange,
+    handleOfflineLoadingStatusChange
   );
   yield takeLatest(PUSH_TO_SERVER, handlePushToServer);
 }

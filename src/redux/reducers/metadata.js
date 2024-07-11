@@ -20,6 +20,7 @@ const initialState = {
   orgUnits: null,
   minDate: "2021-01-01",
   maxDate: moment().endOf("year").format("YYYY-MM-DD"),
+  immutableYear: [2019],
   // subtract(1, "years")
 };
 

@@ -3,6 +3,8 @@ import { Button, Popconfirm, Table } from "antd";
 import { useTranslation } from "react-i18next";
 import { TableColumn, TableFilter } from "../../utils";
 import "./index.css";
+import { isImmutableYear } from "@/utils/event";
+import { useSelector } from "react-redux";
 
 const RegisteredTeiList = ({
   teis,
@@ -17,6 +19,8 @@ const RegisteredTeiList = ({
   onRowClick,
 }) => {
   const { t } = useTranslation();
+  const { immutableYear } = useSelector((state) => state.metadata);
+
   const deleteColumn = {
     width: 56,
     key: "deleteKey",
@@ -40,6 +44,11 @@ const RegisteredTeiList = ({
             type="text"
             size="small"
             danger
+            disabled={
+              record?.BUEzQEErqa7
+                ? isImmutableYear(record.BUEzQEErqa7, immutableYear)
+                : false
+            }
           />
         </Popconfirm>
       </div>

@@ -42,3 +42,7 @@ export const getEventByYearAndHalt6Month = (events, year, haft6Month) => {
     }
   }
 };
+
+export const isImmutableYear = (year, immerYears) => {
+  return immerYears.includes(Number(year));
+};
