@@ -68,6 +68,7 @@ const CascadeTable = (props) => {
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
+      if (isImmutableYear(year, immutableYear)) return;
       if (e.currentTarget && e.currentTarget.contains(e.target))
         handleSelectRow(e, data[rowIndex], rowIndex);
     },
@@ -381,6 +382,7 @@ const CascadeTable = (props) => {
       formatExtraData: formStatus,
     },
   ];
+
   const rowStyle = { backgroundColor: "#c8e6c9" };
   return (
     <div className="bootstrap-iso">
