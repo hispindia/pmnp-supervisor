@@ -1,13 +1,43 @@
+import fs from "fs";
+import util from "util";
 import {
   getTrackedEntityInstanceListByQuery,
   getTrackedEntityInstance,
   getTrackedEntityInstances,
+  postTrackedEntityInstances,
+  transferOwnership,
 } from "./utils.js";
 
-const orgMapping = [{ from: "TVYs8g7UpUb", to: "wZyhliHIouG" }];
+const orgMapping = [
+  // { from: "COxzTO1lGSN", to: "DBBbEtlV8GE" },
+  // { from: "TVYs8g7UpUb", to: "wZyhliHIouG" },
+  // { from: "yBUPBfBDAss", to: "jYqmG15kxT9" },
+  // { from: "NBxCr3RELVP", to: "wb4N2bD81ow" },
+  { from: "bN75ZaVTvIH", to: "QB8DhjrKnFb" },
+  { from: "hLCT7boOi0L", to: "QB8DhjrKnFb" },
+];
+
+const __dirname = "./";
 
 const FAMILY_PROGRAM_ID = "L0EgY4EomHv";
 const MEMBER_PROGRAM_ID = "xvzrp56zKvI";
+
+var log_file = fs.createWriteStream(__dirname + "/debug.log", { flags: "w" });
+var error_file = fs.createWriteStream(__dirname + "/error.log", { flags: "w" });
+var log_stdout = process.stdout;
+console.error = function (d, type) {
+  switch (type) {
+    default: {
+      error_file.write(util.format(d) + "\n");
+    }
+  }
+  log_stdout.write(util.format(d) + "\n");
+};
+
+console.log = function (d) {
+  log_file.write(util.format(d) + "\n");
+  log_stdout.write(util.format(d) + "\n");
+};
 
 const teiMapping = {
   firstname: "IEE2BMhfoSc",
@@ -33,6 +63,13 @@ const updateOrgUnitValue = (obj, keyName, newValue) => {
 
   return Object.keys(obj).reduce((acc, key) => {
     const value = obj[key];
+
+    // remove value of "geometry" key
+    if (key === "geometry") {
+      acc[key] = null;
+      return acc;
+    }
+
     if (key === keyName) {
       acc[key] = newValue;
     } else if (typeof value === "object" && value !== null) {
@@ -44,7 +81,7 @@ const updateOrgUnitValue = (obj, keyName, newValue) => {
   }, {});
 };
 
-const updateFamilyOrgUnit = async (familyTeiId, pairOrg) => {
+const updateFamilyOrgUnit = async (familyTeiId, pairOrg, process) => {
   const { from, to } = pairOrg;
   const familyTei = await getTrackedEntityInstance(familyTeiId);
 
@@ -58,29 +95,61 @@ const updateFamilyOrgUnit = async (familyTeiId, pairOrg) => {
 
   const updatedFamilyTei = updateOrgUnitValue(familyTei, "orgUnit", to);
 
-  // console.log({ trackedEntities: updatedFamilyTei });
-
   const updatedMembers = membersOfFamily.instances.map((member) =>
     updateOrgUnitValue(member, "orgUnit", to)
   );
 
-  console.log(updatedMembers);
+  const resultTransfer = await transferOwnership({
+    trackedEntity: familyTeiId,
+    program: FAMILY_PROGRAM_ID,
+    to: to,
+  });
+
+  const resultFamily = await postTrackedEntityInstances({
+    trackedEntities: [updatedFamilyTei],
+  });
+
+  const resultMembers = await postTrackedEntityInstances({
+    trackedEntities: updatedMembers,
+  });
+
+  console.log(
+    `tei: ${familyTeiId}, members: ${updatedMembers.length}, family: ${resultFamily.status}, members: ${resultMembers.status}, transfer: ${resultTransfer.status}, ${process}`
+  );
 };
 
 (async () => {
-  for (const orgUnit of orgMapping) {
-    const { from, to } = orgUnit;
+  try {
+    for (const orgUnit of orgMapping) {
+      const { from, to } = orgUnit;
 
-    const getFamilyTeiIds = await getTrackedEntityInstanceListByQuery({
-      orgUnit: from,
-      program: FAMILY_PROGRAM_ID,
-      fields: "trackedEntity",
-    });
+      const getFamilyTeiIds = await getTrackedEntityInstanceListByQuery({
+        orgUnit: from,
+        program: FAMILY_PROGRAM_ID,
+        fields: "trackedEntity",
+      });
+      console.log(
+        `Start: ${from} -> ${to}: ${getFamilyTeiIds.instances.length}`
+      );
 
-    for (const { trackedEntity } of getFamilyTeiIds.instances) {
-      await updateFamilyOrgUnit(trackedEntity, orgUnit);
+      // console.log(
+      //   JSON.stringify(getFamilyTeiIds.instances.map((e) => e.trackedEntity))
+      // );
+      // console.log(getFamilyTeiIds.instances.length);
+      // return;
 
-      break;
+      for (const idx in getFamilyTeiIds.instances) {
+        const { trackedEntity } = getFamilyTeiIds.instances[idx];
+
+        await updateFamilyOrgUnit(
+          trackedEntity,
+          orgUnit,
+          `${Number(idx) + 1}/${getFamilyTeiIds.instances.length}`
+        );
+      }
+      console.log(`End: ${from} -> ${to}`);
     }
+  } catch (error) {
+    console.error(error, "error");
   }
 })();
