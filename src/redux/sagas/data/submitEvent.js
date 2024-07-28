@@ -25,19 +25,6 @@ import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
 
-const teiMapping = {
-  firstname: "IEE2BMhfoSc",
-  lastname: "IBLkiaYRRL3",
-  sex: "DmuazFb368B",
-  ethnicity: "tJrT8GIy477",
-  birthyear: "bIzDI9HJCB0",
-  age: "BaiVwt8jVfg",
-  nationality: "NLth2WTyo7M",
-  status: "tASKWHyRolc",
-  agetype: "ck9h7CokxQE",
-  DOB: "tQeFLjYbqzv",
-};
-
 function* handleSubmitEvent({ event }) {
   const { offlineStatus } = yield select((state) => state.common);
 

@@ -15,7 +15,7 @@ import initCascadeDataFromTEIsEvents from "./initCascadeData";
 import handleInitData from "./initData";
 import handleInitNewData from "./initNewData";
 
-const teiMapping = {
+export const teiMapping = {
   firstname: "IEE2BMhfoSc",
   lastname: "IBLkiaYRRL3",
   sex: "DmuazFb368B",

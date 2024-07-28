@@ -38,9 +38,15 @@ const fetchWrapper = (...input) => {
 };
 
 const pull = (baseUrl, username, password, endPoint, pagingObject, params) => {
-  const { paging, pageSize, totalPages, page, filter, order } = pagingObject
-    ? pagingObject
-    : {};
+  const {
+    paging,
+    pageSize,
+    totalPages,
+    page,
+    filter,
+    order,
+    skipPaging = false,
+  } = pagingObject ? pagingObject : {};
 
   endPoint += "?";
   if (filter) {
@@ -57,8 +63,13 @@ const pull = (baseUrl, username, password, endPoint, pagingObject, params) => {
   } else {
     endPoint += "paging=false&";
   }
+
   if (params) {
     endPoint += params.join("&");
+  }
+
+  if (skipPaging) {
+    endPoint += "&skipPaging=true";
   }
 
   return fetchWrapper(baseUrl + endPoint, {
