@@ -25,13 +25,13 @@ export const getTrackedEntityInstanceListByQuery = ({
   );
 };
 
-export const postTrackedEntityInstance = async (tei) => {
+export const postTrackedEntityInstances = async (teis) => {
   return await push(
     VITE_BASE_URL,
     VITE_USERNAME,
     VITE_PASSWORD,
     `/api/tracker?async=false`,
-    tei,
+    teis,
     "POST"
   );
 };
@@ -67,5 +67,16 @@ export const getTrackedEntityInstance = (trackedEntityInstance) => {
     `/api/tracker/trackedEntities/${trackedEntityInstance}.json`,
     {},
     [`fields=*`]
+  );
+};
+
+export const transferOwnership = async ({ trackedEntity, program, to }) => {
+  return await push(
+    VITE_BASE_URL,
+    VITE_USERNAME,
+    VITE_PASSWORD,
+    `/api/tracker/ownership/transfer?trackedEntityInstance=${trackedEntity}&program=${program}&ou=${to}`,
+    {},
+    "PUT"
   );
 };
