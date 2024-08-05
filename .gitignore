@@ -6,7 +6,12 @@
 .pnp.js
 
 # log
+<<<<<<< HEAD
 debug*
+=======
+debug.log
+debug.json
+>>>>>>> a6efcb785e0a3ff9e5a2d5ff4a104489e0bfd5ad
 error.log
 
 # testing

@@ -9,10 +9,6 @@ import {
 } from "./utils.js";
 
 const orgMapping = [
-  // { from: "COxzTO1lGSN", to: "DBBbEtlV8GE" },
-  // { from: "TVYs8g7UpUb", to: "wZyhliHIouG" },
-  // { from: "yBUPBfBDAss", to: "jYqmG15kxT9" },
-  // { from: "NBxCr3RELVP", to: "wb4N2bD81ow" },
   { from: "bN75ZaVTvIH", to: "QB8DhjrKnFb" },
   { from: "hLCT7boOi0L", to: "QB8DhjrKnFb" },
 ];
@@ -131,12 +127,6 @@ const updateFamilyOrgUnit = async (familyTeiId, pairOrg, process) => {
       console.log(
         `Start: ${from} -> ${to}: ${getFamilyTeiIds.instances.length}`
       );
-
-      // console.log(
-      //   JSON.stringify(getFamilyTeiIds.instances.map((e) => e.trackedEntity))
-      // );
-      // console.log(getFamilyTeiIds.instances.length);
-      // return;
 
       for (const idx in getFamilyTeiIds.instances) {
         const { trackedEntity } = getFamilyTeiIds.instances[idx];
