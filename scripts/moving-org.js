@@ -9,8 +9,24 @@ import {
 } from "./utils.js";
 
 const orgMapping = [
-  { from: "bN75ZaVTvIH", to: "QB8DhjrKnFb" },
-  { from: "hLCT7boOi0L", to: "QB8DhjrKnFb" },
+  // { from: "L8jziUR2ma4", to: "L8jziUR2ma4" },
+
+  // { from: "Xmki8VIRAuh", to: "Xmki8VIRAuh" },
+  // { from: "O7D0ZvIKa9A", to: "O7D0ZvIKa9A" },
+  // { from: "wt2Pw1id6iv", to: "wt2Pw1id6iv" },
+  // { from: "rglFoFxDFW0", to: "rglFoFxDFW0" },
+
+  // { from: "Ifd0yIFRvBq", to: "Ifd0yIFRvBq" },
+  // { from: "XHdD3mNs6Nd", to: "XHdD3mNs6Nd" },
+  // { from: "BS5pTItc37J", to: "BS5pTItc37J" },
+  // { from: "GhO02tPjNNH", to: "GhO02tPjNNH" },
+  // { from: "UJ8iluWwAAE", to: "UJ8iluWwAAE" },
+
+  { from: "DBBbEtlV8GE", to: "DBBbEtlV8GE" },
+  { from: "wZyhliHIouG", to: "wZyhliHIouG" },
+  { from: "jYqmG15kxT9", to: "jYqmG15kxT9" },
+  { from: "wb4N2bD81ow", to: "wb4N2bD81ow" },
+  { from: "QB8DhjrKnFb", to: "QB8DhjrKnFb" },
 ];
 
 const __dirname = "./";
@@ -114,6 +130,30 @@ const updateFamilyOrgUnit = async (familyTeiId, pairOrg, process) => {
   );
 };
 
+const transferMembers = async (familyTeiId, pairOrg, process) => {
+  const { from, to } = pairOrg;
+
+  const membersOfFamily = await getTrackedEntityInstances({
+    ou: from,
+    filters: [`attribute=gv9xX5w4kKt:EQ:${familyTeiId}`],
+    attributes: Object.entries(teiMapping).map((e) => e[1]),
+    program: MEMBER_PROGRAM_ID,
+    fields: "*",
+  });
+
+  for (const member of membersOfFamily.instances) {
+    const resultTransferMember = await transferOwnership({
+      trackedEntity: member.trackedEntity,
+      program: MEMBER_PROGRAM_ID,
+      to: to,
+    });
+
+    console.log(
+      `tei: ${member.trackedEntity}, transfer: ${resultTransferMember.status}, ${process}`
+    );
+  }
+};
+
 (async () => {
   try {
     for (const orgUnit of orgMapping) {
@@ -131,7 +171,13 @@ const updateFamilyOrgUnit = async (familyTeiId, pairOrg, process) => {
       for (const idx in getFamilyTeiIds.instances) {
         const { trackedEntity } = getFamilyTeiIds.instances[idx];
 
-        await updateFamilyOrgUnit(
+        // await updateFamilyOrgUnit(
+        //   trackedEntity,
+        //   orgUnit,
+        //   `${Number(idx) + 1}/${getFamilyTeiIds.instances.length}`
+        // );
+
+        await transferMembers(
           trackedEntity,
           orgUnit,
           `${Number(idx) + 1}/${getFamilyTeiIds.instances.length}`
