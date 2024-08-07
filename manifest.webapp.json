@@ -1,11 +1,11 @@
 {
   "name": "Family Information V2",
-  "short_name": "FIv2 PWA",
-  "description": "FIv2 - Progressive Web App.",
+  "short_name": "Family Information V2",
+  "description": "Family Information V2",
   "background_color": "#5a0fc8",
   "theme_color": "#5a0fc8",
   "display": "standalone",
-  "version": "1.0.59",
+  "version": "1.0.60",
   "icons": [
     {
       "src": "./assets/icon-maskable.png",
