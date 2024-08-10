@@ -4,7 +4,6 @@ import { submitEvent } from "@/redux/actions/data/tei/currentEvent";
 import { generateUid } from "@/utils";
 import { transformEvent } from "@/utils/event";
 import moment from "moment";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const getHalfYear = (selected6Month, year) => {
@@ -29,11 +28,6 @@ const CensusDetailFormContainer = () => {
   const currentEvent = currentEvents.find((event) =>
     moment(event.occurredAt).isBetween(startDate, endDate, null, "[]")
   );
-
-  const [tempCurrentEvent, setTempCurrentEvent] = useState({
-    ...currentEvent,
-    dataValues: currentEvent?.dataValues || {},
-  });
 
   const onTabChange = (tabIndex) => {
     dispatch(changeEventFamily(index, year, tabIndex));

@@ -45,7 +45,7 @@ const SideBar = () => {
         if (!years.includes(year)) years.push(year);
         return years;
       }, []).length;
-      dispatch(changeEventFamily(currentItemSize, year, 0));
+      dispatch(changeEventFamily(currentItemSize, year, 1));
       childRef.current.close();
     } else {
       setWarningText(`${year} ${"already exists."}`);
