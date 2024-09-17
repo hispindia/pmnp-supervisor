@@ -79,10 +79,25 @@ function* handleOfflineStatusChange({ offlineStatus }) {
   }
 }
 
-function handlePushResult(result, message) {
+function* handlePushResult(result, message) {
   if (result?.length > 0 && result.status != "OK") {
     if (result.some((result) => result.status != "OK")) {
-      throw new Error(message);
+      const errors = [];
+
+      for (let i = 0; i < result.length; i++) {
+        const error = yield result[i].json();
+        errors.push(error);
+      }
+
+      const errorMessages = errors.map((error) =>
+        error.validationReport.errorReports
+          .map((errorReport) => errorReport.message)
+          .join("\n")
+      );
+
+      console.log({ errorMessages });
+
+      throw new Error(message + "\n" + errorMessages.join("\n"));
     }
   }
 }
@@ -100,17 +115,17 @@ function* handlePushToServer() {
 
     // push tracked entities
     const teiPushResults = yield call(trackedEntityManager.push);
-    handlePushResult(teiPushResults, "Push tracked entities failed!");
+    yield handlePushResult(teiPushResults, "Push tracked entities failed: ");
     yield put(setCurrentOfflineLoading({ id: "tei", percent: 100 }));
 
     // push enrollments
     const enrPushResults = yield call(enrollmentManager.push);
-    handlePushResult(enrPushResults, "Push enrollments failed!");
+    yield handlePushResult(enrPushResults, "Push enrollments failed: ");
     yield put(setCurrentOfflineLoading({ id: "enr", percent: 100 }));
 
     // push events
     const eventPushRetuls = yield call(eventManager.push);
-    handlePushResult(eventPushRetuls, "Push events failed!");
+    yield handlePushResult(eventPushRetuls, "Push events failed: ");
     yield put(setCurrentOfflineLoading({ id: "event", percent: 100 }));
 
     // if there is no error, set offline status to false
@@ -120,7 +135,7 @@ function* handlePushToServer() {
       message: "Warning",
       description: error ? error.message : "Sync data to server failed!",
       placement: "bottomRight",
-      duration: 5,
+      duration: 0,
     });
 
     console.log("handlePushToServer - error", error);
