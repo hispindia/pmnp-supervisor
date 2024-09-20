@@ -755,6 +755,10 @@ const locale = {
     en: "PUSH",
     lo: "ສົ່ງ",
   },
+  exportExcel: {
+    en: "Export Excel",
+    lo: "ສົ່ງອອກເອກະສານຄ້າຍຄອບຄົວ",
+  },
   online: {
     en: "Online",
     lo: "ອອນໄລນ໌",
