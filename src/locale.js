@@ -757,7 +757,7 @@ const locale = {
   },
   exportExcel: {
     en: "Export Excel",
-    lo: "ໂຫຼດເອົາຂໍ້ມູນອອບລາຍເກັບໄວ້",
+    lo: "ເອັກສະປອດເປັນເອັກເຊ້ວ",
   },
   online: {
     en: "Online",
