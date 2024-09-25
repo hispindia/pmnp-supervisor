@@ -143,19 +143,18 @@ const CensusDetailForm = ({
       },
       QteYoL0Yy6K: {
         dependentFields: ["QteYoL0Yy6K"],
-        // showFieldFunc: ([QteYoL0Yy6K]) => QteYoL0Yy6K != 0,
-        setValuesFunc: ([QteYoL0Yy6K]) => {
-          if (QteYoL0Yy6K <= 0) {
-            return {
-              [target]: "",
-            };
-          }
-        },
-        childPropsFunc: ([QteYoL0Yy6K]) => {
-          return {
-            disabled: QteYoL0Yy6K <= 0,
-          };
-        },
+        // setValuesFunc: ([QteYoL0Yy6K]) => {
+        //   if (QteYoL0Yy6K <= 0) {
+        //     return {
+        //       [target]: "",
+        //     };
+        //   }
+        // },
+        // childPropsFunc: ([QteYoL0Yy6K]) => {
+        //   return {
+        //     disabled: QteYoL0Yy6K <= 0,
+        //   };
+        // },
       },
     };
   };
@@ -311,12 +310,12 @@ const CensusDetailForm = ({
       type: "data",
       name: t("How many people died in total in the family?"),
       uid: "QteYoL0Yy6K",
-      ...sumOf("QteYoL0Yy6K", [
-        "m5y4aLbmIOO",
-        "akAYIsCrRwV",
-        "mPTyd0nP5Xx",
-        "LmGX6VpLkIX",
-      ]),
+      // ...sumOf("QteYoL0Yy6K", [
+      //   "m5y4aLbmIOO",
+      //   "akAYIsCrRwV",
+      //   "mPTyd0nP5Xx",
+      //   "LmGX6VpLkIX",
+      // ]),
       styles: {},
     },
     {
