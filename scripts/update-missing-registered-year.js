@@ -54,10 +54,7 @@ const transformTEI = (teis) => {
 
         console.log(`Start: page: ${i}/${pageCount}, status: ${result.status}`);
       }
-
-      return;
     }
-    return;
   } catch (error) {
     console.error(error, "error");
   }
