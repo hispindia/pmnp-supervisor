@@ -180,11 +180,11 @@ function Layout({
             <MortalityBarChart forwardingRef={mortalityChartRef} data={data} />
           </FullHeightBox>
         </Grid>
-        <Grid item xs={12} md={6}>
+        {/* <Grid item xs={12} md={6}>
           <FullHeightBox p={2} boxShadow={2}>
             <DisabilityChart forwardingRef={disabilityChartRef} data={data} />
           </FullHeightBox>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );
