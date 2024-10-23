@@ -1,5 +1,5 @@
-import { pull, push } from "../src/api/Fetch.js";
 import dotenv from "dotenv";
+import { pull, push } from "../src/api/Fetch.js";
 dotenv.config(); // load env vars from .env
 const { VITE_BASE_URL, VITE_USERNAME, VITE_PASSWORD } = process.env;
 
@@ -89,7 +89,7 @@ export const getTrackedEntityInstances = ({
     VITE_USERNAME,
     VITE_PASSWORD,
     `/api/tracker/trackedEntities.json`,
-    {},
+    { skipPaging: true },
     [
       `orgUnit=${ou}`,
       `program=${program}`,

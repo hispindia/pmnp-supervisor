@@ -26,14 +26,13 @@ const orgMapping = [
   // { from: "wZyhliHIouG", to: "wZyhliHIouG" },
   // { from: "jYqmG15kxT9", to: "jYqmG15kxT9" },
   // { from: "wb4N2bD81ow", to: "wb4N2bD81ow" },
-  // { from: "QB8DhjrKnFb", to: "hLCT7boOi0L" },
-  { from: "bN75ZaVTvIH", to: "QB8DhjrKnFb" },
+  // { from: "hLCT7boOi0L", to: "QB8DhjrKnFb" },
+  { from: "hLCT7boOi0L", to: "QB8DhjrKnFb" },
 ];
 
 // FI - z7zj2wHeY3a
 // Members - kGuveiKyIxB;j5UMD1h6xpc;M4v7XcIc3dW;kckSVreUTE5
 
-const DEBUG = true;
 const __dirname = "./";
 
 const FAMILY_PROGRAM_ID = "L0EgY4EomHv";
@@ -69,8 +68,6 @@ const teiMapping = {
   DOB: "tQeFLjYbqzv",
 };
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, 1000));
-
 const updateOrgUnitValue = (obj, keyName, newValue) => {
   if (obj === null) {
     return obj;
@@ -102,59 +99,32 @@ const updateOrgUnitValue = (obj, keyName, newValue) => {
 
 const updateFamilyOrgUnit = async (familyTeiId, pairOrg, process) => {
   const { from, to } = pairOrg;
-
-  if (DEBUG) console.log("familyTei");
   const familyTei = await getTrackedEntityInstance(familyTeiId);
 
-  if (DEBUG) console.log("membersOfFamilyFrom");
-  const membersOfFamilyFrom = await getTrackedEntityInstances({
+  const membersOfFamily = await getTrackedEntityInstances({
     ou: from,
     filters: [`attribute=gv9xX5w4kKt:EQ:${familyTeiId}`],
-    attributes: [], // Object.entries(teiMapping).map((e) => e[1]),
-    program: MEMBER_PROGRAM_ID,
-    fields: "*",
-  });
-
-  if (DEBUG) console.log("membersOfFamilyTo");
-  const membersOfFamilyTo = await getTrackedEntityInstances({
-    ou: to,
-    filters: [`attribute=gv9xX5w4kKt:EQ:${familyTeiId}`],
-    attributes: [], //Object.entries(teiMapping).map((e) => e[1]),
+    attributes: Object.entries(teiMapping).map((e) => e[1]),
     program: MEMBER_PROGRAM_ID,
     fields: "*",
   });
 
   const updatedFamilyTei = updateOrgUnitValue(familyTei, "orgUnit", to);
 
-  const membersOfFamily =
-    membersOfFamilyFrom.instances.length > 0
-      ? membersOfFamilyFrom
-      : membersOfFamilyTo;
-
   const updatedMembers = membersOfFamily.instances.map((member) =>
     updateOrgUnitValue(member, "orgUnit", to)
   );
 
-  if (DEBUG) {
-    console.log(JSON.stringify(updatedFamilyTei));
-    console.log(JSON.stringify(updatedMembers));
-    return;
-  }
-
-  // POST section
-  console.log("transferOwnership");
   const resultTransfer = await transferOwnership({
     trackedEntity: familyTeiId,
     program: FAMILY_PROGRAM_ID,
     to: to,
   });
 
-  console.log("resultFamily");
   const resultFamily = await postTrackedEntityInstances({
     trackedEntities: [updatedFamilyTei],
   });
 
-  console.log("resultMembers");
   const resultMembers = await postTrackedEntityInstances({
     trackedEntities: updatedMembers,
   });
@@ -188,40 +158,68 @@ const transferMembers = async (familyTeiId, pairOrg, process) => {
   }
 };
 
+const transferMembersByOrgSearch = async (pairOrg, process) => {
+  const { from, to } = pairOrg;
+
+  const membersOfFamily = await getTrackedEntityInstances({
+    ou: from,
+    filters: [],
+    program: MEMBER_PROGRAM_ID,
+    attributes: [],
+    fields: "*",
+  });
+
+  const filteredMembers = membersOfFamily.instances.filter((member) =>
+    [
+      // "kGuveiKyIxB",
+      // "j5UMD1h6xpc",
+      // "M4v7XcIc3dW",
+      // "kckSVreUTE5",
+      "z7zj2wHeY3a",
+    ].includes(member.trackedEntity)
+  );
+
+  const updatedMembers = filteredMembers.map((member) =>
+    updateOrgUnitValue(member, "orgUnit", to)
+  );
+
+  const resultMembers = await postTrackedEntityInstances({
+    trackedEntities: updatedMembers,
+  });
+  console.log(JSON.stringify(resultMembers));
+
+  return;
+
+  for (const member of membersOfFamily.instances) {
+    const { trackedEntity } = member;
+
+    if (
+      !["kGuveiKyIxB", "j5UMD1h6xpc", "M4v7XcIc3dW", "kckSVreUTE5"].includes(
+        trackedEntity
+      )
+    ) {
+      continue;
+    }
+
+    const resultTransferMember = await transferOwnership({
+      trackedEntity: member.trackedEntity,
+      program: MEMBER_PROGRAM_ID,
+      to: to,
+    });
+
+    console.log(
+      `tei: ${member.trackedEntity}, transfer: ${resultTransferMember.status}, ${process}`
+    );
+  }
+};
+
 (async () => {
   try {
     for (const orgUnit of orgMapping) {
       const { from, to } = orgUnit;
 
-      const getFamilyTeiIds = await getTrackedEntityInstanceListByQuery({
-        orgUnit: from,
-        program: FAMILY_PROGRAM_ID,
-        fields: "trackedEntity",
-      });
-      console.log(
-        `Start: ${from} -> ${to}: ${getFamilyTeiIds.instances.length}`
-      );
+      // await transferMembersByOrgSearch(orgUnit, 0);
 
-      for (const idx in getFamilyTeiIds.instances) {
-        const { trackedEntity } = getFamilyTeiIds.instances[idx];
-
-        await updateFamilyOrgUnit(
-          trackedEntity,
-          orgUnit,
-          `${Number(idx) + 1}/${getFamilyTeiIds.instances.length}`
-        );
-
-        //sleep for 1 second
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        if (DEBUG) return;
-
-        // await transferMembers(
-        //   trackedEntity,
-        //   orgUnit,
-        //   `${Number(idx) + 1}/${getFamilyTeiIds.instances.length}`
-        // );
-      }
       console.log(`End: ${from} -> ${to}`);
     }
   } catch (error) {
