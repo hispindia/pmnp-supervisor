@@ -9,25 +9,28 @@ import {
 } from "./utils.js";
 
 const orgMapping = [
-  // { from: "L8jziUR2ma4", to: "L8jziUR2ma4" },
-
-  // { from: "Xmki8VIRAuh", to: "Xmki8VIRAuh" },
-  // { from: "O7D0ZvIKa9A", to: "O7D0ZvIKa9A" },
-  // { from: "wt2Pw1id6iv", to: "wt2Pw1id6iv" },
-  // { from: "rglFoFxDFW0", to: "rglFoFxDFW0" },
-
-  // { from: "Ifd0yIFRvBq", to: "Ifd0yIFRvBq" },
-  // { from: "XHdD3mNs6Nd", to: "XHdD3mNs6Nd" },
-  // { from: "BS5pTItc37J", to: "BS5pTItc37J" },
-  // { from: "GhO02tPjNNH", to: "GhO02tPjNNH" },
-  // { from: "UJ8iluWwAAE", to: "UJ8iluWwAAE" },
-
-  // { from: "DBBbEtlV8GE", to: "DBBbEtlV8GE" },
-  // { from: "wZyhliHIouG", to: "wZyhliHIouG" },
-  // { from: "jYqmG15kxT9", to: "jYqmG15kxT9" },
-  // { from: "wb4N2bD81ow", to: "wb4N2bD81ow" },
-  // { from: "QB8DhjrKnFb", to: "hLCT7boOi0L" },
-  { from: "bN75ZaVTvIH", to: "QB8DhjrKnFb" },
+  { from: "CXoDVCHXwSr", to: "L8jziUR2ma4" },
+  { from: "O6EJGedmvs8", to: "Xmki8VIRAuh" },
+  { from: "tbaOmWtfz8i", to: "GhO02tPjNNH" },
+  { from: "OavbW8IpsbU", to: "UJ8iluWwAAE" },
+  { from: "DqW53N4590X", to: "wt2Pw1id6iv" },
+  { from: "JbGFjJidFnj", to: "wt2Pw1id6iv" },
+  { from: "yRCbaBMYdOY", to: "rglFoFxDFW0" },
+  { from: "gSxhr62dcD6", to: "O7D0ZvIKa9A" },
+  { from: "AMJocbcEoD8", to: "O7D0ZvIKa9A" },
+  { from: "sOlkzElSdWK", to: "GhO02tPjNNH" },
+  { from: "xWVFPRIyIk4", to: "O7D0ZvIKa9A" },
+  { from: "jl9WPLJBn88", to: "wt2Pw1id6iv" },
+  { from: "TU474f7abpm", to: "rglFoFxDFW0" },
+  { from: "sOzdo8wO8Jc", to: "XHdD3mNs6Nd" },
+  { from: "fGCconG98yb", to: "Ifd0yIFRvBq" },
+  { from: "VIM6bpKQ7dR", to: "XHdD3mNs6Nd" },
+  { from: "zfgjNkGzORV", to: "BS5pTItc37J" },
+  { from: "n7pKjMKS7ml", to: "GhO02tPjNNH" },
+  { from: "iQVuGRseX8n", to: "UJ8iluWwAAE" },
+  { from: "COxzTO1lGSN", to: "DBBbEtlV8GE" },
+  { from: "TVYs8g7UpUb", to: "wZyhliHIouG" },
+  { from: "yBUPBfBDAss", to: "jYqmG15kxT9" },
 ];
 
 // FI - z7zj2wHeY3a

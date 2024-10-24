@@ -51,10 +51,15 @@ function LayoutContainer(props) {
     setLoading(true);
     setData(null);
 
+    /**
+     * Why geting ${year}Q4?
+     * - Because after new update, we have 2 events for each year (30/6 and 31/12), and each event have the same data, if we get full year data, we will get duplicate data.
+     * - So, we get the last quarter of the year to avoid duplicate data.
+     *  */
     try {
       const data = await Promise.all([
         dataApi.get(`/api/analytics.json`, { paging: false }, [
-          `dimension=pe:${year}&dimension=dx:${all_dx[0]}&&filter=ou:${selectedOrgUnit.id}&displayProperty=NAME`, // &filter=ou:LEVEL-${selectedOrgUnit.level};
+          `dimension=pe:${year}Q4&dimension=dx:${all_dx[0]}&&filter=ou:${selectedOrgUnit.id}&displayProperty=NAME`, // &filter=ou:LEVEL-${selectedOrgUnit.level};
         ]),
         getOptionDataByDeId(WATER_SOURCE_DE_ID)(year, selectedOrgUnit, dataApi),
         getOptionDataByDeId(TOILET_TYPE_DE_ID)(year, selectedOrgUnit, dataApi),
@@ -66,7 +71,7 @@ function LayoutContainer(props) {
       for (let index = 1; index < all_dx.length; index++) {
         await dataApi
           .get(`/api/analytics.json`, { paging: false }, [
-            `dimension=pe:${year}&dimension=dx:${all_dx[index]}&filter=ou:${selectedOrgUnit.id}&displayProperty=NAME`, // &filter=ou:LEVEL-${selectedOrgUnit.level};
+            `dimension=pe:${year}Q4&dimension=dx:${all_dx[index]}&filter=ou:${selectedOrgUnit.id}&displayProperty=NAME`, // &filter=ou:LEVEL-${selectedOrgUnit.level};
           ])
           .then((res) => {
             const { rows } = res;
