@@ -551,6 +551,10 @@ const locale = {
     en: "11. Family Drinking Water Source",
     lo: "ແຫຼ່ງນ້ຳດື່ມຫຼັກ",
   },
+  familyDrinkingWaterSource: {
+    en: "Family Drinking Water Source",
+    lo: "ແຫຼ່ງນ້ຳດື່ມຫຼັກ",
+  },
   pipedWater: {
     en: "Piped water",
     lo: "ນ້ຳປະປາ",

@@ -76,22 +76,25 @@ const RegisteredTeiList = ({
 
         return teaObject;
       });
+
     const lastUpdatedObject = {
       title: t("lastUpdated"),
-      dataIndex: "occurredAt",
-      key: "occurredAt",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
       sorter: true,
       // filterDropdown: TableFilter(null, onFilter, {
       //   name: "lastupdated",
       //   type: "DATE",
       // }),
-      render: (value) => (
-        <TableColumn
-          metadata={null}
-          external={{ name: "occurredAt", type: "DATE" }}
-          value={value}
-        />
-      ),
+      render: (value) => {
+        return (
+          <TableColumn
+            metadata={null}
+            external={{ name: "updatedAt", type: "DATE" }}
+            value={value}
+          />
+        );
+      },
     };
     columns.unshift(lastUpdatedObject);
     return columns;
@@ -113,6 +116,8 @@ const RegisteredTeiList = ({
         });
         rowObject[column.dataIndex] = attribute ? attribute.value : "";
       });
+
+      rowObject.updatedAt = tei.updatedAt;
       return rowObject;
     });
 

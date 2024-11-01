@@ -129,6 +129,9 @@ function* handlePushToServer() {
     yield put(setCurrentOfflineLoading({ id: "event", percent: 100 }));
 
     // if there is no error, set offline status to false
+
+    // wait for 3 second to show 100% progress bar
+    yield new Promise((resolve) => setTimeout(resolve, 3000));
     yield put(setOfflineStatus(false));
   } catch (error) {
     notification.warning({

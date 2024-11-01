@@ -160,8 +160,6 @@ const AppContainer = () => {
           ...results[0],
         };
 
-        console.log({ programMetadata });
-
         dispatch(setProgramMetadata(programMetadata));
         dispatch(setProgramMetadataMember(results[4]));
         dispatch(setOrgUnitLevels(results[3].organisationUnitLevels));

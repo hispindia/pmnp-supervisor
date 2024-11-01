@@ -145,7 +145,7 @@ export const TableColumn = ({ metadata, external, value }) => {
   if (external) {
     switch (external.type) {
       case "DATE":
-        return value ? moment(value).format("YYYY-MM-DD") : "";
+        return value ? moment(value).format("DD/MM/YYYY") : "";
       default:
         return value ? value : "";
     }

@@ -7,12 +7,12 @@ const insuranceDEIds = [
   "SyPLRSV1NCn",
   "Oov8I1ZmXo3",
   "C2zynun5YMh",
-  "fqdxmeIjMGq"
+  "fqdxmeIjMGq",
 ];
 
 const labels = ["sasssso", "mps", "nhi", "chi", "phi", "dh", "dn"];
 
-const calculateInsuranceAggregatedData = data =>
+const calculateInsuranceAggregatedData = (data) =>
   bindDataContext(data).getValuesFromDeIds(insuranceDEIds);
 
 export { calculateInsuranceAggregatedData, labels };

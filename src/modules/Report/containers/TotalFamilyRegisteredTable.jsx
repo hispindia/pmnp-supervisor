@@ -6,6 +6,7 @@ import HorizontalTable from "../components/HorizontalTable";
 function TotalFamilyRegisteredTable({ data, forwardingRef }) {
   const { t } = useTranslation();
   const years = data.metaData.dimensions.pe;
+  console.log(calculateTotalFamilyRegisteredData(data));
   return (
     <HorizontalTable
       title={t("totalFamilyRegistered")}

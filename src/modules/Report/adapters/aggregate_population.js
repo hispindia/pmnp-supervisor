@@ -8,7 +8,7 @@ const labels = [
   "15-44",
   "45-49",
   "50-59",
-  "60+"
+  "60+",
 ].reverse();
 
 const maleDEIds = [
@@ -19,7 +19,7 @@ const maleDEIds = [
   "yHQ9LbhuLPh",
   "osp7h6GLyV8",
   "GTEknIuyEiO",
-  "y9zGBpMBAhQ"
+  "y9zGBpMBAhQ",
 ].reverse(); // in order by age
 
 const femaleDEIds = [
@@ -30,7 +30,7 @@ const femaleDEIds = [
   "CCtvT9h1yB4",
   "Gf8F7hQqygz",
   "AI5nHnkf5WR",
-  "dE6mw0hXdAt"
+  "dE6mw0hXdAt",
 ].reverse(); // in order by age
 
 // const calculatePopulationAggregatedData = data => {
@@ -38,7 +38,7 @@ const femaleDEIds = [
 //   return dataContext.sumByDEs([maleDEIds, femaleDEIds]);
 // };
 
-const calculatePopulationAggregatedData = data => {
+const calculatePopulationAggregatedData = (data) => {
   const dataContext = bindDataContext(data);
   const maleDataValues = dataContext.getValuesFromDeIds(maleDEIds);
   const femaleDataValues = dataContext.getValuesFromDeIds(femaleDEIds);

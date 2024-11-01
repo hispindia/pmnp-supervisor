@@ -45,7 +45,7 @@ function DisabilityChart({ data, forwardingRef }) {
               enabled: true,
             },
             pointWidth: 45,
-          }
+          },
         },
         series: [
           {

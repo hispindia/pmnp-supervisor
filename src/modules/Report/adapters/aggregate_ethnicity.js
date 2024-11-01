@@ -5,12 +5,12 @@ const ethnicityDEIds = [
   "ueeqalP1NnB",
   "NnsZ7Yq0ZMl",
   "AZULo0fgAPA",
-  "jObBjI31SHJ"
+  "jObBjI31SHJ",
 ];
 
 const labels = ["laoTai", "monKhmer", "hmongMien", "chineseTibet", "others"];
 
-const calculateEthnicityAggregatedData = data =>
+const calculateEthnicityAggregatedData = (data) =>
   bindDataContext(data).getValuesFromDeIds(ethnicityDEIds);
 
 export { calculateEthnicityAggregatedData, labels };
