@@ -40,13 +40,13 @@ export const getEventsRawData = async (pager, org, program) => {
         "followup",
         "dataValues[dataElement,providedElsewhere,value]",
       ].join(",")}`,
-    ],
+    ]
   );
 };
 
 export const getEventsAnalyticsTable = async (pager, org, program) => {
   const dataElementIds = program.programStages[0].dataElements.map(
-    (de) => de.id,
+    (de) => de.id
   );
 
   return await dataApi.get(
@@ -61,7 +61,7 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
       `endDate=${moment().format("YYYY-MM-DD")}`,
       // `dimension=dx:${dataElementIds.map((de) => de).join(';')}`,
       dataElementIds.map((de) => `dimension=${de}`).join("&"),
-    ],
+    ]
   );
 };
 
@@ -96,7 +96,7 @@ export const pull = async ({
                 page,
               },
               org,
-              program,
+              program
             );
 
             if (
@@ -108,7 +108,7 @@ export const pull = async ({
             }
 
             console.log(
-              `EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`,
+              `EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`
             );
 
             await persist(await beforePersistAnalyticsData(result, program));
@@ -319,7 +319,7 @@ const beforePersistAnalyticsData = async (result, program) => {
   }
 
   const dataElementIds = program.programStages[0].dataElements.map(
-    (de) => de.id,
+    (de) => de.id
   );
 
   for (const ev of events) {

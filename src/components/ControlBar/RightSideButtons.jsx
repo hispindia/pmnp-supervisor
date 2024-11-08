@@ -7,6 +7,7 @@ import styles from "./ControlBar.module.css";
 import { useLocation } from "react-router";
 import OfflineModeButton from "@/containers/ControlBar/OfflineModeButton";
 import PushToServerButton from "@/containers/ControlBar/PushToServerButton";
+import BulkImportButton from "@/containers/ControlBar/BulkImportButton";
 
 const { exitBtn, helpBtn, barContainer } = styles;
 
@@ -24,6 +25,7 @@ const RightSideButtons = ({
       <div className="d-none d-md-block">
         <OfflineModeButton />
         <PushToServerButton />
+        <BulkImportButton />
       </div>
 
       {shouldShowExit ? (

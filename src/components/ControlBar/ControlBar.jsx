@@ -8,7 +8,7 @@ import { setSelectedOrgUnit } from "../../redux/actions/metadata";
 import { MenuOutlined } from "@ant-design/icons";
 import OrgUnitContainer from "../../containers/ControlBar/OrgUnit";
 import ReportButtonContainer from "../../containers/ControlBar/ReportButton";
-import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButtons";
+import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButtonsContainer";
 import OfflineModeButton from "@/containers/ControlBar/OfflineModeButton";
 import PushToServerButton from "@/containers/ControlBar/PushToServerButton";
 import ListButtonContainer from "@/containers/ControlBar/ListButton";

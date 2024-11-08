@@ -1,6 +1,5 @@
-import React from "react";
-import RightSideButtons from "../../components/ControlBar/RightSideButtons";
 import { useTranslation } from "react-i18next";
+import RightSideButtons from "../../components/ControlBar/RightSideButtons";
 
 const RightSideButtonsContainer = ({ className }) => {
   const { t } = useTranslation();
