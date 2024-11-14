@@ -25,7 +25,6 @@ const RightSideButtons = ({
       <div className="d-none d-md-block">
         <OfflineModeButton />
         <PushToServerButton />
-        <BulkImportButton />
       </div>
 
       {shouldShowExit ? (

@@ -12,6 +12,11 @@ const BulkImportButton = () => {
     return null;
   }
 
+  const clearCache = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
   const handleMakeFakeData = async () => {
     for (let i = 0; i < 10; i++) {
       const fakeData = createFakeData();
@@ -31,19 +36,33 @@ const BulkImportButton = () => {
   };
 
   return (
-    <Button
-      onClick={handleMakeFakeData}
-      style={{
-        marginRight: "10px",
-      }}
-      shape="round"
-      size="small"
-      type="primary"
-      danger
-      icon={<UploadOutlined />}
-    >
-      Add 10 fake data
-    </Button>
+    <>
+      <Button
+        onClick={handleMakeFakeData}
+        style={{
+          marginRight: "10px",
+        }}
+        shape="round"
+        size="small"
+        type="primary"
+        danger
+        icon={<UploadOutlined />}
+      >
+        Add 10 fake data
+      </Button>
+      <Button
+        onClick={clearCache}
+        style={{
+          marginRight: "10px",
+        }}
+        shape="round"
+        size="small"
+        type="primary"
+        danger
+      >
+        Clear all
+      </Button>
+    </>
   );
 };
 

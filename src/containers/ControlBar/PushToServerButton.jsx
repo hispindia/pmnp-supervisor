@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import * as XLSX from "xlsx";
 import { findChangedData } from "./OfflineModeButton";
 import PushModal, { pushMapping } from "./PushModal";
+import BulkImportButton from "./BulkImportButton";
 
 const PushToServerButton = () => {
   const { t } = useTranslation();
@@ -152,6 +153,8 @@ const PushToServerButton = () => {
       >
         {t("exportExcel")}
       </Button>
+
+      <BulkImportButton />
     </>
   );
 };
