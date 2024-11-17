@@ -743,6 +743,26 @@ const locale = {
     en: "Please push changed data.",
     lo: "ແຈ້ງເຕືອນ.",
   },
+  somethingWentWrong: {
+    en: "Something went wrong",
+    lo: "ມີບາງຢ່າງຜິດພາດ",
+  },
+  importSuccess: {
+    en: "Import success",
+    lo: "ນຳເຂົ້າສຳເລັດ",
+  },
+  import: {
+    en: "Import",
+    lo: "ນຳເຂົ້າ",
+  },
+  noImportFileSelected: {
+    en: "No import file selected",
+    lo: "ບໍ່ມີໄຟຟ້ານຳເຂົ້າ",
+  },
+  importExcel: {
+    en: "Import Excel",
+    lo: "ນຳເຂົ້າ Excel",
+  },
   pleaseInstallApp: {
     en: "Please install app to use this function.",
     lo: "Please install app to use this function.",
