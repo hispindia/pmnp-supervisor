@@ -8,13 +8,19 @@ import { Button, Modal, Upload, notification } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import * as XLSX from "xlsx";
+import { setSelectedOrgUnit } from "@/redux/actions/metadata";
+import { filter } from "@/redux/actions/teis";
 
 const sheetNames = ["Events", "Enrollments", "Tracked Entities"];
 
 const ImportModal = ({ open, onCancel, onOk, onClose, pushData }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [fileList, setFileList] = useState([]);
+  const { selectedOrgUnit } = useSelector((state) => state.metadata);
 
   const handleCancel = () => {
     setFileList([]);
@@ -89,6 +95,13 @@ const ImportModal = ({ open, onCancel, onOk, onClose, pushData }) => {
 
       setFileList([]);
 
+      if (history.location.pathname === "/list") {
+        dispatch(setSelectedOrgUnit({ ...selectedOrgUnit }));
+        dispatch(filter([]));
+      }
+
+      history.replace(`/list`);
+
       notification.success({
         message: t("success"),
         description: t("importSuccess"),
@@ -98,7 +111,7 @@ const ImportModal = ({ open, onCancel, onOk, onClose, pushData }) => {
     } catch (error) {
       notification.warning({
         message: t("warning"),
-        description: t("somethingWentWrong"),
+        description: `${t("somethingWentWrong")} : ${error.message}`,
         placement: "bottomRight",
         duration: 10,
       });
