@@ -15,6 +15,7 @@ import * as XLSX from "xlsx";
 import { findChangedData } from "./OfflineModeButton";
 import PushModal, { pushMapping } from "./PushModal";
 import BulkImportButton from "./BulkImportButton";
+import ExcelImportButton from "./ExcelImportButton";
 
 const PushToServerButton = () => {
   const { t } = useTranslation();
@@ -153,6 +154,8 @@ const PushToServerButton = () => {
       >
         {t("exportExcel")}
       </Button>
+
+      <ExcelImportButton />
 
       <BulkImportButton />
     </>

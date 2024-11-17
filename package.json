@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "cross-env VITE_MODE=production VITE_BASE_URL=../../.. VITE_USERNAME= VITE_PASSWORD= vite build",
     "preview": "vite preview",
     "postbuild": "node postbuild.js && cd dist && bestzip pwa_dhis2.zip *",
