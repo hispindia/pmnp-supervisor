@@ -3,21 +3,12 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import db from "@/indexDB/db";
 import { setOfflineStatus } from "@/redux/actions/common";
 import { useIsPwa } from "../../hooks";
 import PrepareOfflineModal from "./PrepareOfflineModal";
+import { findChangedData } from "@/utils/offline";
 
 const { VITE_MODE } = import.meta.env;
-
-export const findOffline = (TABLE_NAME) =>
-  db[TABLE_NAME].where("isOnline").anyOf(0).toArray();
-export const findChangedData = () =>
-  Promise.all([
-    findOffline("enrollment"),
-    findOffline("event"),
-    findOffline("trackedEntity"),
-  ]);
 
 const OfflineModeButton = () => {
   const { t } = useTranslation();

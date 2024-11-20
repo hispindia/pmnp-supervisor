@@ -20,30 +20,6 @@ const RightSideButtonsContainer = ({ className }) => {
       helpLabel={t("help")}
       exitLabel={t("exit")}
     />
-
-    // <div className={barContainer}>
-    //     <div className={helpBtn}>
-    //         <Tooltip title={t("help")} placement="left">
-    //             <IconButton size="small">
-    //                 <HelpIcon
-    //                     onClick={}
-    //                 />
-    //             </IconButton>
-    //         </Tooltip>
-    //     </div>
-    //     {/*<div className={completeBtn} id="complete-button"></div>*/}
-    //     {/* <div className={closeBtn} id="close-button"></div> */}
-    //     <div className={exitBtn}>
-    //         <Button
-    //             variant="contained"
-    //             color="default"
-    //             disableElevation
-    //             onClick={}
-    //         >
-    //             {t("exit")}
-    //         </Button>
-    //     </div>
-    // </div>
   );
 };
 

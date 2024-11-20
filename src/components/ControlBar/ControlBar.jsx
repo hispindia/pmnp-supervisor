@@ -47,7 +47,7 @@ const ControlBar = () => {
             <OrgUnitContainer />
           </div>
 
-          <div className="d-md-none">
+          <div className="d-lg-none">
             <Dropdown
               menu={{
                 items,
@@ -57,7 +57,6 @@ const ControlBar = () => {
             >
               <a onClick={(e) => e.preventDefault()}>
                 {/* hamburger icon */}
-
                 <Button>
                   <MenuOutlined />
                 </Button>
@@ -65,23 +64,21 @@ const ControlBar = () => {
             </Dropdown>
           </div>
 
-          <div className="mr-3 d-none d-md-block">
+          <div className="mr-3 d-none d-lg-block">
             <AddNewFamilyButtonContainer />
           </div>
 
-          <div className="mr-3 d-none d-md-block">
+          <div className="mr-3 d-none d-lg-block">
             <ReportButtonContainer />
           </div>
 
-          <div className="d-none d-md-block">
+          <div className="d-none d-lg-block">
             <ListButtonContainer />
           </div>
         </div>
 
         <RightSideButtonsContainer />
       </div>
-
-      {/*<div className={appContentContainer} />*/}
     </>
   );
 };

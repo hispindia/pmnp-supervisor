@@ -1,13 +1,11 @@
-import React from "react";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import HelpIcon from "@material-ui/icons/Help";
-import { Button } from "antd";
-import styles from "./ControlBar.module.css";
-import { useLocation } from "react-router";
 import OfflineModeButton from "@/containers/ControlBar/OfflineModeButton";
 import PushToServerButton from "@/containers/ControlBar/PushToServerButton";
-import BulkImportButton from "@/containers/ControlBar/BulkImportButton";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import HelpIcon from "@material-ui/icons/Help";
+import { Button } from "antd";
+import { useLocation } from "react-router";
+import styles from "./ControlBar.module.css";
 
 const { exitBtn, helpBtn, barContainer } = styles;
 
@@ -22,7 +20,7 @@ const RightSideButtons = ({
 
   return (
     <div className={barContainer}>
-      <div className="d-none d-md-block">
+      <div className="d-none d-lg-block">
         <OfflineModeButton />
         <PushToServerButton />
       </div>
@@ -36,8 +34,7 @@ const RightSideButtons = ({
               </IconButton>
             </Tooltip>
           </div>
-          {/*<div className={completeBtn} id="complete-button"></div>*/}
-          {/* <div className={closeBtn} id="close-button"></div> */}
+
           <div className={exitBtn}>
             <Button
               variant="contained"
