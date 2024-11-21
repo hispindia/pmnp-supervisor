@@ -62,7 +62,7 @@ export const useExcel = () => {
     }
   };
 
-  const handleExportExcel = async () => {
+  const exportExcel = async () => {
     const currentDateTime = new Date().toLocaleString();
     const results = await findChangedData();
     const found = results.find((r) => r.length > 0);
@@ -116,5 +116,13 @@ export const useExcel = () => {
     });
   };
 
-  return { handleExportExcel, importExcel };
+  const autoExportExcel = async () => {
+    // get user local folder path
+    const exportPath = dialog.showOpenDialog({ properties: ["openDirectory"] });
+    console.log({ exportPath });
+
+    // const exportPath =
+  };
+
+  return { exportExcel, importExcel, autoExportExcel };
 };

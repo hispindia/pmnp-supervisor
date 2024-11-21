@@ -20,7 +20,7 @@ import { useExcel } from "./useExcel";
 const PushToServerButton = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { handleExportExcel } = useExcel();
+  const { exportExcel } = useExcel();
 
   const [pushModalOpen, setPushModalOpen] = useState(false);
   const [pushData, setPushData] = useState(
@@ -86,7 +86,7 @@ const PushToServerButton = () => {
         {t("push")}
       </Button>
       <Button
-        onClick={handleExportExcel}
+        onClick={exportExcel}
         style={{
           marginRight: "10px",
           backgroundColor: blue[5],
