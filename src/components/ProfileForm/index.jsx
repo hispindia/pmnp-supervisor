@@ -129,25 +129,39 @@ const ProfileForm = ({
           />
         </div> */}
         <div className="col-lg-3">
-          <Dhis2FormItem id="xbwURy2jG2K" displayFormName={t("unitOfVillage")}>
-            <InputField size="large" disabled={!isEdit} />
-          </Dhis2FormItem>
-        </div>
-        <div className="col-lg-3">
-          <Dhis2FormItem id="W8WZcI1SUjC" displayFormName={t("houseNumber")}>
+          <Dhis2FormItem
+            id="b4UUhQPwlRH"
+            // displayFormName={t("unitOfVillage")}
+          >
             <InputField size="large" disabled={!isEdit} />
           </Dhis2FormItem>
         </div>
         <div className="col-lg-3">
           <Dhis2FormItem
-            id="rzGghDo5ipI"
-            displayFormName={t("residenceStatus")}
+            id="eMYBznRdn0t"
+            // displayFormName={t("houseNumber")}
           >
             <InputField size="large" disabled={!isEdit} />
           </Dhis2FormItem>
         </div>
+        <div className="col-lg-3">
+          <Dhis2FormItem
+            id="WcKI8B0MYaB"
+            // displayFormName={t("houseNumber")}
+          >
+            <InputField size="large" disabled={!isEdit} />
+          </Dhis2FormItem>
+        </div>
+        {/* <div className="col-lg-3">
+          <Dhis2FormItem
+            id="SHPW4d00NnM"
+            // displayFormName={t("houseNumber")}
+          >
+            <InputField size="large" disabled={!isEdit} />
+          </Dhis2FormItem>
+        </div> */}
       </div>
-      <div className="row col-lg-12">
+      {/* <div className="row col-lg-12">
         <div className="col-lg-3">
           <Dhis2FormItem
             id="nYcHuUDqeBY"
@@ -156,8 +170,8 @@ const ProfileForm = ({
             <InputField size="large" disabled={!isEdit} />
           </Dhis2FormItem>
         </div>
-      </div>
-      <div className="row col-lg-12">
+      </div> */}
+      {/* <div className="row col-lg-12">
         <div className="col-lg-3">
           <Dhis2FormItem
             dependentFields={["rzGghDo5ipI"]}
@@ -306,7 +320,7 @@ const ProfileForm = ({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <Space>
         <Button.Group>
           {!isEdit ? (
