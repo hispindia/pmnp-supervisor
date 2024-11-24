@@ -6,7 +6,6 @@ import _ from "lodash";
 
 // components
 import InputField from "../InputFieldCore/InputField.component.jsx";
-// import InputField from '../CustomAntForm/InputField';
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -48,7 +47,7 @@ function CaptureForm(props) {
     initFromData(data);
 
     let cloneMetadata = _.cloneDeep(metadata).reduce((obj, md) => {
-      obj[md.code] = md;
+      obj[md.id] = md;
       return obj;
     }, {});
 
@@ -68,7 +67,7 @@ function CaptureForm(props) {
   const editCall = (metadata, prevData, formData, code, value) => {
     let data = _.clone(formData);
     let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
-      obj[md.code] = md;
+      obj[md.id] = md;
       return obj;
     }, {});
     editRowCallback(cloneMetadata, prevData, data, code, value);
@@ -80,10 +79,19 @@ function CaptureForm(props) {
   const generateFields = () => {
     return formMetadata
       .filter((f) => !f.additionCol)
-      .filter((f) => !f.hidden)
+      .filter((f) => f.displayInList)
       .map((f) => {
+        const trackedEntityAttribute = f.trackedEntityAttribute;
+        const {
+          valueType,
+          displayName,
+          pattern,
+          translations,
+          id: code,
+        } = trackedEntityAttribute;
+
         return (
-          <div className="col-lg-4 mb-3" key={f.code}>
+          <div className="col-lg-4 mb-3" key={code}>
             <InputField
               locale={locale}
               uiLocale={uiLocale}
@@ -91,31 +99,25 @@ function CaptureForm(props) {
                 periodType: f.periodType,
               })}
               valueSet={f.valueSet}
-              pattern={f.pattern}
-              valueType={f.valueType}
+              pattern={pattern}
+              valueType={valueType}
               label={
-                !_.isEmpty(f.translations) ? f.translations[locale] : f.name
+                !_.isEmpty(translations) ? translations[locale] : displayName
               }
               attribute={f.attribute}
-              value={formData[f.code] || ""}
+              value={formData[code] || ""}
               onBlur={(value) =>
-                editCall(
-                  formMetadata,
-                  prevData.current,
-                  formData,
-                  f.code,
-                  value
-                )
+                editCall(formMetadata, prevData.current, formData, code, value)
               }
               onChange={(value) => {
-                changeValue(f.code, value);
+                changeValue(code, value);
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">{f.prefix}</InputAdornment>
                 ),
               }}
-              error={validation(f.code)}
+              error={validation(code)}
               maxDate={props.maxDate}
               minDate={"1900-12-31"}
             />

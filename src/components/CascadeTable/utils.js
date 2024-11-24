@@ -5,13 +5,15 @@ import _ from "lodash";
 const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
   const cols = [];
   metadata
-    .filter((e) => !e.hiddenCol)
-    .forEach((ele) => {
+    .filter((e) => e.displayInList)
+    .forEach((e) => {
+      const ele = e.trackedEntityAttribute;
+
       let textFields = !_.isEmpty(ele.translations)
         ? ele.translations[locale]
-        : ele.name;
+        : ele.displayName;
       const colC = {
-        dataField: ele.code,
+        dataField: ele.id,
         text: textFields,
       };
       // additionCol
@@ -53,15 +55,15 @@ const transformD = (metadata, data, dataValuesTranslate, locale) => {
   }
 
   metadata.forEach((md) => {
-    let displayValue = d[md.code];
+    let displayValue = d[md.id];
     if (dataValuesTranslate) {
-      displayValue = dataValuesTranslate[d[md.code]]
-        ? dataValuesTranslate[d[md.code]][locale]
-          ? dataValuesTranslate[d[md.code]][locale]
-          : d[md.code]
-        : d[md.code];
+      displayValue = dataValuesTranslate[d[md.id]]
+        ? dataValuesTranslate[d[md.id]][locale]
+          ? dataValuesTranslate[d[md.id]][locale]
+          : d[md.id]
+        : d[md.id];
     }
-    d[md.code] = displayValue;
+    d[md.id] = displayValue;
   });
   return d;
 };
@@ -79,15 +81,15 @@ const transformData = (metadata, datas, dataValuesTranslate, locale) => {
     metadata
       .filter((e) => e.valueSet && e.valueSet.length > 0)
       .forEach((md) => {
-        let displayValue = d[md.code];
+        let displayValue = d[md.id];
         if (dataValuesTranslate) {
-          displayValue = dataValuesTranslate[md.code][d[md.code]]
-            ? dataValuesTranslate[md.code][d[md.code]][locale]
-              ? dataValuesTranslate[md.code][d[md.code]][locale]
-              : d[md.code]
-            : d[md.code];
+          displayValue = dataValuesTranslate[md.id][d[md.id]]
+            ? dataValuesTranslate[md.id][d[md.id]][locale]
+              ? dataValuesTranslate[md.id][d[md.id]][locale]
+              : d[md.id]
+            : d[md.id];
         }
-        d[md.code] = displayValue;
+        d[md.id] = displayValue;
       });
   });
 

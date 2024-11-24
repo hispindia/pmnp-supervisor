@@ -140,17 +140,10 @@ const FamilyMemberForm = ({
     setData(cascadeData);
 
     if (metadata) {
-      let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
-        obj[md.code] = md;
+      let cloneMetadata = metadata.reduce((obj, md) => {
+        obj[md.id] = md;
         return obj;
       }, {});
-
-      // // Show STATUS when number of events > 2
-      // if (events && events.length > 1) {
-      //   cloneMetadata["status"].hidden = false;
-      // } else {
-      //   cloneMetadata["status"].hidden = true;
-      // }
 
       setMetadata([...Object.values(cloneMetadata)]);
     }
@@ -162,44 +155,34 @@ const FamilyMemberForm = ({
     // keep selected member details
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
 
-    // UPDATE METADATA
-    if (data["agetype"] != null) {
-      metadata[mapping[data["agetype"]]].hidden = false;
-      metadata[mapping[data["agetype"]]].compulsory = true;
-    }
+    // // UPDATE METADATA
+    // if (data["agetype"] != null) {
+    //   metadata[mapping[data["agetype"]]].hidden = false;
+    //   metadata[mapping[data["agetype"]]].compulsory = true;
+    // }
 
-    if (data["agetype"] == "DOB" || data["agetype"] == "dob") {
-      metadata["birthyear"].hidden = true;
-      metadata["birthyear"].compulsory = false;
-      metadata["age"].hidden = true;
-      metadata["age"].compulsory = false;
-    } else if (data["agetype"] == "birthyear") {
-      metadata["DOB"].hidden = true;
-      metadata["DOB"].compulsory = false;
-      metadata["age"].hidden = true;
-      metadata["age"].compulsory = false;
-    } else if (data["agetype"] == "age") {
-      metadata["birthyear"].hidden = true;
-      metadata["birthyear"].compulsory = false;
-      metadata["DOB"].hidden = true;
-      metadata["DOB"].compulsory = false;
-    } else {
-      metadata["DOB"].hidden = true;
-      metadata["DOB"].compulsory = false;
-      metadata["age"].hidden = true;
-      metadata["age"].compulsory = false;
-      metadata["birthyear"].hidden = true;
-      metadata["birthyear"].compulsory = false;
-    }
-
-    // No longer needed
-    // // Hide Highest Education if it's not Head of Family
-    // if (data["relation"] != "head") {
-    //   metadata["education"].hidden = true;
-    //   metadata["education"].compulsory = false;
+    // if (data["agetype"] == "DOB" || data["agetype"] == "dob") {
+    //   metadata["birthyear"].hidden = true;
+    //   metadata["birthyear"].compulsory = false;
+    //   metadata["age"].hidden = true;
+    //   metadata["age"].compulsory = false;
+    // } else if (data["agetype"] == "birthyear") {
+    //   metadata["DOB"].hidden = true;
+    //   metadata["DOB"].compulsory = false;
+    //   metadata["age"].hidden = true;
+    //   metadata["age"].compulsory = false;
+    // } else if (data["agetype"] == "age") {
+    //   metadata["birthyear"].hidden = true;
+    //   metadata["birthyear"].compulsory = false;
+    //   metadata["DOB"].hidden = true;
+    //   metadata["DOB"].compulsory = false;
     // } else {
-    //   metadata["education"].hidden = false;
-    //   metadata["education"].compulsory = true;
+    //   metadata["DOB"].hidden = true;
+    //   metadata["DOB"].compulsory = false;
+    //   metadata["age"].hidden = true;
+    //   metadata["age"].compulsory = false;
+    //   metadata["birthyear"].hidden = true;
+    //   metadata["birthyear"].compulsory = false;
     // }
 
     // UPDATE DATA
@@ -215,14 +198,6 @@ const FamilyMemberForm = ({
       data["birthyear"] = null;
       data["DOB"] = null;
     }
-
-    // No longer needed
-    // // Remove Highest Education if it is not Head of family
-    // if (code == "relation") {
-    //   if (data["relation"] != "head") {
-    //     data["education"] = "";
-    //   }
-    // }
 
     // Automatically select Femail if it's Wife
     if (code == "relation") {

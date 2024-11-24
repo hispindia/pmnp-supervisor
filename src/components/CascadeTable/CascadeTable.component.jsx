@@ -91,11 +91,6 @@ const CascadeTable = (props) => {
     };
     callbackFunction && callbackFunction(metadata, dataRows, rowIndex, "edit");
 
-    // changeEventDataValue(
-    //   "oC9jreyd9SD",
-    //   JSON.stringify({ dataVals: dataRows["rows"] })
-    // );
-
     setData([...dataRows["rows"]]);
 
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
