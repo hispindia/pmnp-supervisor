@@ -1,49 +1,76 @@
-import React from "react";
 import { generateUid } from "@/utils";
 import _ from "lodash";
+
+const transformMetadata = (e, type, locale, dataValuesTranslate) => {
+  const ele = e?.[type];
+
+  if (!ele) {
+    return null;
+  }
+
+  let textFields = !_.isEmpty(ele.translations)
+    ? ele.translations[locale]
+    : ele.displayName;
+  const colC = {
+    dataField: ele.id,
+    text: textFields,
+  };
+  // additionCol
+  if (ele.additionCol)
+    colC.classes = (cell, row, rowIndex, colIndex) => {
+      return "additionCol";
+    };
+
+  // Custom classes
+  if (ele.classes) colC.classes = ele.classes;
+  if (ele.formatter) colC.formatter = ele.formatter;
+  if (ele.formatExtraData) colC.formatExtraData = ele.formatExtraData;
+
+  if (ele.valueSet) {
+    colC.formatter = (cellContent, row, rowIndex, extraData) => {
+      let displayValue = cellContent;
+
+      if (dataValuesTranslate) {
+        displayValue = dataValuesTranslate[cellContent]
+          ? dataValuesTranslate[cellContent][locale]
+            ? dataValuesTranslate[cellContent][locale]
+            : cellContent
+          : cellContent;
+      }
+      return displayValue;
+    };
+  }
+
+  return colC;
+};
 
 const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
   const cols = [];
   metadata
     .filter((e) => e.displayInList)
     .forEach((e) => {
-      const ele = e.trackedEntityAttribute;
-
-      let textFields = !_.isEmpty(ele.translations)
-        ? ele.translations[locale]
-        : ele.displayName;
-      const colC = {
-        dataField: ele.id,
-        text: textFields,
-      };
-      // additionCol
-      if (ele.additionCol)
-        colC.classes = (cell, row, rowIndex, colIndex) => {
-          return "additionCol";
-        };
-
-      // Custom classes
-      if (ele.classes) colC.classes = ele.classes;
-      if (ele.formatter) colC.formatter = ele.formatter;
-      if (ele.formatExtraData) colC.formatExtraData = ele.formatExtraData;
-
-      if (ele.valueSet) {
-        colC.formatter = (cellContent, row, rowIndex, extraData) => {
-          let displayValue = cellContent;
-
-          if (dataValuesTranslate) {
-            displayValue = dataValuesTranslate[cellContent]
-              ? dataValuesTranslate[cellContent][locale]
-                ? dataValuesTranslate[cellContent][locale]
-                : cellContent
-              : cellContent;
-          }
-          return displayValue;
-        };
-      }
+      const colC = transformMetadata(
+        e,
+        "trackedEntityAttribute",
+        locale,
+        dataValuesTranslate
+      );
 
       cols.push(colC);
     });
+
+  const dataElements = metadata.filter((e) => e.dataElement);
+  dataElements.forEach((de) => {
+    const colC = transformMetadata(
+      de,
+      "dataElement",
+      locale,
+      dataValuesTranslate
+    );
+
+    cols.push(colC);
+  });
+
   return cols;
 };
 
@@ -96,4 +123,4 @@ const transformData = (metadata, datas, dataValuesTranslate, locale) => {
   return datas_clone;
 };
 
-export { transformMetadataToColumns, transformData, transformD };
+export { transformD, transformData, transformMetadataToColumns };

@@ -1,8 +1,6 @@
 import { onKeyDown } from "@/utils";
 import { Checkbox, DatePicker, Input, Radio, Select } from "antd";
 import dayjs from "dayjs";
-
-import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
 import { useTranslation } from "react-i18next";
 const { TextArea } = Input;
 const { Option } = Select;
@@ -95,6 +93,7 @@ const InputField = ({
         />
       );
     case "DATE":
+    case "AGE":
       return (
         <DatePicker
           // value={value ? moment(value) : ""}

@@ -43,7 +43,7 @@ const InputField = ({
       );
     }
 
-    if (valueType === "DATE") {
+    if (valueType === "DATE" || valueType === "AGE") {
       return (
         <DateField
           {...(_.has(props, "periodType") && {

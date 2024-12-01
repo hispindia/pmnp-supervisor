@@ -77,53 +77,62 @@ function CaptureForm(props) {
   };
 
   const generateFields = () => {
-    return formMetadata
+    const trackedEntityAttributeFormFields = formMetadata
       .filter((f) => !f.additionCol)
-      .filter((f) => f.displayInList)
-      .map((f) => {
-        const trackedEntityAttribute = f.trackedEntityAttribute;
-        const {
-          valueType,
-          displayName,
-          pattern,
-          translations,
-          id: code,
-        } = trackedEntityAttribute;
+      .filter((f) => f.displayInList);
 
-        return (
-          <div className="col-lg-4 mb-3" key={code}>
-            <InputField
-              locale={locale}
-              uiLocale={uiLocale}
-              {...(_.has(f, "periodType") && {
-                periodType: f.periodType,
-              })}
-              valueSet={f.valueSet}
-              pattern={pattern}
-              valueType={valueType}
-              label={
-                !_.isEmpty(translations) ? translations[locale] : displayName
-              }
-              attribute={f.attribute}
-              value={formData[code] || ""}
-              onBlur={(value) =>
-                editCall(formMetadata, prevData.current, formData, code, value)
-              }
-              onChange={(value) => {
-                changeValue(code, value);
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">{f.prefix}</InputAdornment>
-                ),
-              }}
-              error={validation(code)}
-              maxDate={props.maxDate}
-              minDate={"1900-12-31"}
-            />
-          </div>
-        );
-      });
+    const dataElementFormFields = formMetadata.filter((f) => f.dataElement);
+
+    const formFields = [
+      ...trackedEntityAttributeFormFields,
+      ...dataElementFormFields,
+    ];
+
+    console.log({ formFields });
+
+    return formFields.map((f) => {
+      let field = f.trackedEntityAttribute;
+
+      if (!field) {
+        field = f.dataElement;
+      }
+
+      const { valueType, displayName, pattern, translations, id: code } = field;
+
+      return (
+        <div className="col-lg-4 mb-3" key={code}>
+          <InputField
+            locale={locale}
+            uiLocale={uiLocale}
+            {...(_.has(f, "periodType") && {
+              periodType: f.periodType,
+            })}
+            valueSet={f.valueSet}
+            pattern={pattern}
+            valueType={valueType}
+            label={
+              !_.isEmpty(translations) ? translations[locale] : displayName
+            }
+            attribute={f.attribute}
+            value={formData[code] || ""}
+            onBlur={(value) =>
+              editCall(formMetadata, prevData.current, formData, code, value)
+            }
+            onChange={(value) => {
+              changeValue(code, value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">{f.prefix}</InputAdornment>
+              ),
+            }}
+            error={validation(code)}
+            maxDate={props.maxDate}
+            minDate={"1900-12-31"}
+          />
+        </div>
+      );
+    });
   };
 
   const handleCancelForm = () => {

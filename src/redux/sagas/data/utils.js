@@ -3,6 +3,7 @@ import moment from "moment";
 import queryString from "query-string";
 import { call, select } from "redux-saga/effects";
 import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
+import { at } from "lodash";
 
 export function* getTeiId() {
   const searchString = yield select((state) => state.router.location.search);
@@ -177,6 +178,10 @@ const dataMapping = {
 };
 
 const convertValueBack = (valueType, value) => {
+  if (value === undefined || value === null) {
+    return "";
+  }
+
   switch (valueType) {
     case "TEXT":
     case "INTEGER_POSITIVE":
@@ -207,6 +212,7 @@ const convertValueBack = (valueType, value) => {
 };
 
 export function* generateTEIDhis2Payload(payload, programMetadata) {
+  console.log({ payload, programMetadata });
   // let { family, currentEvent, memberEvent, memberDetails, memberTEI } = payload;
   let { family, memberEvent, memberDetails, memberEnrollment } = payload;
 
@@ -225,19 +231,26 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     attributes: [],
   };
 
-  Object.entries(teiMapping).forEach(([key, value]) => {
-    const attributeMetadata = programMetadata.trackedEntityAttributes.find(
-      (attr) => attr.id === key
-    );
-
+  programMetadata.trackedEntityAttributes.forEach((attr) => {
     tei.attributes.push({
-      attribute: key,
-      value: convertValueBack(
-        attributeMetadata.valueType,
-        memberDetails[teiMapping[key]]
-      ),
+      attribute: attr.id,
+      value: convertValueBack(attr.valueType, memberDetails[attr.id]),
     });
   });
+
+  // Object.entries(teiMapping).forEach(([key, value]) => {
+  //   const attributeMetadata = programMetadata.trackedEntityAttributes.find(
+  //     (attr) => attr.id === key
+  //   );
+
+  //   tei.attributes.push({
+  //     attribute: key,
+  //     value: convertValueBack(
+  //       attributeMetadata.valueType,
+  //       memberDetails[teiMapping[key]]
+  //     ),
+  //   });
+  // });
 
   // assign family TEI id to each member
   tei.attributes.push({
@@ -278,21 +291,37 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     dataValues: [],
   };
 
-  let programStage = programMetadata.programStages[0];
+  // Loop through programStages
+  programMetadata.programStages.forEach((programStage) => {
+    programStage.dataElements.forEach((de) => {
+      const value = convertValueBack(de.valueType, memberDetails[de.id]);
 
-  Object.entries(eventMapping).forEach(([key, value]) => {
-    const dataElementMetadata = programStage.dataElements.find(
-      (de) => de.id === key
-    );
+      if (!value) {
+        return;
+      }
 
-    eventPayload.dataValues.push({
-      dataElement: key,
-      value: convertValueBack(
-        dataElementMetadata.valueType,
-        memberDetails[eventMapping[key]]
-      ),
+      eventPayload.dataValues.push({
+        dataElement: de.id,
+        value,
+      });
     });
   });
+
+  // let programStage = programMetadata.programStages[0];
+
+  // Object.entries(eventMapping).forEach(([key, value]) => {
+  //   const dataElementMetadata = programStage.dataElements.find(
+  //     (de) => de.id === key
+  //   );
+
+  //   eventPayload.dataValues.push({
+  //     dataElement: key,
+  //     value: convertValueBack(
+  //       dataElementMetadata.valueType,
+  //       memberDetails[eventMapping[key]]
+  //     ),
+  //   });
+  // });
 
   // assign family TEI id to each member
   eventPayload.dataValues.push({

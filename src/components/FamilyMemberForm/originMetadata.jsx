@@ -320,6 +320,60 @@ const originMetadata = [
       attributeValues: [],
     },
   },
+  {
+    dataElement: {
+      valueType: "TEXT",
+      optionSet: {
+        code: "Membership Status",
+        name: "Membership Status",
+        translations: [],
+        options: [
+          {
+            code: "Present",
+            name: "Present",
+            translations: [],
+            displayName: "Present",
+            id: "jIFpYXSw3Gt",
+            attributeValues: [],
+          },
+          {
+            code: "Demise",
+            name: "Demise",
+            translations: [],
+            displayName: "Demise",
+            id: "HCFYJffamov",
+            attributeValues: [],
+          },
+          {
+            code: "Transferred",
+            name: "Transferred",
+            translations: [],
+            displayName: "Transferred",
+            id: "rCq4Jte9x3x",
+            attributeValues: [],
+          },
+        ],
+        valueType: "TEXT",
+        version: 3,
+        displayName: "Membership Status",
+        id: "p1mPcT964KJ",
+        attributeValues: [],
+      },
+      displayName: "HHM_1 - Membership Status",
+      displayShortName: "HHM_1 - Membership Status",
+      displayFormName: "Membership Status",
+      id: "cP1EanFicmA",
+      attributeValues: [
+        {
+          attribute: {
+            id: "KhGyBaFWXZT",
+          },
+          value: "member_form",
+        },
+      ],
+    },
+    compulsory: false,
+  },
   // {
   //   code: "sex",
   //   name: "Sex",
