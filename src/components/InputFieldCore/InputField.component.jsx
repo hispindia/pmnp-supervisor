@@ -6,7 +6,7 @@ import { onKeyDown } from "@/utils";
 
 const InputField = ({
   valueType,
-  valueSet,
+  optionSet,
   label,
   value,
   warning,
@@ -22,19 +22,21 @@ const InputField = ({
   onInput,
   ...props
 }) => {
-  const generateSelectFieldValue = (valueSet, value) => {
-    const v = valueSet.find((currentValue) => currentValue.value === value);
+  const generateSelectFieldValue = (options, value) => {
+    const v = options.find((currentValue) => currentValue.code === value);
     return v ? v : null;
   };
 
   const generateInput = () => {
-    if (valueSet) {
+    if (optionSet) {
+      const { options } = optionSet;
+
       return (
         <SelectField
-          valueSet={valueSet}
+          options={options}
           locale={locale}
           uiLocale={uiLocale}
-          value={generateSelectFieldValue(valueSet, value)}
+          value={generateSelectFieldValue(options, value)}
           handleBlur={onBlur}
           handleChange={onChange}
           disabled={disabled}
@@ -49,7 +51,6 @@ const InputField = ({
           {...(_.has(props, "periodType") && {
             periodType: props.periodType,
           })}
-          valueSet={valueSet}
           value={value}
           locale={locale}
           handleBlur={onBlur}

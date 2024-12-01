@@ -38,7 +38,7 @@ const eventMapping = {
 // construct data for family form Teis and Events
 function* initCascadeDataFromTEIsEvents(payload) {
   // const programStages = yield select(
-  //     (state) => state.metadata.programMetadata.programStages
+  //   (state) => state.metadata.programMetadata.programStages
   // );
 
   console.log("initCascadeDataFromTEIsEvents", { payload });
@@ -72,25 +72,20 @@ function* initCascadeDataFromTEIsEvents(payload) {
           let theTEI = {
             id: tei.trackedEntity,
           };
-          // TEI
-          Object.entries(teiMapping).forEach(([key, value]) => {
-            const attributeData = tei.attributes.find(
-              (attr) => attr.attribute === value
-            );
-            if (attributeData) {
-              theTEI[key] = attributeData.value;
-            }
+
+          tei.attributes.forEach((attr) => {
+            theTEI[attr.attribute] = attr.value;
           });
 
-          // EVENT
-          Object.entries(eventMapping).forEach(([key, value]) => {
-            const event = eventByYear?.[0]?.dataValues.find(
-              (de) => de.dataElement === value
-            );
-            if (event) {
-              theTEI[key] = event.value;
-            }
-          });
+          const event = eventByYear?.[0];
+          if (event) {
+            event.dataValues.forEach((de) => {
+              const key = de.dataElement;
+              const value = de.value;
+
+              theTEI[key] = value;
+            });
+          }
 
           cas.push(theTEI);
         }

@@ -93,7 +93,6 @@ const InputField = ({
         />
       );
     case "DATE":
-    case "AGE":
       return (
         <DatePicker
           // value={value ? moment(value) : ""}

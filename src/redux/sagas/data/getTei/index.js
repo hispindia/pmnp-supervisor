@@ -28,16 +28,11 @@ export const teiMapping = {
   DOB: "tQeFLjYbqzv",
 };
 
-const eventMapping = {
-  relation: "u0Ke4EXsIKZ",
-  education: "Z9a4Vim1cuJ",
-  insurance: "vbBhehiwNLV",
-  maritalstatus: "xXybyxfggiE",
-};
-
 function* handleGetTei() {
-  console.log("handleGetTei");
   yield put(loadTei(true));
+  const programs = yield select((state) => state.metadata.programMetadata);
+  console.log({ programs });
+
   try {
     const teiId = yield call(getTeiId);
     if (teiId) {
@@ -110,6 +105,8 @@ function* initExistedDataSaga() {
       Object.entries(teiMapping).map((e) => e[1]),
       `xvzrp56zKvI`
     );
+
+    console.log({ memberTEIs });
   }
 
   // const headerIndexes = yield call(getHeaderIndexes, memberTEIs);

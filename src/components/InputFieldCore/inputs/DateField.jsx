@@ -12,7 +12,6 @@ import "moment/locale/lo";
 
 const DateField = (
   {
-    valueSet,
     value,
     handleChange,
     periodType,
@@ -28,7 +27,7 @@ const DateField = (
   props
 ) => {
   const { disabled = false, ...other } = props;
-  let fieldValue = value;  
+  let fieldValue = value;
   if (moment(value, "YYYY-MM-DD", true).isValid()) {
     fieldValue = moment(value, "YYYY-MM-DD");
   }

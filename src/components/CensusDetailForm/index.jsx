@@ -159,394 +159,461 @@ const CensusDetailForm = ({
     };
   };
 
+  /**
+ * <thead>
+            <tr aria-colspan="2">
+                <td colspan="3"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td colspan="2" style="border:1px solid black;background:#b9ecfd;">Non-biodegradable household solid
+                    waste (glass, blades, expired medicine, bandages, etc.) disposal method used</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Public garbage collection
+                </td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="fkAXYJ8nOll"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Open Pit</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="hwCISmocKY6"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Burning</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="f28Es6U3KSr"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Burial
+                </td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="lSzJofGb7fU"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Others</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="vapo8mgKcyM"></td>
+            </tr>
+        </tbody>
+        <thead>
+            <tr aria-colspan="2">
+                <td colspan="3"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td colspan="2" style="border:1px solid black;background:#b9ecfd;">Sanitation</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Proper drainage</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="spZ0rGykIK6">
+                </td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Livestock without separate animal-shed</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="nFFkSQtqGqL">
+                </td>
+            </tr>
+        </tbody>
+        <thead>
+            <tr aria-colspan="2">
+                <td colspan="3"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td colspan="2" style="border:1px solid black;background:#b9ecfd;">Facility accessibility and income
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Using the usual means, how long does it take to
+                    get to the nearest facility in minutes?</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="ezLCrmL40SD">
+                </td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">What was your household’s TOTAL INCOME
+                    (collective
+                    for all members and all sources: salaries, wages, pension, farm produce, dairy, forest products,
+                    zorig
+                    chusum, remittance, kidu, business, real state, rental, etc ) last year?</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="Cql7XO3Z5Fe"></td>
+            </tr>
+        </tbody>
+        <thead>
+            <tr aria-colspan="2">
+                <td colspan="3"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td colspan="2" style="border:1px solid black;background:#b9ecfd;">Malaria endemic specific questions
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Does your household have Long Lasting Insecticide
+                    Nets (LLIN) received last year?</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="GtSSMCc6nXz">
+                </td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">No. of LLINs received last year</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="Ojvu6krZKBX"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Did anyone in your household sleep under LLINs
+                    last night?</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="WTFyAoDjI4X"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">No. of U5 children who slept under LLINs last
+                    night</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="S4G690Rx8KD"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">No. of pregnant women who slept under LLINs last
+                    night</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="FL0F1NaV4e2"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">No. of other members who slept under LLINs last
+                    night</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="b60lyh4IRgb"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Was your house sprayed with IRS last year?</td>
+                <td><input type="text" style="width:100%; box-sizing: border-box;" placeholder="uMRfJEDErNx"></td>
+            </tr>
+        </tbody>
+        <thead>
+            <tr aria-colspan="2">
+                <td colspan="3"></td>
+            </tr>
+            <tr style="text-align:left;">
+                <td colspan="2" style="border:1px solid black;background:#b9ecfd;">Salt Test</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">Household salt Iodine content</td>
+                <td><input type="text" style="box-sizing: border-box;" placeholder="YGisOzETviK">
+                </td>
+            </tr>
+            <tr style="text-align:left;">
+                <td style="border:1px solid black;background:#b9ecfd;">If less than15 PPM specify the brand of salt</td>
+                <td><input type="text" style="box-sizing: border-box;" placeholder="pUnhWS1qOeS">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ */
+
   const tableRenderData = [
-    {
-      type: "data",
-      name: t("How many babies born alive in the family?"),
-      uid: "skFDIWZmgTC",
-      styles: {},
-    },
-    // {
-    //     type: 'data',
-    //     name: t('CensusDetailFormRow2'),
-    //     uid: 'AB4m6KuUXF8',
-    //     styles: {},
-    // },
+    // Household Status
     {
       type: "title",
-      name: t("Location of birth (Including alive and stillbith)"),
-      styles: {},
+      name: "Household Status",
+      styles: { fontWeight: "bold" },
     },
     {
       type: "data",
-      name: t("Home?"),
-      uid: "jxfyOMxkbIw",
-      ...dependenciesOf("jxfyOMxkbIw")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Health Center?"),
-      uid: "XM59B0Lw2Md",
-      ...dependenciesOf("XM59B0Lw2Md")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("District Hospital"),
-      uid: "y3h4wxW3w50",
-      ...dependenciesOf("y3h4wxW3w50")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Provincial Hospital"),
-      uid: "ispm3X8fxSY",
-      ...dependenciesOf("ispm3X8fxSY")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Central Hospital"),
-      uid: "U4fdHCMef6x",
-      ...dependenciesOf("U4fdHCMef6x")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Private clinic/Private hospital"),
-      uid: "SJ0Cvi4jeGy",
-      ...dependenciesOf("SJ0Cvi4jeGy")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: `${t("Overseas")}`,
-      uid: "DZqf1SBDDqv",
-      ...dependenciesOf("DZqf1SBDDqv")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: `${t("Other", { n: 8 })}`,
-      uid: "w19F9i9XORa",
-      ...dependenciesOf("w19F9i9XORa")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "title",
-      name: t("Who assisted the birth(s)?"),
-      styles: {},
-    },
-    {
-      type: "data",
-      name: t("Self (No assistance)"),
-      uid: "hRlVw3IeQ45",
-      ...dependenciesOf("hRlVw3IeQ45")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Husband or relative"),
-      uid: "c8E0s3lqCmD",
-      ...dependenciesOf("c8E0s3lqCmD")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Village health volunteer"),
-      uid: "iYpP9mXDw1W",
-      ...dependenciesOf("iYpP9mXDw1W")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Skilled birth attendant (Nurse, Mid wife, Doctor)"),
-      uid: "FOTKm0DKO4Q",
-      ...dependenciesOf("FOTKm0DKO4Q")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("Other than specify above"),
-      uid: "YIg4eMjDYLg",
-      ...dependenciesOf("YIg4eMjDYLg")["skFDIWZmgTC"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("How many babies born dead (stillbirth) from in the family?"),
-      uid: "AB4m6KuUXF8",
-      styles: {},
-    },
-    // 5
-    {
-      type: "data",
-      name: t("How many people died in total in the family?"),
-      uid: "QteYoL0Yy6K",
-      // ...sumOf("QteYoL0Yy6K", [
-      //   "m5y4aLbmIOO",
-      //   "akAYIsCrRwV",
-      //   "mPTyd0nP5Xx",
-      //   "LmGX6VpLkIX",
-      // ]),
-      styles: {},
-    },
-    {
-      type: "data",
-      name: t("How many children under one year died in family?"),
-      uid: "m5y4aLbmIOO",
-      // ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
-      styles: {},
-    },
-    {
-      type: "data",
-      name: t("How many children age one to 4 years died?"),
-      uid: "akAYIsCrRwV",
-      // ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
-      styles: {},
-    },
-    {
-      type: "data",
-      name: t("How many children age 5 to 19 years died?"),
-      uid: "mPTyd0nP5Xx",
-      // ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
-      styles: {},
-    },
-    {
-      type: "data",
-      name: t(
-        "How many women died due to pregnancy, delivery or within 42 days after giving birth?"
-      ),
-      uid: "LmGX6VpLkIX",
-      // ...dependenciesOf("m5y4aLbmIOO")["QteYoL0Yy6K"],
+      name: "Household Status",
+      uid: "NPb0hOBn6g9",
       styles: {},
     },
 
-    // Family Drinking Water Source
+    // Water and Sanitation
     {
       type: "title",
-      name: t(
-        "The main source of drinking water and water for family use that can be found within 30 minutes"
-      ),
+      name: "Water and Sanitation",
+      styles: { fontWeight: "bold" },
     },
     {
       type: "data",
-      name: t("Drinking"),
-      uid: "p2P8g0MnDBK",
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Are household members often exposed to Household Air Pollution from the inefficient combustion of solid fuels (i.e. wood, coal, charcoal, crop waste, dung) and kerosene used for cooking including animal feeds, heating or lighting the house?",
+      uid: "d4DgS6Tv3uG",
+      styles: {},
     },
     {
       type: "data",
-      name: t("Using"),
-      uid: "okAPcV5WhBR",
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "What is the MAIN source (point of collection) of drinking water for members of your household?",
+      uid: "a0t6coJR4bG",
+      styles: {},
     },
-    // Family Toilet
     {
       type: "data",
-      name: t("What kind of toilet is used by the family?"),
-      uid: "BDi5vJcbiMv",
+      name: "Where is that water source (point of collection) located?",
+      uid: "lRVDgo5HwYe",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "How long does it take to go there, get water (queue for water and fill containers), and come back?",
+      uid: "ADGaCK23IbP",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "In the last month, has there been any time when your household did not have sufficient quantities of drinking water when needed?",
+      uid: "ABBZkh32owZ",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "What kind of toilet facility do members of your household usually use?",
+      uid: "JT2QvZDPRAy",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Do you share this facility with others who are not members of your household?",
+      uid: "rlecl6N9HcX",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Has your (pit latrine or septic tank) been emptied last year?",
+      uid: "ySLtaPSULVN",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "The last time it was emptied, where were the contents emptied?",
+      uid: "RIqHmgT1OWu",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Can you please show me where members of your household most often wash their hands?",
+      uid: "R0AYFvHFg6u",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Observe availability of water at the place for handwashing. (Note: Verify by checking the tap/pump, or basin, bucket, water container or similar objects for presence of water.)",
+      uid: "d4VMT4orArm",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Observe availability of soap or detergent at the place for handwashing",
+      uid: "Ju3AkdRHT52",
       styles: {},
     },
 
+    // Biodegradable household solid waste (cooked food, vegetables, fruit, leaves, etc.) disposal method used
     {
       type: "title",
-      name: t("Family Planning"),
+      name: "Biodegradable household solid waste (cooked food, vegetables, fruit, leaves, etc.) disposal method used",
+      styles: { fontWeight: "bold" },
+    },
+    {
+      type: "data",
+      name: "Composting",
+      uid: "SgyzeqQpg6V",
       styles: {},
     },
     {
       type: "data",
-      name: t(
-        "Number of women (15-49 years) in the family who need to use family planning?"
-      ),
-      uid: "ztDjhjZoEGe",
+      name: "Animal feeds (e.g., food or vegetables wastes)",
+      uid: "F0DV8pEPF98",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Public garbage collection",
+      uid: "nz1hyyrSn4k",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Open Pit",
+      uid: "vP0NGw6z3Mh",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Others",
+      uid: "wbLpz0ADrJv",
       styles: {},
     },
 
-    // 12.2 How many women (15-49 years) or their partners are using family planning and what types are they using?
+    // Recyclable household solid waste (paper, cartons, cans, metallic items, bottles, etc.) disposal method used
+    {
+      type: "title",
+      name: "Recyclable household solid waste (paper, cartons, cans, metallic items, bottles, etc.) disposal method used",
+      styles: { fontWeight: "bold" },
+    },
     {
       type: "data",
-      name: t(
-        "How many women (15-49 years) or their partners are using family planning and what types are they using?"
-      ),
-      uid: "FnkNunC3Yzx",
-      // ...dependenciesOf("FnkNunC3Yzx")["ztDjhjZoEGe"],
-      ...sumOf("FnkNunC3Yzx", [
-        "w73XYMu84K1",
-        "W5hvU3H2QY5",
-        "S1WAIB8yKgF",
-        "ZXOAIBtP7ag",
-        "nZWuXN9NcOB",
-        "gFg12NU3oJu",
-        "TcsUpke05hG",
-        "iR1xbBp4DbI",
-        "q8XozNLbeO9",
-      ]),
+      name: "Recycling or reusing (including scrape dealers)",
+      uid: "ua9PvkeM7iH",
       styles: {},
     },
     {
       type: "data",
-      name: t("contraceptive pill"),
-      uid: "w73XYMu84K1",
-      // ...dependenciesOf("w73XYMu84K1")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Public garbage collection",
+      uid: "haBuqhxXffw",
+      styles: {},
     },
     {
       type: "data",
-      name: t("depose(injectable)"),
-      uid: "W5hvU3H2QY5",
-      // ...dependenciesOf("W5hvU3H2QY5")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Burning",
+      uid: "Og4wEm4Z7OV",
+      styles: {},
     },
     {
       type: "data",
-      name: t("condom(male/female)"),
-      uid: "S1WAIB8yKgF",
-      // ...dependenciesOf("S1WAIB8yKgF")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Open Pit",
+      uid: "CWDcKbFmFty",
+      styles: {},
     },
     {
       type: "data",
-      name: t("Implant"),
-      uid: "ZXOAIBtP7ag",
-      // ...dependenciesOf("ZXOAIBtP7ag")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("IUD"),
-      uid: "nZWuXN9NcOB",
-      // ...dependenciesOf("nZWuXN9NcOB")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("emergency pill"),
-      uid: "gFg12NU3oJu",
-      // ...dependenciesOf("gFg12NU3oJu")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("sterilization(men&women)"),
-      uid: "TcsUpke05hG",
-      // ...dependenciesOf("TcsUpke05hG")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("other modern contraceptive"),
-      uid: "iR1xbBp4DbI",
-      // ...dependenciesOf("iR1xbBp4DbI")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
-    },
-    {
-      type: "data",
-      name: t("other traditional methods"),
-      uid: "q8XozNLbeO9",
-      // ...dependenciesOf("q8XozNLbeO9")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Others",
+      uid: "DenbY2uVxeR",
+      styles: {},
     },
 
-    // 10.3. How many women (15-49 years old) use family planning services at which location?
+    // Non-biodegradable household solid waste (glass, blades, expired medicine, bandages, etc.) disposal method used
     {
-      type: "data",
-      name: t(
-        "How many women (15-49 years old) use family planning services at which location?"
-      ),
-      uid: "IDz3cuoy2Ix",
-      // ...dependenciesOf("IDz3cuoy2Ix")["ztDjhjZoEGe"],
-      ...sumOf("IDz3cuoy2Ix", [
-        "rHsyapbYSIW",
-        "ne55arYhEDv",
-        "OWhICvMs71C",
-        "tCPGWfB5BXA",
-      ]),
+      type: "title",
+      name: "Non-biodegradable household solid waste (glass, blades, expired medicine, bandages, etc.) disposal method used",
+      styles: { fontWeight: "bold" },
     },
     {
       type: "data",
-      name: t("in public facility"),
-      uid: "rHsyapbYSIW",
-      // ...dependenciesOf("rHsyapbYSIW")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Public garbage collection",
+      uid: "fkAXYJ8nOll",
+      styles: {},
     },
     {
       type: "data",
-      name: t("at private clinic/pharmacy"),
-      uid: "ne55arYhEDv",
-      // ...dependenciesOf("ne55arYhEDv")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Open Pit",
+      uid: "hwCISmocKY6",
+      styles: {},
     },
     {
       type: "data",
-      name: t("Mobile Service Unit and Village health volunteer"),
-      uid: "OWhICvMs71C",
-      // ...dependenciesOf("OWhICvMs71C")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Burning",
+      uid: "f28Es6U3KSr",
+      styles: {},
     },
     {
       type: "data",
-      name: `${t("Other10_3")}`,
-      uid: "tCPGWfB5BXA",
-      ...dependenciesOf("tCPGWfB5BXA")["ztDjhjZoEGe"],
-      styles: {
-        paddingLeft: "50px",
-      },
+      name: "Burial",
+      uid: "lSzJofGb7fU",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Others",
+      uid: "vapo8mgKcyM",
+      styles: {},
+    },
+
+    // Sanitation
+    {
+      type: "title",
+      name: "Sanitation",
+      styles: { fontWeight: "bold" },
+    },
+    {
+      type: "data",
+      name: "Proper drainage",
+      uid: "spZ0rGykIK6",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Livestock without separate animal-shed",
+      uid: "nFFkSQtqGqL",
+      styles: {},
+    },
+
+    // Facility accessibility and income
+    {
+      type: "title",
+      name: "Facility accessibility and income",
+      styles: { fontWeight: "bold" },
+    },
+    {
+      type: "data",
+      name: "Using the usual means, how long does it take to get to the nearest facility in minutes?",
+      uid: "ezLCrmL40SD",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "What was your household’s TOTAL INCOME (collective for all members and all sources: salaries, wages, pension, farm produce, dairy, forest products, zorig chusum, remittance, kidu, business, real state, rental, etc ) last year?",
+      uid: "Cql7XO3Z5Fe",
+      styles: {},
+    },
+
+    // Malaria endemic specific questions
+    {
+      type: "title",
+      name: "Malaria endemic specific questions",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Does your household have Long Lasting Insecticide Nets (LLIN) received last year?",
+      uid: "GtSSMCc6nXz",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "No. of LLINs received last year",
+      uid: "Ojvu6krZKBX",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Did anyone in your household sleep under LLINs last night?",
+      uid: "WTFyAoDjI4X",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "No. of U5 children who slept under LLINs last night",
+      uid: "S4G690Rx8KD",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "No. of pregnant women who slept under LLINs last night",
+      uid: "FL0F1NaV4e2",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "No. of other members who slept under LLINs last night",
+      uid: "b60lyh4IRgb",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "Was your house sprayed with IRS last year?",
+      uid: "uMRfJEDErNx",
+      styles: {},
+    },
+
+    // Salt Test
+    {
+      type: "title",
+      name: "Salt Test",
+      styles: { fontWeight: "bold" },
+    },
+    {
+      type: "data",
+      name: "Household salt Iodine content",
+      uid: "YGisOzETviK",
+      styles: {},
+    },
+    {
+      type: "data",
+      name: "If less than15 PPM specify the brand of salt",
+      uid: "pUnhWS1qOeS",
+      styles: {},
     },
   ];
 

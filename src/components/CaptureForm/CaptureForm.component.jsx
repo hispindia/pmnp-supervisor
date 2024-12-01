@@ -88,8 +88,6 @@ function CaptureForm(props) {
       ...dataElementFormFields,
     ];
 
-    console.log({ formFields });
-
     return formFields.map((f) => {
       let field = f.trackedEntityAttribute;
 
@@ -97,8 +95,14 @@ function CaptureForm(props) {
         field = f.dataElement;
       }
 
-      const { valueType, displayName, pattern, translations, id: code } = field;
-
+      const {
+        valueType,
+        displayName,
+        pattern,
+        translations,
+        id: code,
+        optionSet,
+      } = field;
       return (
         <div className="col-lg-4 mb-3" key={code}>
           <InputField
@@ -107,7 +111,7 @@ function CaptureForm(props) {
             {...(_.has(f, "periodType") && {
               periodType: f.periodType,
             })}
-            valueSet={f.valueSet}
+            optionSet={optionSet}
             pattern={pattern}
             valueType={valueType}
             label={

@@ -225,7 +225,7 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
   let tei = {
     orgUnit: orgUnit,
     trackedEntity: memberDetails.id,
-    trackedEntityType: "MCPQUTHX1Ze",
+    trackedEntityType: "Y2TBztNgJpH",
     programOwners: [],
     enrollments: [],
     attributes: [],
@@ -268,7 +268,7 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     program: "xvzrp56zKvI",
     trackedEntity: memberDetails.id,
     enrollment: enrollment,
-    trackedEntityType: "MCPQUTHX1Ze",
+    trackedEntityType: "Y2TBztNgJpH",
     enrolledAt: memberEnrollment.enrolledAt,
     occurredAt: memberEnrollment.enrolledAt,
     incidentDate: memberEnrollment.enrolledAt,

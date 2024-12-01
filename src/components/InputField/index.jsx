@@ -73,12 +73,20 @@ const InputField = (props) => {
           />
         );
       case "DATE":
-      case "AGE":
         return (
           <DatePicker
             value={value ? moment(value) : ""}
             onChange={(momentObject) => {
               onChange(momentObject.format("YYYY-MM-DD"));
+            }}
+          />
+        );
+      case "AGE":
+        return (
+          <DatePicker
+            value={value}
+            onChange={(momentObject) => {
+              onChange(momentObject);
             }}
           />
         );
@@ -112,15 +120,7 @@ const InputField = (props) => {
             disabled={disabled}
           ></Checkbox>
         );
-      case "AGE":
-        return (
-          <DatePicker
-            value={value}
-            onChange={(momentObject) => {
-              onChange(momentObject);
-            }}
-          />
-        );
+
       default:
         return <span>UNSUPPORTED VALUE TYPE</span>;
     }
