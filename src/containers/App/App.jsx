@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import App from "../../components/App/App";
 // import { setUpDatabase } from '../../libs/idb-handler';
 import AppSkeleton from "../../skeletons/App";
-import villages from "../../villages/villageOptions.json";
 
 /* REDUX */
 import withSkeletonLoading from "@/hocs/withSkeletonLoading";
@@ -43,71 +42,6 @@ const AppContainer = () => {
     } else {
       return null;
     }
-  };
-
-  const createVillageHierachy = (villageOptions, organisationUnits) => {
-    const hierarchy = [];
-    const villages = villageOptions.options;
-    const orgUnits = organisationUnits.organisationUnits;
-    // const provinces = result[0].options;
-    // const districts = result[1].options;
-    // const villages = result[2].options;
-
-    villages.forEach((village) => {
-      const coordinates = findAttribute(village.attributeValues, "E4BKRTaQKot");
-      const provinceCode = findAttribute(
-        village.attributeValues,
-        "REMLxBe9c4w"
-      );
-      const districtCode = findAttribute(
-        village.attributeValues,
-        "GabcHXoJJWG"
-      );
-      const province = orgUnits.find((ou) => ou.code === provinceCode);
-      const district = orgUnits.find((ou) => ou.code === districtCode);
-      if (!province || !district) return;
-      const foundProvince = hierarchy.find((ou) => ou.value === provinceCode);
-      const foundDistrict = hierarchy.find((ou) => ou.value === districtCode);
-      if (!foundProvince) {
-        hierarchy.push({
-          value: province.code,
-          data: null,
-          path: province.code,
-          label: province.displayName,
-        });
-      }
-      if (!foundDistrict) {
-        hierarchy.push({
-          value: district.code,
-          data: null,
-          path: province.code + "/" + district.code,
-          label: district.displayName,
-        });
-      }
-      hierarchy.push({
-        value: village.code,
-        data: coordinates
-          ? {
-              latitude: parseFloat(coordinates.split(",")[0]),
-              longitude: parseFloat(coordinates.split(",")[1]),
-            }
-          : null,
-        path: provinceCode + "/" + districtCode + "/" + village.code,
-        label: village.displayName,
-      });
-    });
-    hierarchy.sort(function (a, b) {
-      var nameA = a.label.toUpperCase();
-      var nameB = b.label.toUpperCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
-    return hierarchy;
   };
 
   useEffect(() => {
@@ -156,7 +90,7 @@ const AppContainer = () => {
 
       Promise.all(getMetadataSet(isOfflineMode)).then(async (results) => {
         const programMetadata = {
-          villageHierarchy: createVillageHierachy(villages, results[1]),
+          villageHierarchy: [],
           ...results[0],
         };
 

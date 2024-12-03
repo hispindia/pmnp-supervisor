@@ -28,7 +28,7 @@ const MainForm = ({
       disabled: isEditingAttributes,
     },
     {
-      label: t("censusDetails"),
+      label: t("Household Survey"),
       key: "3",
       children: <CensusDetailFormContainer />,
       disabled: isEditingAttributes,
