@@ -9,6 +9,7 @@ import moment from "moment";
 // Date Picker
 import MomentUtils from "@date-io/moment";
 import "moment/locale/lo";
+import { useTranslation } from "react-i18next";
 
 const DateField = (
   {
@@ -22,10 +23,10 @@ const DateField = (
     minDateMessage,
     locale,
     variant,
-    uiLocale,
   },
   props
 ) => {
+  const { t } = useTranslation();
   const { disabled = false, ...other } = props;
   let fieldValue = value;
   if (moment(value, "YYYY-MM-DD", true).isValid()) {
@@ -72,16 +73,8 @@ const DateField = (
         minDate={minDate}
         maxDateMessage={maxDateMessage}
         minDateMessage={minDateMessage}
-        clearLabel={React.createElement(
-          "span",
-          null,
-          uiLocale && uiLocale.clear
-        )}
-        cancelLabel={React.createElement(
-          "span",
-          null,
-          uiLocale && uiLocale.cancel
-        )}
+        clearLabel={React.createElement("span", null, t("clear"))}
+        cancelLabel={React.createElement("span", null, t("cancel"))}
       />
     </MuiPickersUtilsProvider>
   );

@@ -689,7 +689,7 @@ const CensusDetailForm = ({
   const items = [
     {
       key: 1,
-      label: `${t("month")} 1-6`,
+      label: ``,
       children: (
         <Table
           size="small"
@@ -701,20 +701,20 @@ const CensusDetailForm = ({
         />
       ),
     },
-    {
-      key: 2,
-      label: `${t("month")}  7-12`,
-      children: (
-        <Table
-          size="small"
-          bordered
-          pagination={false}
-          showHeader={false}
-          dataSource={dataSource}
-          columns={columns}
-        />
-      ),
-    },
+    // {
+    //   key: 2,
+    //   label: `${t("month")}  7-12`,
+    //   children: (
+    //     <Table
+    //       size="small"
+    //       bordered
+    //       pagination={false}
+    //       showHeader={false}
+    //       dataSource={dataSource}
+    //       columns={columns}
+    //     />
+    //   ),
+    // },
   ];
 
   return (

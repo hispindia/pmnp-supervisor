@@ -23,6 +23,10 @@ const locale = {
     en: "Census Details",
     lo: "ລາຍລະອຽດການສຳຫຼວດ (ບ 1 ຂ)",
   },
+  "Household Survey": {
+    en: "Household Survey",
+    lo: "ການຜົນການຄອບຄົວ",
+  },
   complete: {
     en: "Complete",
     lo: "ສຳເລັດ",

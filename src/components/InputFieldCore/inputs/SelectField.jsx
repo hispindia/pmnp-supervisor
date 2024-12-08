@@ -1,17 +1,18 @@
+import { useTranslation } from "react-i18next";
 import Select from "react-select";
 
 const SelectField = (
-  { options, value, handleChange, handleBlur, locale, uiLocale, disabled },
+  { valueSet, value, handleChange, handleBlur, locale, disabled },
   props
 ) => {
-  const translatedOptions = options.map((e) => {
+  const { t } = useTranslation();
+
+  const options = valueSet.map((e) => {
     e.label = locale
       ? locale != "en"
         ? e.translations[locale]
-        : e.name
-      : e.name;
-
-    e.value = e.code;
+        : e.label
+      : e.label;
     return e;
   });
 
@@ -20,18 +21,17 @@ const SelectField = (
       value={value}
       isDisabled={disabled}
       isClearable={true}
-      options={translatedOptions}
-      placeholder={value ? value : uiLocale && uiLocale.select}
+      options={options}
+      placeholder={value ? value : t("select")}
       onChange={(selected) => {
-        console.log(selected.code);
         if (!selected) {
           handleChange(null);
           handleBlur && handleBlur(null);
           return;
         }
 
-        handleChange(selected.code);
-        handleBlur && handleBlur(selected.code);
+        handleChange(selected.value);
+        handleBlur && handleBlur(selected.value);
       }}
       styles={{
         control: (provided) => ({

@@ -6,12 +6,16 @@ import _ from "lodash";
 
 // components
 import InputField from "../InputFieldCore/InputField.component.jsx";
+import { useTranslation } from "react-i18next";
+// import InputField from '../CustomAntForm/InputField';
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
 };
 
 function CaptureForm(props) {
+  const { t } = useTranslation();
+
   const {
     classes,
     className,
@@ -24,7 +28,6 @@ function CaptureForm(props) {
     handleAddNewRow,
     editRowCallback = null,
     locale,
-    uiLocale,
     ...other
   } = props;
 
@@ -40,14 +43,14 @@ function CaptureForm(props) {
     onSubmit,
     clear,
   } = useForm(_.cloneDeep(metadata), data, {
-    compulsory: uiLocale.thisFieldIsRequired,
+    compulsory: t("thisFieldIsRequired"),
   });
 
   useEffect(() => {
     initFromData(data);
 
     let cloneMetadata = _.cloneDeep(metadata).reduce((obj, md) => {
-      obj[md.id] = md;
+      obj[md.code] = md;
       return obj;
     }, {});
 
@@ -67,7 +70,7 @@ function CaptureForm(props) {
   const editCall = (metadata, prevData, formData, code, value) => {
     let data = _.clone(formData);
     let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
-      obj[md.id] = md;
+      obj[md.code] = md;
       return obj;
     }, {});
     editRowCallback(cloneMetadata, prevData, data, code, value);
@@ -77,66 +80,51 @@ function CaptureForm(props) {
   };
 
   const generateFields = () => {
-    const trackedEntityAttributeFormFields = formMetadata
+    return formMetadata
       .filter((f) => !f.additionCol)
-      .filter((f) => f.displayInList);
-
-    const dataElementFormFields = formMetadata.filter((f) => f.dataElement);
-
-    const formFields = [
-      ...trackedEntityAttributeFormFields,
-      ...dataElementFormFields,
-    ];
-
-    return formFields.map((f) => {
-      let field = f.trackedEntityAttribute;
-
-      if (!field) {
-        field = f.dataElement;
-      }
-
-      const {
-        valueType,
-        displayName,
-        pattern,
-        translations,
-        id: code,
-        optionSet,
-      } = field;
-      return (
-        <div className="col-lg-4 mb-3" key={code}>
-          <InputField
-            locale={locale}
-            uiLocale={uiLocale}
-            {...(_.has(f, "periodType") && {
-              periodType: f.periodType,
-            })}
-            optionSet={optionSet}
-            pattern={pattern}
-            valueType={valueType}
-            label={
-              !_.isEmpty(translations) ? translations[locale] : displayName
-            }
-            attribute={f.attribute}
-            value={formData[code] || ""}
-            onBlur={(value) =>
-              editCall(formMetadata, prevData.current, formData, code, value)
-            }
-            onChange={(value) => {
-              changeValue(code, value);
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">{f.prefix}</InputAdornment>
-              ),
-            }}
-            error={validation(code)}
-            maxDate={props.maxDate}
-            minDate={"1900-12-31"}
-          />
-        </div>
-      );
-    });
+      .filter((f) => !f.hidden)
+      .map((f) => {
+        return (
+          <div className="col-lg-4 mb-3" key={f.code}>
+            <InputField
+              locale={locale}
+              {...(_.has(f, "periodType") && {
+                periodType: f.periodType,
+              })}
+              valueSet={f.valueSet}
+              pattern={f.pattern}
+              valueType={f.valueType}
+              label={
+                !_.isEmpty(f.translations)
+                  ? f.translations[locale]
+                  : f.displayName
+              }
+              attribute={f.attribute}
+              value={formData[f.code] || ""}
+              onBlur={(value) =>
+                editCall(
+                  formMetadata,
+                  prevData.current,
+                  formData,
+                  f.code,
+                  value
+                )
+              }
+              onChange={(value) => {
+                changeValue(f.code, value);
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">{f.prefix}</InputAdornment>
+                ),
+              }}
+              error={validation(f.code)}
+              maxDate={props.maxDate}
+              minDate={"1900-12-31"}
+            />
+          </div>
+        );
+      });
   };
 
   const handleCancelForm = () => {
@@ -179,7 +167,7 @@ function CaptureForm(props) {
                   className="btn btn-success"
                   onClick={(e) => handleOnSubmit(e, "add")}
                 >
-                  {uiLocale.save}
+                  {t("save")}
                 </button>
               </div>
             )}
@@ -194,7 +182,7 @@ function CaptureForm(props) {
                   className="btn btn-success"
                   onClick={(e) => handleOnSubmit(e, "edit")}
                 >
-                  {uiLocale.save}
+                  {t("save")}
                 </button>
               </div>
             )}
@@ -209,7 +197,7 @@ function CaptureForm(props) {
                   className="btn btn-light"
                   onClick={(e) => handleCancelForm()}
                 >
-                  {uiLocale.cancel}
+                  {t("cancel")}
                 </button>
               </div>
             )}

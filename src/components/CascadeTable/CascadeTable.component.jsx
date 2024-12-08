@@ -4,7 +4,7 @@ import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES } from "../constants";
-import { calcAgeFromDOB } from "../FamilyMemberForm/FormCalculationUtils";
+// import { calcAgeFromDOB } from "../FamilyMemberForm/FormCalculationUtils";
 
 // Icon
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +22,7 @@ import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
 import { isImmutableYear } from "@/utils/event";
+import { useTranslation } from "react-i18next";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -36,8 +37,6 @@ const CascadeTable = (props) => {
     initFunction = null,
     externalComponents,
     components = <div>Working...</div>,
-    uiLocale,
-    t,
     locale,
     originMetadata,
     metadata,
@@ -46,7 +45,7 @@ const CascadeTable = (props) => {
     data,
     ...other
   } = props;
-
+  const { t } = useTranslation();
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
   const { year } = useSelector((state) => state.data.tei.selectedYear);
   const { immutableYear } = useSelector((state) => state.metadata);
@@ -55,7 +54,6 @@ const CascadeTable = (props) => {
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
   );
-  // const [data, setData] = useState(props.data);
 
   const [showData, setShowData] = useState(
     transformData(metadata, props.data, dataValuesTranslate, locale)
@@ -265,20 +263,6 @@ const CascadeTable = (props) => {
         return obj;
       }, {});
 
-    // props.metadata.forEach((m) => {
-    //   if (m.valueSet && m.valueSet.length > 0) {
-    //     tempDataValuesTranslate = {
-    //       ...tempDataValuesTranslate,
-    //       ...m.valueSet.reduce((obj, i) => {
-    //         if (i.translations) {
-    //           obj[i.value] = i.translations;
-    //         }
-    //         return obj;
-    //       }, {}),
-    //     };
-    //   }
-    // });
-
     setColumns(
       transformMetadataToColumns(metadata, locale, tempDataValuesTranslate)
     );
@@ -317,23 +301,6 @@ const CascadeTable = (props) => {
     ...columns,
     // TODO
     {
-      dataField: "age",
-      text: locale == "lo" ? "ອາຍຸ" : "Age",
-      align: "center",
-      formatter: (cellContent, row, rowIndex, extraData) => {
-        let res = calcAgeFromDOB(
-          row["DOB"],
-          row["birthyear"],
-          row["age"],
-          extraData,
-          t
-        );
-
-        return res;
-      },
-      formatExtraData: currentEvent,
-    },
-    {
       dataField: "actions",
       text: "Actions",
       align: "center",
@@ -346,25 +313,16 @@ const CascadeTable = (props) => {
               extraData !== FORM_ACTION_TYPES.NONE ||
               isImmutableYear(year, immutableYear)
             }
-            title={uiLocale.delete}
+            title={t("delete")}
             onDelete={(e) => {
               handleDeleteRow(e, row);
             }}
-            messageText={uiLocale.deleteDialogContent}
-            cancelText={uiLocale.cancel}
-            deleteText={uiLocale.delete}
+            messageText={t("deleteDialogContent")}
+            cancelText={t("cancel")}
+            deleteText={t("delete")}
             onClick={(e) => {
               e.stopPropagation();
-              console.log("DeleteConfirmationButton", row, rowIndex);
               dispatch(changeMember({ ...row, isDelete: true }));
-
-              // callbackFunction &&
-              //   callbackFunction(
-              //     metadata,
-              //     row,
-              //     rowIndex,
-              //     "delete_member_selected"
-              //   );
             }}
             onCancel={(e) => {
               callbackFunction(metadata, row, rowIndex, "clean");
@@ -378,7 +336,6 @@ const CascadeTable = (props) => {
     },
   ];
 
-  const rowStyle = { backgroundColor: "#c8e6c9" };
   return (
     <div className="bootstrap-iso">
       <div className="container-fluid">
@@ -395,14 +352,13 @@ const CascadeTable = (props) => {
             <Modal.Body>
               <Card>
                 <Card.Body>
-                  <Card.Title>{uiLocale.familyMemberDetails}</Card.Title>
+                  <Card.Title>{t("familyMemberDetails")}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
                     {formStatus !== FORM_ACTION_TYPES.ADD_NEW &&
                       "No." + (selectedRowIndex + 1)}
                   </Card.Subtitle>
                   <CaptureForm
                     locale={locale}
-                    uiLocale={uiLocale}
                     metadata={metadata}
                     rowIndex={selectedRowIndex}
                     data={_.cloneDeep(selectedData)}
@@ -418,9 +374,6 @@ const CascadeTable = (props) => {
               </Card>
             </Modal.Body>
           </Modal>
-          <div className="col-md-12 order-md-12 mb-12 table-sm">
-            {/* <Paper elevation={0}>{components[0]()}</Paper> */}
-          </div>
         </div>
 
         {/* <hr className="mb-4" /> */}
@@ -435,7 +388,7 @@ const CascadeTable = (props) => {
               aria-controls="collapseExample"
               aria-expanded={formStatus === FORM_ACTION_TYPES.ADD_NEW}
             >
-              {uiLocale.addNewMember}
+              {t("addNewMember")}
             </Button>
           </div>
           {/* <div className="col-md-4 order-md-4 mb-4">
