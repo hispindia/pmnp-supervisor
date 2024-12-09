@@ -552,7 +552,7 @@ const CensusDetailForm = ({
     {
       type: "title",
       name: "Malaria endemic specific questions",
-      styles: {},
+      styles: {fontWeight: "bold" },
     },
     {
       type: "data",

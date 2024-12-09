@@ -12,11 +12,11 @@ const locale = {
     lo: "ລົງທະບຽນບ້ານ",
   },
   familyRegistration: {
-    en: "Family Registration",
+    en: "Household Registration",
     lo: "ລົງທະບຽນຄອບຄົວ",
   },
   familyMembers: {
-    en: "Family Members",
+    en: "Household Members",
     lo: "ສະມາຊິກຄອບຄົວ (ບ 1 ກ)",
   },
   censusDetails: {
