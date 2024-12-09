@@ -46,6 +46,28 @@ const mapping = {
   ageinyears: "age",
 };
 
+const convertOriginMetadata = (programMetadataMember) => {
+  programMetadataMember.trackedEntityAttributes.forEach((attr) => {
+    attr.code = attr.id;
+  });
+
+  const programStagesDataElements = programMetadataMember.programStages.reduce(
+    (acc, stage) => {
+      stage.dataElements.forEach((de) => {
+        de.code = de.id;
+      });
+
+      return [...acc, ...stage.dataElements];
+    },
+    []
+  );
+
+  return [
+    ...programMetadataMember.trackedEntityAttributes,
+    ...programStagesDataElements,
+  ];
+};
+
 const FamilyMemberForm = ({
   currentEvent,
   changeEventDataValue,
@@ -60,6 +82,13 @@ const FamilyMemberForm = ({
   const classes = useStyles();
 
   const { year } = useSelector((state) => state.data.tei.selectedYear);
+  const { programMetadataMember } = useSelector((state) => state.metadata);
+  console.log({ programMetadataMember });
+
+  const originMetadata = convertOriginMetadata(programMetadataMember);
+
+  console.log({ originMetadata });
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -294,17 +323,17 @@ const FamilyMemberForm = ({
             loading={loading}
             mask
             loaded={true}
-            uiLocale={{
-              addNewMember: t("addNewMember"),
-              save: t("save"),
-              select: t("select"),
-              cancel: t("cancel"),
-              clear: t("resetFilter"),
-              familyMemberDetails: t("familyMemberDetails"),
-              delete: t("delete"),
-              deleteDialogContent: t("deleteDialogContent"),
-              thisFieldIsRequired: t("thisFieldIsRequired"),
-            }}
+            // uiLocale={{
+            //   addNewMember: t("addNewMember"),
+            //   save: t("save"),
+            //   select: t("select"),
+            //   cancel: t("cancel"),
+            //   clear: t("resetFilter"),
+            //   familyMemberDetails: t("familyMemberDetails"),
+            //   delete: t("delete"),
+            //   deleteDialogContent: t("deleteDialogContent"),
+            //   thisFieldIsRequired: t("thisFieldIsRequired"),
+            // }}
             locale={i18n.language || "en"}
             metadata={metadata}
             data={data}

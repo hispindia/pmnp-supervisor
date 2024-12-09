@@ -3,10 +3,11 @@ import "./InputField.styles.css";
 import propTypes from "./InputField.types.js";
 import { DateField, SelectField, TextField } from "./inputs/index";
 import { onKeyDown } from "@/utils";
+import { useTranslation } from "react-i18next";
 
 const InputField = ({
   valueType,
-  optionSet,
+  valueSet,
   label,
   value,
   warning,
@@ -17,26 +18,24 @@ const InputField = ({
   disabled,
   pattern,
   locale,
-  uiLocale,
   attribute = null,
   onInput,
   ...props
 }) => {
-  const generateSelectFieldValue = (options, value) => {
-    const v = options.find((currentValue) => currentValue.code === value);
+  const { t } = useTranslation();
+
+  const generateSelectFieldValue = (valueSet, value) => {
+    const v = valueSet.find((currentValue) => currentValue.value === value);
     return v ? v : null;
   };
 
   const generateInput = () => {
-    if (optionSet) {
-      const { options } = optionSet;
-
+    if (valueSet) {
       return (
         <SelectField
-          options={options}
+          valueSet={valueSet}
           locale={locale}
-          uiLocale={uiLocale}
-          value={generateSelectFieldValue(options, value)}
+          value={generateSelectFieldValue(valueSet, value)}
           handleBlur={onBlur}
           handleChange={onChange}
           disabled={disabled}
@@ -51,25 +50,24 @@ const InputField = ({
           {...(_.has(props, "periodType") && {
             periodType: props.periodType,
           })}
+          valueSet={valueSet}
           value={value}
           locale={locale}
           handleBlur={onBlur}
           handleChange={onChange}
           disabled={disabled}
-          uiLocale={uiLocale}
           {...props}
         />
       );
     }
     if (valueType === "BOOLEAN") {
       const vs = [
-        { value: "true", label: uiLocale.yes },
-        { value: "false", label: uiLocale.no },
+        { value: "true", label: t("yes") },
+        { value: "false", label: t("no") },
       ];
       return (
         <SelectField
           value={generateSelectFieldValue(vs, value)}
-          uiLocale={uiLocale}
           valueSet={vs}
           handleChange={onChange}
           disabled={disabled}

@@ -338,24 +338,6 @@ export default class DataApiClass extends BaseApiClass {
           return true;
         });
 
-        // var sortColumnIndex = data.headers.findIndex(function (h) {
-        //   return h.name === sortColumn.id;
-        // });
-        // if (sortColumnIndex)
-        //   data.rows = orderByKeyFilter(
-        //     data.rows,
-        //     sortColumnIndex,
-        //     sortColumn.direction
-        //   );
-        // //order list
-        // cachedMultipleEventFiltersData[workingList.name] = data;
-        // workingList.cachedSorting = searchParams.sortUrl;
-        // workingList.cachedOrgUnit = searchParams.orgUnitId;
-        // var data = getCachedMultipleEventFiltersData(
-        //   workingList,
-        //   pager,
-        //   sortColumn
-        // );
         resolve(data);
       });
     });

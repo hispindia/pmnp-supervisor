@@ -85,28 +85,6 @@ export default class MetadataApiClass extends BaseApiClass {
 
     let data = {};
     data.tree = orgUnits.reduce((accumulator, currentOu) => {
-      // accumulator[`organisationUnits/${currentOu.id}`] = async () => {
-      //   const orgUnit = await pull(
-      //     this.baseUrl,
-      //     this.username,
-      //     this.password,
-      //     `/api/organisationUnits/${currentOu.id}?fields=id,code,displayName,path,children[id,code,displayName,path]`,
-      //     { paging: false },
-      //     []
-      //   );
-      //   orgUnit.children = orgUnit.children.sort(function (a, b) {
-      //     var nameA = a.displayName.toUpperCase();
-      //     var nameB = b.displayName.toUpperCase();
-      //     if (nameA < nameB) {
-      //       return -1;
-      //     }
-      //     if (nameA > nameB) {
-      //       return 1;
-      //     }
-      //     return 0;
-      //   });
-      //   return orgUnit;
-      // };
       if (filter) {
         if (!filter.includes(currentOu.path)) {
           currentOu.children = currentOu.children
@@ -318,7 +296,7 @@ export default class MetadataApiClass extends BaseApiClass {
       `/api/programs/${program}`,
       { paging: false },
       [
-        "fields=id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[id,displayName,programStageDataElements[compulsory,dataElement[id,displayName,displayFormName,displayShortName,description,valueType,optionSet[id]]",
+        "fields=id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[id,displayName,programStageDataElements[compulsory,dataElement[translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
       ]
     );
 
