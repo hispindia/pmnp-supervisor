@@ -27,7 +27,7 @@ const Layout = ({ children }) => {
           <div className={app}>
             {!isPwa && (
               <div className={headerBarContainer}>
-                <HeaderBar title="Family Information System" />
+                <HeaderBar title="Household Information System" />
               </div>
             )}
             {children}
