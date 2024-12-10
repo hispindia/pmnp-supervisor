@@ -4,7 +4,7 @@ const locale = {
     lo: "ເລືອກ",
   },
   addNewFamily: {
-    en: "Add New Family",
+    en: "Add New Household",
     lo: "ເພີ່ມຄອບຄົວໃໝ່",
   },
   enrollingVillage: {
