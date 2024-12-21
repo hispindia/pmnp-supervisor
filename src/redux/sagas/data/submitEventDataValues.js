@@ -28,6 +28,10 @@ import { getEventsByYear } from "@/utils/event";
 
 function* handleSubmitEventDataValues({ dataValues }) {
   console.log("handleSubmitEventDataValues", { dataValues });
+
+  // Trick - clear oC9jreyd9SD to be able to submit new data
+  delete dataValues.oC9jreyd9SD;
+
   const { offlineStatus } = yield select((state) => state.common);
 
   yield put(loadTei(true));

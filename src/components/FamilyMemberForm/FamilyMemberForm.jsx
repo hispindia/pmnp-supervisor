@@ -35,17 +35,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapping = {
-  "Date of birth": "DOB",
-  "Birth Year": "birthyear",
-  "Age in years": "age",
-  dob: "DOB",
-  DOB: "DOB",
-  birthyear: "birthyear",
-  age: "age",
-  ageinyears: "age",
-};
-
 const convertOriginMetadata = (programMetadataMember) => {
   programMetadataMember.trackedEntityAttributes.forEach((attr) => {
     attr.code = attr.id;
@@ -83,11 +72,7 @@ const FamilyMemberForm = ({
 
   const { year } = useSelector((state) => state.data.tei.selectedYear);
   const { programMetadataMember } = useSelector((state) => state.metadata);
-  console.log({ programMetadataMember });
-
   const originMetadata = convertOriginMetadata(programMetadataMember);
-
-  console.log({ originMetadata });
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -138,33 +123,33 @@ const FamilyMemberForm = ({
 
     let cascadeData = getCascadeData();
 
-    const mappingNewCode = {
-      "First name": "firstname",
-      "Last name": "lastname",
-      "Relation with head": "relation",
-      Sex: "sex",
-      Ethnicity: "ethnicity",
-      Nationality: "nationality",
-      "Highest Education of head of the Family": "education",
-      "Type of Insurance scheme": "insurance",
-      "Marital status": "maritalstatus",
-      "Date of birth": "DOB",
-      dob: "DOB",
-      "Birth Year": "birthyear",
-      "Age in years": "age",
-      ageinyears: "age",
-      Status: "status",
-      "Type of Age": "agetype",
-    };
+    // const mappingNewCode = {
+    //   "First name": "firstname",
+    //   "Last name": "lastname",
+    //   "Relation with head": "relation",
+    //   Sex: "sex",
+    //   Ethnicity: "ethnicity",
+    //   Nationality: "nationality",
+    //   "Highest Education of head of the Family": "education",
+    //   "Type of Insurance scheme": "insurance",
+    //   "Marital status": "maritalstatus",
+    //   "Date of birth": "DOB",
+    //   dob: "DOB",
+    //   "Birth Year": "birthyear",
+    //   "Age in years": "age",
+    //   ageinyears: "age",
+    //   Status: "status",
+    //   "Type of Age": "agetype",
+    // };
 
-    cascadeData.forEach((obj) => {
-      Object.entries(obj).forEach(([key, val]) => {
-        if (Object.keys(mappingNewCode).includes(key)) {
-          obj[mappingNewCode[key]] = obj[key];
-          delete obj[key];
-        }
-      });
-    });
+    // cascadeData.forEach((obj) => {
+    //   Object.entries(obj).forEach(([key, val]) => {
+    //     if (Object.keys(mappingNewCode).includes(key)) {
+    //       obj[mappingNewCode[key]] = obj[key];
+    //       delete obj[key];
+    //     }
+    //   });
+    // });
 
     setData(cascadeData);
 
