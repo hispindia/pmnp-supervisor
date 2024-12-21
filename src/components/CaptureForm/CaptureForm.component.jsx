@@ -98,7 +98,7 @@ function CaptureForm(props) {
               label={
                 !_.isEmpty(f.translations)
                   ? f.translations[locale]
-                  : f.displayName
+                  : f.displayFormName
               }
               attribute={f.attribute}
               value={formData[f.code] || ""}

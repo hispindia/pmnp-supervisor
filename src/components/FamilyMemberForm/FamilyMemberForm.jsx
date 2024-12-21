@@ -85,20 +85,6 @@ const FamilyMemberForm = ({
 
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
 
-  useEffect(() => {
-    return () => {
-      console.log("FamilyMemberForm - unmounted");
-
-      // TODO: why crash here???
-      // dispatch(clear());
-      // setData([]);
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log("checking data", { data });
-  }, [data]);
-
   const getCascadeData = () => {
     let cascadeData = [];
     if (currentCascade && currentCascade[year]) {
@@ -122,34 +108,6 @@ const FamilyMemberForm = ({
     setLoading(true);
 
     let cascadeData = getCascadeData();
-
-    // const mappingNewCode = {
-    //   "First name": "firstname",
-    //   "Last name": "lastname",
-    //   "Relation with head": "relation",
-    //   Sex: "sex",
-    //   Ethnicity: "ethnicity",
-    //   Nationality: "nationality",
-    //   "Highest Education of head of the Family": "education",
-    //   "Type of Insurance scheme": "insurance",
-    //   "Marital status": "maritalstatus",
-    //   "Date of birth": "DOB",
-    //   dob: "DOB",
-    //   "Birth Year": "birthyear",
-    //   "Age in years": "age",
-    //   ageinyears: "age",
-    //   Status: "status",
-    //   "Type of Age": "agetype",
-    // };
-
-    // cascadeData.forEach((obj) => {
-    //   Object.entries(obj).forEach(([key, val]) => {
-    //     if (Object.keys(mappingNewCode).includes(key)) {
-    //       obj[mappingNewCode[key]] = obj[key];
-    //       delete obj[key];
-    //     }
-    //   });
-    // });
 
     setData(cascadeData);
 

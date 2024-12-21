@@ -63,9 +63,6 @@ const SideBar = () => {
   //         setWarningText(`${year} ${'already exists.'}`);
   //     }
   // };
-  useEffect(() => {
-    console.log({ selectedYear });
-  }, [selectedYear]);
 
   return (
     <React.Fragment>
