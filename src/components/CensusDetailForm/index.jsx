@@ -1,36 +1,29 @@
 import { Button, Col, Form, Row, Table, Tabs } from "antd";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import SideBarContainer from "../../containers/SideBar";
 import withDhis2FormItem from "../../hocs/withDhis2Field";
 import CFormControl from "../CustomAntForm/CFormControl";
-import InputField from "../CustomAntForm/InputField";
+import tableRenderData from './houseServey'
 
 /* style */
 import "./index.css";
+import InputField from "../InputField";
 
-const CensusDetailForm = ({
-  onSubmit,
-  selected6Month,
-  onTabChange,
-  values,
-}) => {
+const malariyaStrictedDelements = ['dhOvYypmAKV', 'GkBNgm5nJFM', 'PflI8FU0Rpd', 'aoQkCHSTvA2', 'uy9zZpHKaom', 'LDTBV6f9x5j', 'keBvW7IyXli']
+const hideForMaleria = ["GtSSMCc6nXz", "Ojvu6krZKBX", "WTFyAoDjI4X", "S4G690Rx8KD", "FL0F1NaV4e2", "b60lyh4IRgb", "uMRfJEDErNx"]
+const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) => {
+
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const dataElements = useSelector(
-    (state) => state.metadata.programMetadata.programStages[0].dataElements
-  );
+  const [surveyList, setSurveyList] = useState([])
 
-  const Dhis2FormItem = useMemo(
-    () => withDhis2FormItem(dataElements)(CFormControl),
-    [dataElements]
-  );
+  const dataElements = useSelector((state) => state.metadata.programMetadata.programStages[0].dataElements);
+  const selectedOuPath = useSelector((state) => state.metadata.selectedOrgUnit.path);
 
-  useEffect(() => {
-    form.resetFields();
-    form.setFieldsValue(values);
-  }, [values]);
+  const Dhis2FormItem = useMemo(() => withDhis2FormItem(dataElements)(CFormControl), [dataElements]);
+
 
   const columns = [
     {
@@ -158,6 +151,9 @@ const CensusDetailForm = ({
       },
     };
   };
+
+
+
 
   /**
  * <thead>
@@ -306,419 +302,259 @@ const CensusDetailForm = ({
     </table>
  */
 
-  const tableRenderData = [
-    // Household Status
-    {
-      type: "title",
-      name: "Household Status",
-      styles: { fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Household Status",
-      uid: "NPb0hOBn6g9",
-      styles: {},
-    },
 
-    // Water and Sanitation
-    {
-      type: "title",
-      name: "Water and Sanitation",
-      styles: { fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Are household members often exposed to Household Air Pollution from the inefficient combustion of solid fuels (i.e. wood, coal, charcoal, crop waste, dung) and kerosene used for cooking including animal feeds, heating or lighting the house?",
-      uid: "d4DgS6Tv3uG",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "What is the MAIN source (point of collection) of drinking water for members of your household?",
-      uid: "a0t6coJR4bG",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Where is that water source (point of collection) located?",
-      uid: "lRVDgo5HwYe",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "How long does it take to go there, get water (queue for water and fill containers), and come back?",
-      uid: "ADGaCK23IbP",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "In the last month, has there been any time when your household did not have sufficient quantities of drinking water when needed?",
-      uid: "ABBZkh32owZ",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "What kind of toilet facility do members of your household usually use?",
-      uid: "JT2QvZDPRAy",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Do you share this facility with others who are not members of your household?",
-      uid: "rlecl6N9HcX",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Has your (pit latrine or septic tank) been emptied last year?",
-      uid: "ySLtaPSULVN",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "The last time it was emptied, where were the contents emptied?",
-      uid: "RIqHmgT1OWu",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Can you please show me where members of your household most often wash their hands?",
-      uid: "R0AYFvHFg6u",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Observe availability of water at the place for handwashing. (Note: Verify by checking the tap/pump, or basin, bucket, water container or similar objects for presence of water.)",
-      uid: "d4VMT4orArm",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Observe availability of soap or detergent at the place for handwashing",
-      uid: "Ju3AkdRHT52",
-      styles: {},
-    },
 
-    // Biodegradable household solid waste (cooked food, vegetables, fruit, leaves, etc.) disposal method used
-    {
-      type: "title",
-      name: "Biodegradable household solid waste (cooked food, vegetables, fruit, leaves, etc.) disposal method used",
-      styles: { fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Composting",
-      uid: "SgyzeqQpg6V",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Animal feeds (e.g., food or vegetables wastes)",
-      uid: "F0DV8pEPF98",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Public garbage collection",
-      uid: "nz1hyyrSn4k",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Open Pit",
-      uid: "vP0NGw6z3Mh",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Others",
-      uid: "wbLpz0ADrJv",
-      styles: {},
-    },
+  useEffect(() => {
+    form.resetFields();
+    form.setFieldsValue(values);
+    // load survey fields
 
-    // Recyclable household solid waste (paper, cartons, cans, metallic items, bottles, etc.) disposal method used
-    {
-      type: "title",
-      name: "Recyclable household solid waste (paper, cartons, cans, metallic items, bottles, etc.) disposal method used",
-      styles: { fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Recycling or reusing (including scrape dealers)",
-      uid: "ua9PvkeM7iH",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Public garbage collection",
-      uid: "haBuqhxXffw",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Burning",
-      uid: "Og4wEm4Z7OV",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Open Pit",
-      uid: "CWDcKbFmFty",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Others",
-      uid: "DenbY2uVxeR",
-      styles: {},
-    },
 
-    // Non-biodegradable household solid waste (glass, blades, expired medicine, bandages, etc.) disposal method used
-    {
-      type: "title",
-      name: "Non-biodegradable household solid waste (glass, blades, expired medicine, bandages, etc.) disposal method used",
-      styles: { fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Public garbage collection",
-      uid: "fkAXYJ8nOll",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Open Pit",
-      uid: "hwCISmocKY6",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Burning",
-      uid: "f28Es6U3KSr",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Burial",
-      uid: "lSzJofGb7fU",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Others",
-      uid: "vapo8mgKcyM",
-      styles: {},
-    },
-
-    // Sanitation
-    {
-      type: "title",
-      name: "Sanitation",
-      styles: { fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Proper drainage",
-      uid: "spZ0rGykIK6",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Livestock without separate animal-shed",
-      uid: "nFFkSQtqGqL",
-      styles: {},
-    },
-
-    // Facility accessibility and income
-    {
-      type: "title",
-      name: "Facility accessibility and income",
-      styles: { fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Using the usual means, how long does it take to get to the nearest facility in minutes?",
-      uid: "ezLCrmL40SD",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "What was your household’s TOTAL INCOME (collective for all members and all sources: salaries, wages, pension, farm produce, dairy, forest products, zorig chusum, remittance, kidu, business, real state, rental, etc ) last year?",
-      uid: "Cql7XO3Z5Fe",
-      styles: {},
-    },
-
-    // Malaria endemic specific questions
-    {
-      type: "title",
-      name: "Malaria endemic specific questions",
-      styles: {fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Does your household have Long Lasting Insecticide Nets (LLIN) received last year?",
-      uid: "GtSSMCc6nXz",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "No. of LLINs received last year",
-      uid: "Ojvu6krZKBX",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Did anyone in your household sleep under LLINs last night?",
-      uid: "WTFyAoDjI4X",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "No. of U5 children who slept under LLINs last night",
-      uid: "S4G690Rx8KD",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "No. of pregnant women who slept under LLINs last night",
-      uid: "FL0F1NaV4e2",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "No. of other members who slept under LLINs last night",
-      uid: "b60lyh4IRgb",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "Was your house sprayed with IRS last year?",
-      uid: "uMRfJEDErNx",
-      styles: {},
-    },
-
-    // Salt Test
-    {
-      type: "title",
-      name: "Salt Test",
-      styles: { fontWeight: "bold" },
-    },
-    {
-      type: "data",
-      name: "Household salt Iodine content",
-      uid: "YGisOzETviK",
-      styles: {},
-    },
-    {
-      type: "data",
-      name: "If less than15 PPM specify the brand of salt",
-      uid: "pUnhWS1qOeS",
-      styles: {},
-    },
-  ];
-
-  const dependentFields = tableRenderData.map((d) => d.uid);
-
-  const dataSource = tableRenderData.map((row, index) => {
-    const {
-      uid,
-      some,
-      alot,
-      thirdRowTitle,
-      thirdRowId,
-      name,
-      type,
-      dependentFields = [],
-      setValuesFunc = () => {},
-      showFieldFunc = () => true,
-      childPropsFunc = () => {},
-    } = row;
-    switch (type) {
-      case "title": {
-        return {
-          ...row,
-          key: index,
-          label: name,
-        };
+    malariyaStrictedDelements.forEach(item => {
+      if (selectedOuPath.includes(item)) {
+        tableRenderData.forEach(item => {
+          if ((hideForMaleria.includes(item.uid))) { item.permanentHide = false }
+        })
+        return
       }
-      default: {
-        if (uid) {
-          return {
-            ...row,
-            key: index,
-            label: name,
-            input1: (
-              <Dhis2FormItem
-                noStyle
-                id={uid}
-                dependentFields={dependentFields}
-                setValuesFunc={setValuesFunc}
-                showFieldFunc={showFieldFunc}
-                childPropsFunc={childPropsFunc}
-              >
-                <InputField size="small" style={{ minWidth: 120 }} />
-              </Dhis2FormItem>
-            ),
-          };
+    })
+
+    if (values['NPb0hOBn6g9'] == 'Empty') {
+      tableRenderData.forEach(item => {
+        if (item.uid != 'NPb0hOBn6g9') { item.hide = true }
+      })
+    }
+
+
+  }, [values])
+
+
+  useEffect(() => { loadServeyFields() }, [])
+
+  function loadServeyFields(event = []) {
+    const uuid = event[0]?.name[0]
+    const value = event[0]?.value
+
+
+    if (event.length) {
+      values[uuid] = value
+      if (uuid == 'NPb0hOBn6g9' && value == 'Empty') {
+        tableRenderData.forEach(item => {
+          if (item.uid != 'NPb0hOBn6g9') { item.hide = true }
+          // else return { ...item, hide: true }
+        })
+        let keysToKeep = ["NPb0hOBn6g9", "tjXaQPI9OcQ"]
+
+        for (let key in values) {
+          if (!keysToKeep.includes(key)) {
+            values[key] = null;
+          }
+        }
+        // values['NPb0hOBn6g9'] = value
+        form.setFieldsValue(values);
+      } else if (uuid == 'a0t6coJR4bG') {
+        let dwelling = ["Pipe in compound but outside the dwelling", "Piped in dwelling"]
+
+        if (value == "Pipe in compound but outside the dwelling") {
+          values["lRVDgo5HwYe"] = "In own dwelling"
+          tableRenderData.forEach(item => {
+            if (item.uid == 'lRVDgo5HwYe') { item.hide = false }
+          })
+          form.setFieldsValue(values);
+        } if (value == "Piped in dwelling") {
+          values["lRVDgo5HwYe"] = "In own dwelling"
+          tableRenderData.forEach(item => {
+            if (item.uid == 'lRVDgo5HwYe') { item.hide = false }
+          })
+          form.setFieldsValue(values);
+        } else if (!dwelling.includes(value)) {
+          values["lRVDgo5HwYe"] = null
+          tableRenderData.forEach(item => {
+            if (item.uid == 'lRVDgo5HwYe') { item.hide = true }
+          })
+
+          form.setFieldsValue(values);
         } else {
+          delete values["lRVDgo5HwYe"]
+          form.setFieldsValue(values);
+        }
+      } else if (uuid == "JT2QvZDPRAy") {
+        if (value == "No facility/bush/field") {
+          tableRenderData.forEach(item => {
+            if (item.uid == "ySLtaPSULVN") { item.hide = true }
+          })
+          values["ySLtaPSULVN"] = null
+        } else {
+
+          tableRenderData.forEach(item => {
+            if (item.uid == "ySLtaPSULVN") { item.hide = false }
+          })
+        }
+        form.setFieldsValue(values);
+
+      } else if (uuid == "ySLtaPSULVN") {
+        if (value == "Never emptied") {
+
+          tableRenderData.forEach(item => {
+            if (item.uid == "RIqHmgT1OWu") { item.hide = true }
+          })
+          values["RIqHmgT1OWu"] = null
+        } else {
+
+          tableRenderData.forEach(item => {
+            if (item.uid == "RIqHmgT1OWu") { item.hide = false }
+          })
+        }
+        form.setFieldsValue(values);
+
+      } else if (uuid == "R0AYFvHFg6u") {
+        let ifExist = ['No handwashing place in dwelling/yard/plot', 'No permission to see', 'Other reasons']
+        if (ifExist.includes(value)) {
+
+          tableRenderData.forEach(item => {
+            if ((item.uid == "d4VMT4orArm") || (item.uid == 'Ju3AkdRHT52')) { item.hide = true }
+            // else return { ...item }
+          })
+          values["d4VMT4orArm"] = null
+          values["Ju3AkdRHT52"] = null
+        } else {
+
+          tableRenderData.forEach(item => {
+            if ((item.uid == "d4VMT4orArm") || (item.uid == 'Ju3AkdRHT52')) { item.hide = false }
+          })
+        }
+        form.setFieldsValue(values);
+      }
+      else if (uuid == "GtSSMCc6nXz") {
+        let ifExist = ['Ojvu6krZKBX', 'WTFyAoDjI4X', 'S4G690Rx8KD', 'FL0F1NaV4e2', 'b60lyh4IRgb']
+        if (value == "false") {
+
+          tableRenderData.forEach(item => {
+            if (ifExist.includes(item.uid)) { item.hide = true }
+          })
+          values["Ojvu6krZKBX"] = null
+          values["WTFyAoDjI4X"] = null
+          values["S4G690Rx8KD"] = null
+          values["FL0F1NaV4e2"] = null
+          values["b60lyh4IRgb"] = null
+        } else if (value != "false") {
+
+          tableRenderData.forEach(item => {
+            if (ifExist.includes(item.uid)) { item.hide = false }
+          })
+        }
+        form.setFieldsValue(values);
+
+      } else if (uuid == 'NPb0hOBn6g9' && value != 'Empty') {
+
+        tableRenderData.forEach(item => {
+          item.hide = false
+        })
+      }
+
+    }
+
+
+    const dataSource = tableRenderData.map((row, index) => {
+      const {
+        uid,
+        some,
+        alot,
+        thirdRowTitle,
+        thirdRowId,
+        name,
+        type,
+        hide,
+        permanentHide,
+        dependentFields = [],
+        setValuesFunc = () => { },
+        showFieldFunc = () => true,
+        childPropsFunc = () => { },
+      } = row;
+      switch (type) {
+        case "title": {
           return {
             ...row,
             key: index,
             label: name,
-            input1: (
-              <Dhis2FormItem displayFormName={t("some")} id={some}>
-                <InputField size="small" />
-              </Dhis2FormItem>
-            ),
-            input2: (
-              <Dhis2FormItem displayFormName={t("alot")} id={alot}>
-                <InputField size="small" />
-              </Dhis2FormItem>
-            ),
-            input3: (
-              <Dhis2FormItem displayFormName={t(thirdRowTitle)} id={thirdRowId}>
-                <InputField size="small" />
-              </Dhis2FormItem>
-            ),
           };
         }
+        default: {
+          if (uid) {
+            return {
+              ...row,
+              key: index,
+              label: name,
+              input1: (
+                <Dhis2FormItem
+                  noStyle
+                  id={uid}
+                  dependentFields={dependentFields}
+                  setValuesFunc={setValuesFunc}
+                  showFieldFunc={showFieldFunc}
+                  childPropsFunc={childPropsFunc}
+
+                >
+                  <InputField
+                    disabled={permanentHide == true ? true : hide}
+                    size="small" style={{ minWidth: 120 }} />
+                </Dhis2FormItem>
+              ),
+            };
+          } else {
+            return {
+              ...row,
+              key: index,
+              label: name,
+              input1: (
+                <Dhis2FormItem
+                  displayFormName={t("some")} id={some}>
+                  <InputField size="small" />
+                </Dhis2FormItem>
+              ),
+              input2: (
+                <Dhis2FormItem displayFormName={t("alot")} id={alot}>
+                  <InputField size="small" />
+                </Dhis2FormItem>
+              ),
+              input3: (
+                <Dhis2FormItem displayFormName={t(thirdRowTitle)} id={thirdRowId}>
+                  <InputField size="small" />
+                </Dhis2FormItem>
+              ),
+            };
+          }
+        }
       }
-    }
-  });
+
+    });
+    setSurveyList(dataSource)
+  }
+
+
+
 
   const items = [
     {
       key: 1,
       label: ``,
       children: (
+
         <Table
           size="small"
           bordered
           pagination={false}
           showHeader={false}
-          dataSource={dataSource}
+          dataSource={surveyList}
           columns={columns}
         />
       ),
-    },
-    // {
-    //   key: 2,
-    //   label: `${t("month")}  7-12`,
-    //   children: (
-    //     <Table
-    //       size="small"
-    //       bordered
-    //       pagination={false}
-    //       showHeader={false}
-    //       dataSource={dataSource}
-    //       columns={columns}
-    //     />
-    //   ),
-    // },
+    }
   ];
 
   return (
     <Form
+      onFieldsChange={loadServeyFields}
       initialValues={values}
       form={form}
       onFinish={(fieldsValue) => {
@@ -744,7 +580,10 @@ const CensusDetailForm = ({
           </Row>
         </Col>
 
+
+
         <Col className="rightBar">
+
           <Tabs
             defaultActiveKey="1"
             size="small"

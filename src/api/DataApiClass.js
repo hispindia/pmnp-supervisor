@@ -254,6 +254,17 @@ export default class DataApiClass extends BaseApiClass {
     );
   };
 
+  getParentsByOuId = (id) => {
+    console.log('id :>> ', id);
+    return pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/organisationUnits/${id}.json?fields=id,displayName,attributeValues[attribute[id,displayName],value],parent[name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value]]]]`,
+      { paging: false },
+    );
+  }
+  
   getTrackedEntityInstanceByQuery = (ou, filters, attributes) => {
     console.log("getTrackedEntityInstanceByQuery");
     return pull(

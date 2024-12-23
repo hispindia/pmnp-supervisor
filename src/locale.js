@@ -458,6 +458,7 @@ const locale = {
   hide: { en: "HIDE", lo: "ເຊື່ອງ" },
   update: { en: "UPDATE", lo: "ປັບປຸງ" },
   save: { en: "Save", lo: "ບັນທຶກ" },
+  skip: { en: "Skip", lo: "མཆོང་ནི་" },
   deleteEvent: { en: "Delete Event", lo: "ລົບເຫດການ" }, //OK
 
   memberDetails: { en: "Member details", lo: "ລາຍລະອຽດສະມາຊິກຄອບຄົວ" }, //OK

@@ -26,6 +26,7 @@ const InputField = (props) => {
     if (valueSet) {
       return (
         <Select
+          disabled={disabled}
           value={value}
           allowClear
           showSearch
@@ -66,6 +67,7 @@ const InputField = (props) => {
       case "LONG_TEXT":
         return (
           <TextArea
+            disabled={disabled}
             value={value || ""}
             onChange={(event) => {
               onChange(event.target.value);
@@ -97,6 +99,7 @@ const InputField = (props) => {
       case "BOOLEAN":
         return (
           <Radio.Group
+            disabled={disabled}
             value={value}
             onChange={(event) => {
               onChange(event.target.value);

@@ -43,8 +43,10 @@ function CaptureForm(props) {
     onSubmit,
     clear,
   } = useForm(_.cloneDeep(metadata), data, {
-    compulsory: t("thisFieldIsRequired"),
+    compulsory: t("thisFieldIsRequired")
   });
+
+  console.log('formData :>> ', formData, data);
 
   useEffect(() => {
     initFromData(data);
@@ -85,8 +87,9 @@ function CaptureForm(props) {
       .filter((f) => !f.hidden)
       .map((f) => {
         return (
-          <div className="col-lg-4 mb-3" key={f.code}>
+          <div className="col-lg-3 mb-3" key={f.code}>
             <InputField
+              disabled={f.code == 'hDE1WNqTTwF' ? true : false}
               locale={locale}
               {...(_.has(f, "periodType") && {
                 periodType: f.periodType,
@@ -133,16 +136,16 @@ function CaptureForm(props) {
 
   const handleOnSubmit = (e, action) => {
     let status = onSubmit(null);
-    if (status) {
-      switch (action) {
-        case "add":
-          handleAddNewRow(e, formData, false);
-          break;
-        case "edit":
-          let row = _.clone(formData);
-          handleEditRow(e, row, rowIndex);
-          break;
-      }
+    // if (status) {
+    switch (action) {
+      case "add":
+        handleAddNewRow(e, formData, false);
+        break;
+      case "edit":
+        let row = _.clone(formData);
+        handleEditRow(e, row, rowIndex);
+        break;
+      // }
     }
   };
 
@@ -201,6 +204,8 @@ function CaptureForm(props) {
                 </button>
               </div>
             )}
+
+
           </div>
         </div>
       </div>

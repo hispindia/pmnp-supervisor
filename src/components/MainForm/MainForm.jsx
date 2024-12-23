@@ -4,6 +4,10 @@ import { useTranslation } from "react-i18next";
 import CensusDetailFormContainer from "../../containers/CensusDetailFormContainer";
 import FMLayoutContainer from "../../containers/FMLayout";
 import ProfileFormContainer from "../../containers/ProfileForm";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo } from "react";
+import { setSelectedParentOuPattern } from "@/redux/actions/data";
+import { useApi } from "@/hooks";
 
 const { TabPane } = Tabs;
 
@@ -14,6 +18,43 @@ const MainForm = ({
   isEditingAttributes,
 }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch()
+
+  const { offlineStatus } = useSelector((state) => state.common);
+  const { selectedOrgUnit: { id: orgUnit } } = useSelector((state) => state.metadata);
+  const { dataApi } = useApi();
+ const randomNumber = useMemo(() => {
+    return Math.floor(100 + Math.random() * 900);
+  }, []);
+
+
+  useEffect(() => {
+
+
+    function extractValues(obj) {
+      let values = [];
+      if (obj.attributeValues) {
+        values.push(...obj.attributeValues?.map(av => av?.value));
+      }
+      if (obj.parent) {
+        values.push(...extractValues(obj.parent));
+      }
+      return values;
+    }
+
+    if (offlineStatus) { }
+    else {
+      try {
+        dataApi.getParentsByOuId(orgUnit).then((json) => {
+          let parent = extractValues(json);
+          dispatch(setSelectedParentOuPattern(parent?.join(' ')+' '+randomNumber))
+        });
+
+      } catch (error) {
+        dispatch(setSelectedParentOuPattern())
+      }
+    }
+  }, [orgUnit])
 
   const items = [
     {

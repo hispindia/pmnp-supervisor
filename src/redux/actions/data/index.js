@@ -12,6 +12,7 @@ import {
   INIT_NEW_EVENT,
   SUBMIT_ATTRIBUTES,
   SUBMIT_EVENTS,
+  SET_PARENT_OU_PATTERN,
 } from "../../types/data/tei";
 
 export const mutateTei = (property, value) => ({
@@ -52,6 +53,14 @@ export const initNewData = () => ({
 export const initData = (trackedEntity) => ({
   type: INIT_DATA,
   trackedEntity,
+});
+
+export const setSelectedParentOuPattern = (pattern=null) => ({
+  type: SET_PARENT_OU_PATTERN,
+  payload: {
+    pattern
+  }
+
 });
 
 export const initDataMember = (trackedEntity, programMetadata) => ({

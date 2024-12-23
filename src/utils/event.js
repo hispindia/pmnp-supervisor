@@ -1,4 +1,5 @@
 export function transformEvent(event) {
+  console.log('event :>> ', event);
   const transformed = { ...event };
   transformed.dataValues = Object.keys(transformed.dataValues).map(
     (dataElement) => {

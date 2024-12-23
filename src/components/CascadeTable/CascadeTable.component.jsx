@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
+
 const CascadeTable = (props) => {
   const {
     classes,
@@ -54,6 +55,7 @@ const CascadeTable = (props) => {
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
   );
+  const { ouPattern } = useSelector((state) => state.data.tei);
 
   const [showData, setShowData] = useState(
     transformData(metadata, props.data, dataValuesTranslate, locale)
@@ -108,7 +110,7 @@ const CascadeTable = (props) => {
   const handleBeforeAddNewRow = () => {
     // Before add new data
     setFormStatus(FORM_ACTION_TYPES.ADD_NEW);
-    setSelectedData({ id: generateUid(), isNew: true });
+    setSelectedData({ id: generateUid(), isNew: true, "hDE1WNqTTwF": ouPattern });
     // setMetadata(JSON.parse(JSON.stringify(originMetadata)));
     setSelectedRowIndex(null);
   };
@@ -250,6 +252,7 @@ const CascadeTable = (props) => {
   }, [JSON.stringify(data)]);
 
   useEffect(() => {
+
     let tempDataValuesTranslate = metadata
       .filter((e) => e.valueSet && e.valueSet.length > 0)
       .reduce((obj, e) => {
@@ -342,7 +345,7 @@ const CascadeTable = (props) => {
         <div className="row">
           <Modal
             backdrop="static"
-            size="lg"
+            size="xl"
             keyboard={false}
             show={
               formStatus === FORM_ACTION_TYPES.ADD_NEW ||

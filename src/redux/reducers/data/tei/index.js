@@ -11,6 +11,7 @@ import {
   GET_TEI_ERROR_MESSAGE,
   IS_EDITING_ATTRIBUTES,
   LOAD_TEI,
+  SET_PARENT_OU_PATTERN,
 } from "../../../types/data/tei";
 import currentTei from "./currentTei";
 import currentEvents from "./currentEvents";
@@ -71,6 +72,14 @@ const currentTab = (state = "1", { type, ...agrs }) => {
       return state;
   }
 };
+const ouPattern = (state = null, { type,payload, ...agrs }) => {
+  switch (type) {
+    case SET_PARENT_OU_PATTERN:
+      return payload.pattern;
+    default:
+      return state;
+  }
+};
 
 const lastYear = new Date().getFullYear() - 1;
 const defaultSelectedFamily = { index: 0, year: lastYear, selected6Month: 1 };
@@ -121,4 +130,5 @@ export default combineReducers({
   selectedYear,
   selectedMember,
   success,
+  ouPattern
 });

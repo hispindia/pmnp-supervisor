@@ -12,3 +12,4 @@ export const SET_USERS = "SET_USERS";
 export const SET_ORGUNIT_GROUPS = "SET_ORGUNIT_GROUPS";
 export const SET_ORGUNIT_LEVELS = "SET_ORGUNIT_LEVELS";
 export const SET_ORGUNITS = "SET_ORGUNITS";
+export const SET_EVENT_DATE = "SET_EVENT_DATE";

@@ -1,5 +1,6 @@
 import moment from "moment";
 import {
+  SET_EVENT_DATE,
   SET_ORGUNITS,
   SET_ORGUNIT_GROUPS,
   SET_ORGUNIT_LEVELS,
@@ -18,6 +19,7 @@ const initialState = {
   orgUnitGroups: null,
   orgUnitLevels: null,
   orgUnits: null,
+  eventDate: moment().format("YYYY-MM-DD"),
   minDate: "2021-01-01",
   maxDate: moment().endOf("year").format("YYYY-MM-DD"),
   immutableYear: [2018, 2019],
@@ -26,6 +28,12 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case SET_EVENT_DATE: {
+      return {
+        ...state,
+        eventDate: action.payload.eventDate,
+      };
+    }
     case SET_PROGRAM_METADATA: {
       return {
         ...state,
