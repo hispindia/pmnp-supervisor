@@ -3,11 +3,11 @@ import { FORM_ACTION_TYPES } from "../constants";
 import useForm from "../../hooks/useForm";
 import { InputAdornment } from "@material-ui/core";
 import _ from "lodash";
+import { useDispatch, useSelector } from "react-redux";
 
 // components
 import InputField from "../InputFieldCore/InputField.component.jsx";
 import { useTranslation } from "react-i18next";
-// import InputField from '../CustomAntForm/InputField';
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -30,7 +30,8 @@ function CaptureForm(props) {
     locale,
     ...other
   } = props;
-
+  const { programMetadataMember } = useSelector((state) => state.metadata);
+  const { programSections, programStages } = programMetadataMember;
   const {
     formData,
     prevData,
@@ -81,8 +82,8 @@ function CaptureForm(props) {
     changeMetadata([...Object.values(cloneMetadata)]);
   };
 
-  const generateFields = () => {
-    return formMetadata
+  const generateFields = (formMetaData) => {
+    return formMetaData
       .filter((f) => !f.additionCol)
       .filter((f) => !f.hidden)
       .map((f) => {
@@ -100,7 +101,7 @@ function CaptureForm(props) {
               label={
                 !_.isEmpty(f.translations)
                   ? f.translations[locale]
-                  : f.displayName
+                  : f.displayFormName
               }
               attribute={f.attribute}
               value={formData[f.code] || ""}
@@ -130,6 +131,74 @@ function CaptureForm(props) {
       });
   };
 
+  const generateSectionFields = () => {
+    if (!programSections || programSections.length === 0) {
+      const trackedEntityAttributes =
+        programMetadataMember.trackedEntityAttributes.map((t) => t.id);
+      const TEIFormMetadata = formMetadata.filter((f) =>
+        trackedEntityAttributes.includes(f.id)
+      );
+      return <div className="row">{generateFields(TEIFormMetadata)}</div>;
+    }
+
+    return programSections.map((pSection) => {
+      const trackedEntityAttributes = pSection.trackedEntityAttributes.map(
+        (tea) => tea.id
+      );
+      const TEIFormMetadata = formMetadata.filter((f) =>
+        trackedEntityAttributes.includes(f.id)
+      );
+
+      return (
+        <div className="row">
+          <div class="card-body">
+            <h5 class="card-title">{pSection.displayName}</h5>
+            <p class="card-text">
+              <div className="row">{generateFields(TEIFormMetadata)}</div>
+            </p>
+          </div>
+        </div>
+      );
+    });
+  };
+
+  const generateProgramStageSectionFields = () => {
+    if (
+      programStages?.some((pStage) => pStage.programStageSections.length === 0)
+    ) {
+      return programStages.map((pStage) => {
+        const dataElements = pStage.dataElements.map((t) => t.id);
+        const programFormMetadata = formMetadata.filter((f) =>
+          dataElements.includes(f.id)
+        );
+        return <div className="row">{generateFields(programFormMetadata)}</div>;
+      });
+    }
+
+    return programStages.map((pStage) => {
+      const programStageSections = pStage.programStageSections;
+      return programStageSections.map((pSection) => {
+        const trackedEntityAttributes = pSection.dataElements.map(
+          (tea) => tea.id
+        );
+        const programFormMetadata = formMetadata.filter((f) =>
+          trackedEntityAttributes.includes(f.id)
+        );
+
+        return (
+          <div className="row">
+            <div class="card-body">
+              <h5 class="card-title">{pSection.displayName}</h5>
+              <p class="card-text">
+                <div className="row">{generateFields(programFormMetadata)}</div>
+              </p>
+            </div>
+          </div>
+        );
+      });
+    });
+  };
+
   const handleCancelForm = () => {
     setFormStatus(FORM_ACTION_TYPES.NONE);
   };
@@ -153,7 +222,10 @@ function CaptureForm(props) {
     <>
       <div className="row">
         <div className="col-md-12">
-          <div className="row">{generateFields()}</div>
+          {generateSectionFields()}
+          {generateProgramStageSectionFields()}
+
+          {/* {generateFields(formMetadata)} */}
         </div>
       </div>
       <div className="row">

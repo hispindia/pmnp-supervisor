@@ -31,7 +31,6 @@ export const teiMapping = {
 function* handleGetTei() {
   yield put(loadTei(true));
   const programs = yield select((state) => state.metadata.programMetadata);
-  console.log({ programs });
 
   try {
     const teiId = yield call(getTeiId);

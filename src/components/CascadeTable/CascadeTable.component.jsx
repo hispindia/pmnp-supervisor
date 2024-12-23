@@ -4,25 +4,22 @@ import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES } from "../constants";
-// import { calcAgeFromDOB } from "../FamilyMemberForm/FormCalculationUtils";
 
 // Icon
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 /* SELECTOR */
-import { changeMember } from "../../redux/actions/data/tei";
-
-import { transformData, transformMetadataToColumns } from "./utils";
-
 import { updateCascade } from "@/redux/actions/data/tei/currentCascade";
+import { isImmutableYear } from "@/utils/event";
 import _ from "lodash";
+import { useTranslation } from "react-i18next";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
+import { changeMember } from "../../redux/actions/data/tei";
 import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
-import { isImmutableYear } from "@/utils/event";
-import { useTranslation } from "react-i18next";
+import { transformData, transformMetadataToColumns } from "./utils";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 

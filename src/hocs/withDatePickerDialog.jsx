@@ -47,7 +47,6 @@ const withDatePickerDialog = (Component) =>
 
       useLayoutEffect(() => {
         return () => {
-          console.log("withDatePickerDialog - didmount");
           setMessageText && setMessageText(null);
         };
       }, []);

@@ -138,17 +138,19 @@ export default class MetadataApiClass extends BaseApiClass {
     );
   };
 
-  getProgramMetadataTest = async (program) => {
-    return await pull(
+  getProgramMetadata = async (program) => {
+    const p = await pull(
       this.baseUrl,
       this.username,
       this.password,
       `/api/programs/${program}`,
       { paging: false },
       [
-        "fields=id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[id,displayName,programStageDataElements[compulsory,dataElement[id,displayName,displayFormName,displayShortName,description,valueType,optionSet[id]]",
+        "fields=programSections[id,name,trackedEntityAttributes,displayName],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[programStageSections[id,dataElements,displayName],id,displayName,programStageDataElements[compulsory,dataElement[translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
       ]
     );
+
+    return await this.convertProgramMetadata(p);
   };
 
   getProgramsMetadata = async () => {
@@ -159,7 +161,7 @@ export default class MetadataApiClass extends BaseApiClass {
       `/api/programs`,
       { paging: false },
       [
-        "fields=id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[id,displayName,programStageDataElements[compulsory,dataElement[id,displayName,displayFormName,displayShortName,description,valueType,optionSet[id]]",
+        "fields=programSections[id,name,trackedEntityAttributes,displayName],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[*,mandatory,displayInList,trackedEntityAttribute[*,id,displayName,displayFormName,displayShortName,valueType,optionSet[id,code,name,translations,attributeValues,sortOrder,options[id,code,name,translations,attributeValues,sortOrder]]]],programStages[programStageSections[id,dataElements,displayName],id,displayName,programStageDataElements[compulsory,dataElement[translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
       ]
     );
 
@@ -230,6 +232,7 @@ export default class MetadataApiClass extends BaseApiClass {
     programMetadata.organisationUnits = p.organisationUnits;
     programMetadata.trackedEntityType = p.trackedEntityType.id;
     programMetadata.organisationUnits = p.organisationUnits;
+    programMetadata.programSections = p.programSections;
     programMetadata.trackedEntityAttributes =
       p.programTrackedEntityAttributes.map((ptea) => {
         const tea = {
@@ -278,6 +281,7 @@ export default class MetadataApiClass extends BaseApiClass {
           }
           return dataElement;
         }),
+        programStageSections: ps.programStageSections,
       };
       return programStage;
     });
@@ -286,21 +290,6 @@ export default class MetadataApiClass extends BaseApiClass {
     programMetadata.programRuleVariables = p.programRuleVariables;
 
     return programMetadata;
-  };
-
-  getProgramMetadata = async (program) => {
-    const p = await pull(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/programs/${program}`,
-      { paging: false },
-      [
-        "fields=id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[id,displayName,programStageDataElements[compulsory,dataElement[translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
-      ]
-    );
-
-    return await this.convertProgramMetadata(p);
   };
 
   getOrgUnitGroups = () =>
