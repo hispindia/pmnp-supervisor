@@ -142,9 +142,13 @@ function CaptureForm(props) {
       const trackedEntityAttributes = pSection.trackedEntityAttributes.map(
         (tea) => tea.id
       );
-      const TEIFormMetadata = formMetadata.filter((f) =>
-        trackedEntityAttributes.includes(f.id)
-      );
+      const TEIFormMetadata = formMetadata
+        .filter((f) => trackedEntityAttributes.includes(f.id))
+        .sort(
+          (a, b) =>
+            trackedEntityAttributes.indexOf(a.id) -
+              trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
+        );
 
       return (
         <div className="row">
@@ -168,6 +172,7 @@ function CaptureForm(props) {
         const programFormMetadata = formMetadata.filter((f) =>
           dataElements.includes(f.id)
         );
+
         return <div className="row">{generateFields(programFormMetadata)}</div>;
       });
     }
@@ -175,12 +180,14 @@ function CaptureForm(props) {
     return programStages.map((pStage) => {
       const programStageSections = pStage.programStageSections;
       return programStageSections.map((pSection) => {
-        const trackedEntityAttributes = pSection.dataElements.map(
-          (tea) => tea.id
-        );
-        const programFormMetadata = formMetadata.filter((f) =>
-          trackedEntityAttributes.includes(f.id)
-        );
+        const dataElements = pSection.dataElements.map((tea) => tea.id);
+        const programFormMetadata = formMetadata
+          .filter((f) => dataElements.includes(f.id))
+          .sort(
+            (a, b) =>
+              dataElements.indexOf(a.id) - dataElements.indexOf(b.id) ||
+              a.id.localeCompare(b.id)
+          );
 
         return (
           <div className="row">
