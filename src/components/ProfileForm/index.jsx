@@ -52,7 +52,7 @@ const ProfileForm = ({
     const values = [
       "TEMP",
       residenceStatus ? residenceStatus.substr(0, 1) : "< >",
-      organisationUnits.find((ou) => ou.id === selectedOrgUnit.id).code,
+      organisationUnits?.find((ou) => ou.id === selectedOrgUnit?.id).code,
       unitOfVillage ? unitOfVillage : "< >",
       houseNumber ? houseNumber : "< >",
       temporaryFamilyBookNumber
@@ -67,7 +67,7 @@ const ProfileForm = ({
     let province = "";
     let district = "";
     let village = "";
-    let find = organisationUnits.find((e) => e.id === profile.orgUnit);
+    let find = organisationUnits?.find((e) => e.id === profile.orgUnit);
     if (find) {
       let findVillageHierarchy = villageHierarchy.find(
         (e) => e.value === find.code

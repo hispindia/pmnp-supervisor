@@ -1,5 +1,4 @@
 export function transformEvent(event) {
-  console.log('event :>> ', event);
   const transformed = { ...event };
   transformed.dataValues = Object.keys(transformed.dataValues).map(
     (dataElement) => {
@@ -47,3 +46,24 @@ export const getEventByYearAndHalt6Month = (events, year, haft6Month) => {
 export const isImmutableYear = (year, immerYears) => {
   return immerYears.includes(Number(year));
 };
+
+// calculate Age with DOB
+export const calculateAge = (dob = new Date()) => {
+  // Parse the input date
+  const birthDate = new Date(dob);
+
+  // Get today's date
+  const today = new Date();
+
+  // Calculate the difference in years
+  let age = today.getFullYear() - birthDate.getFullYear();
+
+  // Adjust for the case where the birthday has not yet occurred this year
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  return age;
+}
+

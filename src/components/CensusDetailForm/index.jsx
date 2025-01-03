@@ -2,28 +2,25 @@ import { Button, Col, Form, Row, Table, Tabs } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import SideBarContainer from "../../containers/SideBar";
-import withDhis2FormItem from "../../hocs/withDhis2Field";
+import SideBarContainer from "@/containers/SideBar";
+import withDhis2FormItem from "@/hocs/withDhis2Field";
 import CFormControl from "../CustomAntForm/CFormControl";
-import tableRenderData from './houseServey'
+import InputField from "../InputField";
+import useHouseholdSurveyForm from "@/hooks/useHouseholdSurveyForm";
 
 /* style */
 import "./index.css";
-import InputField from "../InputField";
 
-const malariyaStrictedDelements = ['dhOvYypmAKV', 'GkBNgm5nJFM', 'PflI8FU0Rpd', 'aoQkCHSTvA2', 'uy9zZpHKaom', 'LDTBV6f9x5j', 'keBvW7IyXli']
-const hideForMaleria = ["GtSSMCc6nXz", "Ojvu6krZKBX", "WTFyAoDjI4X", "S4G690Rx8KD", "FL0F1NaV4e2", "b60lyh4IRgb", "uMRfJEDErNx"]
+
 const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) => {
 
-  const { t } = useTranslation();
-  const [form] = Form.useForm();
-  const [surveyList, setSurveyList] = useState([])
-
   const dataElements = useSelector((state) => state.metadata.programMetadata.programStages[0].dataElements);
-  const selectedOuPath = useSelector((state) => state.metadata.selectedOrgUnit.path);
-
   const Dhis2FormItem = useMemo(() => withDhis2FormItem(dataElements)(CFormControl), [dataElements]);
 
+
+  const { form, surveyList, loadServeyFields } = useHouseholdSurveyForm(values)
+
+  const { t } = useTranslation();
 
   const columns = [
     {
@@ -151,8 +148,6 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
       },
     };
   };
-
-
 
 
   /**
@@ -303,236 +298,81 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
  */
 
 
-
-  useEffect(() => {
-    form.resetFields();
-    form.setFieldsValue(values);
-    // load survey fields
-
-
-    malariyaStrictedDelements.forEach(item => {
-      if (selectedOuPath.includes(item)) {
-        tableRenderData.forEach(item => {
-          if ((hideForMaleria.includes(item.uid))) { item.permanentHide = false }
-        })
-        return
-      }
-    })
-
-    if (values['NPb0hOBn6g9'] == 'Empty') {
-      tableRenderData.forEach(item => {
-        if (item.uid != 'NPb0hOBn6g9') { item.hide = true }
-      })
-    }
-
-
-  }, [values])
-
-
   useEffect(() => { loadServeyFields() }, [])
 
-  function loadServeyFields(event = []) {
-    const uuid = event[0]?.name[0]
-    const value = event[0]?.value
-
-
-    if (event.length) {
-      values[uuid] = value
-      if (uuid == 'NPb0hOBn6g9' && value == 'Empty') {
-        tableRenderData.forEach(item => {
-          if (item.uid != 'NPb0hOBn6g9') { item.hide = true }
-          // else return { ...item, hide: true }
-        })
-        let keysToKeep = ["NPb0hOBn6g9", "tjXaQPI9OcQ"]
-
-        for (let key in values) {
-          if (!keysToKeep.includes(key)) {
-            values[key] = null;
-          }
-        }
-        // values['NPb0hOBn6g9'] = value
-        form.setFieldsValue(values);
-      } else if (uuid == 'a0t6coJR4bG') {
-        let dwelling = ["Pipe in compound but outside the dwelling", "Piped in dwelling"]
-
-        if (value == "Pipe in compound but outside the dwelling") {
-          values["lRVDgo5HwYe"] = "In own dwelling"
-          tableRenderData.forEach(item => {
-            if (item.uid == 'lRVDgo5HwYe') { item.hide = false }
-          })
-          form.setFieldsValue(values);
-        } if (value == "Piped in dwelling") {
-          values["lRVDgo5HwYe"] = "In own dwelling"
-          tableRenderData.forEach(item => {
-            if (item.uid == 'lRVDgo5HwYe') { item.hide = false }
-          })
-          form.setFieldsValue(values);
-        } else if (!dwelling.includes(value)) {
-          values["lRVDgo5HwYe"] = null
-          tableRenderData.forEach(item => {
-            if (item.uid == 'lRVDgo5HwYe') { item.hide = true }
-          })
-
-          form.setFieldsValue(values);
-        } else {
-          delete values["lRVDgo5HwYe"]
-          form.setFieldsValue(values);
-        }
-      } else if (uuid == "JT2QvZDPRAy") {
-        if (value == "No facility/bush/field") {
-          tableRenderData.forEach(item => {
-            if (item.uid == "ySLtaPSULVN") { item.hide = true }
-          })
-          values["ySLtaPSULVN"] = null
-        } else {
-
-          tableRenderData.forEach(item => {
-            if (item.uid == "ySLtaPSULVN") { item.hide = false }
-          })
-        }
-        form.setFieldsValue(values);
-
-      } else if (uuid == "ySLtaPSULVN") {
-        if (value == "Never emptied") {
-
-          tableRenderData.forEach(item => {
-            if (item.uid == "RIqHmgT1OWu") { item.hide = true }
-          })
-          values["RIqHmgT1OWu"] = null
-        } else {
-
-          tableRenderData.forEach(item => {
-            if (item.uid == "RIqHmgT1OWu") { item.hide = false }
-          })
-        }
-        form.setFieldsValue(values);
-
-      } else if (uuid == "R0AYFvHFg6u") {
-        let ifExist = ['No handwashing place in dwelling/yard/plot', 'No permission to see', 'Other reasons']
-        if (ifExist.includes(value)) {
-
-          tableRenderData.forEach(item => {
-            if ((item.uid == "d4VMT4orArm") || (item.uid == 'Ju3AkdRHT52')) { item.hide = true }
-            // else return { ...item }
-          })
-          values["d4VMT4orArm"] = null
-          values["Ju3AkdRHT52"] = null
-        } else {
-
-          tableRenderData.forEach(item => {
-            if ((item.uid == "d4VMT4orArm") || (item.uid == 'Ju3AkdRHT52')) { item.hide = false }
-          })
-        }
-        form.setFieldsValue(values);
+  const dataSource = surveyList.map((row, index) => {
+    const {
+      uid,
+      some,
+      alot,
+      thirdRowTitle,
+      thirdRowId,
+      name,
+      type,
+      hide,
+      permanentHide,
+      dependentFields = [],
+      setValuesFunc = () => { },
+      showFieldFunc = () => true,
+      childPropsFunc = () => { },
+    } = row;
+    switch (type) {
+      case "title": {
+        return {
+          ...row,
+          key: index,
+          label: name,
+        };
       }
-      else if (uuid == "GtSSMCc6nXz") {
-        let ifExist = ['Ojvu6krZKBX', 'WTFyAoDjI4X', 'S4G690Rx8KD', 'FL0F1NaV4e2', 'b60lyh4IRgb']
-        if (value == "false") {
-
-          tableRenderData.forEach(item => {
-            if (ifExist.includes(item.uid)) { item.hide = true }
-          })
-          values["Ojvu6krZKBX"] = null
-          values["WTFyAoDjI4X"] = null
-          values["S4G690Rx8KD"] = null
-          values["FL0F1NaV4e2"] = null
-          values["b60lyh4IRgb"] = null
-        } else if (value != "false") {
-
-          tableRenderData.forEach(item => {
-            if (ifExist.includes(item.uid)) { item.hide = false }
-          })
-        }
-        form.setFieldsValue(values);
-
-      } else if (uuid == 'NPb0hOBn6g9' && value != 'Empty') {
-
-        tableRenderData.forEach(item => {
-          item.hide = false
-        })
-      }
-
-    }
-
-
-    const dataSource = tableRenderData.map((row, index) => {
-      const {
-        uid,
-        some,
-        alot,
-        thirdRowTitle,
-        thirdRowId,
-        name,
-        type,
-        hide,
-        permanentHide,
-        dependentFields = [],
-        setValuesFunc = () => { },
-        showFieldFunc = () => true,
-        childPropsFunc = () => { },
-      } = row;
-      switch (type) {
-        case "title": {
+      default: {
+        if (uid) {
           return {
             ...row,
             key: index,
             label: name,
+            input1: (
+              <Dhis2FormItem
+                noStyle
+                id={uid}
+                dependentFields={dependentFields}
+                setValuesFunc={setValuesFunc}
+                showFieldFunc={showFieldFunc}
+                childPropsFunc={childPropsFunc}
+
+              >
+                <InputField
+                  disabled={permanentHide == true ? true : hide}
+                  size="small" style={{ minWidth: 120 }} />
+              </Dhis2FormItem>
+            ),
+          };
+        } else {
+          return {
+            ...row,
+            key: index,
+            label: name,
+            input1: (
+              <Dhis2FormItem
+                displayFormName={t("some")} id={some}>
+                <InputField size="small" />
+              </Dhis2FormItem>
+            ),
+            input2: (
+              <Dhis2FormItem displayFormName={t("alot")} id={alot}>
+                <InputField size="small" />
+              </Dhis2FormItem>
+            ),
+            input3: (
+              <Dhis2FormItem displayFormName={t(thirdRowTitle)} id={thirdRowId}>
+                <InputField size="small" />
+              </Dhis2FormItem>
+            ),
           };
         }
-        default: {
-          if (uid) {
-            return {
-              ...row,
-              key: index,
-              label: name,
-              input1: (
-                <Dhis2FormItem
-                  noStyle
-                  id={uid}
-                  dependentFields={dependentFields}
-                  setValuesFunc={setValuesFunc}
-                  showFieldFunc={showFieldFunc}
-                  childPropsFunc={childPropsFunc}
-
-                >
-                  <InputField
-                    disabled={permanentHide == true ? true : hide}
-                    size="small" style={{ minWidth: 120 }} />
-                </Dhis2FormItem>
-              ),
-            };
-          } else {
-            return {
-              ...row,
-              key: index,
-              label: name,
-              input1: (
-                <Dhis2FormItem
-                  displayFormName={t("some")} id={some}>
-                  <InputField size="small" />
-                </Dhis2FormItem>
-              ),
-              input2: (
-                <Dhis2FormItem displayFormName={t("alot")} id={alot}>
-                  <InputField size="small" />
-                </Dhis2FormItem>
-              ),
-              input3: (
-                <Dhis2FormItem displayFormName={t(thirdRowTitle)} id={thirdRowId}>
-                  <InputField size="small" />
-                </Dhis2FormItem>
-              ),
-            };
-          }
-        }
       }
+    }
 
-    });
-    setSurveyList(dataSource)
-  }
-
-
-
+  });
 
   const items = [
     {
@@ -545,7 +385,7 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
           bordered
           pagination={false}
           showHeader={false}
-          dataSource={surveyList}
+          dataSource={dataSource}
           columns={columns}
         />
       ),

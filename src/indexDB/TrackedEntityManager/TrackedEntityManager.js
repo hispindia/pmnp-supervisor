@@ -309,6 +309,18 @@ export const findOne = async (trackedEntity) => {
     console.error(`Failed to get trackedEntity`, error);
   }
 };
+export const findOuPattern = async ({orgUnit}) => {
+  try {
+    const patternData = await db[TABLE_NAME].where("trackedEntity")
+      .equals(orgUnit)
+      .toArray();
+
+    // return toDhis2TrackedEntity(tei);
+    console.log('patternData :>> ', patternData);
+  } catch (error) {
+    console.error(`Failed to get trackedEntity`, error);
+  }
+};
 
 export const find = async ({
   paging = true,

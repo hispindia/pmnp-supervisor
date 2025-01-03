@@ -52,12 +52,14 @@ const CascadeTable = (props) => {
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
   );
-  const { ouPattern } = useSelector((state) => state.data.tei);
+  // const { ouPattern } = useSelector((state) => state.data.tei);
+  const profile = useSelector((state) => state.data.tei.data.currentTei);
 
   const [showData, setShowData] = useState(
     transformData(metadata, props.data, dataValuesTranslate, locale)
   );
 
+  console.log(' profile :>> ',  profile);
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
 
@@ -107,7 +109,7 @@ const CascadeTable = (props) => {
   const handleBeforeAddNewRow = () => {
     // Before add new data
     setFormStatus(FORM_ACTION_TYPES.ADD_NEW);
-    setSelectedData({ id: generateUid(), isNew: true, "hDE1WNqTTwF": ouPattern });
+    setSelectedData({ id: generateUid(), isNew: true, "hDE1WNqTTwF": profile.attributes["b4UUhQPwlRH"]});
     // setMetadata(JSON.parse(JSON.stringify(originMetadata)));
     setSelectedRowIndex(null);
   };

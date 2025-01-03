@@ -90,7 +90,7 @@ function CaptureForm(props) {
         return (
           <div className="col-lg-3 mb-3" key={f.code}>
             <InputField
-              disabled={f.code == 'hDE1WNqTTwF' ? true : false}
+              disabled={f.disabled}
               locale={locale}
               {...(_.has(f, "periodType") && {
                 periodType: f.periodType,
@@ -133,11 +133,11 @@ function CaptureForm(props) {
 
   const generateSectionFields = () => {
     if (!programSections || programSections.length === 0) {
-      const trackedEntityAttributes =
-        programMetadataMember.trackedEntityAttributes.map((t) => t.id);
+      const trackedEntityAttributes = programMetadataMember.trackedEntityAttributes.map((t) => t.id);
       const TEIFormMetadata = formMetadata.filter((f) =>
         trackedEntityAttributes.includes(f.id)
       );
+      console.log('TEIFormMetadata::::if :>> ', TEIFormMetadata);
       return <div className="row">{generateFields(TEIFormMetadata)}</div>;
     }
 
@@ -148,7 +148,7 @@ function CaptureForm(props) {
       const TEIFormMetadata = formMetadata.filter((f) =>
         trackedEntityAttributes.includes(f.id)
       );
-
+      console.log('TEIFormMetadata :>> ', TEIFormMetadata);
       return (
         <div className="row">
           <div class="card-body">
@@ -171,6 +171,7 @@ function CaptureForm(props) {
         const programFormMetadata = formMetadata.filter((f) =>
           dataElements.includes(f.id)
         );
+        console.log('programFormMetadata:>>>>>>if', programFormMetadata)
         return <div className="row">{generateFields(programFormMetadata)}</div>;
       });
     }
@@ -178,13 +179,11 @@ function CaptureForm(props) {
     return programStages.map((pStage) => {
       const programStageSections = pStage.programStageSections;
       return programStageSections.map((pSection) => {
-        const trackedEntityAttributes = pSection.dataElements.map(
-          (tea) => tea.id
-        );
+        const trackedEntityAttributes = pSection.dataElements.map((tea) => tea.id);
         const programFormMetadata = formMetadata.filter((f) =>
           trackedEntityAttributes.includes(f.id)
         );
-
+        console.log('programFormMetadata:>>>>>>', programFormMetadata)
         return (
           <div className="row">
             <div class="card-body">

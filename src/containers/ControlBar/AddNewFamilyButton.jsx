@@ -23,7 +23,7 @@ const AddNewFamilyButtonContainer = () => {
     const history = useHistory();
 
     const isAssignedToOrg = useMemo(() => {
-        return programMetadata.organisationUnits.find(
+        return programMetadata?.organisationUnits?.find(
             (e) => e.id == selectedOrgUnit.id
         );
     }, [selectedOrgUnit]);

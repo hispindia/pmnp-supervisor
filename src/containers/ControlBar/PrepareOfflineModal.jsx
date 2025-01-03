@@ -27,7 +27,7 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
 
   const userOrgUnits = useMemo(
     () =>
-      programMetadata.organisationUnits.filter(({ path }) =>
+      programMetadata?.organisationUnits?.filter(({ path }) =>
         orgUnits.find(({ id }) => path.includes(id))
       ),
     [programMetadata]

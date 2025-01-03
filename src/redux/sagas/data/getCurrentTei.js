@@ -28,36 +28,3 @@ function* handleGetTei({ tei: teiId }) {
 export default function* getTei() {
     yield takeLatest(GET_TEI, handleGetTei);
 }
-
-// export function* getParentOuPatern() {
-//     console.log('getParentOuPatern: called');
-//     const { offlineStatus = null } = yield select((state) => state?.common);
-//     const { selectedOrgUnit: { id: orgUnit } } = yield select((state) => state.metadata);
-//     // handle parent nodes
-//     let parent = null
-
-//     function extractValues(obj) {
-//         let values = [];
-//         if (obj.attributeValues) {
-//             values.push(...obj.attributeValues?.map(av => av?.value));
-//         }
-//         if (obj.parent) {
-//             values.push(...extractValues(obj.parent));
-//         }
-//         return values;
-//     }
-
-//     if (offlineStatus) { }
-//     else {
-//         try {
-//             parent = yield call(dataApi.getParentsByOuId, orgUnit);
-//             let parent = extractValues(parent);
-//             console.log('allParents:>>>>>>', parent)
-//             yield put(setSelectedParentOuPattern(parent?.join(' ')))
-//         } catch (error) {
-//             yield put(setSelectedParentOuPattern())
-//         }
-//     }
-
-//     return parent;
-// }

@@ -103,7 +103,7 @@ const FamilyMemberForm = ({
   }, [currentCascade]);
 
   useEffect(() => {
-    (async () => {})();
+    (async () => { })();
 
     setLoading(true);
 

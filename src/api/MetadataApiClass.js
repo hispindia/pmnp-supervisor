@@ -227,6 +227,8 @@ export default class MetadataApiClass extends BaseApiClass {
       localStorage.setItem("optionSets", JSON.stringify(newCacheOptions));
     }
 
+    const defaultProgramTrackedEntityAttributeDisable = ['hDE1WNqTTwF', 'BaiVwt8jVfg']
+
     const programMetadata = {};
     programMetadata.id = p.id;
     programMetadata.organisationUnits = p.organisationUnits;
@@ -245,6 +247,7 @@ export default class MetadataApiClass extends BaseApiClass {
           valueType: ptea.trackedEntityAttribute.valueType,
           valueSet: null,
           displayInList: ptea.displayInList,
+          disabled: defaultProgramTrackedEntityAttributeDisable.includes(ptea.trackedEntityAttribute.id),
         };
         if (ptea.trackedEntityAttribute.optionSet) {
           tea.valueSet = optionSets.optionSets

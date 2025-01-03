@@ -2,7 +2,7 @@ import { put, select, call } from "redux-saga/effects";
 import { generateUid } from "../../../../utils";
 import { getTeiSuccess } from "../../../actions/data/tei";
 import moment from "moment";
-import  { getParentOuPatern } from "./setParentPatter";
+import { getParentOuPatern } from "./setParentPattern";
 
 function* handleInitNewData() {
   yield getParentOuPatern()

@@ -1,12 +1,12 @@
 import { useState, useRef } from 'react';
 import _ from 'lodash';
+import { calculateAge } from '@/utils/event';
+import { FAMILY_MEMBER_METADATA_CUSTOMUPDATE, FAMILY_MEMBER_VALUE } from '@/components/constants';
 
 const useForm = (metadata, data, uiLocale) => {
     const [formMetadata, setMetadata] = useState(metadata);
     const [formData, setFormData] = useState(data);
     const [warningLocale, setWarningLocale] = useState(uiLocale);
-    // const [previousData, setPreviousData] = useState(data);
-
     const [validationText, setValidationText] = useState({});
 
     const validationTypes = ['compulsory'];
@@ -30,10 +30,28 @@ const useForm = (metadata, data, uiLocale) => {
     };
 
     const changeValue = (property, value) => {
+        console.log('formMetadata :>> ', formMetadata);
         let temp = JSON.parse(JSON.stringify(formData));
         prevData.current = { ...temp };
 
-        formData[property] = value;
+        switch (property) {
+            case FAMILY_MEMBER_METADATA_CUSTOMUPDATE.DOB:
+                const age = calculateAge(value);
+                formData[FAMILY_MEMBER_METADATA_CUSTOMUPDATE.AGE] = age;
+
+                if (age < 16) formData[FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER] = null
+                formData[property] = value;
+                break;
+
+            case FAMILY_MEMBER_METADATA_CUSTOMUPDATE.MEMBERSHIP_STATUS:
+                if (FAMILY_MEMBER_VALUE[property] == value) formData[FAMILY_MEMBER_METADATA_CUSTOMUPDATE.TRANFER_TO] = null;
+                formData[property] = value;
+            default:
+                formData[property] = value;
+        }
+
+
+
         setFormData({ ...formData });
     };
 
@@ -81,7 +99,7 @@ const useForm = (metadata, data, uiLocale) => {
         setWarningLocale({});
     };
 
-    const editCallback = () => {};
+    const editCallback = () => { };
 
     return {
         formMetadata,

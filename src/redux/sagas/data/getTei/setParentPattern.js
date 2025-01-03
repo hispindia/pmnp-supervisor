@@ -1,14 +1,12 @@
 import { dataApi } from "@/api";
 import { setSelectedParentOuPattern } from "@/redux/actions/data";
 import { call, put, select } from "redux-saga/effects";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
 export function* getParentOuPatern() {
-    console.log('getParentOuPatern: called');
-    const { offlineStatus } = yield select((state) => state.common);
-    const { selectedOrgUnit: { id: orgUnit } } = yield select((state) => state.metadata);
-    // handle parent nodes
-    let parent = null
 
+    const { offlineStatus } = yield select((state) => state.common);
+    const { selectedOrgUnit: { id: orgUnit } } = yield select((state) => state.metadata);    // handle parent nodes
     let randomNumber = Math.floor(100 + Math.random() * 900);
 
     function extractValues(obj) {
@@ -22,12 +20,15 @@ export function* getParentOuPatern() {
         return values;
     }
 
-    if (offlineStatus) { }
+    if (offlineStatus) {
+        let parent = trackedEntityManager.findOuPattern({ orgUnit });
+        parent = extractValues(parent);
+        yield put(setSelectedParentOuPattern(parent?.join(' ') + ' ' + randomNumber))
+    }
     else {
         try {
-            parent = yield call(dataApi.getParentsByOuId, orgUnit);
+            let parent = yield call(dataApi.getParentsByOuId, orgUnit);
             parent = extractValues(parent);
-            // console.log('allParents:>>>>>>', parent)
             yield put(setSelectedParentOuPattern(parent?.join(' ') + ' ' + randomNumber))
         } catch (error) {
             yield put(setSelectedParentOuPattern())
@@ -35,5 +36,4 @@ export function* getParentOuPatern() {
     }
 
     return parent
-
 }

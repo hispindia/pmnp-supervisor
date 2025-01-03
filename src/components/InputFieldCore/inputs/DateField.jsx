@@ -29,6 +29,8 @@ const DateField = (
   const { t } = useTranslation();
   const { disabled = false, ...other } = props;
   let fieldValue = value;
+  console.log('fieldValue :>> ', fieldValue);
+
   if (moment(value, "YYYY-MM-DD", true).isValid()) {
     fieldValue = moment(value, "YYYY-MM-DD");
   }
@@ -60,7 +62,7 @@ const DateField = (
         })}
         variant={variant}
         disabled={disabled}
-        value={moment(fieldValue, switchFormatMoment(periodType))}
+        value={value ? moment(fieldValue, switchFormatMoment(periodType)) : null}
         defaultValue=""
         onChange={(date) => {
           handleChange(moment(date).format(switchFormatMoment(periodType)));
