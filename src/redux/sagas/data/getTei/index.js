@@ -63,6 +63,7 @@ function* initExistedDataSaga() {
   const { offlineStatus } = yield select((state) => state.common);
   const teiId = yield call(getTeiId);
   const programId = yield select((state) => state.metadata.programMetadata.id);
+  // console.log('teiId :>> ', teiId);
 
   let data = {};
 

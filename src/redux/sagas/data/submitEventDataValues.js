@@ -287,7 +287,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
           );
           console.log("no TEI", updatedMemberTei);
           yield call(pushTEI, updatedMemberTei);
-          yield put(getTeiSuccessMessage(`Created successfully`));
+          // yield put(getTeiSuccessMessage(`Created successfully`));
         } catch (error) {
           console.log("no TEI", error);
         }
@@ -306,20 +306,23 @@ function* handleSubmitEventDataValues({ dataValues }) {
 function* pushTEI(updatedMemberTei) {
   console.log("pushTEI", updatedMemberTei.data);
   const { offlineStatus } = yield select((state) => state.common);
+  let pushTie;
   try {
     // OFFLINE MODE
     if (offlineStatus) {
-      yield call(trackedEntityManager.setTrackedEntityInstance, {
+      pushTie=  yield call(trackedEntityManager.setTrackedEntityInstance, {
         trackedEntity: updatedMemberTei.data,
       });
     } else {
-      yield call(dataApi.postTrackedEntityInstances, {
+      pushTie=  yield call(dataApi.postTrackedEntityInstances, {
         trackedEntities: [updatedMemberTei.data],
       });
     }
+    yield put(getTeiSuccessMessage(`Created successfully`));
   } catch (e) {
-    console.error("pushTEI", e.message);
-    yield put(getTeiError(e.message));
+    // console.log('pushTie :>> ', pushTie);
+    console.error("pushTEI", e);
+    yield put(getTeiError('Data submission failed'));
   }
 }
 

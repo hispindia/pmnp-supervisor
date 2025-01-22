@@ -17,7 +17,6 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
   const dataElements = useSelector((state) => state.metadata.programMetadata.programStages[0].dataElements);
   const Dhis2FormItem = useMemo(() => withDhis2FormItem(dataElements)(CFormControl), [dataElements]);
 
-
   const { form, surveyList, loadServeyFields } = useHouseholdSurveyForm(values)
 
   const { t } = useTranslation();
@@ -309,7 +308,7 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
       thirdRowId,
       name,
       type,
-      hide,
+      hidden,
       permanentHide,
       dependentFields = [],
       setValuesFunc = () => { },
@@ -334,15 +333,14 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
               <Dhis2FormItem
                 noStyle
                 id={uid}
+                hidden={permanentHide == true ? true : hidden}
                 dependentFields={dependentFields}
                 setValuesFunc={setValuesFunc}
                 showFieldFunc={showFieldFunc}
                 childPropsFunc={childPropsFunc}
 
               >
-                <InputField
-                  disabled={permanentHide == true ? true : hide}
-                  size="small" style={{ minWidth: 120 }} />
+                <InputField size="small" style={{ minWidth: 120 }} />
               </Dhis2FormItem>
             ),
           };
@@ -353,17 +351,22 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
             label: name,
             input1: (
               <Dhis2FormItem
+                hidden={hidden}
                 displayFormName={t("some")} id={some}>
                 <InputField size="small" />
               </Dhis2FormItem>
             ),
             input2: (
-              <Dhis2FormItem displayFormName={t("alot")} id={alot}>
+              <Dhis2FormItem
+                hidden={hidden}
+                displayFormName={t("alot")} id={alot}>
                 <InputField size="small" />
               </Dhis2FormItem>
             ),
             input3: (
-              <Dhis2FormItem displayFormName={t(thirdRowTitle)} id={thirdRowId}>
+              <Dhis2FormItem
+                hidden={hidden}
+                displayFormName={t(thirdRowTitle)} id={thirdRowId}>
                 <InputField size="small" />
               </Dhis2FormItem>
             ),

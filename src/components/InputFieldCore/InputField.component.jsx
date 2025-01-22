@@ -69,6 +69,7 @@ const InputField = ({
         <SelectField
           value={generateSelectFieldValue(vs, value)}
           valueSet={vs}
+          handleBlur={onBlur}
           handleChange={onChange}
           disabled={disabled}
           {...props}

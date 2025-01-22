@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useDispatch, useSelector } from "react-redux";
-import { FORM_ACTION_TYPES } from "../constants";
+import { defaultProgramTrackedEntityAttributeDisable, FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE } from "../constants";
 
 // Icon
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -59,7 +59,7 @@ const CascadeTable = (props) => {
     transformData(metadata, props.data, dataValuesTranslate, locale)
   );
 
-  console.log(' profile :>> ',  profile);
+  // console.log(' profile :>> ',  profile);
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
 
@@ -109,12 +109,13 @@ const CascadeTable = (props) => {
   const handleBeforeAddNewRow = () => {
     // Before add new data
     setFormStatus(FORM_ACTION_TYPES.ADD_NEW);
-    setSelectedData({ id: generateUid(), isNew: true, "hDE1WNqTTwF": profile.attributes["b4UUhQPwlRH"]});
+    setSelectedData({ id: generateUid(), isNew: true, "hDE1WNqTTwF": profile.attributes["b4UUhQPwlRH"] });
     // setMetadata(JSON.parse(JSON.stringify(originMetadata)));
     setSelectedRowIndex(null);
   };
 
   const handleAddNewRow = (e, row, continueAdd) => {
+    console.trace('row:>>>', row);
     // Add new data
     !continueAdd && setFormStatus(FORM_ACTION_TYPES.NONE);
     data.push(row);

@@ -79,7 +79,7 @@ const InputField = (props) => {
           <DatePicker
             value={value ? moment(value) : ""}
             onChange={(momentObject) => {
-              onChange(momentObject.format("YYYY-MM-DD"));
+              momentObject && onChange(momentObject.format("YYYY-MM-DD"));
             }}
           />
         );

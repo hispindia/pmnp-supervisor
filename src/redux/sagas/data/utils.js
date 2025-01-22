@@ -212,7 +212,7 @@ const convertValueBack = (valueType, value) => {
 };
 
 export function* generateTEIDhis2Payload(payload, programMetadata) {
-  console.log({ payload, programMetadata });
+  console.log('**********:>>>', { payload, programMetadata });
   // let { family, currentEvent, memberEvent, memberDetails, memberTEI } = payload;
   let { family, memberEvent, memberDetails, memberEnrollment } = payload;
 
@@ -276,26 +276,55 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     events: [],
   };
 
-  let eventPayload = {
-    event: event,
-    status: "COMPLETED",
-    program: "xvzrp56zKvI",
-    programStage: "Ux1dcyOiHe7",
-    enrollmentStatus: "ACTIVE",
-    enrollment: enrollment,
-    orgUnit: orgUnit,
-    occurredAt: memberEvent.occurredAt,
-    dueDate: memberEvent.occurredAt,
-    trackedEntity: memberDetails.id,
-    status: memberEvent.status,
-    dataValues: [],
-  };
+  // let eventPayload = {
+  //   event: event,
+  //   status: "COMPLETED",
+  //   program: programMetadata.id || 'n/a',
+  //   // program: "xvzrp56zKvI",
+  //   programStage: "Ux1dcyOiHe7",
+  //   enrollmentStatus: "ACTIVE",
+  //   enrollment: enrollment,
+  //   orgUnit: orgUnit,
+  //   occurredAt: memberEvent.occurredAt,
+  //   dueDate: memberEvent.occurredAt,
+  //   trackedEntity: memberDetails.id,
+  //   status: memberEvent.status,
+  //   dataValues: [],
+  // };
+
+  // modified event payload for multiple program stages.
+  let modifiedEventPayload = []
 
   // Loop through programStages
   programMetadata.programStages.forEach((programStage) => {
+
+    let eventPayload = {
+      event: event,
+      status: "COMPLETED",
+      program: programMetadata.id || 'n/a',
+      // program: "xvzrp56zKvI",
+      // programStage: "Ux1dcyOiHe7",
+      programStage: programStage.id,
+      enrollmentStatus: "ACTIVE",
+      enrollment: enrollment,
+      orgUnit: orgUnit,
+      occurredAt: memberEvent.occurredAt,
+      dueDate: memberEvent.occurredAt,
+      trackedEntity: memberDetails.id,
+      status: memberEvent.status,
+      dataValues: [],
+    };
+
+
     programStage.dataElements.forEach((de) => {
       const value = convertValueBack(de.valueType, memberDetails[de.id]);
 
+      if (de.id == "ig2YSpQdP55") {
+        eventPayload.dataValues.push({
+          dataElement: "ig2YSpQdP55",
+          value: family.trackedEntity,
+        });
+      }
       if (!value) {
         return;
       }
@@ -305,6 +334,12 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
         value,
       });
     });
+
+    // Update occurred and due date values
+    eventPayload.occurredAt = memberEvent.occurredAt;
+    eventPayload.dueDate = memberEvent.occurredAt;
+
+    modifiedEventPayload.push(eventPayload);
   });
 
   // let programStage = programMetadata.programStages[0];
@@ -324,16 +359,17 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
   // });
 
   // assign family TEI id to each member
-  eventPayload.dataValues.push({
-    dataElement: "ig2YSpQdP55",
-    value: family.trackedEntity,
-  });
+  // eventPayload.dataValues.push({
+  //   dataElement: "ig2YSpQdP55",
+  //   value: family.trackedEntity,
+  // });
 
-  eventPayload.occurredAt = memberEvent.occurredAt;
-  eventPayload.dueDate = memberEvent.occurredAt;
+  // eventPayload.occurredAt = memberEvent.occurredAt;
+  // eventPayload.dueDate = memberEvent.occurredAt;
 
   // Combine payload
-  enrollmentPayload.events.push(eventPayload);
+  // enrollmentPayload.events.push(eventPayload);
+  enrollmentPayload.events = modifiedEventPayload;
   tei.enrollments.push(enrollmentPayload);
 
   console.log({ tei, memberDetails });

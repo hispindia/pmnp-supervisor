@@ -29,7 +29,7 @@ const DateField = (
   const { t } = useTranslation();
   const { disabled = false, ...other } = props;
   let fieldValue = value;
-  console.log('fieldValue :>> ', fieldValue);
+  // console.log('fieldValue :>> ', fieldValue);
 
   if (moment(value, "YYYY-MM-DD", true).isValid()) {
     fieldValue = moment(value, "YYYY-MM-DD");

@@ -44,10 +44,8 @@ function CaptureForm(props) {
     onSubmit,
     clear,
   } = useForm(_.cloneDeep(metadata), data, {
-    compulsory: t("thisFieldIsRequired")
+    compulsory: t("thisFieldIsRequired"),
   });
-
-  console.log('formData :>> ', formData, data);
 
   useEffect(() => {
     initFromData(data);
@@ -70,12 +68,15 @@ function CaptureForm(props) {
     };
   }, []);
 
+
   const editCall = (metadata, prevData, formData, code, value) => {
+    console.log('editCall called')
     let data = _.clone(formData);
     let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
       obj[md.code] = md;
       return obj;
     }, {});
+
     editRowCallback(cloneMetadata, prevData, data, code, value);
 
     setFormData({ ...data });
@@ -105,6 +106,7 @@ function CaptureForm(props) {
               }
               attribute={f.attribute}
               value={formData[f.code] || ""}
+
               onBlur={(value) =>
                 editCall(
                   formMetadata,
@@ -133,11 +135,11 @@ function CaptureForm(props) {
 
   const generateSectionFields = () => {
     if (!programSections || programSections.length === 0) {
-      const trackedEntityAttributes = programMetadataMember.trackedEntityAttributes.map((t) => t.id);
+      const trackedEntityAttributes =
+        programMetadataMember.trackedEntityAttributes.map((t) => t.id);
       const TEIFormMetadata = formMetadata.filter((f) =>
         trackedEntityAttributes.includes(f.id)
       );
-      console.log('TEIFormMetadata::::if :>> ', TEIFormMetadata);
       return <div className="row">{generateFields(TEIFormMetadata)}</div>;
     }
 
@@ -150,7 +152,7 @@ function CaptureForm(props) {
         .sort(
           (a, b) =>
             trackedEntityAttributes.indexOf(a.id) -
-              trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
+            trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
         );
 
       return (
@@ -175,6 +177,7 @@ function CaptureForm(props) {
         const programFormMetadata = formMetadata.filter((f) =>
           dataElements.includes(f.id)
         );
+
         return <div className="row">{generateFields(programFormMetadata)}</div>;
       });
     }
@@ -183,13 +186,10 @@ function CaptureForm(props) {
       const programStageSections = pStage.programStageSections;
       return programStageSections.map((pSection) => {
         const dataElements = pSection.dataElements.map((tea) => tea.id);
-        const programFormMetadata = formMetadata
-          .filter((f) => dataElements.includes(f.id))
-          .sort(
-            (a, b) =>
-              dataElements.indexOf(a.id) - dataElements.indexOf(b.id) ||
-              a.id.localeCompare(b.id)
-          );
+        const programFormMetadata = formMetadata.filter((f) => dataElements.includes(f.id)).sort((a, b) =>
+          dataElements.indexOf(a.id) - dataElements.indexOf(b.id) ||
+          a.id.localeCompare(b.id)
+        );
 
         return (
           <div className="row">
@@ -211,16 +211,19 @@ function CaptureForm(props) {
 
   const handleOnSubmit = (e, action) => {
     let status = onSubmit(null);
-    // if (status) {
-    switch (action) {
-      case "add":
-        handleAddNewRow(e, formData, false);
-        break;
-      case "edit":
-        let row = _.clone(formData);
-        handleEditRow(e, row, rowIndex);
-        break;
-      // }
+    console.trace(status);
+
+    console.log('status:>>', status)
+    if (status) {
+      switch (action) {
+        case "add":
+          handleAddNewRow(e, formData, false);
+          break;
+        case "edit":
+          let row = _.clone(formData);
+          handleEditRow(e, row, rowIndex);
+          break;
+      }
     }
   };
 
@@ -282,8 +285,6 @@ function CaptureForm(props) {
                 </button>
               </div>
             )}
-
-
           </div>
         </div>
       </div>

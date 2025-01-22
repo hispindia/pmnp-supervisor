@@ -1,6 +1,7 @@
 import { pull } from "./Fetch";
 import dev_data from "./dev_data";
 import BaseApiClass from "./BaseApiClass";
+import { defaultProgramTrackedEntityAttributeDisable, HAS_INITIAN_NOVALUE } from "@/components/constants";
 export default class MetadataApiClass extends BaseApiClass {
   getMe = () =>
     pull(
@@ -227,7 +228,6 @@ export default class MetadataApiClass extends BaseApiClass {
       localStorage.setItem("optionSets", JSON.stringify(newCacheOptions));
     }
 
-    const defaultProgramTrackedEntityAttributeDisable = ['hDE1WNqTTwF', 'BaiVwt8jVfg']
 
     const programMetadata = {};
     programMetadata.id = p.id;

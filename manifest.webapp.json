@@ -1,7 +1,7 @@
 {
-  "name": "Household Information V2",
+  "name": "Household Health Surveillance",
   "short_name": "FIv2 PWA",
-  "description": "Household Information V2",
+  "description": "Household Health Surveillance",
   "background_color": "#5a0fc8",
   "theme_color": "#5a0fc8",
   "display": "standalone",

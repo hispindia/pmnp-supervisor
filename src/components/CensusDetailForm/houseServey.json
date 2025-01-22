@@ -237,28 +237,6 @@
       "hide": false,
       "styles": {}
     },
-
-    {
-      "type": "title",
-      "name": "Sanitation",
-      "hide": false,
-      "styles": { "fontWeight": "bold" }
-    },
-    {
-      "type": "data",
-      "name": "Proper drainage",
-      "uid": "spZ0rGykIK6",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Livestock without separate animal-shed",
-      "uid": "nFFkSQtqGqL",
-      "hide": false,
-      "styles": {}
-    },
-
     {
       "type": "title",
       "name": "Facility accessibility and income",
@@ -270,15 +248,20 @@
       "name": "Using the usual means, how long does it take to get to the nearest facility in minutes?",
       "uid": "ezLCrmL40SD",
       "hide": false,
-
       "styles": {}
     },
     {
       "type": "data",
-      "name": "What was your household’s TOTAL INCOME (collective for all members and all sources: salaries, wages, pension, farm produce, dairy, forest products, zorig chusum, remittance, kidu, business, real state, rental, etc ) last year?",
+      "name": "In the past 12 months, was there ever a time when your household did not have enough food to feed all its members?",
       "uid": "Cql7XO3Z5Fe",
       "hide": false,
-
+      "styles": {}
+    },
+    {
+      "type": "data",
+      "name": "Which of the following best describes your household’s overall economic status over the past year?",
+      "uid": "SQmWcDdvnem",
+      "hide": false,
       "styles": {}
     },
 

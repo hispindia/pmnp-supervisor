@@ -29,9 +29,10 @@ const useHouseholdSurveyForm = (values) => {
 
         if (values['NPb0hOBn6g9'] == 'Empty') {
             tableRenderData.forEach(item => {
-                if (item.uid != 'NPb0hOBn6g9') { item.hide = true }
+                if (item.uid != 'NPb0hOBn6g9') { item.hidden = true }
             })
         }
+
     }, [values])
 
 
@@ -43,11 +44,12 @@ const useHouseholdSurveyForm = (values) => {
         if (event.length) {
             values[uuid] = value
             if (uuid == 'NPb0hOBn6g9' && value == 'Empty') {
+                let keysToKeep = ["NPb0hOBn6g9", "tjXaQPI9OcQ"]
+
                 tableRenderData.forEach(item => {
-                    if (item.uid != 'NPb0hOBn6g9') { item.hide = true }
+                    if (!keysToKeep.includes(item.uid)) { item.hidden = true }
                 })
 
-                let keysToKeep = ["NPb0hOBn6g9", "tjXaQPI9OcQ"]
 
                 for (let key in values) {
                     if (!keysToKeep.includes(key)) {
@@ -62,40 +64,41 @@ const useHouseholdSurveyForm = (values) => {
                 if (value == "Pipe in compound but outside the dwelling") {
                     values["lRVDgo5HwYe"] = "In own dwelling"
 
-                    tableRenderData.forEach(item => {
-                        if (item.uid == 'lRVDgo5HwYe') { item.hide = false }
-                    })
+                    // tableRenderData.forEach(item => {
+                    //     if (item.uid == 'lRVDgo5HwYe') { item.hidden = false }
+                    // })
 
                     form.setFieldsValue(values);
                 } if (value == "Piped in dwelling") {
                     values["lRVDgo5HwYe"] = "In own dwelling"
-                    tableRenderData.forEach(item => {
-                        if (item.uid == 'lRVDgo5HwYe') { item.hide = false }
-                    })
+                    // tableRenderData.forEach(item => {
+                    //     if (item.uid == 'lRVDgo5HwYe') { item.hidden = false }
+                    // })
 
                     form.setFieldsValue(values);
-                } else if (!dwelling.includes(value)) {
-                    values["lRVDgo5HwYe"] = null
-                    tableRenderData.forEach(item => {
-                        if (item.uid == 'lRVDgo5HwYe') { item.hide = true }
-                    })
+                }
+                // else if (!dwelling.includes(value)) {
+                //     values["lRVDgo5HwYe"] = null
+                //     tableRenderData.forEach(item => {
+                //         if (item.uid == 'lRVDgo5HwYe') { item.hidden = true }
+                //     })
 
-                    form.setFieldsValue(values);
-                } else {
+                //     form.setFieldsValue(values);
+                // }
+                else {
                     delete values["lRVDgo5HwYe"]
                     form.setFieldsValue(values);
                 }
             } else if (uuid == "JT2QvZDPRAy") {
                 if (value == "No facility/bush/field") {
                     tableRenderData.forEach(item => {
-                        if (item.uid == "ySLtaPSULVN") { item.hide = true }
+                        if ((item.uid == "ySLtaPSULVN") || (item.uid == 'RIqHmgT1OWu')) { item.hidden = true }
                     })
 
                     values["ySLtaPSULVN"] = null
                 } else {
-
                     tableRenderData.forEach(item => {
-                        if (item.uid == "ySLtaPSULVN") { item.hide = false }
+                        if ((item.uid == "ySLtaPSULVN") || (item.uid == 'RIqHmgT1OWu')) { item.hidden = false }
                     })
 
                 }
@@ -105,14 +108,14 @@ const useHouseholdSurveyForm = (values) => {
                 if (value == "Never emptied") {
 
                     tableRenderData.forEach(item => {
-                        if (item.uid == "RIqHmgT1OWu") { item.hide = true }
+                        if (item.uid == "RIqHmgT1OWu") { item.hidden = true }
                     })
 
                     values["RIqHmgT1OWu"] = null
                 } else {
 
                     tableRenderData.forEach(item => {
-                        if (item.uid == "RIqHmgT1OWu") { item.hide = false }
+                        if (item.uid == "RIqHmgT1OWu") { item.hidden = false }
                     })
                 }
                 form.setFieldsValue(values);
@@ -122,14 +125,14 @@ const useHouseholdSurveyForm = (values) => {
                 if (ifExist.includes(value)) {
 
                     tableRenderData.forEach(item => {
-                        if ((item.uid == "d4VMT4orArm") || (item.uid == 'Ju3AkdRHT52')) { item.hide = true }
+                        if ((item.uid == "d4VMT4orArm") || (item.uid == 'Ju3AkdRHT52')) { item.hidden = true }
                     })
                     values["d4VMT4orArm"] = null
                     values["Ju3AkdRHT52"] = null
                 } else {
 
                     tableRenderData.forEach(item => {
-                        if ((item.uid == "d4VMT4orArm") || (item.uid == 'Ju3AkdRHT52')) { item.hide = false }
+                        if ((item.uid == "d4VMT4orArm") || (item.uid == 'Ju3AkdRHT52')) { item.hidden = false }
                     })
                 }
                 form.setFieldsValue(values);
@@ -139,7 +142,7 @@ const useHouseholdSurveyForm = (values) => {
                 if (value == "false") {
 
                     tableRenderData.forEach(item => {
-                        if (ifExist.includes(item.uid)) { item.hide = true }
+                        if (ifExist.includes(item.uid)) { item.hidden = true }
                     })
                     values["Ojvu6krZKBX"] = null
                     values["WTFyAoDjI4X"] = null
@@ -149,14 +152,14 @@ const useHouseholdSurveyForm = (values) => {
                 } else if (value != "false") {
 
                     tableRenderData.forEach(item => {
-                        if (ifExist.includes(item.uid)) { item.hide = false }
+                        if (ifExist.includes(item.uid)) { item.hidden = false }
                     })
                 }
                 form.setFieldsValue(values);
 
             } else if (uuid == 'NPb0hOBn6g9' && value != 'Empty') {
                 tableRenderData.forEach(item => {
-                    item.hide = false
+                    item.hidden = false
                 })
             }
 

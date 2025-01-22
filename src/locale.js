@@ -24,7 +24,7 @@ const locale = {
     lo: "ລາຍລະອຽດການສຳຫຼວດ (ບ 1 ຂ)",
   },
   "Household Survey": {
-    en: "Household Survey",
+    en: "Household Information",
     lo: "ການຜົນການຄອບຄົວ",
   },
   complete: {
