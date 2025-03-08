@@ -1,3 +1,5 @@
+import { HOUSEHOLD_PROGRAM_ID } from "@/constants/app-config";
+
 const all_dx = [
   "L0EgY4EomHv.xllqsmDiexq;L0EgY4EomHv.hx5FKOqT18B",
   "L0EgY4EomHv.CCtvT9h1yB4;L0EgY4EomHv.yHQ9LbhuLPh",
@@ -54,7 +56,7 @@ const getAggregatedData = (year, orgUnit, dataApi) => {
 
 const getOptionDataByDeId = (deId) => async (year, orgUnit, dataApi) =>
   dataApi.get(
-    `/api/analytics/events/aggregate/L0EgY4EomHv.json`,
+    `/api/analytics/events/aggregate/${HOUSEHOLD_PROGRAM_ID}.json`,
     { paging: false },
     [
       `dimension=pe:${year}&dimension=vY4mlqYfJEH.${deId}&filter=ou:${orgUnit.id}&stage=vY4mlqYfJEH&displayProperty=NAME&outputType=EVENT`,
@@ -63,7 +65,7 @@ const getOptionDataByDeId = (deId) => async (year, orgUnit, dataApi) =>
 
 const getFamilyRegisteredData = async (year, orgUnit, dataApi) =>
   dataApi.get(
-    `/api/analytics/events/aggregate/L0EgY4EomHv.json`,
+    `/api/analytics/events/aggregate/${HOUSEHOLD_PROGRAM_ID}.json`,
     { paging: false },
     [
       `dimension=ou:${orgUnit.id}&dimension=pe:${year}&stage=vY4mlqYfJEH&displayProperty=NAME&outputType=ENROLLMENT`,
@@ -72,7 +74,7 @@ const getFamilyRegisteredData = async (year, orgUnit, dataApi) =>
 
 const getTotalPopulationData = async (year, orgUnit, dataApi) =>
   dataApi.get(
-    `/api/analytics/events/aggregate/L0EgY4EomHv.json`,
+    `/api/analytics/events/aggregate/${HOUSEHOLD_PROGRAM_ID}.json`,
     { paging: false },
     [
       `dimension=pe:${year}&dimension=ou:${orgUnit.id}&stage=vY4mlqYfJEH&displayProperty=NAME&outputType=EVENT&value=Va3FC8Io1b0&aggregationType=SUM`,

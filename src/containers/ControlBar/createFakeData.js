@@ -1,3 +1,4 @@
+import { HOUSEHOLD_PROGRAM_ID } from "@/constants/app-config";
 import { generateUid } from "@/utils";
 
 export const createFakeData = () => {
@@ -19,7 +20,7 @@ export const createFakeData = () => {
     enrs: [
       {
         updatedAt: "2024-11-08",
-        program: "L0EgY4EomHv",
+        program: HOUSEHOLD_PROGRAM_ID,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: familyTeiId,
         incidentDate: "2024-12-31",
@@ -343,7 +344,7 @@ export const createFakeData = () => {
         event: generateUid(),
         eventStatus: "ACTIVE",
         isOnline: 0,
-        program: "L0EgY4EomHv",
+        program: HOUSEHOLD_PROGRAM_ID,
         programStage: "vY4mlqYfJEH",
         enrollment: familyEnrId,
         orgUnit: "Q3PHpzrZzn8",
@@ -398,7 +399,7 @@ export const createFakeData = () => {
         event: generateUid(),
         eventStatus: "ACTIVE",
         isOnline: 0,
-        program: "L0EgY4EomHv",
+        program: HOUSEHOLD_PROGRAM_ID,
         programStage: "vY4mlqYfJEH",
         enrollment: familyEnrId,
         orgUnit: "Q3PHpzrZzn8",
@@ -575,7 +576,7 @@ export const createFakeData = () => {
         enrollments: [
           {
             updatedAt: "2024-11-08",
-            program: "L0EgY4EomHv",
+            program: HOUSEHOLD_PROGRAM_ID,
             orgUnit: "Q3PHpzrZzn8",
             trackedEntity: familyTeiId,
             incidentDate: "2024-12-31",

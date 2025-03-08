@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
+import { HOUSEHOLD_PROGRAM_ID } from "@/constants/app-config";
 
 export const AppContext = React.createContext(null);
 
@@ -19,7 +20,7 @@ export default ({ children }) => {
   if (process.env.NODE_ENV == "development") {
   }
 
-  const [selectedProgram, setSelectedProgram] = useState("L0EgY4EomHv");
+  const [selectedProgram, setSelectedProgram] = useState(HOUSEHOLD_PROGRAM_ID);
   const [selectedTei, setSelectedTei] = useState(null);
   const [selectedEnr, setSelectedEnr] = useState(null);
 
