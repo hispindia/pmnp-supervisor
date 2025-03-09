@@ -259,8 +259,8 @@ function* handleSubmitEventDataValues({ dataValues }) {
         if (selectedMember && selectedMember.relation == "head") {
           const newFamilyAttributes = {
             ...currentTei.attributes,
-            IEE2BMhfoSc: selectedMember.firstname,
-            IBLkiaYRRL3: selectedMember.lastname,
+            [MEMBER_FIRST_NAME_ATTRIBUTE_ID]: selectedMember.firstname,
+            [MEMBER_LAST_NAME_ATTRIBUTE_ID]: selectedMember.lastname,
           };
 
           yield put(submitFamilyTeiAttributes(newFamilyAttributes));

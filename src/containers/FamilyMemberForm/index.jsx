@@ -46,9 +46,6 @@ const FamilyMemberFormContainer = () => {
   }, [JSON.stringify(event)]);
 
   useEffect(() => {
-    // console.log("update selected year", events, selectedYear, eventData);
-    // https://dhis2.asia/laomembers/api/trackedEntityInstances/query.json?attribute=gv9xX5w4kKt:EQ:yAHVhPxHorS&ou=Y9PhSNpBvg0&attribute=tASKWHyRolc&attribute=NLth2WTyo7M&attribute=tJrT8GIy477&attribute=BaiVwt8jVfg&attribute=IBLkiaYRRL3&attribute=bIzDI9HJCB0&attribute=IEE2BMhfoSc&attribute=tQeFLjYbqzv&attribute=DmuazFb368B&attribute=ck9h7CokxQE
-
     if (events && events.length > 0 && eventData) {
       initEvent(JSON.parse(JSON.stringify(eventData)));
     }
