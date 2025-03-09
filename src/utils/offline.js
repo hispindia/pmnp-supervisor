@@ -1,6 +1,6 @@
 import { metadataApi } from "@/api";
 import {
-  HOUSEHOLD_MEMBER_PROGRAM_ID,
+  MEMBER_PROGRAM_ID,
   HOUSEHOLD_PROGRAM_ID,
 } from "@/constants/app-config";
 import * as meManager from "@/indexDB/MeManager/MeManager";
@@ -16,24 +16,24 @@ export const getMetadataSet = (isOfflineMode) => {
       organisationUnitManager.getAllOrganisationUnits(),
       meManager.getMe(),
       organisationUnitLevelsManager.getAllOrganisationUnitLevels(),
-      programManager.getProgramById(HOUSEHOLD_MEMBER_PROGRAM_ID),
+      programManager.getProgramById(MEMBER_PROGRAM_ID),
       organisationUnitManager.getUserOrgs(),
     ];
   } else {
     return [
       metadataApi.getProgramMetadata(HOUSEHOLD_PROGRAM_ID),
       metadataApi.get(`/api/organisationUnits`, {}, [
-        "filter=level:in:[1,2,3,4]&paging=false&fields=id,code,path,displayName,level,parent,translations",
+        "paging=false&fields=id,code,path,displayName,level,parent,translations",
       ]),
       metadataApi.getMe(),
       metadataApi.getOrgUnitLevels(),
-      metadataApi.getProgramMetadata(HOUSEHOLD_MEMBER_PROGRAM_ID),
+      metadataApi.getProgramMetadata(MEMBER_PROGRAM_ID),
       metadataApi.getUserOrgUnits(),
     ];
   }
 };
 
-// xvzrp56zKvI
+// MEMBER_PROGRAM_ID
 
 export const findOffline = (TABLE_NAME) =>
   db[TABLE_NAME].where("isOnline").anyOf(0).toArray();

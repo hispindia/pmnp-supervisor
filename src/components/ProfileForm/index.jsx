@@ -130,8 +130,8 @@ const ProfileForm = ({
         </div> */}
         <div className="col-lg-3">
           <Dhis2FormItem
-            id="b4UUhQPwlRH"
-          // displayFormName={t("unitOfVillage")}
+            id="IKOSsYJJZis"
+            // displayFormName={t("unitOfVillage")}
           >
             <InputField size="large" disabled={true} />
           </Dhis2FormItem>
@@ -139,22 +139,25 @@ const ProfileForm = ({
         <div className="col-lg-3">
           <Dhis2FormItem
             id="eMYBznRdn0t"
-          // displayFormName={t("houseNumber")}
+            // displayFormName={t("Barangay")}
           >
             <InputField size="large" disabled={!isEdit} />
           </Dhis2FormItem>
         </div>
 
         <div className="col-lg-3">
-          <Dhis2FormItem id="alEL4UIuRee"          >
+          <Dhis2FormItem
+            id="J2KmQw53CRl"
+            //Purok / Zone
+          >
             <InputField size="large" disabled={!isEdit} />
           </Dhis2FormItem>
         </div>
-        
+
         <div className="col-lg-3">
           <Dhis2FormItem
-            id="WcKI8B0MYaB"
-          // displayFormName={t("houseNumber")}
+            id="HYNM3CJYLje"
+            // displayFormName={t("Street Address")}
           >
             <InputField size="large" disabled={!isEdit} />
           </Dhis2FormItem>
@@ -346,10 +349,10 @@ const ProfileForm = ({
               dependentFields={[
                 "BUEzQEErqa7",
                 // "G9KYJZ8dW76",
-                "b4UUhQPwlRH",
+                "IKOSsYJJZis",
                 "eMYBznRdn0t",
-                "alEL4UIuRee",
-                "WcKI8B0MYaB",
+                "J2KmQw53CRl",
+                "HYNM3CJYLje",
 
                 // "xbwURy2jG2K",
                 // "W8WZcI1SUjC",

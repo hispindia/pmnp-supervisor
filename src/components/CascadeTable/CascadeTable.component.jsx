@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultProgramTrackedEntityAttributeDisable, FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE } from "../constants";
+import {
+  defaultProgramTrackedEntityAttributeDisable,
+  FORM_ACTION_TYPES,
+  HAS_INITIAN_NOVALUE,
+} from "../constants";
 
 // Icon
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -22,7 +26,6 @@ import "./CascadeTable.styles.css";
 import { transformData, transformMetadataToColumns } from "./utils";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
-
 
 const CascadeTable = (props) => {
   const {
@@ -109,13 +112,17 @@ const CascadeTable = (props) => {
   const handleBeforeAddNewRow = () => {
     // Before add new data
     setFormStatus(FORM_ACTION_TYPES.ADD_NEW);
-    setSelectedData({ id: generateUid(), isNew: true, "hDE1WNqTTwF": profile.attributes["b4UUhQPwlRH"] });
+    setSelectedData({
+      id: generateUid(),
+      isNew: true,
+      hDE1WNqTTwF: profile.attributes["IKOSsYJJZis"],
+    });
     // setMetadata(JSON.parse(JSON.stringify(originMetadata)));
     setSelectedRowIndex(null);
   };
 
   const handleAddNewRow = (e, row, continueAdd) => {
-    console.trace('row:>>>', row);
+    console.trace("row:>>>", row);
     // Add new data
     !continueAdd && setFormStatus(FORM_ACTION_TYPES.NONE);
     data.push(row);
@@ -252,7 +259,6 @@ const CascadeTable = (props) => {
   }, [JSON.stringify(data)]);
 
   useEffect(() => {
-
     let tempDataValuesTranslate = metadata
       .filter((e) => e.valueSet && e.valueSet.length > 0)
       .reduce((obj, e) => {

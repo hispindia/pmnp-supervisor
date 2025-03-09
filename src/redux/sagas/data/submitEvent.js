@@ -24,6 +24,10 @@ import moment from "moment";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
+import {
+  HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
+  MEMBER_PROGRAM_ID,
+} from "@/constants/app-config";
 
 function* handleSubmitEvent({ event }) {
   const { offlineStatus } = yield select((state) => state.common);
@@ -169,7 +173,7 @@ function* handleCloneEvent({ year }) {
       trackedEntity: currentTei.trackedEntity,
       orgUnit: selectedOrgUnit.id,
       program: programMetadata.id,
-      programStage: "vY4mlqYfJEH",
+      programStage: HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
       enrollment: currentEnrollment.enrollment,
       occurredAt: `${year}-06-30`,
       dueDate: `${year}-06-30`,
@@ -183,7 +187,7 @@ function* handleCloneEvent({ year }) {
       trackedEntity: currentTei.trackedEntity,
       orgUnit: selectedOrgUnit.id,
       program: programMetadata.id,
-      programStage: "vY4mlqYfJEH",
+      programStage: HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
       enrollment: currentEnrollment.enrollment,
       occurredAt: `${year}-12-31`,
       dueDate: `${year}-12-31`,
@@ -241,14 +245,14 @@ function* handleCloneEvent({ year }) {
         memberTEIsEvents = yield call(
           trackedEntityManager.getTrackedEntityInstancesByIDs,
           {
-            program: "xvzrp56zKvI",
+            program: MEMBER_PROGRAM_ID,
             trackedEntities: memberTEIsUid,
           }
         );
       } else {
         memberTEIsEvents = yield call(
           dataApi.getAllTrackedEntityInstancesByIDs,
-          "xvzrp56zKvI",
+          MEMBER_PROGRAM_ID,
           memberTEIsUid
         );
       }

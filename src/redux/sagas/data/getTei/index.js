@@ -14,18 +14,22 @@ import { getSelectedOrgUnitByOuId, getTeiId } from "../utils";
 import initCascadeDataFromTEIsEvents from "./initCascadeData";
 import handleInitData from "./initData";
 import handleInitNewData from "./initNewData";
+import {
+  FAMILY_UID_ATTRIBUTE_ID,
+  MEMBER_PROGRAM_ID,
+} from "@/constants/app-config";
 
 export const teiMapping = {
-  firstname: "IEE2BMhfoSc",
-  lastname: "IBLkiaYRRL3",
-  sex: "DmuazFb368B",
-  ethnicity: "tJrT8GIy477",
-  birthyear: "bIzDI9HJCB0",
-  age: "BaiVwt8jVfg",
-  nationality: "NLth2WTyo7M",
-  status: "tASKWHyRolc",
-  agetype: "ck9h7CokxQE",
-  DOB: "tQeFLjYbqzv",
+  // firstname: "IEE2BMhfoSc",
+  // lastname: "IBLkiaYRRL3",
+  // sex: "DmuazFb368B",
+  // ethnicity: "tJrT8GIy477",
+  // birthyear: "bIzDI9HJCB0",
+  // age: "BaiVwt8jVfg",
+  // nationality: "NLth2WTyo7M",
+  // status: "tASKWHyRolc",
+  // agetype: "ck9h7CokxQE",
+  // DOB: "tQeFLjYbqzv",
 };
 
 function* handleGetTei() {
@@ -94,16 +98,16 @@ function* initExistedDataSaga() {
   if (offlineStatus) {
     memberTEIs = yield call(trackedEntityManager.getTrackedEntityInstances, {
       orgUnit,
-      filters: [`attribute=gv9xX5w4kKt:EQ:${teiId}`],
+      filters: [`attribute=${FAMILY_UID_ATTRIBUTE_ID}:EQ:${teiId}`],
     });
   } else {
     // get Members TEI
     memberTEIs = yield call(
       dataApi.getTrackedEntityInstances,
       orgUnit,
-      [`attribute=gv9xX5w4kKt:EQ:${teiId}`],
+      [`attribute=${FAMILY_UID_ATTRIBUTE_ID}:EQ:${teiId}`],
       Object.entries(teiMapping).map((e) => e[1]),
-      `xvzrp56zKvI`
+      MEMBER_PROGRAM_ID
     );
 
     console.log({ memberTEIs });
@@ -120,14 +124,14 @@ function* initExistedDataSaga() {
       memberTEIsEvents = yield call(
         trackedEntityManager.getTrackedEntityInstancesByIDs,
         {
-          program: "xvzrp56zKvI",
+          program: MEMBER_PROGRAM_ID,
           trackedEntities: memberTEIsUid,
         }
       );
     } else {
       memberTEIsEvents = yield call(
         dataApi.getAllTrackedEntityInstancesByIDs,
-        "xvzrp56zKvI",
+        MEMBER_PROGRAM_ID,
         memberTEIsUid
       );
     }

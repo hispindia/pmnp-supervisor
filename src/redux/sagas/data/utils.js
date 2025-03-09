@@ -1,9 +1,15 @@
+import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
+import {
+  FAMILY_UID_ATTRIBUTE_ID,
+  MEMBER_FAMILY_UID_ATTRIBUTE_ID,
+  MEMBER_PROGRAM_ID,
+  MEMBER_TRACKED_ENTITY_TYPE_ID,
+} from "@/constants/app-config";
+import { generateUid } from "@/utils";
 import { getEventByYearAndHalt6Month, getEventsByYear } from "@/utils/event";
 import moment from "moment";
 import queryString from "query-string";
 import { call, select } from "redux-saga/effects";
-import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
-import { at } from "lodash";
 
 export function* getTeiId() {
   const searchString = yield select((state) => state.router.location.search);
@@ -141,36 +147,6 @@ export function* transformEvent(event) {
   return transformed;
 }
 
-const teiMapping = {
-  BaiVwt8jVfg: "age",
-  DmuazFb368B: "sex",
-  IBLkiaYRRL3: "lastname",
-  IEE2BMhfoSc: "firstname",
-  NLth2WTyo7M: "nationality",
-  bIzDI9HJCB0: "birthyear",
-  ck9h7CokxQE: "agetype",
-  tASKWHyRolc: "status",
-  tJrT8GIy477: "ethnicity",
-  tQeFLjYbqzv: "DOB",
-  W4aInCTn8p5: "newFamilyBookNum",
-  rSETgSvyVpJ: "covidNum",
-  PYgXM3R2TQd: "policeNum",
-  g9wNk1T3MLE: "phoneNum",
-  // gv9xX5w4kKt: "FI_UID"
-};
-const enrMapping = {};
-const eventMapping = {
-  // PzzayUNGasj: "DOB",
-  Z9a4Vim1cuJ: "education",
-  hV0pAEbJqZj: "status",
-  it3Ih0CVTV1: "age",
-  kf8isugsc3x: "birthyear",
-  u0Ke4EXsIKZ: "relation",
-  vbBhehiwNLV: "insurance",
-  xXybyxfggiE: "maritalstatus",
-  xvLv4LQGQuT: "agetype",
-  // ig2YSpQdP55: "FI_UID"
-};
 const dataMapping = {
   Active: "active",
   Transferred: "transfer-out",
@@ -212,7 +188,7 @@ const convertValueBack = (valueType, value) => {
 };
 
 export function* generateTEIDhis2Payload(payload, programMetadata) {
-  console.log('**********:>>>', { payload, programMetadata });
+  console.log("**********:>>>", { payload, programMetadata });
   // let { family, currentEvent, memberEvent, memberDetails, memberTEI } = payload;
   let { family, memberEvent, memberDetails, memberEnrollment } = payload;
 
@@ -225,7 +201,7 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
   let tei = {
     orgUnit: orgUnit,
     trackedEntity: memberDetails.id,
-    trackedEntityType: "Y2TBztNgJpH",
+    trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
     programOwners: [],
     enrollments: [],
     attributes: [],
@@ -254,7 +230,7 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
 
   // assign family TEI id to each member
   tei.attributes.push({
-    attribute: "gv9xX5w4kKt",
+    attribute: FAMILY_UID_ATTRIBUTE_ID,
     value: family.trackedEntity,
   });
 
@@ -265,10 +241,10 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
   // ENR
   let enrollmentPayload = {
     orgUnit: orgUnit,
-    program: "xvzrp56zKvI",
+    program: MEMBER_PROGRAM_ID,
     trackedEntity: memberDetails.id,
     enrollment: enrollment,
-    trackedEntityType: "Y2TBztNgJpH",
+    trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
     enrolledAt: memberEnrollment.enrolledAt,
     occurredAt: memberEnrollment.enrolledAt,
     incidentDate: memberEnrollment.enrolledAt,
@@ -276,34 +252,15 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     events: [],
   };
 
-  // let eventPayload = {
-  //   event: event,
-  //   status: "COMPLETED",
-  //   program: programMetadata.id || 'n/a',
-  //   // program: "xvzrp56zKvI",
-  //   programStage: "Ux1dcyOiHe7",
-  //   enrollmentStatus: "ACTIVE",
-  //   enrollment: enrollment,
-  //   orgUnit: orgUnit,
-  //   occurredAt: memberEvent.occurredAt,
-  //   dueDate: memberEvent.occurredAt,
-  //   trackedEntity: memberDetails.id,
-  //   status: memberEvent.status,
-  //   dataValues: [],
-  // };
-
   // modified event payload for multiple program stages.
-  let modifiedEventPayload = []
+  let modifiedEventPayload = [];
 
   // Loop through programStages
   programMetadata.programStages.forEach((programStage) => {
-
     let eventPayload = {
-      event: event,
+      event: generateUid(),
       status: "COMPLETED",
-      program: programMetadata.id || 'n/a',
-      // program: "xvzrp56zKvI",
-      // programStage: "Ux1dcyOiHe7",
+      program: programMetadata.id || "n/a",
       programStage: programStage.id,
       enrollmentStatus: "ACTIVE",
       enrollment: enrollment,
@@ -315,13 +272,12 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
       dataValues: [],
     };
 
-
     programStage.dataElements.forEach((de) => {
       const value = convertValueBack(de.valueType, memberDetails[de.id]);
 
-      if (de.id == "ig2YSpQdP55") {
+      if (de.id == MEMBER_FAMILY_UID_ATTRIBUTE_ID) {
         eventPayload.dataValues.push({
-          dataElement: "ig2YSpQdP55",
+          dataElement: MEMBER_FAMILY_UID_ATTRIBUTE_ID,
           value: family.trackedEntity,
         });
       }

@@ -25,6 +25,10 @@ import { updateEvents } from "../../actions/data/tei/currentEvent";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import { getEventsByYear } from "@/utils/event";
+import {
+  MEMBER_FIRST_NAME_ATTRIBUTE_ID,
+  MEMBER_LAST_NAME_ATTRIBUTE_ID,
+} from "@/constants/app-config";
 
 function* handleSubmitEventDataValues({ dataValues }) {
   console.log("handleSubmitEventDataValues", { dataValues });
@@ -157,8 +161,8 @@ function* handleSubmitEventDataValues({ dataValues }) {
             if (selectedMember && selectedMember.relation == "head") {
               const newFamilyAttributes = {
                 ...currentTei.attributes,
-                IEE2BMhfoSc: selectedMember.firstname,
-                IBLkiaYRRL3: selectedMember.lastname,
+                [MEMBER_FIRST_NAME_ATTRIBUTE_ID]: selectedMember.firstname,
+                [MEMBER_LAST_NAME_ATTRIBUTE_ID]: selectedMember.lastname,
               };
 
               yield put(submitFamilyTeiAttributes(newFamilyAttributes));
@@ -269,7 +273,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
             incidentDate: newCurrentEvent.occurredAt,
           };
           let newEvent = {
-            event: generateUid(),
+            // event: generateUid(),
             occurredAt: newCurrentEvent.occurredAt,
             dueDate: newCurrentEvent.occurredAt,
           };
@@ -310,11 +314,11 @@ function* pushTEI(updatedMemberTei) {
   try {
     // OFFLINE MODE
     if (offlineStatus) {
-      pushTie=  yield call(trackedEntityManager.setTrackedEntityInstance, {
+      pushTie = yield call(trackedEntityManager.setTrackedEntityInstance, {
         trackedEntity: updatedMemberTei.data,
       });
     } else {
-      pushTie=  yield call(dataApi.postTrackedEntityInstances, {
+      pushTie = yield call(dataApi.postTrackedEntityInstances, {
         trackedEntities: [updatedMemberTei.data],
       });
     }
@@ -322,7 +326,7 @@ function* pushTEI(updatedMemberTei) {
   } catch (e) {
     // console.log('pushTie :>> ', pushTie);
     console.error("pushTEI", e);
-    yield put(getTeiError('Data submission failed'));
+    yield put(getTeiError("Data submission failed"));
   }
 }
 

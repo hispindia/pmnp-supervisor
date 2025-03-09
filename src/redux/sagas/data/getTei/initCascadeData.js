@@ -4,43 +4,8 @@ import { getCascadeSuccess } from "../../../actions/data/tei";
 import _ from "lodash";
 import moment from "moment";
 
-const teiMapping = {
-  id: "instance",
-  firstname: "IEE2BMhfoSc",
-  lastname: "IBLkiaYRRL3",
-  sex: "DmuazFb368B",
-  ethnicity: "tJrT8GIy477",
-  birthyear: "bIzDI9HJCB0",
-  // age: 'BaiVwt8jVfg',
-  nationality: "NLth2WTyo7M",
-  status: "tASKWHyRolc",
-  agetype: "ck9h7CokxQE",
-  DOB: "tQeFLjYbqzv",
-  // New Family Book Number
-  newFamilyBookNum: "W4aInCTn8p5",
-  // Covid Number
-  covidNum: "rSETgSvyVpJ",
-  // Police Number
-  policeNum: "PYgXM3R2TQd",
-  // Phone Number
-  phoneNum: "g9wNk1T3MLE",
-};
-
-const eventMapping = {
-  // DOB: "PzzayUNGasj", DOB of event ( do not use this )
-  relation: "u0Ke4EXsIKZ",
-  education: "Z9a4Vim1cuJ",
-  insurance: "vbBhehiwNLV",
-  maritalstatus: "xXybyxfggiE",
-  age: "it3Ih0CVTV1",
-};
-
 // construct data for family form Teis and Events
 function* initCascadeDataFromTEIsEvents(payload) {
-  // const programStages = yield select(
-  //   (state) => state.metadata.programMetadata.programStages
-  // );
-
   console.log("initCascadeDataFromTEIsEvents", { payload });
 
   let currentCascade = {};

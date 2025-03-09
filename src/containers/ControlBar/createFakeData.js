@@ -1,4 +1,12 @@
-import { HOUSEHOLD_PROGRAM_ID } from "@/constants/app-config";
+import {
+  FAMILY_UID_ATTRIBUTE_ID,
+  HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
+  MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
+  MEMBER_PROGRAM_ID,
+  MEMBER_TRACKED_ENTITY_TYPE_ID,
+  HOUSEHOLD_PROGRAM_ID,
+  MEMBER_FAMILY_UID_ATTRIBUTE_ID,
+} from "@/constants/app-config";
 import { generateUid } from "@/utils";
 
 export const createFakeData = () => {
@@ -34,9 +42,9 @@ export const createFakeData = () => {
       },
       {
         updatedAt: "2024-11-08",
-        program: "xvzrp56zKvI",
+        program: MEMBER_PROGRAM_ID,
         orgUnit: "Q3PHpzrZzn8",
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         trackedEntity: memberIds.member1.teiId,
         incidentDate: "2024-06-30",
         isOnline: 0,
@@ -50,9 +58,9 @@ export const createFakeData = () => {
       },
       {
         updatedAt: "2024-11-08",
-        program: "xvzrp56zKvI",
+        program: MEMBER_PROGRAM_ID,
         orgUnit: "Q3PHpzrZzn8",
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         trackedEntity: memberIds.member2.teiId,
         incidentDate: "2024-06-30",
         isOnline: 0,
@@ -66,9 +74,9 @@ export const createFakeData = () => {
       },
       {
         updatedAt: "2024-11-08",
-        program: "xvzrp56zKvI",
+        program: MEMBER_PROGRAM_ID,
         orgUnit: "Q3PHpzrZzn8",
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         trackedEntity: memberIds.member3.teiId,
         incidentDate: "2024-06-30",
         isOnline: 0,
@@ -82,9 +90,9 @@ export const createFakeData = () => {
       },
       {
         updatedAt: "2024-11-08",
-        program: "xvzrp56zKvI",
+        program: MEMBER_PROGRAM_ID,
         orgUnit: "Q3PHpzrZzn8",
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         trackedEntity: memberIds.member4.teiId,
         incidentDate: "2024-06-30",
         isOnline: 0,
@@ -98,9 +106,9 @@ export const createFakeData = () => {
       },
       {
         updatedAt: "2024-11-08",
-        program: "xvzrp56zKvI",
+        program: MEMBER_PROGRAM_ID,
         orgUnit: "Q3PHpzrZzn8",
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         trackedEntity: memberIds.member5.teiId,
         incidentDate: "2024-06-30",
         isOnline: 0,
@@ -114,9 +122,9 @@ export const createFakeData = () => {
       },
       {
         updatedAt: "2024-11-08",
-        program: "xvzrp56zKvI",
+        program: MEMBER_PROGRAM_ID,
         orgUnit: "Q3PHpzrZzn8",
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         trackedEntity: memberIds.member6.teiId,
         incidentDate: "2024-06-30",
         isOnline: 0,
@@ -133,8 +141,8 @@ export const createFakeData = () => {
       {
         event: memberIds.member1.eventId,
         isOnline: 0,
-        program: "xvzrp56zKvI",
-        programStage: "Ux1dcyOiHe7",
+        program: MEMBER_PROGRAM_ID,
+        programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
         enrollment: memberIds.member1.enrId,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: memberIds.member1.teiId,
@@ -166,7 +174,7 @@ export const createFakeData = () => {
             value: "birthyear",
           },
           {
-            dataElement: "ig2YSpQdP55",
+            dataElement: MEMBER_FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
@@ -175,8 +183,8 @@ export const createFakeData = () => {
       {
         event: memberIds.member2.eventId,
         isOnline: 0,
-        program: "xvzrp56zKvI",
-        programStage: "Ux1dcyOiHe7",
+        program: MEMBER_PROGRAM_ID,
+        programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
         enrollment: memberIds.member2.enrId,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: memberIds.member2.teiId,
@@ -208,7 +216,7 @@ export const createFakeData = () => {
             value: "birthyear",
           },
           {
-            dataElement: "ig2YSpQdP55",
+            dataElement: MEMBER_FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
@@ -217,8 +225,8 @@ export const createFakeData = () => {
       {
         event: memberIds.member3.eventId,
         isOnline: 0,
-        program: "xvzrp56zKvI",
-        programStage: "Ux1dcyOiHe7",
+        program: MEMBER_PROGRAM_ID,
+        programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
         enrollment: memberIds.member3.enrId,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: memberIds.member3.teiId,
@@ -250,7 +258,7 @@ export const createFakeData = () => {
             value: "birthyear",
           },
           {
-            dataElement: "ig2YSpQdP55",
+            dataElement: MEMBER_FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
@@ -259,8 +267,8 @@ export const createFakeData = () => {
       {
         event: memberIds.member4.eventId,
         isOnline: 0,
-        program: "xvzrp56zKvI",
-        programStage: "Ux1dcyOiHe7",
+        program: MEMBER_PROGRAM_ID,
+        programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
         enrollment: memberIds.member4.enrId,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: memberIds.member4.teiId,
@@ -292,7 +300,7 @@ export const createFakeData = () => {
             value: "birthyear",
           },
           {
-            dataElement: "ig2YSpQdP55",
+            dataElement: MEMBER_FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
@@ -301,8 +309,8 @@ export const createFakeData = () => {
       {
         event: memberIds.member5.eventId,
         isOnline: 0,
-        program: "xvzrp56zKvI",
-        programStage: "Ux1dcyOiHe7",
+        program: MEMBER_PROGRAM_ID,
+        programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
         enrollment: memberIds.member5.enrId,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: memberIds.member5.teiId,
@@ -334,7 +342,7 @@ export const createFakeData = () => {
             value: "birthyear",
           },
           {
-            dataElement: "ig2YSpQdP55",
+            dataElement: MEMBER_FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
@@ -345,7 +353,7 @@ export const createFakeData = () => {
         eventStatus: "ACTIVE",
         isOnline: 0,
         program: HOUSEHOLD_PROGRAM_ID,
-        programStage: "vY4mlqYfJEH",
+        programStage: HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
         enrollment: familyEnrId,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: familyTeiId,
@@ -400,7 +408,7 @@ export const createFakeData = () => {
         eventStatus: "ACTIVE",
         isOnline: 0,
         program: HOUSEHOLD_PROGRAM_ID,
-        programStage: "vY4mlqYfJEH",
+        programStage: HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
         enrollment: familyEnrId,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: familyTeiId,
@@ -449,8 +457,8 @@ export const createFakeData = () => {
       {
         event: memberIds.member6.eventId,
         isOnline: 0,
-        program: "xvzrp56zKvI",
-        programStage: "Ux1dcyOiHe7",
+        program: MEMBER_PROGRAM_ID,
+        programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
         enrollment: memberIds.member6.enrId,
         orgUnit: "Q3PHpzrZzn8",
         trackedEntity: memberIds.member6.teiId,
@@ -482,7 +490,7 @@ export const createFakeData = () => {
             value: "birthyear",
           },
           {
-            dataElement: "ig2YSpQdP55",
+            dataElement: MEMBER_FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
@@ -492,13 +500,13 @@ export const createFakeData = () => {
     teis: [
       {
         trackedEntity: memberIds.member1.teiId,
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         enrollments: [
           {
             updatedAt: "2024-11-08",
-            program: "xvzrp56zKvI",
+            program: MEMBER_PROGRAM_ID,
             orgUnit: "Q3PHpzrZzn8",
-            trackedEntityType: "MCPQUTHX1Ze",
+            trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
             trackedEntity: memberIds.member1.teiId,
             incidentDate: "2024-06-30",
             isOnline: 0,
@@ -565,7 +573,7 @@ export const createFakeData = () => {
             attribute: "g9wNk1T3MLE",
           },
           {
-            attribute: "gv9xX5w4kKt",
+            attribute: FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
@@ -639,13 +647,13 @@ export const createFakeData = () => {
       },
       {
         trackedEntity: memberIds.member2.teiId,
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         enrollments: [
           {
             updatedAt: "2024-11-08",
-            program: "xvzrp56zKvI",
+            program: MEMBER_PROGRAM_ID,
             orgUnit: "Q3PHpzrZzn8",
-            trackedEntityType: "MCPQUTHX1Ze",
+            trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
             trackedEntity: memberIds.member2.teiId,
             incidentDate: "2024-06-30",
             isOnline: 0,
@@ -712,20 +720,20 @@ export const createFakeData = () => {
             attribute: "g9wNk1T3MLE",
           },
           {
-            attribute: "gv9xX5w4kKt",
+            attribute: FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
       },
       {
         trackedEntity: memberIds.member3.teiId,
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         enrollments: [
           {
             updatedAt: "2024-11-08",
-            program: "xvzrp56zKvI",
+            program: MEMBER_PROGRAM_ID,
             orgUnit: "Q3PHpzrZzn8",
-            trackedEntityType: "MCPQUTHX1Ze",
+            trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
             trackedEntity: memberIds.member3.teiId,
             incidentDate: "2024-06-30",
             isOnline: 0,
@@ -792,20 +800,20 @@ export const createFakeData = () => {
             attribute: "g9wNk1T3MLE",
           },
           {
-            attribute: "gv9xX5w4kKt",
+            attribute: FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
       },
       {
         trackedEntity: memberIds.member4.teiId,
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         enrollments: [
           {
             updatedAt: "2024-11-08",
-            program: "xvzrp56zKvI",
+            program: MEMBER_PROGRAM_ID,
             orgUnit: "Q3PHpzrZzn8",
-            trackedEntityType: "MCPQUTHX1Ze",
+            trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
             trackedEntity: memberIds.member4.teiId,
             incidentDate: "2024-06-30",
             isOnline: 0,
@@ -875,20 +883,20 @@ export const createFakeData = () => {
             attribute: "g9wNk1T3MLE",
           },
           {
-            attribute: "gv9xX5w4kKt",
+            attribute: FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
       },
       {
         trackedEntity: memberIds.member5.teiId,
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         enrollments: [
           {
             updatedAt: "2024-11-08",
-            program: "xvzrp56zKvI",
+            program: MEMBER_PROGRAM_ID,
             orgUnit: "Q3PHpzrZzn8",
-            trackedEntityType: "MCPQUTHX1Ze",
+            trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
             trackedEntity: memberIds.member5.teiId,
             incidentDate: "2024-06-30",
             isOnline: 0,
@@ -959,20 +967,20 @@ export const createFakeData = () => {
             value: "12312",
           },
           {
-            attribute: "gv9xX5w4kKt",
+            attribute: FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],
       },
       {
         trackedEntity: memberIds.member6.teiId,
-        trackedEntityType: "MCPQUTHX1Ze",
+        trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
         enrollments: [
           {
             updatedAt: "2024-11-08",
-            program: "xvzrp56zKvI",
+            program: MEMBER_PROGRAM_ID,
             orgUnit: "Q3PHpzrZzn8",
-            trackedEntityType: "MCPQUTHX1Ze",
+            trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
             trackedEntity: memberIds.member6.teiId,
             incidentDate: "2024-06-30",
             isOnline: 0,
@@ -1039,7 +1047,7 @@ export const createFakeData = () => {
             attribute: "g9wNk1T3MLE",
           },
           {
-            attribute: "gv9xX5w4kKt",
+            attribute: FAMILY_UID_ATTRIBUTE_ID,
             value: familyTeiId,
           },
         ],

@@ -5,6 +5,10 @@ import { getTeisErrorMessage, getTeisSuccessMessage } from "../../actions/teis";
 import { DELETE_EVENT, DELETE_FAMILY_EVENT } from "../../types/data/tei";
 import * as eventManager from "../../../indexDB/EventManager/EventManager";
 import { getEventsByYear } from "@/utils/event";
+import {
+  MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
+  MEMBER_FAMILY_UID_ATTRIBUTE_ID,
+} from "@/constants/app-config";
 
 export default function* deleteEventSaga() {
   yield takeEvery(DELETE_EVENT, handleDeleteEvent);
@@ -50,9 +54,11 @@ function* handleDeleteFamilyEvent({ eventId }) {
     let memberEventsIds = [];
     if (offlineStatus) {
       let memberEventsByYear = yield call(eventManager.getEventsByQuery, {
-        programStage: "Ux1dcyOiHe7",
+        programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
         orgUnit: currentTei.orgUnit,
-        filters: [`filter=ig2YSpQdP55:EQ:${currentTei.trackedEntity}`],
+        filters: [
+          `filter=${MEMBER_FAMILY_UID_ATTRIBUTE_ID}:EQ:${currentTei.trackedEntity}`,
+        ],
         startDate: `${year}-01-01`,
         endDate: `${year}-12-31`,
       });
@@ -61,9 +67,11 @@ function* handleDeleteFamilyEvent({ eventId }) {
     } else {
       let memberEventsByYear = yield call(
         dataApi.getEventsByQuery,
-        "Ux1dcyOiHe7",
+        MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
         currentTei.orgUnit,
-        [`filter=ig2YSpQdP55:EQ:${currentTei.trackedEntity}`],
+        [
+          `filter=${MEMBER_FAMILY_UID_ATTRIBUTE_ID}:EQ:${currentTei.trackedEntity}`,
+        ],
         `${year}-01-01`,
         `${year}-12-31`
       );

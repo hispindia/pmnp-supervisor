@@ -68,9 +68,8 @@ function CaptureForm(props) {
     };
   }, []);
 
-
   const editCall = (metadata, prevData, formData, code, value) => {
-    console.log('editCall called')
+    console.log("editCall called");
     let data = _.clone(formData);
     let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
       obj[md.code] = md;
@@ -106,7 +105,6 @@ function CaptureForm(props) {
               }
               attribute={f.attribute}
               value={formData[f.code] || ""}
-
               onBlur={(value) =>
                 editCall(
                   formMetadata,
@@ -127,6 +125,7 @@ function CaptureForm(props) {
               error={validation(f.code)}
               maxDate={props.maxDate}
               minDate={"1900-12-31"}
+              data-element-id={f.code}
             />
           </div>
         );
@@ -152,7 +151,7 @@ function CaptureForm(props) {
         .sort(
           (a, b) =>
             trackedEntityAttributes.indexOf(a.id) -
-            trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
+              trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
         );
 
       return (
@@ -186,10 +185,13 @@ function CaptureForm(props) {
       const programStageSections = pStage.programStageSections;
       return programStageSections.map((pSection) => {
         const dataElements = pSection.dataElements.map((tea) => tea.id);
-        const programFormMetadata = formMetadata.filter((f) => dataElements.includes(f.id)).sort((a, b) =>
-          dataElements.indexOf(a.id) - dataElements.indexOf(b.id) ||
-          a.id.localeCompare(b.id)
-        );
+        const programFormMetadata = formMetadata
+          .filter((f) => dataElements.includes(f.id))
+          .sort(
+            (a, b) =>
+              dataElements.indexOf(a.id) - dataElements.indexOf(b.id) ||
+              a.id.localeCompare(b.id)
+          );
 
         return (
           <div className="row">
@@ -213,7 +215,7 @@ function CaptureForm(props) {
     let status = onSubmit(null);
     console.trace(status);
 
-    console.log('status:>>', status)
+    console.log("status:>>", status);
     if (status) {
       switch (action) {
         case "add":
