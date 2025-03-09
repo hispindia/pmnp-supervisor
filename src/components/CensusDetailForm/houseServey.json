@@ -1,353 +1,111 @@
- [
-    {
-      "type": "data",
-      "name": "Household Survey Date",
-      "uid": "tjXaQPI9OcQ",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "title",
-      "name": "Household Status",
-      "hide": false,
-      "styles": { "fontWeight": "bold" }
-    },
-
-    {
-      "type": "data",
-      "name": "Household Status",
-      "uid": "NPb0hOBn6g9",
-      "hide": false,
-      "styles": {}
-    },
-
-    {
-      "type": "title",
-      "name": "Water and Sanitation",
-      "hide": false,
-      "styles": { "fontWeight": "bold" }
-    },
-    {
-      "type": "data",
-      "name": "Are household members often exposed to Household Air Pollution from the inefficient combustion of solid fuels (i.e. wood, coal, charcoal, crop waste, dung) and kerosene used for cooking including animal feeds, heating or lighting the house?",
-      "uid": "d4DgS6Tv3uG",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "What is the MAIN source (point of collection) of drinking water for members of your household?",
-      "uid": "a0t6coJR4bG",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Where is that water source (point of collection) located?",
-      "uid": "lRVDgo5HwYe",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "How long does it take to go there, get water (queue for water and fill containers), and come back?",
-      "uid": "ADGaCK23IbP",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "In the last month, has there been any time when your household did not have sufficient quantities of drinking water when needed?",
-      "uid": "ABBZkh32owZ",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "What kind of toilet facility do members of your household usually use?",
-      "uid": "JT2QvZDPRAy",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Do you share this facility with others who are not members of your household?",
-      "uid": "rlecl6N9HcX",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Has your (pit latrine or septic tank) been emptied last year?",
-      "uid": "ySLtaPSULVN",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "The last time it was emptied, where were the contents emptied?",
-      "uid": "RIqHmgT1OWu",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Can you please show me where members of your household most often wash their hands?",
-      "uid": "R0AYFvHFg6u",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Observe availability of water at the place for handwashing. (Note: Verify by checking the tap/pump, or basin, bucket, water container or similar objects for presence of water.)",
-      "uid": "d4VMT4orArm",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Observe availability of soap or detergent at the place for handwashing",
-      "uid": "Ju3AkdRHT52",
-      "hide": false,
-      "styles": {}
-    },
-
-    {
-      "type": "title",
-      "name": "Biodegradable household solid waste (cooked food, vegetables, fruit, leaves, etc.) disposal method used",
-      "hide": false,
-      "styles": { "fontWeight": "bold" }
-    },
-    {
-      "type": "data",
-      "name": "Composting",
-      "uid": "SgyzeqQpg6V",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Animal feeds (e.g., food or vegetables wastes)",
-      "uid": "F0DV8pEPF98",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Public garbage collection",
-      "uid": "nz1hyyrSn4k",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Open Pit",
-      "uid": "vP0NGw6z3Mh",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Others",
-      "uid": "wbLpz0ADrJv",
-      "hide": false,
-      "styles": {}
-    },
-
-    {
-      "type": "title",
-      "name": "Recyclable household solid waste (paper, cartons, cans, metallic items, bottles, etc.) disposal method used",
-      "hide": false,
-      "styles": { "fontWeight": "bold" }
-    },
-    {
-      "type": "data",
-      "name": "Recycling or reusing (including scrape dealers)",
-      "uid": "ua9PvkeM7iH",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Public garbage collection",
-      "uid": "haBuqhxXffw",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Burning",
-      "uid": "Og4wEm4Z7OV",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Open Pit",
-      "uid": "CWDcKbFmFty",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Others",
-      "uid": "DenbY2uVxeR",
-      "hide": false,
-      "styles": {}
-    },
-
-      {
-      "type": "title",
-      "name": "Non-biodegradable household solid waste (glass, blades, expired medicine, bandages, etc.) disposal method used",
-      "hide": false,
-      "styles": { "fontWeight": "bold" }
-    },
-    {
-      "type": "data",
-      "name": "Public garbage collection",
-      "uid": "fkAXYJ8nOll",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Open Pit",
-      "uid": "hwCISmocKY6",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Burning",
-      "uid": "f28Es6U3KSr",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Burial",
-      "uid": "lSzJofGb7fU",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Others",
-      "uid": "vapo8mgKcyM",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "title",
-      "name": "Facility accessibility and income",
-      "hide": false,
-      "styles": { "fontWeight": "bold" }
-    },
-    {
-      "type": "data",
-      "name": "Using the usual means, how long does it take to get to the nearest facility in minutes?",
-      "uid": "ezLCrmL40SD",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "In the past 12 months, was there ever a time when your household did not have enough food to feed all its members?",
-      "uid": "Cql7XO3Z5Fe",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Which of the following best describes your household’s overall economic status over the past year?",
-      "uid": "SQmWcDdvnem",
-      "hide": false,
-      "styles": {}
-    },
-
-    {
-      "type": "title",
-      "name": "Malaria endemic specific questions",
-      "hide": false,
-      "permanentHide": true,
-      "styles": { "fontWeight": "bold" }
-    },
-    {
-      "type": "data",
-      "name": "Does your household have Long Lasting Insecticide Nets (LLIN) received last year?",
-      "uid": "GtSSMCc6nXz",
-      "hide": false,
-      "permanentHide": true,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "No. of LLINs received last year",
-      "uid": "Ojvu6krZKBX",
-      "hide": false,
-      "permanentHide": true,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Did anyone in your household sleep under LLINs last night?",
-      "uid": "WTFyAoDjI4X",
-      "hide": false,
-      "permanentHide": true,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "No. of U5 children who slept under LLINs last night",
-      "uid": "S4G690Rx8KD",
-      "hide": false,
-      "permanentHide": true,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "No. of pregnant women who slept under LLINs last night",
-      "uid": "FL0F1NaV4e2",
-      "hide": false,
-      "permanentHide": true,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "No. of other members who slept under LLINs last night",
-      "uid": "b60lyh4IRgb",
-      "hide": false,
-      "permanentHide": true,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "Was your house sprayed with IRS last year?",
-      "uid": "uMRfJEDErNx",
-      "hide": false,
-      "permanentHide": true,
-      "styles": {}
-    },
-
-    {
-      "type": "title",
-      "name": "Salt Test",
-      "hide": false,
-      "styles": { "fontWeight": "bold" }
-    },
-    {
-      "type": "data",
-      "name": "Household salt Iodine content",
-      "uid": "YGisOzETviK",
-      "hide": false,
-      "styles": {}
-    },
-    {
-      "type": "data",
-      "name": "If less than15 PPM specify the brand of salt",
-      "uid": "pUnhWS1qOeS",
-      "hide": false,
-      "styles": {}
-    }
-  ]
-  
+[
+  {
+    "type": "title",
+    "name": "WASH",
+    "hide": false,
+    "styles": { "fontWeight": "bold" }
+  },
+  {
+    "type": "data",
+    "name": "Primary source of drinking water",
+    "uid": "MNu4naFgvBC",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Primary source of water for handwashing",
+    "uid": "EeraoiUKKA6",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Access to a sanitary toilet",
+    "uid": "JOsQfzE5Lrl",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "title",
+    "name": "Social Welfare",
+    "hide": false,
+    "styles": { "fontWeight": "bold" }
+  },
+  {
+    "type": "data",
+    "name": "Assistance from government programs received",
+    "uid": "dtTG7cjn1CH",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Government programs for assistance",
+    "uid": "RC5B8EETrOM",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "title",
+    "name": "Household Set",
+    "hide": false,
+    "styles": { "fontWeight": "bold" }
+  },
+  {
+    "type": "data",
+    "name": "Attended SBC session in last 3 months",
+    "uid": "dxag8YT8w46",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Social and Behaviour Change (SBC) sessions",
+    "uid": "gNBFmUFtW6a",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Early learning services availed",
+    "uid": "GL5thgdHcDd",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Average number of meals in the past month",
+    "uid": "SOa1oPsJ7iH",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Access to alternative sources of food",
+    "uid": "Q48wScY7yMD",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Walking distance time to public facilities",
+    "uid": "pGDkzy24jOZ",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Balanced food consumed in the last month",
+    "uid": "GK9fvjUhS6E",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "HH experienced hunger in last 3 months",
+    "uid": "ya8RsEdaasP",
+    "hide": false,
+    "styles": {}
+  }
+]

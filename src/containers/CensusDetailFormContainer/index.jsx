@@ -19,6 +19,7 @@ const CensusDetailFormContainer = () => {
   const currentEvents = useSelector(
     (state) => state.data.tei.data.currentEvents
   );
+
   const { year, index, selected6Month } = useSelector(
     (state) => state.data.tei.selectedYear
   );

@@ -1,5 +1,5 @@
 import {
-  HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
+  HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
   HOUSEHOLD_PROGRAM_ID,
 } from "@/constants/app-config";
 
@@ -62,7 +62,7 @@ const getOptionDataByDeId = (deId) => async (year, orgUnit, dataApi) =>
     `/api/analytics/events/aggregate/${HOUSEHOLD_PROGRAM_ID}.json`,
     { paging: false },
     [
-      `dimension=pe:${year}&dimension=${HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID}.${deId}&filter=ou:${orgUnit.id}&stage=${HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID}&displayProperty=NAME&outputType=EVENT`,
+      `dimension=pe:${year}&dimension=${HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID}.${deId}&filter=ou:${orgUnit.id}&stage=${HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID}&displayProperty=NAME&outputType=EVENT`,
     ]
   );
 
@@ -71,7 +71,7 @@ const getFamilyRegisteredData = async (year, orgUnit, dataApi) =>
     `/api/analytics/events/aggregate/${HOUSEHOLD_PROGRAM_ID}.json`,
     { paging: false },
     [
-      `dimension=ou:${orgUnit.id}&dimension=pe:${year}&stage=${HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID}&displayProperty=NAME&outputType=ENROLLMENT`,
+      `dimension=ou:${orgUnit.id}&dimension=pe:${year}&stage=${HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID}&displayProperty=NAME&outputType=ENROLLMENT`,
     ]
   );
 
@@ -80,7 +80,7 @@ const getTotalPopulationData = async (year, orgUnit, dataApi) =>
     `/api/analytics/events/aggregate/${HOUSEHOLD_PROGRAM_ID}.json`,
     { paging: false },
     [
-      `dimension=pe:${year}&dimension=ou:${orgUnit.id}&stage=${HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID}&displayProperty=NAME&outputType=EVENT&value=Va3FC8Io1b0&aggregationType=SUM`,
+      `dimension=pe:${year}&dimension=ou:${orgUnit.id}&stage=${HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID}&displayProperty=NAME&outputType=EVENT&value=Va3FC8Io1b0&aggregationType=SUM`,
     ]
   );
 

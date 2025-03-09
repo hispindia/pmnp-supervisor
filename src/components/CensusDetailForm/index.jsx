@@ -10,14 +10,28 @@ import useHouseholdSurveyForm from "@/hooks/useHouseholdSurveyForm";
 
 /* style */
 import "./index.css";
+import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
 
+const CensusDetailForm = ({
+  onSubmit,
+  selected6Month,
+  onTabChange,
+  values,
+}) => {
+  const programStages = useSelector(
+    (state) => state.metadata.programMetadata.programStages
+  );
 
-const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) => {
+  const HH_Survey_dataElements =
+    programStages.find((ps) => ps.id === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID)
+      ?.dataElements || [];
 
-  const dataElements = useSelector((state) => state.metadata.programMetadata.programStages[0].dataElements);
-  const Dhis2FormItem = useMemo(() => withDhis2FormItem(dataElements)(CFormControl), [dataElements]);
+  const Dhis2FormItem = useMemo(
+    () => withDhis2FormItem(HH_Survey_dataElements)(CFormControl),
+    [HH_Survey_dataElements]
+  );
 
-  const { form, surveyList, loadServeyFields } = useHouseholdSurveyForm(values)
+  const { form, surveyList, loadServeyFields } = useHouseholdSurveyForm(values);
 
   const { t } = useTranslation();
 
@@ -147,7 +161,6 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
       },
     };
   };
-
 
   /**
  * <thead>
@@ -296,8 +309,9 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
     </table>
  */
 
-
-  useEffect(() => { loadServeyFields() }, [])
+  useEffect(() => {
+    loadServeyFields();
+  }, []);
 
   const dataSource = surveyList.map((row, index) => {
     const {
@@ -311,9 +325,9 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
       hidden,
       permanentHide,
       dependentFields = [],
-      setValuesFunc = () => { },
+      setValuesFunc = () => {},
       showFieldFunc = () => true,
-      childPropsFunc = () => { },
+      childPropsFunc = () => {},
     } = row;
     switch (type) {
       case "title": {
@@ -338,7 +352,6 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
                 setValuesFunc={setValuesFunc}
                 showFieldFunc={showFieldFunc}
                 childPropsFunc={childPropsFunc}
-
               >
                 <InputField size="small" style={{ minWidth: 120 }} />
               </Dhis2FormItem>
@@ -352,21 +365,27 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
             input1: (
               <Dhis2FormItem
                 hidden={hidden}
-                displayFormName={t("some")} id={some}>
+                displayFormName={t("some")}
+                id={some}
+              >
                 <InputField size="small" />
               </Dhis2FormItem>
             ),
             input2: (
               <Dhis2FormItem
                 hidden={hidden}
-                displayFormName={t("alot")} id={alot}>
+                displayFormName={t("alot")}
+                id={alot}
+              >
                 <InputField size="small" />
               </Dhis2FormItem>
             ),
             input3: (
               <Dhis2FormItem
                 hidden={hidden}
-                displayFormName={t(thirdRowTitle)} id={thirdRowId}>
+                displayFormName={t(thirdRowTitle)}
+                id={thirdRowId}
+              >
                 <InputField size="small" />
               </Dhis2FormItem>
             ),
@@ -374,7 +393,6 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
         }
       }
     }
-
   });
 
   const items = [
@@ -382,7 +400,6 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
       key: 1,
       label: ``,
       children: (
-
         <Table
           size="small"
           bordered
@@ -392,7 +409,7 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
           columns={columns}
         />
       ),
-    }
+    },
   ];
 
   return (
@@ -423,10 +440,7 @@ const CensusDetailForm = ({ onSubmit, selected6Month, onTabChange, values, }) =>
           </Row>
         </Col>
 
-
-
         <Col className="rightBar">
-
           <Tabs
             defaultActiveKey="1"
             size="small"

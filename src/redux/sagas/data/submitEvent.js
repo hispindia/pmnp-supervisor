@@ -1,3 +1,4 @@
+import { transformEvent } from "@/utils/event";
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { dataApi } from "../../../api";
 import {
@@ -7,7 +8,6 @@ import {
   UPDATE_EVENT_DATE,
 } from "../../types/data/tei";
 import { generateTEIDhis2Payload, getCurrentEvent } from "./utils";
-import { transformEvent } from "@/utils/event";
 
 import {
   getTei,
@@ -20,14 +20,14 @@ import { updateEvents } from "../../actions/data/tei/currentEvent";
 
 import { generateUid } from "@/utils";
 
-import moment from "moment";
-import * as eventManager from "@/indexDB/EventManager/EventManager";
-import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
 import {
-  HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
+  HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
   MEMBER_PROGRAM_ID,
 } from "@/constants/app-config";
+import * as eventManager from "@/indexDB/EventManager/EventManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import moment from "moment";
 
 function* handleSubmitEvent({ event }) {
   const { offlineStatus } = yield select((state) => state.common);
@@ -173,7 +173,7 @@ function* handleCloneEvent({ year }) {
       trackedEntity: currentTei.trackedEntity,
       orgUnit: selectedOrgUnit.id,
       program: programMetadata.id,
-      programStage: HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
+      programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
       enrollment: currentEnrollment.enrollment,
       occurredAt: `${year}-06-30`,
       dueDate: `${year}-06-30`,
@@ -187,7 +187,7 @@ function* handleCloneEvent({ year }) {
       trackedEntity: currentTei.trackedEntity,
       orgUnit: selectedOrgUnit.id,
       program: programMetadata.id,
-      programStage: HOUSEHOLD_DETAILS_PROGRAM_STAGE_ID,
+      programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
       enrollment: currentEnrollment.enrollment,
       occurredAt: `${year}-12-31`,
       dueDate: `${year}-12-31`,
