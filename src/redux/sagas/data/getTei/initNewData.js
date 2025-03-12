@@ -3,35 +3,44 @@ import { generateUid } from "../../../../utils";
 import { getTeiSuccess } from "../../../actions/data/tei";
 import moment from "moment";
 import { getParentOuPatern } from "./setParentPattern";
+import { getOrganisationUnitById } from "@/utils/organisation";
 
 function* handleInitNewData() {
   yield getParentOuPatern();
 
   const {
-    selectedOrgUnit: { id: orgUnit },
+    selectedOrgUnit: { id: orgUnitId },
     programMetadata: { id: program, trackedEntityType, programStages },
+    orgUnits,
   } = yield select((state) => state.metadata);
 
   const { ouPattern } = yield select((state) => state.data.tei);
+  console.log({ ouPattern });
 
   const generatedTeiId = generateUid();
   const generatedEnrollmentId = generateUid();
+
+  const selectedOrgUnit = getOrganisationUnitById(orgUnitId, orgUnits);
+
+  const { code } = selectedOrgUnit;
+
   const currentTei = {
     trackedEntity: generatedTeiId,
-    orgUnit,
+    orgUnit: orgUnitId,
     isDirty: false,
     isNew: true,
     isSaved: false,
     trackedEntityType,
     attributes: {
-      // BUEzQEErqa7: moment().subtract(1, "y").format("YYYY"),
-      BUEzQEErqa7: moment().format("YYYY"),
+      BUEzQEErqa7: moment().subtract(1, "y").format("YYYY"),
+      // BUEzQEErqa7: moment().format("YYYY"),
       IKOSsYJJZis: ouPattern,
+      eMYBznRdn0t: code,
     },
   };
   const currentEnrollment = {
     enrollment: generatedEnrollmentId,
-    orgUnit,
+    orgUnit: orgUnitId,
     program,
     isDirty: false,
     isNew: true,
@@ -40,7 +49,7 @@ function* handleInitNewData() {
   // const currentEvents = programStages.map((ps) => {
   //     return {
   //         event: generateUid(),
-  //         orgUnit,
+  //         orgUnitId,
   //         programStage: ps.id,
   //         program,
   //         isDirty: false,

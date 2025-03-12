@@ -6,7 +6,7 @@ export const AppContext = React.createContext(null);
 
 export default ({ children }) => {
   const lastInputDataYear = moment()
-    // .subtract(1, "years")
+    .subtract(1, "years")
     // .endOf('year')
     .format("YYYY");
   const [minDate] = useState("2018");

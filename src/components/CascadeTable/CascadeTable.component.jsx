@@ -55,7 +55,6 @@ const CascadeTable = (props) => {
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
   );
-  // const { ouPattern } = useSelector((state) => state.data.tei);
   const profile = useSelector((state) => state.data.tei.data.currentTei);
 
   const [showData, setShowData] = useState(

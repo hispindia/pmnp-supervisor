@@ -131,7 +131,7 @@ const ProfileForm = ({
         <div className="col-lg-3">
           <Dhis2FormItem
             id="IKOSsYJJZis"
-            // displayFormName={t("unitOfVillage")}
+            // displayFormName={t("Household ID")}
           >
             <InputField size="large" disabled={true} />
           </Dhis2FormItem>
@@ -141,7 +141,7 @@ const ProfileForm = ({
             id="eMYBznRdn0t"
             // displayFormName={t("Barangay")}
           >
-            <InputField size="large" disabled={!isEdit} />
+            <InputField size="large" disabled={true} />
           </Dhis2FormItem>
         </div>
 

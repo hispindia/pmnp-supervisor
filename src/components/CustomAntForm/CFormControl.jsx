@@ -48,7 +48,6 @@ const CFormControl = ({
 
         // Must be called to auto calculate dependent fields
         form.setFieldsValue(newValues);
-
         return (typeof isShow === "boolean" ? isShow : true) ? (
           id ? (
             <Form.Item

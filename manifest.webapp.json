@@ -1,7 +1,7 @@
 {
-  "name": "Household Health Surveillance",
-  "short_name": "FIv2 PWA",
-  "description": "Household Health Surveillance",
+  "name": "PMNP scorecard app",
+  "short_name": "PMNP scorecard app",
+  "description": "PMNP scorecard app",
   "background_color": "#5a0fc8",
   "theme_color": "#5a0fc8",
   "display": "standalone",
