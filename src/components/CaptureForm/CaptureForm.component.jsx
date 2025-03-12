@@ -183,6 +183,7 @@ function CaptureForm(props) {
 
     return programStages.map((pStage) => {
       const programStageSections = pStage.programStageSections;
+
       return programStageSections.map((pSection) => {
         const dataElements = pSection.dataElements.map((tea) => tea.id);
         const programFormMetadata = formMetadata
@@ -192,6 +193,10 @@ function CaptureForm(props) {
               dataElements.indexOf(a.id) - dataElements.indexOf(b.id) ||
               a.id.localeCompare(b.id)
           );
+
+        // if all field hidden => hide the section
+        const filtered = programFormMetadata.filter((f) => !f.hidden);
+        if (filtered.length === 0) return null;
 
         return (
           <div className="row">

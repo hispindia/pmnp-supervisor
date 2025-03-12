@@ -179,6 +179,8 @@ const FamilyMemberForm = ({
     setLoading(false);
   }, [currentEvent]);
 
+  console.log({ programMetadataMember });
+
   const editRowCallback = (metadata, previousData, data, code, value) => {
     // keep selected member details
     console.log("editRowCallback clicked", { metadata, previousData, data });
@@ -904,6 +906,72 @@ const FamilyMemberForm = ({
       // data[code] = value;
     }
 
+    const enrollmentDate = lastDayOfYear(new Date(currentEvent.occurredAt));
+    const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
+    const years = differenceInYears(enrollmentDate, dateOfbirth);
+    const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
+    data["xDSSvssuNFs"] = weeks;
+    data["H42aYY9JMIR"] = years;
+
+    let shownSections = [];
+    let hiddenSections = [
+      "IxbqFSJPfEN",
+      "A2TBfLOW8HG",
+      "tlNWZDOWfP2",
+      "jV8O1ZITgIn",
+      "E4FpYkBzAsW",
+    ];
+
+    const pregnancyStatus = data["ycBIHr9bYyw"];
+    if (pregnancyStatus === "1") {
+      hiddenSections = hiddenSections.filter((h) => h !== "IxbqFSJPfEN");
+      shownSections.push("IxbqFSJPfEN");
+    }
+    if (pregnancyStatus === "2") {
+      hiddenSections = hiddenSections.filter((h) => h !== "A2TBfLOW8HG");
+      shownSections.push("A2TBfLOW8HG");
+    }
+    if (dateOfbirth) {
+      if (years <= 5) {
+        hiddenSections = hiddenSections.filter(
+          (h) => h !== "tlNWZDOWfP2" || h !== "jV8O1ZITgIn"
+        );
+        shownSections.push("tlNWZDOWfP2");
+        shownSections.push("jV8O1ZITgIn");
+      }
+
+      const sex = data["Qt4YSwPxw0X"];
+      if (
+        years >= 10 &&
+        years <= 49 &&
+        sex === "1" &&
+        (pregnancyStatus === "2" || pregnancyStatus === "3")
+      ) {
+        hiddenSections = hiddenSections.filter((h) => h !== "E4FpYkBzAsW");
+        shownSections.push("E4FpYkBzAsW");
+      }
+    }
+
+    const scorecardSurveyStage = programMetadataMember.programStages.find(
+      (ps) => ps.id === "QfXSvc9HtKN"
+    );
+
+    if (scorecardSurveyStage) {
+      scorecardSurveyStage.programStageSections.forEach((pss) => {
+        if (hiddenSections.includes(pss.id)) {
+          pss.dataElements.forEach((de) => {
+            metadata[de.id].hidden = true;
+          });
+        }
+        if (shownSections.includes(pss.id)) {
+          pss.dataElements.forEach((de) => {
+            metadata[de.id].hidden = false;
+          });
+        }
+      });
+    }
+
+    // clear data for hidden items
     for (let meta in metadata) {
       if (metadata[meta].hidden) {
         delete data[meta];
@@ -911,7 +979,6 @@ const FamilyMemberForm = ({
     }
 
     console.log("dispatch:data :>> ", data);
-
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
 
     // // UPDATE METADATA
@@ -957,13 +1024,6 @@ const FamilyMemberForm = ({
       data["birthyear"] = null;
       data["DOB"] = null;
     }
-
-    const enrollmentDate = lastDayOfYear(new Date(currentEvent.occurredAt));
-    const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
-    const years = differenceInYears(enrollmentDate, dateOfbirth);
-    const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
-    data["xDSSvssuNFs"] = weeks;
-    data["H42aYY9JMIR"] = years;
 
     // Automatically select Femail if it's Wife
     if (code == "relation") {
