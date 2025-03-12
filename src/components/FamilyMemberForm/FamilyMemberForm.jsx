@@ -69,6 +69,12 @@ import {
   WG_SORT_SET,
 } from "../constants";
 import { calculateAge } from "@/utils/event";
+import {
+  differenceInWeeks,
+  differenceInYears,
+  format,
+  lastDayOfYear,
+} from "date-fns";
 
 const { familyMemberFormContainer, cascadeTableWrapper } = styles;
 const LoadingCascadeTable = withSkeletonLoading()(CascadeTable);
@@ -175,7 +181,7 @@ const FamilyMemberForm = ({
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
     // keep selected member details
-    console.log("editRowCallback clicked", metadata, previousData, data);
+    console.log("editRowCallback clicked", { metadata, previousData, data });
 
     metadata["Cn37lbyhz6f"].isDisabled = true;
 
@@ -951,6 +957,13 @@ const FamilyMemberForm = ({
       data["birthyear"] = null;
       data["DOB"] = null;
     }
+
+    const enrollmentDate = lastDayOfYear(new Date(currentEvent.occurredAt));
+    const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
+    const years = differenceInYears(enrollmentDate, dateOfbirth);
+    const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
+    data["xDSSvssuNFs"] = weeks;
+    data["H42aYY9JMIR"] = years;
 
     // Automatically select Femail if it's Wife
     if (code == "relation") {
