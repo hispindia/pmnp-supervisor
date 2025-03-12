@@ -135,6 +135,9 @@ const FamilyMemberForm = ({
 
   const dispatch = useDispatch();
 
+  const attributes = useSelector(
+    (state) => state.data.tei.data.currentTei.attributes
+  );
   const currentCascade = useSelector(
     (state) => state.data.tei.data.currentCascade
   );
@@ -179,13 +182,9 @@ const FamilyMemberForm = ({
     setLoading(false);
   }, [currentEvent]);
 
-  console.log({ programMetadataMember });
-
   const editRowCallback = (metadata, previousData, data, code, value) => {
     // keep selected member details
     console.log("editRowCallback clicked", { metadata, previousData, data });
-
-    metadata["Cn37lbyhz6f"].isDisabled = true;
 
     switch (code) {
       // handle form validation on besis of DOB
@@ -904,6 +903,16 @@ const FamilyMemberForm = ({
         console.log("default found");
         break;
       // data[code] = value;
+    }
+
+    metadata["Cn37lbyhz6f"].disabled = true;
+    metadata["RDQQ3t9oXw5"].disabled = true;
+    data["RDQQ3t9oXw5"] = attributes["IKOSsYJJZis"];
+
+    const memberId = data["Cn37lbyhz6f"];
+    if (!memberId) {
+      // random 3 digits
+      // data["Cn37lbyhz6f"] = Math.floor(100 + Math.random() * 900);
     }
 
     const enrollmentDate = lastDayOfYear(new Date(currentEvent.occurredAt));

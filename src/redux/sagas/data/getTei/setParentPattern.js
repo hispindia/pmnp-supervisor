@@ -8,7 +8,7 @@ export function* getParentOuPatern() {
   const {
     selectedOrgUnit: { id: orgUnit },
   } = yield select((state) => state.metadata); // handle parent nodes
-  let randomNumber = Math.floor(100 + Math.random() * 900);
+  let randomNumber = Math.floor(1000000 + Math.random() * 9000000);
 
   function extractValues(obj) {
     let values = [];
@@ -24,17 +24,13 @@ export function* getParentOuPatern() {
   if (offlineStatus) {
     let parent = trackedEntityManager.findOuPattern({ orgUnit });
     parent = extractValues(parent);
-    yield put(
-      setSelectedParentOuPattern(parent?.join(" ") + " " + randomNumber)
-    );
+    yield put(setSelectedParentOuPattern(randomNumber));
   } else {
     try {
       let parent = yield call(dataApi.getParentsByOuId, orgUnit);
       console.log({ parent });
       parent = extractValues(parent);
-      yield put(
-        setSelectedParentOuPattern(parent?.join(" ") + " " + randomNumber)
-      );
+      yield put(setSelectedParentOuPattern(randomNumber));
     } catch (error) {
       yield put(setSelectedParentOuPattern());
     }
