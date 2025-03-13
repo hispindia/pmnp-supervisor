@@ -1,7 +1,8 @@
 import { generateUid } from "@/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import {
   defaultProgramTrackedEntityAttributeDisable,
@@ -13,30 +14,38 @@ import {
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-/* SELECTOR */
-import { updateCascade } from "@/redux/actions/data/tei/currentCascade";
-import { isImmutableYear } from "@/utils/event";
-import _ from "lodash";
-import { useTranslation } from "react-i18next";
-import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
-import { changeMember } from "../../redux/actions/data/tei";
-import CaptureForm from "../CaptureForm";
-import "../CustomStyles/css/bootstrap.min.css";
 import {
   transformData,
   transformMetadataToColumns,
 } from "../CascadeTable/utils";
+import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
+import CaptureForm from "../CaptureForm";
+import "../CustomStyles/css/bootstrap.min.css";
+import _ from "lodash";
 
-const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
+const DeleteConfirmationButton = withDeleteConfirmation(Button);
+
+const InterviewTable = ({
+  data,
+  setData,
+  metadata,
+  originMetadata,
+  setMetadata,
+}) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
 
+  const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const { programMetadata } = useSelector((state) => state.metadata);
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
   );
+
+  const showData = useMemo(() => {
+    return transformData(metadata, data, dataValuesTranslate, locale);
+  }, [metadata, data, dataValuesTranslate, locale]);
 
   const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
 
@@ -56,12 +65,10 @@ const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
     !continueAdd && setFormStatus(FORM_ACTION_TYPES.NONE);
     data.push(row);
 
-    console.log({ data });
-
     setData([...data]);
     let updatedMetadata = updateMetadata(metadata, data);
 
-    console.log("handleAddNewRow", { updatedMetadata, dataRows });
+    console.log("handleAddNewRow", { updatedMetadata, data });
     setMetadata([...updatedMetadata]);
   };
 
@@ -104,13 +111,37 @@ const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
     return metadata;
   };
 
-  const handleEditRow = () => {};
+  const handleEditRow = (e, row, rowIndex) => {
+    // Update data
+    let newData = _.clone(data);
+    newData[rowIndex] = { ...row };
+
+    setData(newData);
+
+    let updatedMetadata = updateMetadata(metadata, newData);
+    console.log("handleEditRow", { updatedMetadata, newData });
+
+    setMetadata([...updatedMetadata]);
+    setFormStatus(FORM_ACTION_TYPES.NONE);
+  };
 
   const editRowCallback = () => {};
 
-  const handleSelectRow = () => {};
-
   const handleDeleteRow = () => {};
+
+  const handleSelectRow = (e, row, rowIndex) => {
+    console.log("selected", row);
+    setFormStatus(FORM_ACTION_TYPES.EDIT);
+    setSelectedData(row);
+    setSelectedRowIndex(rowIndex);
+  };
+
+  const clearForm = () => {
+    setSelectedData({});
+    setMetadata(originMetadata);
+    setSelectedRowIndex(null);
+    setFormStatus(FORM_ACTION_TYPES.NONE);
+  };
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
@@ -161,6 +192,31 @@ const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
       formatExtraData: formStatus,
     },
   ];
+
+  useEffect(() => {
+    let tempDataValuesTranslate = metadata
+      .filter((e) => e.valueSet && e.valueSet.length > 0)
+      .reduce((obj, e) => {
+        obj[e.code] = e.valueSet.reduce((ob, op) => {
+          ob[op.value] = op.label;
+          if (op.translations) {
+            ob[op.value] = { ...op.translations, en: op.label };
+          }
+          return ob;
+        }, {});
+        return obj;
+      }, {});
+
+    setColumns(
+      transformMetadataToColumns(metadata, locale, tempDataValuesTranslate)
+    );
+    setDataValuesTranslate(tempDataValuesTranslate);
+
+    return () => {
+      console.log("Cascade table unmounted");
+      clearForm();
+    };
+  }, []);
 
   return (
     <div className="px-4">
@@ -219,7 +275,7 @@ const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
         <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive pl-0">
           <BootstrapTable
             keyField="id"
-            data={[]}
+            data={showData}
             columns={columnsC}
             rowEvents={rowEvents}
             striped

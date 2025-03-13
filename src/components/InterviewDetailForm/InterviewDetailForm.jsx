@@ -18,6 +18,7 @@ const InterviewDetailForm = () => {
       setData={setData}
       metadata={metadata}
       setMetadata={setMetadata}
+      originMetadata={originMetadata}
     />
   );
 };
