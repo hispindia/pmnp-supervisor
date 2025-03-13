@@ -905,7 +905,7 @@ const FamilyMemberForm = ({
       // data[code] = value;
     }
 
-    metadata["Cn37lbyhz6f"].disabled = true;
+    // metadata["Cn37lbyhz6f"].disabled = true;
     metadata["RDQQ3t9oXw5"].disabled = true;
     data["RDQQ3t9oXw5"] = attributes["IKOSsYJJZis"];
 

@@ -3,22 +3,29 @@ import { HAS_INITIAN_NOVALUE } from "../constants";
 import { useState } from "react";
 
 import _ from "lodash";
+import InterviewTable from "../InterviewTable/InterviewTable";
 
 const InterviewDetailForm = () => {
   const { programMetadata } = useSelector((state) => state.metadata);
   const originMetadata = convertOriginMetadata(programMetadata);
 
+  const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
 
-  console.log({ programMetadata, originMetadata });
-
-  return <div>InterviewDetailForm</div>;
+  return (
+    <InterviewTable
+      data={data}
+      setData={setData}
+      metadata={metadata}
+      setMetadata={setMetadata}
+    />
+  );
 };
 
 const convertOriginMetadata = (programMetadataMember) => {
-  programMetadataMember.trackedEntityAttributes.forEach((attr) => {
-    attr.code = attr.id;
-  });
+  // programMetadataMember.trackedEntityAttributes.forEach((attr) => {
+  //   attr.code = attr.id;
+  // });
 
   const programStagesDataElements = programMetadataMember.programStages.reduce(
     (acc, stage) => {
@@ -33,7 +40,7 @@ const convertOriginMetadata = (programMetadataMember) => {
   );
 
   return [
-    ...programMetadataMember.trackedEntityAttributes,
+    // ...programMetadataMember.trackedEntityAttributes,
     ...programStagesDataElements,
   ];
 };

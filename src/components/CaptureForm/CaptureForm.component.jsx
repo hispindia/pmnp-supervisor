@@ -27,11 +27,13 @@ function CaptureForm(props) {
     handleEditRow,
     handleAddNewRow,
     editRowCallback = null,
+    formProgramMetadata,
     locale,
     ...other
   } = props;
   const { programMetadataMember } = useSelector((state) => state.metadata);
-  const { programSections, programStages } = programMetadataMember;
+  const { programSections, programStages } =
+    formProgramMetadata || programMetadataMember;
   const {
     formData,
     prevData,
@@ -46,6 +48,8 @@ function CaptureForm(props) {
   } = useForm(_.cloneDeep(metadata), data, {
     compulsory: t("thisFieldIsRequired"),
   });
+
+  console.log({ formData });
 
   useEffect(() => {
     initFromData(data);
