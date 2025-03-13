@@ -29,10 +29,14 @@ import {
 
 const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
   const { t, i18n } = useTranslation();
+  const locale = i18n.language || "en";
 
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const { programMetadata } = useSelector((state) => state.metadata);
+  const [columns, setColumns] = useState(
+    transformMetadataToColumns(metadata, locale)
+  );
 
   const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
 
@@ -104,6 +108,60 @@ const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
 
   const editRowCallback = () => {};
 
+  const handleSelectRow = () => {};
+
+  const handleDeleteRow = () => {};
+
+  const rowEvents = {
+    onClick: (e, row, rowIndex) => {
+      if (e.currentTarget && e.currentTarget.contains(e.target))
+        handleSelectRow(e, data[rowIndex], rowIndex);
+    },
+  };
+
+  const columnsC = [
+    {
+      dataField: "no.",
+      text: "No.",
+      align: "center",
+      formatter: (cellContent, row, rowIndex, extraData) => {
+        return rowIndex + 1;
+      },
+    },
+    ...columns,
+    // TODO
+    {
+      dataField: "actions",
+      text: "Actions",
+      align: "center",
+      formatter: (cellContent, row, rowIndex, extraData) => {
+        return (
+          <DeleteConfirmationButton
+            variant="outline-danger"
+            size="sm"
+            disabled={extraData !== FORM_ACTION_TYPES.NONE}
+            title={t("delete")}
+            onDelete={(e) => {
+              handleDeleteRow(e, row);
+            }}
+            messageText={t("deleteDialogContent")}
+            cancelText={t("cancel")}
+            deleteText={t("delete")}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            onCancel={(e) => {
+              // callbackFunction(metadata, row, rowIndex, "clean");
+            }}
+          >
+            <FontAwesomeIcon icon={faTrash} size="xs" />
+          </DeleteConfirmationButton>
+        );
+      },
+      formatExtraData: formStatus,
+    },
+  ];
+
   return (
     <div className="px-4">
       <Modal
@@ -124,7 +182,7 @@ const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
               </Card.Subtitle>
               <CaptureForm
                 formProgramMetadata={programMetadata}
-                locale={i18n.language || "en"}
+                locale={locale}
                 metadata={metadata}
                 rowIndex={selectedRowIndex}
                 data={_.cloneDeep(selectedData)}
@@ -154,6 +212,20 @@ const InterviewTable = ({ data, setData, metadata, setMetadata }) => {
           >
             {t("addNewInterview")}
           </Button>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive pl-0">
+          <BootstrapTable
+            keyField="id"
+            data={[]}
+            columns={columnsC}
+            rowEvents={rowEvents}
+            striped
+            hover
+            condensed
+          />
         </div>
       </div>
     </div>
