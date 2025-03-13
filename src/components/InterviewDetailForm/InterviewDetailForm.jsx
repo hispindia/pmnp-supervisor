@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import _ from "lodash";
 import InterviewTable from "../InterviewTable/InterviewTable";
+import { HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID } from "@/constants/app-config";
 
 const InterviewDetailForm = () => {
   const { programMetadata } = useSelector((state) => state.metadata);
@@ -30,6 +31,10 @@ const convertOriginMetadata = (programMetadataMember) => {
 
   const programStagesDataElements = programMetadataMember.programStages.reduce(
     (acc, stage) => {
+      if (stage.id !== HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID) {
+        return acc;
+      }
+
       stage.dataElements.forEach((de) => {
         de.code = de.id;
         de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
