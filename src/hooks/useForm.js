@@ -22,7 +22,6 @@ const useForm = (metadata, data, uiLocale) => {
   const dispatch = useDispatch();
 
   const validationCheck = (type, value) => {
-    console.log("validationCheck called");
     switch (type) {
       case "compulsory":
         if (value == "" || value == null || value == undefined) {
@@ -267,8 +266,6 @@ const useForm = (metadata, data, uiLocale) => {
   };
 
   const validation = (code, otherError) => {
-    console.log("validation called");
-
     if (otherError) {
       return otherError;
     } else {
@@ -303,8 +300,6 @@ const useForm = (metadata, data, uiLocale) => {
     );
 
     // custom fileds validations
-
-    console.log({ valText });
 
     setValidationText(valText);
 

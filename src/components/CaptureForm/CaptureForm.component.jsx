@@ -222,7 +222,6 @@ function CaptureForm(props) {
 
   const handleOnSubmit = (e, action) => {
     let status = onSubmit(null);
-    console.trace(status);
 
     console.log("status:>>", status);
     if (status) {

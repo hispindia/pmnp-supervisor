@@ -31,6 +31,7 @@ const InterviewTable = ({
   metadata,
   originMetadata,
   setMetadata,
+  callbackFunction,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
@@ -64,6 +65,8 @@ const InterviewTable = ({
     // Add new data
     !continueAdd && setFormStatus(FORM_ACTION_TYPES.NONE);
     data.push(row);
+
+    callbackFunction(metadata, data, data.length - 1, "add");
 
     setData([...data]);
     let updatedMetadata = updateMetadata(metadata, data);
@@ -118,6 +121,7 @@ const InterviewTable = ({
 
     setData(newData);
 
+    callbackFunction && callbackFunction(metadata, newData, rowIndex, "edit");
     let updatedMetadata = updateMetadata(metadata, newData);
     console.log("handleEditRow", { updatedMetadata, newData });
 
@@ -127,7 +131,23 @@ const InterviewTable = ({
 
   const editRowCallback = () => {};
 
-  const handleDeleteRow = () => {};
+  const handleDeleteRow = (e, row) => {
+    e.stopPropagation();
+    let rows = data.filter((d) => d.id != row.id);
+
+    callbackFunction(metadata, rows, null, "delete_member");
+    setData([...rows]);
+
+    // update new currentCascade
+    // const updatedCurrentCascade = {
+    //   ...currentCascade,
+    //   [year]: rows,
+    // };
+    // dispatch(updateCascade(updatedCurrentCascade));
+
+    let updatedMetadata = updateMetadata(metadata, rows);
+    setMetadata([...updatedMetadata]);
+  };
 
   const handleSelectRow = (e, row, rowIndex) => {
     console.log("selected", row);
@@ -182,7 +202,7 @@ const InterviewTable = ({
               e.stopPropagation();
             }}
             onCancel={(e) => {
-              // callbackFunction(metadata, row, rowIndex, "clean");
+              callbackFunction(metadata, row, rowIndex, "clean");
             }}
           >
             <FontAwesomeIcon icon={faTrash} size="xs" />

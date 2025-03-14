@@ -73,6 +73,10 @@ const TYPE_OF_ACTION = {
   NEVER: "Never",
 };
 
+export const HOUSEHOLD_MEMBER_ID = "Cn37lbyhz6f";
+export const PMNP_ID = "NOKzq4dAKF7";
+export const MEMBER_HOUSEHOLD_UID = "RDQQ3t9oXw5";
+
 export const MOTHER_CHILD_SECTION = [
   "Z4zfIkKCP7R",
   "VQRxvN71m5l",

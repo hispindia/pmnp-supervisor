@@ -75,6 +75,7 @@ const FamilyMemberFormContainer = () => {
       currentEvent={event}
       changeEventDataValue={handleChangeDataValue}
       changeEvent={changeEvent}
+      setEventDirty={setEventDirty}
       blockEntry={false}
       events={events}
       externalComponents={<div></div>}
