@@ -22,6 +22,15 @@ import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import _ from "lodash";
+import { submitEvent } from "@/redux/actions/data";
+import { transformEvent } from "@/utils/event";
+import {
+  HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
+  HOUSEHOLD_INTERVIEW_TIME_DE_ID,
+} from "@/constants/app-config";
+import { format, quartersToMonths } from "date-fns";
+import { getMidDateOfQuarterly } from "./utils";
+import { deleteEvent } from "@/redux/actions/data/tei";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -35,6 +44,11 @@ const InterviewTable = ({
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
+  const currentEvents = useSelector(
+    (state) => state.data.tei.data.currentEvents
+  );
+
+  const dispatch = useDispatch();
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
   const [selectedData, setSelectedData] = useState({});
@@ -53,10 +67,7 @@ const InterviewTable = ({
   const handleBeforeAddNewRow = () => {
     // Before add new data
     setFormStatus(FORM_ACTION_TYPES.ADD_NEW);
-    setSelectedData({
-      id: generateUid(),
-      isNew: true,
-    });
+    setSelectedData({ id: generateUid() });
     setSelectedRowIndex(null);
   };
 
@@ -70,9 +81,69 @@ const InterviewTable = ({
 
     setData([...data]);
     let updatedMetadata = updateMetadata(metadata, data);
+    setMetadata([...updatedMetadata]);
 
     console.log("handleAddNewRow", { updatedMetadata, data });
+
+    // submit new event
+    let cloneEvent = currentEvents[currentEvents.length - 1];
+    const { id, ...dataValues } = row;
+
+    const midDate = getMidDateOfQuarterly(
+      dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID]
+    );
+
+    // init new event
+    dispatch(
+      submitEvent(
+        transformEvent({
+          ...cloneEvent,
+          _isDirty: true,
+          event: id,
+          occurredAt: `${midDate}`,
+          dueDate: `${midDate}`,
+          status: "ACTIVE",
+          programStage: HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
+          dataValues,
+        })
+      )
+    );
+  };
+
+  const handleEditRow = (e, row, rowIndex) => {
+    // Update data
+    let newData = _.clone(data);
+    newData[rowIndex] = { ...row };
+
+    setData(newData);
+
+    callbackFunction && callbackFunction(metadata, newData, rowIndex, "edit");
+
+    let updatedMetadata = updateMetadata(metadata, newData);
+    console.log("handleEditRow", { updatedMetadata, newData });
+
     setMetadata([...updatedMetadata]);
+    setFormStatus(FORM_ACTION_TYPES.NONE);
+
+    // save event
+    const currentEvent = currentEvents.find((e) => e.event === row.id);
+    const { id, ...dataValues } = row;
+
+    const midDate = getMidDateOfQuarterly(
+      dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID]
+    );
+
+    dispatch(
+      submitEvent(
+        transformEvent({
+          ...currentEvent,
+          _isDirty: true,
+          occurredAt: `${midDate}`,
+          dueDate: `${midDate}`,
+          dataValues,
+        })
+      )
+    );
   };
 
   const updateMetadata = (metadata, data) => {
@@ -114,36 +185,17 @@ const InterviewTable = ({
     return metadata;
   };
 
-  const handleEditRow = (e, row, rowIndex) => {
-    // Update data
-    let newData = _.clone(data);
-    newData[rowIndex] = { ...row };
-
-    setData(newData);
-
-    callbackFunction && callbackFunction(metadata, newData, rowIndex, "edit");
-    let updatedMetadata = updateMetadata(metadata, newData);
-    console.log("handleEditRow", { updatedMetadata, newData });
-
-    setMetadata([...updatedMetadata]);
-    setFormStatus(FORM_ACTION_TYPES.NONE);
-  };
-
   const editRowCallback = () => {};
 
   const handleDeleteRow = (e, row) => {
     e.stopPropagation();
+
+    dispatch(deleteEvent(row.id));
+
     let rows = data.filter((d) => d.id != row.id);
 
     callbackFunction(metadata, rows, null, "delete_member");
     setData([...rows]);
-
-    // update new currentCascade
-    // const updatedCurrentCascade = {
-    //   ...currentCascade,
-    //   [year]: rows,
-    // };
-    // dispatch(updateCascade(updatedCurrentCascade));
 
     let updatedMetadata = updateMetadata(metadata, rows);
     setMetadata([...updatedMetadata]);

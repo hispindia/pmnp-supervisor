@@ -49,8 +49,6 @@ function CaptureForm(props) {
     compulsory: t("thisFieldIsRequired"),
   });
 
-  console.log({ formData });
-
   useEffect(() => {
     initFromData(data);
 

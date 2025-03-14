@@ -1,15 +1,20 @@
 import { useSelector } from "react-redux";
 import { HAS_INITIAN_NOVALUE } from "../constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import _ from "lodash";
 import InterviewTable from "../InterviewTable/InterviewTable";
-import { HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID } from "@/constants/app-config";
+import {
+  HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
+  HOUSEHOLD_INTERVIEW_TIME_DE_ID,
+} from "@/constants/app-config";
 
 const InterviewDetailForm = () => {
+  const currentEvents = useSelector(
+    (state) => state.data.tei.data.currentEvents
+  );
   const { programMetadata } = useSelector((state) => state.metadata);
   const originMetadata = convertOriginMetadata(programMetadata);
-  console.log({ originMetadata });
 
   const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
@@ -43,15 +48,25 @@ const InterviewDetailForm = () => {
     // FOR PARTICULAR ROW
     if (rowIndex != null) {
       console.log("callbackFunction rowIndex", rows[rowIndex].id);
-
-      // Set default value for Active memberz
-      if (!Boolean(rows[rowIndex]["status"])) {
-        rows[rowIndex]["status"] = "active";
-      }
     }
 
     // FOR ALL ROWS
   };
+
+  const interviewEvents = currentEvents.filter(
+    (e) => e.programStage === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
+  );
+
+  console.log({ interviewEvents });
+
+  useEffect(() => {
+    const transformed = interviewEvents.map((e) => ({
+      id: e.event,
+      ...e.dataValues,
+    }));
+
+    setData(transformed);
+  }, [JSON.stringify(interviewEvents)]);
 
   return (
     <InterviewTable
@@ -70,25 +85,16 @@ const convertOriginMetadata = (programMetadata) => {
   //   attr.code = attr.id;
   // });
 
-  const interviewTime_ID = "I5nbD6rXhmn";
-
   const interviewDetailsProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
   );
 
   const dataElements = interviewDetailsProgramStage.dataElements.map((de) => {
-    if (de.id === interviewTime_ID) {
-      return {
-        ...de,
-        valueType: "QUARTERLY",
-        code: de.id,
-      };
-    }
-
     return {
       ...de,
       code: de.id,
       hidden: HAS_INITIAN_NOVALUE.includes(de.id),
+      // valueType: de.id === HOUSEHOLD_INTERVIEW_TIME_DE_ID ? "QUARTERLY" : de.valueType,
     };
   });
 

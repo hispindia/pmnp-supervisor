@@ -27,8 +27,6 @@ const FamilyMemberFormContainer = () => {
     selectedYear.selected6Month
   );
 
-  console.log({ events, eventData });
-
   const {
     event,
     initEvent,
