@@ -27,7 +27,10 @@ import {
   PMNP_ID,
 } from "../constants";
 import styles from "./FamilyMemberForm.module.css";
-import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
+import {
+  FAMILY_UID_ATTRIBUTE_ID,
+  HOUSEHOLD_ID_ATTR_ID,
+} from "@/constants/app-config";
 
 const { familyMemberFormContainer, cascadeTableWrapper } = styles;
 const LoadingCascadeTable = withSkeletonLoading()(CascadeTable);
@@ -153,6 +156,8 @@ const FamilyMemberForm = ({
       currentCascade,
     });
 
+    metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
+
     metadata[HOUSEHOLD_MEMBER_ID].disabled = true;
     data[HOUSEHOLD_MEMBER_ID] = getMaxHHMemberID(currentCascade);
 
@@ -244,36 +249,6 @@ const FamilyMemberForm = ({
 
     console.log("dispatch:data :>> ", data);
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
-
-    // // UPDATE METADATA
-    // if (data["agetype"] != null) {
-    //   metadata[mapping[data["agetype"]]].hidden = false;
-    //   metadata[mapping[data["agetype"]]].compulsory = true;
-    // }
-
-    // if (data["agetype"] == "DOB" || data["agetype"] == "dob") {
-    //   metadata["birthyear"].hidden = true;
-    //   metadata["birthyear"].compulsory = false;
-    //   metadata["age"].hidden = true;
-    //   metadata["age"].compulsory = false;
-    // } else if (data["agetype"] == "birthyear") {
-    //   metadata["DOB"].hidden = true;
-    //   metadata["DOB"].compulsory = false;
-    //   metadata["age"].hidden = true;
-    //   metadata["age"].compulsory = false;
-    // } else if (data["agetype"] == "age") {
-    //   metadata["birthyear"].hidden = true;
-    //   metadata["birthyear"].compulsory = false;
-    //   metadata["DOB"].hidden = true;
-    //   metadata["DOB"].compulsory = false;
-    // } else {
-    //   metadata["DOB"].hidden = true;
-    //   metadata["DOB"].compulsory = false;
-    //   metadata["age"].hidden = true;
-    //   metadata["age"].compulsory = false;
-    //   metadata["birthyear"].hidden = true;
-    //   metadata["birthyear"].compulsory = false;
-    // }
 
     // UPDATE DATA
     if (code == "DOB") {
