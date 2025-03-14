@@ -62,7 +62,9 @@ const DateField = (
         })}
         variant={variant}
         disabled={disabled}
-        value={value ? moment(fieldValue, switchFormatMoment(periodType)) : null}
+        value={
+          value ? moment(fieldValue, switchFormatMoment(periodType)) : null
+        }
         defaultValue=""
         onChange={(date) => {
           handleChange(moment(date).format(switchFormatMoment(periodType)));

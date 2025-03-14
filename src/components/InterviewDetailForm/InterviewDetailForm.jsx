@@ -9,6 +9,7 @@ import { HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID } from "@/constants/app-co
 const InterviewDetailForm = () => {
   const { programMetadata } = useSelector((state) => state.metadata);
   const originMetadata = convertOriginMetadata(programMetadata);
+  console.log({ originMetadata });
 
   const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
@@ -69,25 +70,31 @@ const convertOriginMetadata = (programMetadata) => {
   //   attr.code = attr.id;
   // });
 
-  const programStagesDataElements = programMetadata.programStages.reduce(
-    (acc, stage) => {
-      if (stage.id !== HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID) {
-        return acc;
-      }
+  const interviewTime_ID = "I5nbD6rXhmn";
 
-      stage.dataElements.forEach((de) => {
-        de.code = de.id;
-        de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
-      });
-
-      return [...acc, ...stage.dataElements];
-    },
-    []
+  const interviewDetailsProgramStage = programMetadata.programStages.find(
+    (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
   );
+
+  const dataElements = interviewDetailsProgramStage.dataElements.map((de) => {
+    if (de.id === interviewTime_ID) {
+      return {
+        ...de,
+        valueType: "QUARTERLY",
+        code: de.id,
+      };
+    }
+
+    return {
+      ...de,
+      code: de.id,
+      hidden: HAS_INITIAN_NOVALUE.includes(de.id),
+    };
+  });
 
   return [
     // ...programMetadata.trackedEntityAttributes,
-    ...programStagesDataElements,
+    ...dataElements,
   ];
 };
 
