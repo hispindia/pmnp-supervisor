@@ -95,15 +95,7 @@ const originMetadata = [
   //   valueSet: null,
   //   displayInList: true,
   // },
-  // {
-  //   compulsory: false,
-  //   id: "hDE1WNqTTwF",
-  //   displayName: "Unique dwelling ID",
-  //   displayFormName: "Unique dwelling ID",
-  //   valueType: "TEXT",
-  //   valueSet: null,
-  //   displayInList: true,
-  // },
+
   // {
   //   compulsory: false,
   //   id: "dzeTdP1U1b1",
@@ -2039,31 +2031,7 @@ const originMetadata1 = [
   //   favorites: [],
   //   program: {
   //     id: "xvzrp56zKvI",
-  //   },
-  //   displayInList: true,
-  //   sortOrder: 8,
-  //   mandatory: false,
-  //   renderOptionsAsRadio: false,
-  //   searchable: false,
-  //   valueType: "TEXT",
-  //   displayShortName: "Family member details 4.0 Unique dwelling ID",
-  //   displayName: "Family member details 4.0 Unique dwelling ID",
-  //   favorite: false,
-  //   id: "ix7lkPzs6XM",
-  //   attributeValues: [],
-  //   trackedEntityAttribute: {
-  //     formName: "Unique dwelling ID",
-  //     valueType: "TEXT",
-  //     unique: false,
-  //     pattern: "",
-  //     displayName: "Unique dwelling ID",
-  //     displayShortName: "Unique dwelling ID",
-  //     displayFormName: "Unique dwelling ID",
-  //     optionSetValue: false,
-  //     id: "hDE1WNqTTwF",
-  //     attributeValues: [],
-  //   },
-  // },
+
   // {
   //   dataElement: {
   //     valueType: "TEXT",
