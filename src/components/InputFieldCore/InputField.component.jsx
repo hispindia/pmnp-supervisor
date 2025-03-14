@@ -6,7 +6,9 @@ import { onKeyDown } from "@/utils";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import TimePicker from "./inputs/TimePicker";
+import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import moment from "moment";
 
 const InputField = ({
   valueType,
@@ -182,15 +184,27 @@ const InputField = ({
             {...props}
           />
         );
-      // case "TIME":
-      //   return (
-      //     <TimePicker
-      //       change={onChange}
-      //       disabled={disabled}
-      //       value={value}
-      //       {...props}
-      //     />
-      //   );
+      case "TIME":
+        return (
+          <MuiPickersUtilsProvider utils={MomentUtils} locale={locale || "en"}>
+            <TimePicker
+              clearable
+              disabled={disabled}
+              value={value ? moment(value, "HH:mm") : null}
+              onChange={(momentObject) => {
+                if (momentObject) {
+                  onChange(momentObject.format("HH:mm"));
+                  onBlur(momentObject.format("HH:mm"));
+                } else {
+                  onChange("");
+                  onBlur("");
+                }
+              }}
+              {...props}
+            />
+          </MuiPickersUtilsProvider>
+        );
+
       case "PATTERNNUMBER":
         return (
           <TextField
