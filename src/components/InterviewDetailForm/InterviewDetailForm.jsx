@@ -57,7 +57,7 @@ const InterviewDetailForm = () => {
     (e) => e.programStage === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
   );
 
-  console.log({ interviewEvents });
+  console.log({ currentEvents, interviewEvents });
 
   useEffect(() => {
     const transformed = interviewEvents.map((e) => ({
@@ -94,7 +94,8 @@ const convertOriginMetadata = (programMetadata) => {
       ...de,
       code: de.id,
       hidden: HAS_INITIAN_NOVALUE.includes(de.id),
-      // valueType: de.id === HOUSEHOLD_INTERVIEW_TIME_DE_ID ? "QUARTERLY" : de.valueType,
+      valueType:
+        de.id === HOUSEHOLD_INTERVIEW_TIME_DE_ID ? "QUARTERLY" : de.valueType,
     };
   });
 

@@ -4,6 +4,9 @@ import propTypes from "./InputField.types.js";
 import { DateField, SelectField, TextField } from "./inputs/index";
 import { onKeyDown } from "@/utils";
 import { useTranslation } from "react-i18next";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+import TimePicker from "./inputs/TimePicker";
 
 const InputField = ({
   valueType,
@@ -60,6 +63,28 @@ const InputField = ({
         />
       );
     }
+
+    if (valueType === "QUARTERLY") {
+      return (
+        <DatePicker
+          size="large"
+          picker="quarter"
+          locale={locale}
+          disabled={disabled}
+          value={value ? dayjs(value) : ""}
+          onChange={(momentObject) => {
+            if (momentObject) {
+              onChange(momentObject.format("YYYY-MM-DD"));
+              onBlur(momentObject.format("YYYY-MM-DD"));
+            } else {
+              onChange("");
+              onBlur("");
+            }
+          }}
+        />
+      );
+    }
+
     if (valueType === "BOOLEAN") {
       const vs = [
         { value: "true", label: t("yes") },
@@ -157,6 +182,15 @@ const InputField = ({
             {...props}
           />
         );
+      // case "TIME":
+      //   return (
+      //     <TimePicker
+      //       change={onChange}
+      //       disabled={disabled}
+      //       value={value}
+      //       {...props}
+      //     />
+      //   );
       case "PATTERNNUMBER":
         return (
           <TextField

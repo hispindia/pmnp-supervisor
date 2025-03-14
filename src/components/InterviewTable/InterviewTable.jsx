@@ -89,9 +89,7 @@ const InterviewTable = ({
     let cloneEvent = currentEvents[currentEvents.length - 1];
     const { id, ...dataValues } = row;
 
-    const midDate = getMidDateOfQuarterly(
-      dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID]
-    );
+    const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID];
 
     // init new event
     dispatch(
@@ -100,8 +98,8 @@ const InterviewTable = ({
           ...cloneEvent,
           _isDirty: true,
           event: id,
-          occurredAt: `${midDate}`,
-          dueDate: `${midDate}`,
+          occurredAt,
+          dueDate: occurredAt,
           status: "ACTIVE",
           programStage: HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
           dataValues,
@@ -129,17 +127,15 @@ const InterviewTable = ({
     const currentEvent = currentEvents.find((e) => e.event === row.id);
     const { id, ...dataValues } = row;
 
-    const midDate = getMidDateOfQuarterly(
-      dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID]
-    );
+    const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID];
 
     dispatch(
       submitEvent(
         transformEvent({
           ...currentEvent,
           _isDirty: true,
-          occurredAt: `${midDate}`,
-          dueDate: `${midDate}`,
+          occurredAt,
+          dueDate: occurredAt,
           dataValues,
         })
       )
@@ -231,7 +227,7 @@ const InterviewTable = ({
         return rowIndex + 1;
       },
     },
-    ...columns,
+    ...columns.filter((c) => c.dataField !== HOUSEHOLD_INTERVIEW_TIME_DE_ID),
     // TODO
     {
       dataField: "actions",
