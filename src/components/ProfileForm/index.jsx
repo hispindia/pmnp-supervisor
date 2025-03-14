@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import withDhis2FormItem from "../../hocs/withDhis2Field";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
+import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 
 const ProfileForm = ({
   onSubmit,
@@ -130,7 +131,7 @@ const ProfileForm = ({
         </div> */}
         <div className="col-lg-3">
           <Dhis2FormItem
-            id="IKOSsYJJZis"
+            id={HOUSEHOLD_ID_ATTR_ID}
             // displayFormName={t("Household ID")}
           >
             <InputField size="large" disabled={true} />
@@ -349,7 +350,7 @@ const ProfileForm = ({
               dependentFields={[
                 "BUEzQEErqa7",
                 // "G9KYJZ8dW76",
-                "IKOSsYJJZis",
+                HOUSEHOLD_ID_ATTR_ID,
                 "eMYBznRdn0t",
                 "J2KmQw53CRl",
                 "HYNM3CJYLje",

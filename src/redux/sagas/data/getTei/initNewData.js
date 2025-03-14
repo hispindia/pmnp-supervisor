@@ -4,6 +4,7 @@ import { getTeiSuccess } from "../../../actions/data/tei";
 import moment from "moment";
 import { getParentOuPatern } from "./setParentPattern";
 import { getOrganisationUnitById } from "@/utils/organisation";
+import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 
 function* handleInitNewData() {
   yield getParentOuPatern();
@@ -34,7 +35,7 @@ function* handleInitNewData() {
     attributes: {
       BUEzQEErqa7: moment().subtract(1, "y").format("YYYY"),
       // BUEzQEErqa7: moment().format("YYYY"),
-      IKOSsYJJZis: ouPattern,
+      [HOUSEHOLD_ID_ATTR_ID]: ouPattern,
       eMYBznRdn0t: code,
     },
   };

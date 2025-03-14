@@ -24,6 +24,7 @@ import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
 import { transformData, transformMetadataToColumns } from "./utils";
+import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -114,7 +115,7 @@ const CascadeTable = (props) => {
     setSelectedData({
       id: generateUid(),
       isNew: true,
-      hDE1WNqTTwF: profile.attributes["IKOSsYJJZis"],
+      RDQQ3t9oXw5: profile.attributes[HOUSEHOLD_ID_ATTR_ID],
     });
     // setMetadata(JSON.parse(JSON.stringify(originMetadata)));
     setSelectedRowIndex(null);

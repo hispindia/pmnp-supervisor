@@ -27,6 +27,7 @@ import {
   PMNP_ID,
 } from "../constants";
 import styles from "./FamilyMemberForm.module.css";
+import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 
 const { familyMemberFormContainer, cascadeTableWrapper } = styles;
 const LoadingCascadeTable = withSkeletonLoading()(CascadeTable);
@@ -156,7 +157,7 @@ const FamilyMemberForm = ({
     data[HOUSEHOLD_MEMBER_ID] = getMaxHHMemberID(currentCascade);
 
     metadata[MEMBER_HOUSEHOLD_UID].disabled = true;
-    data[MEMBER_HOUSEHOLD_UID] = attributes["IKOSsYJJZis"];
+    data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
     metadata[PMNP_ID].disabled = true;
     data[
