@@ -1,4 +1,4 @@
-import InterviewDetailForm from "@/components/InterviewDetailForm/InterviewDetailForm";
+import InterviewDetailForm from "@/components/InterviewDetail/InterviewDetailForm";
 
 const InterviewDetailContainer = () => {
   return <InterviewDetailForm />;

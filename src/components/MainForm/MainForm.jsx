@@ -5,6 +5,7 @@ import CensusDetailFormContainer from "../../containers/CensusDetailFormContaine
 import FMLayoutContainer from "../../containers/FMLayout";
 import ProfileFormContainer from "../../containers/ProfileForm";
 import InterviewDetailContainer from "@/containers/InterviewDetail/InterviewDetailContainer";
+import HouseHoldSurveyContainer from "@/containers/HouseHoldSurvey/HouseHoldSurveyContainer";
 
 const { TabPane } = Tabs;
 
@@ -37,7 +38,7 @@ const MainForm = ({
     {
       label: t("Household Survey"),
       key: "3",
-      children: <CensusDetailFormContainer />,
+      children: <HouseHoldSurveyContainer />,
       disabled: isEditingAttributes,
     },
   ];

@@ -164,6 +164,10 @@ const FamilyMemberForm = ({
     metadata[MEMBER_HOUSEHOLD_UID].disabled = true;
     data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
+    // InterviewDetails - Household ID
+    metadata["C4b8S7zjs0g"].disabled = true;
+    data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
+
     metadata[PMNP_ID].disabled = true;
     data[
       PMNP_ID
@@ -180,6 +184,11 @@ const FamilyMemberForm = ({
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
     data["xDSSvssuNFs"] = weeks;
+
+    if (weeks >= 52) {
+      metadata["xDSSvssuNFs"].hidden = true;
+    }
+
     data["H42aYY9JMIR"] = years;
 
     let shownSections = [];

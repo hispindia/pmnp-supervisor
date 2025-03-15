@@ -4,37 +4,31 @@ import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  defaultProgramTrackedEntityAttributeDisable,
-  FORM_ACTION_TYPES,
-  HAS_INITIAN_NOVALUE,
-} from "../constants";
+import { FORM_ACTION_TYPES } from "../constants";
 
 // Icon
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
+  HOUSEHOLD_SURVEY_TIME_DE_ID,
+  HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
+} from "@/constants/app-config";
+import { submitEvent } from "@/redux/actions/data";
+import { deleteEvent } from "@/redux/actions/data/tei";
+import { transformEvent } from "@/utils/event";
+import _ from "lodash";
+import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
+import CaptureForm from "../CaptureForm";
+import {
   transformData,
   transformMetadataToColumns,
 } from "../CascadeTable/utils";
-import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
-import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
-import _ from "lodash";
-import { submitEvent } from "@/redux/actions/data";
-import { transformEvent } from "@/utils/event";
-import {
-  HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
-  HOUSEHOLD_INTERVIEW_TIME_DE_ID,
-} from "@/constants/app-config";
-import { format, quartersToMonths } from "date-fns";
-import { getMidDateOfQuarterly } from "./utils";
-import { deleteEvent } from "@/redux/actions/data/tei";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
-const InterviewTable = ({
+const HouseHoldSurveyTable = ({
   data,
   setData,
   metadata,
@@ -56,6 +50,9 @@ const InterviewTable = ({
   const { programMetadata } = useSelector((state) => state.metadata);
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
+  );
+  const attributes = useSelector(
+    (state) => state.data.tei.data.currentTei.attributes
   );
 
   const showData = useMemo(() => {
@@ -89,7 +86,7 @@ const InterviewTable = ({
     let cloneEvent = currentEvents[currentEvents.length - 1];
     const { id, ...dataValues } = row;
 
-    const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID];
+    const occurredAt = dataValues[HOUSEHOLD_SURVEY_TIME_DE_ID];
 
     // init new event
     dispatch(
@@ -101,7 +98,7 @@ const InterviewTable = ({
           occurredAt,
           dueDate: occurredAt,
           status: "ACTIVE",
-          programStage: HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
+          programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
           dataValues,
         })
       )
@@ -127,7 +124,7 @@ const InterviewTable = ({
     const currentEvent = currentEvents.find((e) => e.event === row.id);
     const { id, ...dataValues } = row;
 
-    const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID];
+    const occurredAt = dataValues[HOUSEHOLD_SURVEY_TIME_DE_ID];
 
     dispatch(
       submitEvent(
@@ -181,7 +178,15 @@ const InterviewTable = ({
     return metadata;
   };
 
-  const editRowCallback = () => {};
+  const editRowCallback = (metadata, previousData, data, code, value) => {
+    console.log("HouseHoldSurveyTable", {
+      metadata,
+      previousData,
+      data,
+      code,
+      value,
+    });
+  };
 
   const handleDeleteRow = (e, row) => {
     e.stopPropagation();
@@ -227,7 +232,7 @@ const InterviewTable = ({
         return rowIndex + 1;
       },
     },
-    ...columns.filter((c) => c.dataField !== HOUSEHOLD_INTERVIEW_TIME_DE_ID),
+    ...columns.filter((c) => c.dataField !== HOUSEHOLD_SURVEY_TIME_DE_ID),
     // TODO
     {
       dataField: "actions",
@@ -356,4 +361,4 @@ const InterviewTable = ({
   );
 };
 
-export default InterviewTable;
+export default HouseHoldSurveyTable;

@@ -1,10 +1,15 @@
 import { useTranslation } from "react-i18next";
 import Select from "react-select";
 
-const SelectField = (
-  { valueSet, value, handleChange, handleBlur, locale, disabled },
-  props
-) => {
+const SelectField = ({
+  valueSet,
+  value,
+  handleChange,
+  handleBlur,
+  locale,
+  disabled,
+  ...props
+}) => {
   const { t } = useTranslation();
 
   const options = valueSet.map((e) => {

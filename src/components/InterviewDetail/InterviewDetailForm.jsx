@@ -3,7 +3,7 @@ import { HAS_INITIAN_NOVALUE } from "../constants";
 import { useEffect, useState } from "react";
 
 import _ from "lodash";
-import InterviewTable from "../InterviewTable/InterviewTable";
+import InterviewTable from "./InterviewDetailTable";
 import {
   HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
