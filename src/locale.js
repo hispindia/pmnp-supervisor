@@ -19,6 +19,10 @@ const locale = {
     en: "Household Members",
     lo: "ສະມາຊິກຄອບຄົວ (ບ 1 ກ)",
   },
+  interviewDetails: {
+    en: "Interview Details",
+    lo: "Interview Details",
+  },
   censusDetails: {
     en: "Census Details",
     lo: "ລາຍລະອຽດການສຳຫຼວດ (ບ 1 ຂ)",
@@ -435,6 +439,7 @@ const locale = {
   },
   addYear: { en: "Add Year", lo: "ເພີ່ມປີ" },
   addNewMember: { en: "Add New Member", lo: "ເພີ່ມສະມາຊິກໃໝ່" },
+  addNewInterview: { en: "Add New Interview", lo: "Add New Interview" },
   number: { en: "No.", lo: "ລຳດັບ" },
   relationWithHead: {
     en: "Relation With Head",

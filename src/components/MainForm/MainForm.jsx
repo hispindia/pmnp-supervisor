@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import CensusDetailFormContainer from "../../containers/CensusDetailFormContainer";
 import FMLayoutContainer from "../../containers/FMLayout";
 import ProfileFormContainer from "../../containers/ProfileForm";
-
+import InterviewDetailContainer from "@/containers/InterviewDetail/InterviewDetailContainer";
 
 const { TabPane } = Tabs;
 
@@ -15,7 +15,7 @@ const MainForm = ({
   isEditingAttributes,
 }) => {
   const { t } = useTranslation();
- 
+
   const items = [
     {
       label: t("familyRegistration"),
@@ -26,6 +26,12 @@ const MainForm = ({
       label: t("familyMembers"),
       key: "2",
       children: <FMLayoutContainer />,
+      disabled: isEditingAttributes,
+    },
+    {
+      label: t("interviewDetails"),
+      key: "4",
+      children: <InterviewDetailContainer />,
       disabled: isEditingAttributes,
     },
     {

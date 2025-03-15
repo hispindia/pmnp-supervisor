@@ -27,11 +27,13 @@ function CaptureForm(props) {
     handleEditRow,
     handleAddNewRow,
     editRowCallback = null,
+    formProgramMetadata,
     locale,
     ...other
   } = props;
   const { programMetadataMember } = useSelector((state) => state.metadata);
-  const { programSections, programStages } = programMetadataMember;
+  const { programSections, programStages } =
+    formProgramMetadata || programMetadataMember;
   const {
     formData,
     prevData,
