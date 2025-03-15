@@ -22,7 +22,7 @@ import { generateUid } from "@/utils";
 
 import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
 import {
-  HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
+  MEMBER_IN_YEAR_PROGRAM_STAGE_ID,
   MEMBER_PROGRAM_ID,
 } from "@/constants/app-config";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
@@ -173,30 +173,15 @@ function* handleCloneEvent({ year }) {
       trackedEntity: currentTei.trackedEntity,
       orgUnit: selectedOrgUnit.id,
       program: programMetadata.id,
-      programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
+      programStage: MEMBER_IN_YEAR_PROGRAM_STAGE_ID,
       enrollment: currentEnrollment.enrollment,
-      occurredAt: `${year}-06-30`,
-      dueDate: `${year}-06-30`,
-      status: "ACTIVE",
-      dataValues: payloadTransformed?.dataValues || [], // payloadTransformed.dataValues,
-    },
-    {
-      _isDirty: false,
-      _isCloned: true,
-      event: generateUid(),
-      trackedEntity: currentTei.trackedEntity,
-      orgUnit: selectedOrgUnit.id,
-      program: programMetadata.id,
-      programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
-      enrollment: currentEnrollment.enrollment,
-      occurredAt: `${year}-12-31`,
-      dueDate: `${year}-12-31`,
+      occurredAt: `${year}-12-30`,
+      dueDate: `${year}-12-30`,
       status: "ACTIVE",
       dataValues: payloadTransformed?.dataValues || [], // payloadTransformed.dataValues,
     },
   ];
 
-  console.log({ newFamilyEvents });
   // yield call(dataApi.pushEvents, {
   //     events: [{ ...newEv, dataValues: payloadTransformed.dataValues }],
   // });

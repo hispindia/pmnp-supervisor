@@ -10,6 +10,9 @@ export const HOUSEHOLD_INTERVIEW_TIME_DE_ID = "I5nbD6rXhmn";
 export const HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID = "gKsusTMmABW";
 export const HOUSEHOLD_SURVEY_TIME_DE_ID = "j1uhoOjaHIb";
 
+// Member In Yaer
+export const MEMBER_IN_YEAR_PROGRAM_STAGE_ID = "epFHY8N3Gq3";
+
 export const MEMBER_PROGRAM_ID = "VVLirjoOGbj";
 export const MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID = "LRJrFeDNEdT";
 export const MEMBER_SURVEY_PROGRAM_STAGE_ID = "QfXSvc9HtKN";

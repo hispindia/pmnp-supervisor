@@ -13,12 +13,17 @@ import {
 /* components */
 import AddYearButton from "@/components/Buttons/AddYearButton.jsx";
 import SidebarItem from "@/components/Buttons/SidebarItem.jsx";
+import { MEMBER_IN_YEAR_PROGRAM_STAGE_ID } from "@/constants/app-config";
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const [warningText, setWarningText] = useState(null);
 
   const { currentEvents } = useSelector((state) => state.data.tei.data);
+  const memberDetailsEvents = currentEvents.filter(
+    (e) => e.programStage === MEMBER_IN_YEAR_PROGRAM_STAGE_ID
+  );
+
   const { maxDate, minDate } = useSelector((state) => state.metadata);
   const selectedYear = useSelector((state) => state.data.tei.selectedYear);
   const { selected6Month } = selectedYear;
@@ -35,12 +40,14 @@ const SideBar = () => {
   };
 
   const handleAddSelectedYear = (year) => {
-    let existedYear = currentEvents.map((e) => moment(e.occurredAt).year());
-    console.log({ existedYear });
+    let existedYear = memberDetailsEvents.map((e) =>
+      moment(e.occurredAt).year()
+    );
+
     if (!existedYear.includes(year)) {
       setWarningText(null);
       dispatch(cloneFamily(year));
-      const currentItemSize = currentEvents.reduce((years, event) => {
+      const currentItemSize = memberDetailsEvents.reduce((years, event) => {
         const year = moment(event.occurredAt).format("YYYY");
         if (!years.includes(year)) years.push(year);
         return years;
@@ -51,18 +58,6 @@ const SideBar = () => {
       setWarningText(`${year} ${"already exists."}`);
     }
   };
-
-  // dont use
-  // const handleEditEventDate = (year) => {
-  //     let existedYear = currentEvents.map((e) => moment(e.occurredAt).year());
-  //     if (!existedYear.includes(year)) {
-  //         setWarningText(null);
-  //         // update event date
-  //         dispatch(updateFamilyDate(year));
-  //     } else {
-  //         setWarningText(`${year} ${'already exists.'}`);
-  //     }
-  // };
 
   return (
     <React.Fragment>
@@ -87,7 +82,7 @@ const SideBar = () => {
         />
 
         <SidebarItem
-          events={currentEvents}
+          events={memberDetailsEvents}
           maxDate={maxDate}
           minDate={minDate}
           selectedItem={selectedYear}
