@@ -62,6 +62,8 @@ const CascadeTable = (props) => {
     transformData(metadata, props.data, dataValuesTranslate, locale)
   );
 
+  console.log({ showData });
+
   // console.log(' profile :>> ',  profile);
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);

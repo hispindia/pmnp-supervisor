@@ -159,7 +159,9 @@ const FamilyMemberForm = ({
     metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
 
     metadata[HOUSEHOLD_MEMBER_ID].disabled = true;
-    data[HOUSEHOLD_MEMBER_ID] = getMaxHHMemberID(currentCascade);
+    data[HOUSEHOLD_MEMBER_ID] = data.isNew
+      ? getMaxHHMemberID(currentCascade)
+      : data[HOUSEHOLD_MEMBER_ID];
 
     metadata[MEMBER_HOUSEHOLD_UID].disabled = true;
     data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];
@@ -189,6 +191,10 @@ const FamilyMemberForm = ({
 
     if (weeks >= 52) {
       metadata["xDSSvssuNFs"].hidden = true;
+      metadata["H42aYY9JMIR"].hidden = false;
+    } else {
+      metadata["xDSSvssuNFs"].hidden = false;
+      metadata["H42aYY9JMIR"].hidden = true;
     }
 
     data["H42aYY9JMIR"] = years;

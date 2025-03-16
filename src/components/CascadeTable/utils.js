@@ -1,9 +1,11 @@
 import React from "react";
 import { generateUid } from "@/utils";
 import _ from "lodash";
+import { FAMILY_UID_ATTRIBUTE_ID } from "@/constants/app-config";
 
 const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
   const cols = [];
+
   metadata
     .filter((e) => !e.hiddenCol)
     .forEach((ele) => {
@@ -40,6 +42,10 @@ const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
         };
       }
 
+      if (ele.id === FAMILY_UID_ATTRIBUTE_ID) {
+        return;
+      }
+
       cols.push(colC);
     });
   return cols;
@@ -72,19 +78,35 @@ const transformData = (metadata, datas, dataValuesTranslate, locale) => {
 
   // missing uid
   datas_clone.forEach((d) => {
+    // change "true"/"false" to -> "yes"/"no"
+    Object.entries(d).forEach(([index, value]) => {
+      if (value === "true") {
+        d[index] = "Yes";
+      }
+
+      if (value === "false") {
+        d[index] = "No";
+      }
+    });
+
     if (d.id == null) {
       d.id = generateUid();
     }
+
+    // MNu4naFgvBC
+    console.log({ datas, metadata, dataValuesTranslate, locale });
 
     metadata
       .filter((e) => e.valueSet && e.valueSet.length > 0)
       .forEach((md) => {
         let displayValue = d[md.code];
+
         if (dataValuesTranslate) {
-          displayValue = dataValuesTranslate[md.code][d[md.code]]
-            ? dataValuesTranslate[md.code][d[md.code]][locale]
-              ? dataValuesTranslate[md.code][d[md.code]][locale]
-              : d[md.code]
+          const translateDisplayValue =
+            dataValuesTranslate[md.code][d[md.code]];
+
+          displayValue = translateDisplayValue
+            ? translateDisplayValue
             : d[md.code];
         }
         d[md.code] = displayValue;
