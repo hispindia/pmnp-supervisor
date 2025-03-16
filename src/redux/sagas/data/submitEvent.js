@@ -98,9 +98,12 @@ function* handleCloneEvent({ year }) {
 
   function* getLastestEvent(paramEvents = []) {
     let tempEvents = currentEvents.length > 0 ? currentEvents : paramEvents;
+    let memberEvents = tempEvents.filter(
+      (e) => e.programStage === MEMBER_IN_YEAR_PROGRAM_STAGE_ID
+    );
     let listEvents = JSON.parse(
       JSON.stringify(
-        tempEvents.sort(function (a, b) {
+        memberEvents.sort(function (a, b) {
           var keyA = new Date(a.occurredAt),
             keyB = new Date(b.occurredAt);
           // Compare the 2 dates

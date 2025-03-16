@@ -168,6 +168,8 @@ const FamilyMemberForm = ({
     metadata["C4b8S7zjs0g"].disabled = true;
     data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
+    metadata["RND5auPDknz"].hidden = true;
+
     metadata[PMNP_ID].disabled = true;
     data[
       PMNP_ID

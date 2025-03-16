@@ -17,3 +17,19 @@ export const getMaxHHMemberID = (cascadeData) => {
 
   return paddedMemberIDs;
 };
+
+export const getHouseholdMemberIDs = (cascadeData) => {
+  if (!cascadeData) {
+    return [];
+  }
+
+  const allMemberIDs = Object.values(cascadeData)
+    .map((members) => members.map((member) => member.Cn37lbyhz6f))
+    .flat()
+    .filter((id) => !isNaN(id));
+
+  // filter duplicates
+  const uniqueMemberIDs = [...new Set(allMemberIDs)];
+
+  return uniqueMemberIDs;
+};

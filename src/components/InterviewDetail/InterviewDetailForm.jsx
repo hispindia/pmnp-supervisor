@@ -3,18 +3,22 @@ import { HAS_INITIAN_NOVALUE } from "../constants";
 import { useEffect, useState } from "react";
 
 import _ from "lodash";
-import InterviewTable from "./InterviewDetailTable";
+import InterviewDetailTable from "./InterviewDetailTable";
 import {
   HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
 } from "@/constants/app-config";
+import { getHouseholdMemberIDs } from "@/utils/member";
 
 const InterviewDetailForm = () => {
   const currentEvents = useSelector(
     (state) => state.data.tei.data.currentEvents
   );
   const { programMetadata } = useSelector((state) => state.metadata);
-  const originMetadata = convertOriginMetadata(programMetadata);
+  const currentCascade = useSelector(
+    (state) => state.data.tei.data.currentCascade
+  );
+  const originMetadata = convertOriginMetadata(programMetadata, currentCascade);
 
   const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
@@ -57,8 +61,6 @@ const InterviewDetailForm = () => {
     (e) => e.programStage === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
   );
 
-  console.log({ currentEvents, interviewEvents });
-
   useEffect(() => {
     const transformed = interviewEvents.map((e) => ({
       id: e.event,
@@ -69,7 +71,7 @@ const InterviewDetailForm = () => {
   }, [JSON.stringify(interviewEvents)]);
 
   return (
-    <InterviewTable
+    <InterviewDetailTable
       data={data}
       setData={setData}
       metadata={metadata}
@@ -80,16 +82,32 @@ const InterviewDetailForm = () => {
   );
 };
 
-const convertOriginMetadata = (programMetadata) => {
+const convertOriginMetadata = (programMetadata, currentCascade) => {
   // programMetadata.trackedEntityAttributes.forEach((attr) => {
   //   attr.code = attr.id;
   // });
+
+  const householdMemberIDs = getHouseholdMemberIDs(currentCascade);
+
+  const householdMembersValueSet = householdMemberIDs.map((id) => ({
+    value: id,
+    label: id,
+  }));
 
   const interviewDetailsProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
   );
 
   const dataElements = interviewDetailsProgramStage.dataElements.map((de) => {
+    // Respondent ID
+    if (de.id === "SrFa2O3m6ff") {
+      return {
+        ...de,
+        code: de.id,
+        valueSet: householdMembersValueSet,
+      };
+    }
+
     return {
       ...de,
       code: de.id,
