@@ -15,7 +15,7 @@ const locale = {
     en: "Household Registration",
     lo: "ລົງທະບຽນຄອບຄົວ",
   },
-  familyMembers: {
+  householdMembers: {
     en: "Household Members",
     lo: "ສະມາຊິກຄອບຄົວ (ບ 1 ກ)",
   },

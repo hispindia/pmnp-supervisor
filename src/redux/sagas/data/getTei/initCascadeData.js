@@ -6,62 +6,43 @@ import moment from "moment";
 
 // construct data for family form Teis and Events
 function* initCascadeDataFromTEIsEvents(payload) {
+  if (!payload) return [];
+
   console.log("initCascadeDataFromTEIsEvents", { payload });
 
   let currentCascade = {};
 
-  const currentEvents = yield select(
-    (state) => state.data.tei.data.currentEvents
-  );
-
   const memberTEIsWithEvents = payload ? payload.instances : [];
 
-  currentCascade =
-    payload &&
-    currentEvents.reduce((res, ce) => {
-      let year = moment(ce.occurredAt).year();
+  currentCascade[2025] = memberTEIsWithEvents.reduce((cas, tei) => {
+    const enr = tei.enrollments[0];
+    const events = enr.events;
 
-      let cascadeByYear = memberTEIsWithEvents.reduce((cas, tei) => {
-        const enr = tei.enrollments[0];
-        const events = enr.events;
-        const eventByYear = _.filter(events, function (n) {
-          return moment(n.occurredAt).isBetween(
-            `${year}-01-01`,
-            `${year}-12-31`,
-            undefined,
-            "[]"
-          );
-        });
+    let theTEI = {
+      id: tei.trackedEntity,
+    };
 
-        if (eventByYear && eventByYear.length > 0) {
-          let theTEI = {
-            id: tei.trackedEntity,
-          };
+    tei.attributes.forEach((attr) => {
+      theTEI[attr.attribute] = attr.value;
+    });
 
-          tei.attributes.forEach((attr) => {
-            theTEI[attr.attribute] = attr.value;
-          });
+    events.forEach((event) => {
+      event.dataValues.forEach((de) => {
+        const key = de.dataElement;
+        const value = de.value;
 
-          const event = eventByYear?.[0];
-          if (event) {
-            event.dataValues.forEach((de) => {
-              const key = de.dataElement;
-              const value = de.value;
+        theTEI[key] = value;
+      });
+    });
 
-              theTEI[key] = value;
-            });
-          }
+    cas.push(theTEI);
 
-          cas.push(theTEI);
-        }
-        return cas;
-      }, []);
+    return cas;
+  }, []);
 
-      res[year] = cascadeByYear;
-      return res;
-    }, {});
+  process.env.NODE_ENV &&
+    console.log("currentCascade", currentCascade, memberTEIsWithEvents);
 
-  process.env.NODE_ENV && console.log("currentCascade", currentCascade);
   yield put(
     getCascadeSuccess({
       currentCascade,

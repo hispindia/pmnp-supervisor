@@ -24,7 +24,7 @@ const MainForm = ({
       children: <ProfileFormContainer />,
     },
     {
-      label: t("familyMembers"),
+      label: t("householdMembers"),
       key: "2",
       children: <FMLayoutContainer />,
       disabled: isEditingAttributes,

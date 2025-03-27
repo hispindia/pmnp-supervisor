@@ -30,6 +30,7 @@ import styles from "./FamilyMemberForm.module.css";
 import {
   FAMILY_UID_ATTRIBUTE_ID,
   HOUSEHOLD_ID_ATTR_ID,
+  INTERVIEW_ID_DATAELEMENT_ID,
 } from "@/constants/app-config";
 
 const { familyMemberFormContainer, cascadeTableWrapper } = styles;
@@ -127,8 +128,6 @@ const FamilyMemberForm = ({
   }, [currentCascade]);
 
   useEffect(() => {
-    (async () => {})();
-
     setLoading(true);
 
     let cascadeData = getCascadeData();
@@ -156,7 +155,9 @@ const FamilyMemberForm = ({
       currentCascade,
     });
 
-    metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
+    // WARNING: if it's hidden, the data will be removed
+    metadata[FAMILY_UID_ATTRIBUTE_ID].disabled = true;
+    metadata[INTERVIEW_ID_DATAELEMENT_ID].hidden = true;
 
     metadata[HOUSEHOLD_MEMBER_ID].disabled = true;
     data[HOUSEHOLD_MEMBER_ID] = data.isNew
@@ -169,8 +170,6 @@ const FamilyMemberForm = ({
     // InterviewDetails - Household ID
     metadata["C4b8S7zjs0g"].disabled = true;
     data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
-
-    metadata["RND5auPDknz"].hidden = true;
 
     metadata[PMNP_ID].disabled = true;
     data[
@@ -370,17 +369,6 @@ const FamilyMemberForm = ({
             loading={loading}
             mask
             loaded={true}
-            // uiLocale={{
-            //   addNewMember: t("addNewMember"),
-            //   save: t("save"),
-            //   select: t("select"),
-            //   cancel: t("cancel"),
-            //   clear: t("resetFilter"),
-            //   familyMemberDetails: t("familyMemberDetails"),
-            //   delete: t("delete"),
-            //   deleteDialogContent: t("deleteDialogContent"),
-            //   thisFieldIsRequired: t("thisFieldIsRequired"),
-            // }}
             locale={i18n.language || "en"}
             metadata={metadata}
             data={data}

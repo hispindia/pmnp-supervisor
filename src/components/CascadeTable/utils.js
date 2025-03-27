@@ -93,9 +93,6 @@ const transformData = (metadata, datas, dataValuesTranslate, locale) => {
       d.id = generateUid();
     }
 
-    // MNu4naFgvBC
-    console.log({ datas, metadata, dataValuesTranslate, locale });
-
     metadata
       .filter((e) => e.valueSet && e.valueSet.length > 0)
       .forEach((md) => {

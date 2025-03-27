@@ -14,9 +14,9 @@ const FamilyMemberLayout = () => {
   return (
     <SnackbarProvider maxSnack={3}>
       <div className="wrapper mt-2">
-        <div className="leftBar mr-3">
+        {/* <div className="leftBar mr-3">
           <SideBarContainer />
-        </div>
+        </div> */}
         <div className="rightBar">
           <FamilyMemberFormContainer />
         </div>

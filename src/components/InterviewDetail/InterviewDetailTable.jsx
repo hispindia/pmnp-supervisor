@@ -14,6 +14,7 @@ import {
   HOUSEHOLD_ID_ATTR_ID,
   HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
+  INTERVIEW_ID_DATAELEMENT_ID,
 } from "@/constants/app-config";
 import { submitEvent } from "@/redux/actions/data";
 import { deleteEvent } from "@/redux/actions/data/tei";
@@ -188,12 +189,12 @@ const InterviewDetailTable = ({
       value,
     });
 
-    // Respondent ID - SrFa2O3m6ff
+    // WARNING: if it's hidden, the data will be removed
+    metadata[INTERVIEW_ID_DATAELEMENT_ID].disabled = true;
 
+    // Respondent ID - SrFa2O3m6ff
     metadata["C4b8S7zjs0g"].disabled = true;
     data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
-
-    metadata["RND5auPDknz"].hidden = true;
   };
 
   const handleDeleteRow = (e, row) => {
