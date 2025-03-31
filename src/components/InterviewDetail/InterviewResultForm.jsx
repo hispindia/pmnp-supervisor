@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import { getQuarterlyFromDate } from "@/utils/date";
 import CaptureForm from "../CaptureForm";
 import _ from "lodash";
+import { ca } from "date-fns/locale";
+import { Next } from "react-bootstrap/esm/PageItem";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
   const i18n = useTranslation();
@@ -107,6 +109,13 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
     onClose();
   };
 
+  const InterviewResult_DEs = {
+    ResultOfInterview_DE: "K2ySLF5Qnri",
+    Order_DE: "S2zDqwE1XYa",
+    NextVisitDate_DE: "eIXjCbOESKK",
+    NextVisitTime_DE: "Z7BdeNfK9r6",
+  };
+
   const editRowCallback = (metadata, previousData, newData, code, value) => {
     console.log("InterviewResultForm change", {
       defaultData,
@@ -123,7 +132,20 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
       interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]
     );
 
-    console.log({ data });
+    // InterviewResult_DEs
+    metadata[InterviewResult_DEs.Order_DE].hidden = true;
+    metadata[InterviewResult_DEs.NextVisitDate_DE].hidden = true;
+    metadata[InterviewResult_DEs.NextVisitTime_DE].hidden = true;
+
+    switch (data[InterviewResult_DEs.ResultOfInterview_DE]) {
+      case "Others":
+        metadata[InterviewResult_DEs.Order_DE].hidden = false;
+        break;
+      case "Postponed":
+        metadata[InterviewResult_DEs.NextVisitDate_DE].hidden = false;
+        metadata[InterviewResult_DEs.NextVisitTime_DE].hidden = false;
+        break;
+    }
 
     if (!newData[HOUSEHOLD_INTERVIEW_ID_DE_ID]) {
       newData[HOUSEHOLD_INTERVIEW_ID_DE_ID] =

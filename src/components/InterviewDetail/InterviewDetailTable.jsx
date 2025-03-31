@@ -160,6 +160,11 @@ const InterviewDetailTable = ({
     dispatch(submitEvent(eventPayload));
   };
 
+  const InterviewDetails_DEs = {
+    HouseholdUpdate_DE: "WBZ6d5BF26K",
+    HouseholdUpdateOthers_DE: "DX407PNjTii",
+  };
+
   const editRowCallback = (metadata, previousData, data, code, value) => {
     console.log("InterviewDetailForm", {
       metadata,
@@ -169,9 +174,17 @@ const InterviewDetailTable = ({
       value,
     });
 
+    console.log({ data });
+
     // WARNING: if it's hidden, the data will be removed
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].hidden = true;
     data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = generateUid();
+
+    // InterviewDetails_DEs
+    metadata[InterviewDetails_DEs.HouseholdUpdateOthers_DE].hidden = true;
+    if (data[InterviewDetails_DEs.HouseholdUpdate_DE] === "Others") {
+      metadata[InterviewDetails_DEs.HouseholdUpdateOthers_DE].hidden = false;
+    }
 
     // Respondent ID - SrFa2O3m6ff
     metadata["C4b8S7zjs0g"].disabled = true;
