@@ -182,6 +182,46 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     data["C4b8S7zjs0g"] = data[MEMBER_HOUSEHOLD_UID];
     metadata["C4b8S7zjs0g"].disabled = true;
 
+    // Menstrual history should be NA for males and questions on LMP, pregnancy status should be hidden
+    if (data["Qt4YSwPxw0X"] === "2" || data["WbgQ0SZFiAU"] === "3") {
+      metadata["qlt8LOSENj8"].hidden = true;
+      metadata["ycBIHr9bYyw"].hidden = true;
+      data["WbgQ0SZFiAU"] = "3";
+    } else {
+      metadata["qlt8LOSENj8"].hidden = false;
+      metadata["ycBIHr9bYyw"].hidden = false;
+    }
+
+    // Name of IP group (Ethnicity)	Only show when 'IP membership' = Yes /1
+    if (data["WbgQ0SZFiAU"] !== "1") {
+      metadata["qlt8LOSENj8"].hidden = true;
+    } else {
+      metadata["qlt8LOSENj8"].hidden = false;
+    }
+
+    // Name of IP group (Ethnicity)	Only show when 'IP membership' = Yes /1
+    if (data["OiOvGqVEyY9"] !== "1") {
+      metadata["g276qF2fXHi"].hidden = true;
+    } else {
+      metadata["g276qF2fXHi"].hidden = false;
+    }
+
+    // 4Ps Household ID number	Only show when '4Ps membership' = Yes / 1
+    const psMembership = data["wxN2PuLymoY"];
+    if (psMembership !== "1") {
+      metadata["CEF6Dkpe2jW"].hidden = true;
+    } else {
+      metadata["CEF6Dkpe2jW"].hidden = false;
+    }
+
+    // PHIC ID	Only show when 'PHIC membership' = Yes / 1
+    const PhiCMembership = data["JjFcU1L7Ll1"];
+    if (PhiCMembership !== "1") {
+      metadata["Yp6gJAdu4yX"].hidden = true;
+    } else {
+      metadata["Yp6gJAdu4yX"].hidden = false;
+    }
+
     const weeks = Number(data["xDSSvssuNFs"] || 0);
     const years = Number(data["H42aYY9JMIR"] || 0);
     const dateOfBirth = data["fJPZFs2yYJQ"];

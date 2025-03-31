@@ -90,9 +90,9 @@ function CaptureForm(props) {
     return formMetaData
       .filter((f) => !f.additionCol)
       .filter((f) => !f.hidden)
-      .map((f) => {
+      .map((f, index) => {
         return (
-          <div className="col-lg-3 mb-3" key={f.code}>
+          <div className="col-lg-3 mb-3" key={`${f.code}-${index}`}>
             <InputField
               disabled={f.disabled}
               locale={locale}

@@ -333,7 +333,7 @@ const ProfileForm = ({
         </div>
       </div> */}
       <Space>
-        <Button.Group>
+        <Button.Group style={{ alignItems: "center" }}>
           {!isEdit ? (
             <Button
               key={0}
@@ -378,13 +378,7 @@ const ProfileForm = ({
                 };
               }}
             >
-              <Button
-                key={1}
-                size="large"
-                type="primary"
-                htmlType="submit"
-                className="mb-3"
-              >
+              <Button key={1} size="large" type="primary" htmlType="submit">
                 <SaveOutlined /> {t("save")}
               </Button>
             </CFormControl>
