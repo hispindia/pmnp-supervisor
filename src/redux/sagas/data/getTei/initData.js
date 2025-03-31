@@ -1,22 +1,11 @@
 import { put, select } from "redux-saga/effects";
 import { convertValue } from "../../../../utils";
-import { getTeiSuccess, changeEventFamily } from "../../../actions/data/tei";
-
-import moment from "moment";
+import { getTeiSuccess } from "../../../actions/data/tei";
 
 function* handleInitData(trackedEntity) {
   console.log("handleInitData", { trackedEntity });
   const programStages = yield select(
     (state) => state.metadata.programMetadata.programStages
-  );
-
-  const selected6Month = yield select(
-    (state) => state.data.tei.selectedYear.selected6Month
-  );
-
-  // selected year
-  const { index: selectedIndex, year: selectedYear } = yield select(
-    (state) => state.data.tei.selectedYear
   );
 
   const currentTei = trackedEntity;
@@ -78,24 +67,6 @@ function* handleInitData(trackedEntity) {
   });
 
   console.log("handleInitData", currentEvents);
-
-  // currentEvents
-  if (currentEvents.length > 0) {
-    const currentAvailableYears = currentEvents.map((event) =>
-      moment(event.occurredAt).format("YYYY")
-    );
-    const isYearSelected =
-      selectedIndex !== -1 && selectedYear !== null && selected6Month !== null;
-
-    // Set default selected year when no year is selected
-    if (!isYearSelected || !currentAvailableYears.includes(selectedYear)) {
-      let index = currentEvents.length - 1;
-      let occurredAt = currentEvents[index].occurredAt;
-      const eventYear = moment(occurredAt).format("YYYY");
-
-      yield put(changeEventFamily(index, eventYear, selected6Month));
-    }
-  }
 
   yield put(
     getTeiSuccess({

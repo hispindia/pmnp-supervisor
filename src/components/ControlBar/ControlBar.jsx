@@ -2,16 +2,15 @@ import AddNewFamilyButtonContainer from "../../containers/ControlBar/AddNewFamil
 import styles from "./ControlBar.module.css";
 
 /* REDUX */
-import { Button, Dropdown } from "antd";
-import { connect } from "react-redux";
-import { setSelectedOrgUnit } from "../../redux/actions/metadata";
-import { MenuOutlined } from "@ant-design/icons";
-import OrgUnitContainer from "../../containers/ControlBar/OrgUnit";
-import ReportButtonContainer from "../../containers/ControlBar/ReportButton";
-import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButtonsContainer";
+import ListButtonContainer from "@/containers/ControlBar/ListButton";
 import OfflineModeButton from "@/containers/ControlBar/OfflineModeButton";
 import PushToServerButton from "@/containers/ControlBar/PushToServerButton";
-import ListButtonContainer from "@/containers/ControlBar/ListButton";
+import { MenuOutlined } from "@ant-design/icons";
+import { Button, Dropdown } from "antd";
+import { connect } from "react-redux";
+import OrgUnitContainer from "../../containers/ControlBar/OrgUnit";
+import ReportButtonContainer from "../../containers/ControlBar/ReportButton";
+import { setSelectedOrgUnit } from "../../redux/actions/metadata";
 
 const { controlBarContainer } = styles;
 
@@ -76,8 +75,6 @@ const ControlBar = () => {
             <ListButtonContainer />
           </div>
         </div>
-
-        <RightSideButtonsContainer />
       </div>
     </>
   );

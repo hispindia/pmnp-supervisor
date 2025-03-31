@@ -1,5 +1,10 @@
-import { push } from "connected-react-router";
+import {
+  FAMILY_UID_ATTRIBUTE_ID,
+  MEMBER_PROGRAM_ID,
+  MEMBER_TRACKED_ENTITY_TYPE_ID,
+} from "@/constants/app-config";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import { push } from "connected-react-router";
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { dataApi } from "../../../../api";
 import { editingAttributes } from "../../../actions/data";
@@ -13,11 +18,8 @@ import { GET_TEI } from "../../../types/data/tei";
 import { getSelectedOrgUnitByOuId, getTeiId } from "../utils";
 import initCascadeDataFromTEIsEvents from "./initCascadeData";
 import handleInitData from "./initData";
+import initInterviewCascadeDataFromTEIsEvents from "./initInterviewCascadeData";
 import handleInitNewData from "./initNewData";
-import {
-  FAMILY_UID_ATTRIBUTE_ID,
-  MEMBER_PROGRAM_ID,
-} from "@/constants/app-config";
 
 export const teiMapping = {
   // firstname: "IEE2BMhfoSc",
@@ -34,7 +36,6 @@ export const teiMapping = {
 
 function* handleGetTei() {
   yield put(loadTei(true));
-  const programs = yield select((state) => state.metadata.programMetadata);
 
   try {
     const teiId = yield call(getTeiId);
@@ -67,7 +68,6 @@ function* initExistedDataSaga() {
   const { offlineStatus } = yield select((state) => state.common);
   const teiId = yield call(getTeiId);
   const programId = yield select((state) => state.metadata.programMetadata.id);
-  // console.log('teiId :>> ', teiId);
 
   let data = {};
 
@@ -102,15 +102,12 @@ function* initExistedDataSaga() {
     });
   } else {
     // get Members TEI
-    memberTEIs = yield call(
-      dataApi.getTrackedEntityInstances,
-      orgUnit,
-      [`attribute=${FAMILY_UID_ATTRIBUTE_ID}:EQ:${teiId}`],
-      Object.entries(teiMapping).map((e) => e[1]),
-      MEMBER_PROGRAM_ID
-    );
-
-    console.log({ memberTEIs });
+    memberTEIs = yield call(dataApi.getTrackedEntityInstances, {
+      ou: orgUnit,
+      filters: [`attribute=${FAMILY_UID_ATTRIBUTE_ID}:EQ:${teiId}`],
+      attributes: Object.entries(teiMapping).map((e) => e[1]),
+      program: MEMBER_PROGRAM_ID,
+    });
   }
 
   // const headerIndexes = yield call(getHeaderIndexes, memberTEIs);
@@ -129,20 +126,25 @@ function* initExistedDataSaga() {
         }
       );
     } else {
-      memberTEIsEvents = yield call(
-        dataApi.getAllTrackedEntityInstancesByIDs,
-        MEMBER_PROGRAM_ID,
-        memberTEIsUid
-      );
+      memberTEIsEvents = yield call(dataApi.getAllTrackedEntityInstancesByIDs, {
+        program: MEMBER_PROGRAM_ID,
+        teiList: memberTEIsUid,
+      });
     }
   }
 
   if (!selectedOrgUnit) {
     throw new Error("Org Unit not found!");
   }
+
   yield put(setSelectedOrgUnit(selectedOrgUnit));
   yield call(handleInitData, teiData);
-  yield call(initCascadeDataFromTEIsEvents, memberTEIsEvents);
+  yield call(initCascadeDataFromTEIsEvents, memberTEIs, false);
+  yield call(
+    initInterviewCascadeDataFromTEIsEvents,
+    memberTEIsEvents,
+    memberTEIs
+  );
   yield put(editingAttributes(false));
 }
 

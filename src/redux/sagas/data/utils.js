@@ -1,11 +1,9 @@
 import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
 import {
   FAMILY_UID_ATTRIBUTE_ID,
-  MEMBER_FAMILY_UID_ATTRIBUTE_ID,
   MEMBER_PROGRAM_ID,
   MEMBER_TRACKED_ENTITY_TYPE_ID,
 } from "@/constants/app-config";
-import { generateUid } from "@/utils";
 import { getEventByYearAndHalt6Month, getEventsByYear } from "@/utils/event";
 import moment from "moment";
 import queryString from "query-string";
@@ -39,98 +37,6 @@ export function* getSelectedOrgUnitByOuId(ouId) {
     .join("/");
 
   return { ...ou, selected: [selectedPath] } || null;
-}
-
-export function* getCurrentEvent() {
-  const currentEvents = yield select(
-    (state) => state.data.tei.data.currentEvents
-  );
-
-  const { year, selected6Month } = yield select(
-    (state) => state.data.tei.selectedYear
-  );
-
-  const currentEvent = getEventByYearAndHalt6Month(
-    currentEvents,
-    year,
-    selected6Month
-  );
-
-  return currentEvent;
-}
-
-export function* makeNewCurrentEvent(dataValues) {
-  const currentEvent = yield call(getCurrentEvent);
-
-  return {
-    ...currentEvent,
-    dataValues: {
-      ...currentEvent.dataValues,
-      ...dataValues,
-    },
-  };
-}
-
-// clone calculateDataElements for all events of the year of Family
-export function* makeNewCurrentEventsWithCalculatedDataElements(
-  currentEvents,
-  dataValues
-) {
-  const { year } = yield select((state) => state.data.tei.selectedYear);
-  let eventsByYear = getEventsByYear(currentEvents, year);
-
-  // get all dataValues in the list calculateDataElements
-  const calculatedDataValues = Object.entries(dataValues).reduce(
-    (acc, [key, value]) => {
-      if (calculateDataElements.includes(key)) {
-        acc[key] = value;
-      }
-      return acc;
-    },
-    {}
-  );
-
-  eventsByYear = eventsByYear.reduce((acc, event) => {
-    acc.push({
-      ...event,
-      dataValues: {
-        ...event.dataValues,
-        ...calculatedDataValues,
-      },
-    });
-    return acc;
-  }, []);
-
-  return eventsByYear;
-}
-
-export function* makeNewCurrentEvents(dataValues) {
-  const newCurrentEvent = yield call(makeNewCurrentEvent, dataValues);
-  newCurrentEvent._isDirty = false;
-  const currentEvents = yield select(
-    (state) => state.data.tei.data.currentEvents
-  );
-
-  const newCurrentEvents = JSON.parse(JSON.stringify(currentEvents));
-  const currentEventIndex = newCurrentEvents.findIndex(
-    (e) => e.event === newCurrentEvent.event
-  );
-
-  newCurrentEvents.splice(currentEventIndex, 1, newCurrentEvent);
-
-  const newCurrentEventsWithCalculatedDataElements = yield call(
-    makeNewCurrentEventsWithCalculatedDataElements,
-    newCurrentEvents,
-    dataValues
-  );
-
-  newCurrentEventsWithCalculatedDataElements.forEach((event) => {
-    const index = newCurrentEvents.findIndex((e) => e.event === event.event);
-
-    newCurrentEvents.splice(index, 1, event);
-  });
-
-  return newCurrentEvents;
 }
 
 export function* transformEvent(event) {
@@ -189,12 +95,10 @@ const convertValueBack = (valueType, value) => {
 
 export function* generateTEIDhis2Payload(payload, programMetadata) {
   console.log("**********:>>>", { payload, programMetadata });
-  // let { family, currentEvent, memberEvent, memberDetails, memberTEI } = payload;
-  let { family, memberEvent, memberDetails, memberEnrollment } = payload;
+  let { family, memberDetails, memberEnrollment } = payload || {};
 
   let { orgUnit } = family;
-  let { event } = memberEvent;
-  let { enrollment } = memberEnrollment;
+  let { enrollment } = memberEnrollment || {};
 
   // Reconstruct payload
   // TEI
@@ -207,126 +111,68 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     attributes: [],
   };
 
+  // TEI attributes
   programMetadata.trackedEntityAttributes.forEach((attr) => {
+    if (attr.id === FAMILY_UID_ATTRIBUTE_ID) {
+      tei.attributes.push({
+        attribute: FAMILY_UID_ATTRIBUTE_ID,
+        value: family.trackedEntity,
+      });
+
+      return;
+    }
+
     tei.attributes.push({
       attribute: attr.id,
       value: convertValueBack(attr.valueType, memberDetails[attr.id]),
     });
   });
 
-  // Object.entries(teiMapping).forEach(([key, value]) => {
-  //   const attributeMetadata = programMetadata.trackedEntityAttributes.find(
-  //     (attr) => attr.id === key
-  //   );
+  // modified event payload for multiple program stages.
+  // let modifiedEventPayload = [];
 
-  //   tei.attributes.push({
-  //     attribute: key,
-  //     value: convertValueBack(
-  //       attributeMetadata.valueType,
-  //       memberDetails[teiMapping[key]]
-  //     ),
-  //   });
+  // // Loop through programStages
+  // programMetadata.programStages.forEach((programStage) => {
+  //   let eventPayload = {
+  //     event: generateUid(),
+  //     status: "COMPLETED",
+  //     program: programMetadata.id || "n/a",
+  //     programStage: programStage.id,
+  //     enrollmentStatus: "ACTIVE",
+  //     enrollment: enrollment,
+  //     orgUnit: orgUnit,
+  //     occurredAt: memberEvent.occurredAt,
+  //     dueDate: memberEvent.occurredAt,
+  //     trackedEntity: memberDetails.id,
+  //     status: memberEvent.status,
+  //     dataValues: [],
+  //   };
+
+  //   // Update occurred and due date values
+  //   eventPayload.occurredAt = memberEvent.occurredAt;
+  //   eventPayload.dueDate = memberEvent.occurredAt;
+
+  //   modifiedEventPayload.push(eventPayload);
   // });
 
-  // assign family TEI id to each member
-  tei.attributes.push({
-    attribute: FAMILY_UID_ATTRIBUTE_ID,
-    value: family.trackedEntity,
-  });
-
-  // Should not clear be cause it will be used to remove the attribute
-  // clear all empty attributes
-  // tei.attributes = tei.attributes.filter((attr) => attr.value);
+  // enrollmentPayload.events = modifiedEventPayload;
 
   // ENR
-  let enrollmentPayload = {
-    orgUnit: orgUnit,
-    program: MEMBER_PROGRAM_ID,
-    trackedEntity: memberDetails.id,
-    enrollment: enrollment,
-    trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
-    enrolledAt: memberEnrollment.enrolledAt,
-    occurredAt: memberEnrollment.enrolledAt,
-    incidentDate: memberEnrollment.enrolledAt,
-    status: "ACTIVE",
-    events: [],
-  };
-
-  // modified event payload for multiple program stages.
-  let modifiedEventPayload = [];
-
-  // Loop through programStages
-  programMetadata.programStages.forEach((programStage) => {
-    let eventPayload = {
-      event: generateUid(),
-      status: "COMPLETED",
-      program: programMetadata.id || "n/a",
-      programStage: programStage.id,
-      enrollmentStatus: "ACTIVE",
-      enrollment: enrollment,
+  if (memberEnrollment) {
+    let enrollmentPayload = {
       orgUnit: orgUnit,
-      occurredAt: memberEvent.occurredAt,
-      dueDate: memberEvent.occurredAt,
+      program: MEMBER_PROGRAM_ID,
       trackedEntity: memberDetails.id,
-      status: memberEvent.status,
-      dataValues: [],
+      enrollment: enrollment,
+      trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
+      enrolledAt: memberEnrollment.enrolledAt,
+      occurredAt: memberEnrollment.enrolledAt,
+      incidentDate: memberEnrollment.enrolledAt,
+      status: "ACTIVE",
     };
 
-    programStage.dataElements.forEach((de) => {
-      const value = convertValueBack(de.valueType, memberDetails[de.id]);
-
-      if (de.id == MEMBER_FAMILY_UID_ATTRIBUTE_ID) {
-        eventPayload.dataValues.push({
-          dataElement: MEMBER_FAMILY_UID_ATTRIBUTE_ID,
-          value: family.trackedEntity,
-        });
-      }
-      if (!value) {
-        return;
-      }
-
-      eventPayload.dataValues.push({
-        dataElement: de.id,
-        value,
-      });
-    });
-
-    // Update occurred and due date values
-    eventPayload.occurredAt = memberEvent.occurredAt;
-    eventPayload.dueDate = memberEvent.occurredAt;
-
-    modifiedEventPayload.push(eventPayload);
-  });
-
-  // let programStage = programMetadata.programStages[0];
-
-  // Object.entries(eventMapping).forEach(([key, value]) => {
-  //   const dataElementMetadata = programStage.dataElements.find(
-  //     (de) => de.id === key
-  //   );
-
-  //   eventPayload.dataValues.push({
-  //     dataElement: key,
-  //     value: convertValueBack(
-  //       dataElementMetadata.valueType,
-  //       memberDetails[eventMapping[key]]
-  //     ),
-  //   });
-  // });
-
-  // assign family TEI id to each member
-  // eventPayload.dataValues.push({
-  //   dataElement: "ig2YSpQdP55",
-  //   value: family.trackedEntity,
-  // });
-
-  // eventPayload.occurredAt = memberEvent.occurredAt;
-  // eventPayload.dueDate = memberEvent.occurredAt;
-
-  // Combine payload
-  // enrollmentPayload.events.push(eventPayload);
-  enrollmentPayload.events = modifiedEventPayload;
-  tei.enrollments.push(enrollmentPayload);
+    tei.enrollments.push(enrollmentPayload);
+  }
 
   console.log({ tei, memberDetails });
   return { data: tei, memberDetails };

@@ -1,22 +1,21 @@
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import { push } from "connected-react-router";
+import moment from "moment";
 import { call, put, select, takeLatest } from "redux-saga/effects";
-import { SUBMIT_ATTRIBUTES } from "../../types/data/tei";
-import { generateDhis2Payload } from "../../../utils";
 import { dataApi } from "../../../api";
-import {
-  mutateAttributes,
-  updateNewStatus,
-} from "../../actions/data/tei/currentTei";
+import { generateDhis2Payload } from "../../../utils";
+import { editingAttributes } from "../../actions/data";
 import {
   getTeiError,
   getTeiSuccessMessage,
   loadTei,
 } from "../../actions/data/tei";
-import { editingAttributes } from "../../actions/data";
+import {
+  mutateAttributes,
+  updateNewStatus,
+} from "../../actions/data/tei/currentTei";
+import { SUBMIT_ATTRIBUTES } from "../../types/data/tei";
 import { getTeiId } from "./utils";
-import moment from "moment";
-import { push } from "connected-react-router";
-import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
-import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 
 function* handleSubmitAttributes({ attributes }) {
   yield put(loadTei(true));

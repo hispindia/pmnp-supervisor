@@ -11,13 +11,6 @@ const App = () => {
       <Switch>
         <Route path="/list" component={RegisteredTeiListContainer} />
         <Route path="/form" component={MainForm} />
-        {/* <Route path="/form1" component={FamilyMemberFormContainer} /> */}
-        {/* <Route path="/form1" component={FMLayout} /> */}
-
-        {/*<Route*/}
-        {/*  path="/form"*/}
-        {/*  render={() => <FormContainer programMetadata={programMetadata} />}*/}
-        {/*/>*/}
         <Route path="/report" component={ReportContainer} />
       </Switch>
     </>

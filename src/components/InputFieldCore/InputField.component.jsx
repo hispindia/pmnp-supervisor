@@ -247,7 +247,10 @@ const InputField = ({
   };
 
   return (
-    <div className="input-field-container">
+    <div
+      className="input-field-container"
+      data-element-id={props["data-element-id"]}
+    >
       {label && <div className="input-field-label">{label}</div>}
       <div className="h-10">{generateInput()}</div>
       {warning && <div className="input-field-warning">{warning}</div>}

@@ -3,19 +3,15 @@ import { useEffect, useState } from "react";
 import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  defaultProgramTrackedEntityAttributeDisable,
-  FORM_ACTION_TYPES,
-  HAS_INITIAN_NOVALUE,
-} from "../constants";
+import { FORM_ACTION_TYPES } from "../constants";
 
 // Icon
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 /* SELECTOR */
+import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 import { updateCascade } from "@/redux/actions/data/tei/currentCascade";
-import { isImmutableYear } from "@/utils/event";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
@@ -24,7 +20,6 @@ import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
 import { transformData, transformMetadataToColumns } from "./utils";
-import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -49,8 +44,6 @@ const CascadeTable = (props) => {
   } = props;
   const { t } = useTranslation();
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
-  const { year } = useSelector((state) => state.data.tei.selectedYear);
-  const { immutableYear } = useSelector((state) => state.metadata);
   const { currentCascade } = useSelector((state) => state.data.tei.data);
   const dispatch = useDispatch();
   const [columns, setColumns] = useState(
@@ -62,9 +55,6 @@ const CascadeTable = (props) => {
     transformData(metadata, props.data, dataValuesTranslate, locale)
   );
 
-  console.log({ showData });
-
-  // console.log(' profile :>> ',  profile);
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
 
@@ -72,7 +62,7 @@ const CascadeTable = (props) => {
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
-      if (isImmutableYear(year, immutableYear)) return;
+      // if (isImmutableYear(year, immutableYear)) return;
       if (e.currentTarget && e.currentTarget.contains(e.target))
         handleSelectRow(e, data[rowIndex], rowIndex);
     },
@@ -100,12 +90,7 @@ const CascadeTable = (props) => {
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
     console.log("handleEditRow", { updatedMetadata, dataRows });
 
-    // update new currentCascade
-    const updatedCurrentCascade = {
-      ...currentCascade,
-      [year]: dataRows["rows"],
-    };
-    dispatch(updateCascade(updatedCurrentCascade));
+    dispatch(updateCascade([...dataRows["rows"]]));
 
     setMetadata([...updatedMetadata]);
     setFormStatus(FORM_ACTION_TYPES.NONE);
@@ -144,12 +129,7 @@ const CascadeTable = (props) => {
     setData([...dataRows["rows"]]);
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
 
-    // update new currentCascade
-    const updatedCurrentCascade = {
-      ...currentCascade,
-      [year]: dataRows["rows"],
-    };
-    dispatch(updateCascade(updatedCurrentCascade));
+    dispatch(updateCascade([...dataRows["rows"]]));
 
     console.log("handleAddNewRow", { updatedMetadata, dataRows });
 
@@ -179,10 +159,7 @@ const CascadeTable = (props) => {
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
 
     // update new currentCascade
-    const updatedCurrentCascade = {
-      ...currentCascade,
-      [year]: dataRows["rows"],
-    };
+    const updatedCurrentCascade = [...currentCascade, ...dataRows["rows"]];
     dispatch(updateCascade(updatedCurrentCascade));
 
     setMetadata([...updatedMetadata]);
@@ -321,8 +298,8 @@ const CascadeTable = (props) => {
             variant="outline-danger"
             size="sm"
             disabled={
-              extraData !== FORM_ACTION_TYPES.NONE ||
-              isImmutableYear(year, immutableYear)
+              extraData !== FORM_ACTION_TYPES.NONE
+              // || isImmutableYear(year, immutableYear)
             }
             title={t("delete")}
             onDelete={(e) => {

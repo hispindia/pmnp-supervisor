@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 // import { TableColumn, TableFilter } from "../../utils/index";
 /* REDUX */
 import { submitEventDataValues } from "../../redux/actions/data/tei/currentEvent";
@@ -11,7 +11,6 @@ import withOrgUnitRequired from "../../hocs/withOrgUnitRequired";
 import withSkeletonLoading from "../../hocs/withSkeletonLoading";
 import { useEvent } from "../../hooks";
 import FIForm from "../../skeletons/TeiList";
-import { getEventByYearAndHalt6Month } from "@/utils/event";
 
 const LoadingFamilyMemberForm = withSkeletonLoading(FIForm)(FamilyMemberForm);
 
@@ -19,26 +18,11 @@ const FamilyMemberFormContainer = () => {
   const { minDate, maxDate } = useSelector((state) => state.metadata);
   const events = useSelector((state) => state.data.tei.data.currentEvents);
   const tei = useSelector((state) => state.data.tei);
-  const selectedYear = useSelector((state) => state.data.tei.selectedYear);
-
-  const eventData = getEventByYearAndHalt6Month(
-    events,
-    selectedYear.year,
-    selectedYear.selected6Month
-  );
-
-  const {
-    event,
-    initEvent,
-    getEvent,
-    clearEvent,
-    changeEvent,
-    changeEventDataValue,
-    setEventDirty,
-    transformEvent,
-  } = useEvent(eventData ? JSON.parse(JSON.stringify(eventData)) : []);
-
   const dispatch = useDispatch();
+  const eventData = events && events.length > 0 ? events[0] : null;
+
+  const { event, initEvent, changeEvent, changeEventDataValue, setEventDirty } =
+    useEvent(eventData ? JSON.parse(JSON.stringify(eventData)) : []);
 
   useEffect(() => {
     console.log("Trigger save immediately when event is changed");
@@ -49,7 +33,7 @@ const FamilyMemberFormContainer = () => {
     if (events && events.length > 0 && eventData) {
       initEvent(JSON.parse(JSON.stringify(eventData)));
     }
-  }, [selectedYear, JSON.stringify(events)]);
+  }, [JSON.stringify(events)]);
 
   const handleSaveButton = (saveInBackground = false) => {
     if (event._isDirty) {

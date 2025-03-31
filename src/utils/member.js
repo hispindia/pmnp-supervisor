@@ -3,8 +3,8 @@ export const getMaxHHMemberID = (cascadeData) => {
     return "001";
   }
 
-  const allMemberIDs = Object.values(cascadeData)
-    .map((members) => members.map((member) => Number(member.Cn37lbyhz6f)))
+  const allMemberIDs = cascadeData
+    .map((members) => ("Cn37lbyhz6f" in members ? members.Cn37lbyhz6f : null))
     .flat()
     .filter((id) => !isNaN(id));
 
@@ -23,8 +23,8 @@ export const getHouseholdMemberIDs = (cascadeData) => {
     return [];
   }
 
-  const allMemberIDs = Object.values(cascadeData)
-    .map((members) => members.map((member) => member.Cn37lbyhz6f))
+  const allMemberIDs = cascadeData
+    .map((members) => ("Cn37lbyhz6f" in members ? members.Cn37lbyhz6f : null))
     .flat()
     .filter((id) => !isNaN(id));
 

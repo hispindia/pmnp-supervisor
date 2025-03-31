@@ -16,9 +16,15 @@ import { changeMember } from "../../redux/actions/data/tei";
 // Import utils
 
 // Styles
+import {
+  FAMILY_UID_ATTRIBUTE_ID,
+  HOUSEHOLD_ID_ATTR_ID,
+  SHOULD_NOT_CLEAR_LIST,
+} from "@/constants/app-config";
 import { getMaxHHMemberID } from "@/utils/member";
 import { getOrganisationUnitById } from "@/utils/organisation";
 import { differenceInWeeks, differenceInYears, lastDayOfYear } from "date-fns";
+import moment from "moment";
 import "../../index.css";
 import {
   HAS_INITIAN_NOVALUE,
@@ -27,13 +33,8 @@ import {
   PMNP_ID,
 } from "../constants";
 import styles from "./FamilyMemberForm.module.css";
-import {
-  FAMILY_UID_ATTRIBUTE_ID,
-  HOUSEHOLD_ID_ATTR_ID,
-  INTERVIEW_ID_DATAELEMENT_ID,
-} from "@/constants/app-config";
 
-const { familyMemberFormContainer, cascadeTableWrapper } = styles;
+const { familyMemberFormContainer } = styles;
 const LoadingCascadeTable = withSkeletonLoading()(CascadeTable);
 
 const useStyles = makeStyles((theme) => ({
@@ -47,27 +48,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const convertOriginMetadata = (programMetadataMember) => {
-  programMetadataMember.trackedEntityAttributes.forEach((attr) => {
-    attr.code = attr.id;
-  });
-
-  const programStagesDataElements = programMetadataMember.programStages.reduce(
-    (acc, stage) => {
-      stage.dataElements.forEach((de) => {
-        de.code = de.id;
-        de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
-      });
-
-      return [...acc, ...stage.dataElements];
-    },
-    []
+const convertOriginMetadata = ({ programMetadata, eventIncluded = true }) => {
+  let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map(
+    (attr) => {
+      return {
+        ...attr,
+        code: attr.id,
+      };
+    }
   );
 
-  return [
-    ...programMetadataMember.trackedEntityAttributes,
-    ...programStagesDataElements,
-  ];
+  let programStagesDataElements = [];
+  if (eventIncluded) {
+    programStagesDataElements = programMetadata.programStages.reduce(
+      (acc, stage) => {
+        stage.dataElements.forEach((de) => {
+          de.code = de.id;
+          de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
+        });
+
+        return [...acc, ...stage.dataElements];
+      },
+      []
+    );
+  }
+
+  return [...trackedEntityAttributes, ...programStagesDataElements];
 };
 
 const FamilyMemberForm = ({
@@ -76,15 +82,12 @@ const FamilyMemberForm = ({
   changeEvent,
   setEventDirty,
   blockEntry,
-  events,
   externalComponents,
   setDisableCompleteBtn,
   ...props
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
-
-  const { year } = useSelector((state) => state.data.tei.selectedYear);
 
   const {
     programMetadataMember,
@@ -94,7 +97,10 @@ const FamilyMemberForm = ({
   const selectedOrgUnit = getOrganisationUnitById(orgUnitId, orgUnits);
   const { code: BarangayCode } = selectedOrgUnit;
 
-  const originMetadata = convertOriginMetadata(programMetadataMember);
+  const originMetadata = convertOriginMetadata({
+    programMetadata: programMetadataMember,
+    eventIncluded: false,
+  });
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -110,19 +116,11 @@ const FamilyMemberForm = ({
 
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
 
-  const getCascadeData = () => {
-    let cascadeData = [];
-    if (currentCascade && currentCascade[year]) {
-      cascadeData = currentCascade?.[year];
-    }
-    return cascadeData;
-  };
-
   useEffect(() => {
     // load from redux
     setLoading(true);
 
-    setData(getCascadeData());
+    setData(currentCascade || []);
 
     setLoading(false);
   }, [currentCascade]);
@@ -130,7 +128,7 @@ const FamilyMemberForm = ({
   useEffect(() => {
     setLoading(true);
 
-    let cascadeData = getCascadeData();
+    let cascadeData = currentCascade || [];
 
     setData(cascadeData);
 
@@ -148,7 +146,7 @@ const FamilyMemberForm = ({
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
     // keep selected member details
-    console.log("editRowCallback clicked", {
+    console.log("FamilyMemberForm clicked", {
       metadata,
       previousData,
       data,
@@ -156,8 +154,8 @@ const FamilyMemberForm = ({
     });
 
     // WARNING: if it's hidden, the data will be removed
-    metadata[FAMILY_UID_ATTRIBUTE_ID].disabled = true;
-    metadata[INTERVIEW_ID_DATAELEMENT_ID].hidden = true;
+    metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
+    // metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].hidden = true;
 
     metadata[HOUSEHOLD_MEMBER_ID].disabled = true;
     data[HOUSEHOLD_MEMBER_ID] = data.isNew
@@ -168,8 +166,8 @@ const FamilyMemberForm = ({
     data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
     // InterviewDetails - Household ID
-    metadata["C4b8S7zjs0g"].disabled = true;
-    data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
+    // metadata["C4b8S7zjs0g"].disabled = true;
+    // data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
     metadata[PMNP_ID].disabled = true;
     data[
@@ -237,27 +235,12 @@ const FamilyMemberForm = ({
       }
     }
 
-    const scorecardSurveyStage = programMetadataMember.programStages.find(
-      (ps) => ps.id === "QfXSvc9HtKN"
-    );
-
-    if (scorecardSurveyStage) {
-      scorecardSurveyStage.programStageSections.forEach((pss) => {
-        if (hiddenSections.includes(pss.id)) {
-          pss.dataElements.forEach((de) => {
-            metadata[de.id].hidden = true;
-          });
-        }
-        if (shownSections.includes(pss.id)) {
-          pss.dataElements.forEach((de) => {
-            metadata[de.id].hidden = false;
-          });
-        }
-      });
-    }
-
     // clear data for hidden items
     for (let meta in metadata) {
+      if (SHOULD_NOT_CLEAR_LIST.includes(meta)) {
+        continue;
+      }
+
       if (metadata[meta].hidden) {
         delete data[meta];
       }
@@ -265,38 +248,6 @@ const FamilyMemberForm = ({
 
     console.log("dispatch:data :>> ", data);
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
-
-    // UPDATE DATA
-    if (code == "DOB") {
-      data["birthyear"] = null;
-      data["age"] = null;
-    }
-    if (code == "birthyear") {
-      data["DOB"] = null;
-      data["age"] = null;
-    }
-    if (code == "age") {
-      data["birthyear"] = null;
-      data["DOB"] = null;
-    }
-
-    // Automatically select Femail if it's Wife
-    if (code == "relation") {
-      if (data["relation"] == "wife") {
-        data["sex"] = "F";
-      } else {
-        if (previousData["relation"] == "wife") {
-          data["sex"] = "";
-        }
-      }
-    }
-
-    // For Initial
-    if (data["sex"] === "M") {
-      metadata["firstname"].prefix = t("Mr");
-    } else if (data["sex"] === "F") {
-      metadata["firstname"].prefix = t("Mrs");
-    }
   };
 
   const callbackFunction = (
@@ -347,47 +298,34 @@ const FamilyMemberForm = ({
     });
   };
 
-  const initFunction = (metadata, dataRows, rowIndex = null) => {
-    // if (metadata) {
-    //   if (events && events.length > 1) {
-    //     metadata["Status"].hidden = false;
-    //   }
-    // }
-  };
-
-  if (!events && events.length <= 0) {
-    return <Paper className={classes.paper}>Add Event</Paper>;
-  }
+  const initFunction = (metadata, dataRows, rowIndex = null) => {};
 
   return (
-    events &&
-    events.length > 0 && (
-      <div className={familyMemberFormContainer}>
-        {blockEntry && <div className={"modalBackdrop"}></div>}
-        <Paper className={classes.paper}>
-          <LoadingCascadeTable
-            loading={loading}
-            mask
-            loaded={true}
-            locale={i18n.language || "en"}
-            metadata={metadata}
-            data={data}
-            currentEvent={currentEvent}
-            changeEventDataValue={changeEventDataValue}
-            initFunction={initFunction}
-            editRowCallback={editRowCallback}
-            callbackFunction={callbackFunction}
-            originMetadata={originMetadata}
-            setMetadata={setMetadata}
-            setData={setData}
-            t={t}
-            externalComponents={externalComponents}
-            maxDate={`${year}-12-31`}
-            minDate={props.minDate}
-          />
-        </Paper>
-      </div>
-    )
+    <div className={familyMemberFormContainer}>
+      {blockEntry && <div className={"modalBackdrop"}></div>}
+      <Paper className={classes.paper}>
+        <LoadingCascadeTable
+          loading={loading}
+          mask
+          loaded={true}
+          locale={i18n.language || "en"}
+          metadata={metadata}
+          data={data}
+          currentEvent={currentEvent}
+          changeEventDataValue={changeEventDataValue}
+          initFunction={initFunction}
+          editRowCallback={editRowCallback}
+          callbackFunction={callbackFunction}
+          originMetadata={originMetadata}
+          setMetadata={setMetadata}
+          setData={setData}
+          t={t}
+          externalComponents={externalComponents}
+          maxDate={`${moment().year()}-12-31`}
+          minDate={props.minDate}
+        />
+      </Paper>
+    </div>
   );
 };
 

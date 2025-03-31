@@ -1,13 +1,9 @@
+import InterviewDetailContainer from "@/containers/InterviewDetail/InterviewDetailContainer";
 import { CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Tabs } from "antd";
 import { useTranslation } from "react-i18next";
-import CensusDetailFormContainer from "../../containers/CensusDetailFormContainer";
 import FMLayoutContainer from "../../containers/FMLayout";
 import ProfileFormContainer from "../../containers/ProfileForm";
-import InterviewDetailContainer from "@/containers/InterviewDetail/InterviewDetailContainer";
-import HouseHoldSurveyContainer from "@/containers/HouseHoldSurvey/HouseHoldSurveyContainer";
-
-const { TabPane } = Tabs;
 
 const MainForm = ({
   onCloseClick,
@@ -35,12 +31,12 @@ const MainForm = ({
       children: <InterviewDetailContainer />,
       disabled: isEditingAttributes,
     },
-    {
-      label: t("Household Survey"),
-      key: "3",
-      children: <HouseHoldSurveyContainer />,
-      disabled: isEditingAttributes,
-    },
+    // {
+    //   label: t("Household Survey"),
+    //   key: "3",
+    //   children: <HouseHoldSurveyContainer />,
+    //   disabled: isEditingAttributes,
+    // },
   ];
 
   return (

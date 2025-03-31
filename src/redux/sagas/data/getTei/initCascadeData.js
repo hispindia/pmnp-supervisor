@@ -5,19 +5,14 @@ import _ from "lodash";
 import moment from "moment";
 
 // construct data for family form Teis and Events
-function* initCascadeDataFromTEIsEvents(payload) {
+function* initCascadeDataFromTEIsEvents(payload, eventIncluded = true) {
   if (!payload) return [];
-
-  console.log("initCascadeDataFromTEIsEvents", { payload });
 
   let currentCascade = {};
 
   const memberTEIsWithEvents = payload ? payload.instances : [];
 
-  currentCascade[2025] = memberTEIsWithEvents.reduce((cas, tei) => {
-    const enr = tei.enrollments[0];
-    const events = enr.events;
-
+  currentCascade = memberTEIsWithEvents.reduce((cas, tei) => {
     let theTEI = {
       id: tei.trackedEntity,
     };
@@ -26,14 +21,19 @@ function* initCascadeDataFromTEIsEvents(payload) {
       theTEI[attr.attribute] = attr.value;
     });
 
-    events.forEach((event) => {
-      event.dataValues.forEach((de) => {
-        const key = de.dataElement;
-        const value = de.value;
+    if (eventIncluded) {
+      const enr = tei.enrollments[0];
+      const events = enr.events;
 
-        theTEI[key] = value;
+      events.forEach((event) => {
+        event.dataValues.forEach((de) => {
+          const key = de.dataElement;
+          const value = de.value;
+
+          theTEI[key] = value;
+        });
       });
-    });
+    }
 
     cas.push(theTEI);
 

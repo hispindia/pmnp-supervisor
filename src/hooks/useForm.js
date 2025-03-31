@@ -312,8 +312,6 @@ const useForm = (metadata, data, uiLocale) => {
     setWarningLocale({});
   };
 
-  const editCallback = () => {};
-
   return {
     formMetadata,
     prevData,

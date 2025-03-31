@@ -7,14 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES } from "../constants";
 
 // Icon
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
   HOUSEHOLD_ID_ATTR_ID,
   HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
+  HOUSEHOLD_INTERVIEW_DATE_DE_ID,
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
-  INTERVIEW_ID_DATAELEMENT_ID,
+  HOUSEHOLD_INTERVIEW_ID_DE_ID,
 } from "@/constants/app-config";
 import { submitEvent } from "@/redux/actions/data";
 import { deleteEvent } from "@/redux/actions/data/tei";
@@ -27,6 +28,10 @@ import {
   transformMetadataToColumns,
 } from "../CascadeTable/utils";
 import "../CustomStyles/css/bootstrap.min.css";
+import "./interview-detail-table.css";
+import InterviewDetailModal from "./InterviewDetailModal";
+import { updateMetadata } from "./utils";
+import { Box } from "@material-ui/core";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -44,24 +49,36 @@ const InterviewDetailTable = ({
     (state) => state.data.tei.data.currentEvents
   );
 
+  console.log("InterviewDetailTable", { data });
+
   const dispatch = useDispatch();
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
-  const { programMetadata } = useSelector((state) => state.metadata);
+  const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
+
+  const { programMetadata, selectedOrgUnit } = useSelector(
+    (state) => state.metadata
+  );
+  const foundProgramStage = programMetadata.programStages.find(
+    (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
+  );
   const [columns, setColumns] = useState(
     transformMetadataToColumns(metadata, locale)
   );
-  const attributes = useSelector(
-    (state) => state.data.tei.data.currentTei.attributes
+  const currentTei = useSelector((state) => state.data.tei.data.currentTei);
+  const currentInterviewCascade = useSelector(
+    (state) => state.data.tei.data.currentInterviewCascade
   );
+  const enrollment = useSelector(
+    (state) => state.data.tei.data.currentEnrollment.enrollment
+  );
+  const { attributes } = currentTei;
 
   const showData = useMemo(() => {
     return transformData(metadata, data, dataValuesTranslate, locale);
   }, [metadata, data, dataValuesTranslate, locale]);
-
-  const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
 
   const handleBeforeAddNewRow = () => {
     // Before add new data
@@ -85,27 +102,29 @@ const InterviewDetailTable = ({
     console.log("handleAddNewRow", { updatedMetadata, data });
 
     // submit new event
-    let cloneEvent = currentEvents[currentEvents.length - 1];
-    const { id, ...dataValues } = row;
+    const { id: event, disabled, ...dataValues } = row;
+    const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
 
-    const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID];
+    const eventPayload = transformEvent({
+      event,
+      enrollment,
+      occurredAt,
+      dueDate: occurredAt,
+      status: "ACTIVE",
+      programStage: HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
+      trackedEntity: currentTei.trackedEntity,
+      orgUnit: selectedOrgUnit.id,
+      program: programMetadata.id,
+      dataValues,
+      _isDirty: true,
+    });
 
+    console.log({ eventPayload });
     // init new event
-    dispatch(
-      submitEvent(
-        transformEvent({
-          ...cloneEvent,
-          _isDirty: true,
-          event: id,
-          occurredAt,
-          dueDate: occurredAt,
-          status: "ACTIVE",
-          programStage: HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
-          dataValues,
-        })
-      )
-    );
+    dispatch(submitEvent(eventPayload));
   };
+
+  console.log({ currentInterviewCascade });
 
   const handleEditRow = (e, row, rowIndex) => {
     // Update data
@@ -121,63 +140,24 @@ const InterviewDetailTable = ({
 
     setMetadata([...updatedMetadata]);
     setFormStatus(FORM_ACTION_TYPES.NONE);
+    setSelectedRowIndex(null);
 
     // save event
     const currentEvent = currentEvents.find((e) => e.event === row.id);
-    const { id, ...dataValues } = row;
+    const { id, disabled, ...dataValues } = row;
 
-    const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_TIME_DE_ID];
+    const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
 
-    dispatch(
-      submitEvent(
-        transformEvent({
-          ...currentEvent,
-          _isDirty: true,
-          occurredAt,
-          dueDate: occurredAt,
-          dataValues,
-        })
-      )
-    );
-  };
-
-  const updateMetadata = (metadata, data) => {
-    metadata.forEach((md) => {
-      // Options
-      if (md.valueSet) {
-        md.valueSet.forEach((item) => {
-          // Compulsory
-          if (md.existCompulsory) {
-            if (data.length == 0) {
-              if (item.compulsory && !_.some(data, { [md.code]: item.value })) {
-                item.isDisabled = false;
-              } else {
-                item.isDisabled = true;
-              }
-            } else {
-              item.isDisabled = false;
-            }
-          }
-
-          // Unique
-          if (item.unique) {
-            if (_.some(data, { [md.code]: item.value })) {
-              item.isDisabled = true;
-            }
-          }
-
-          // Number column
-          // if (item.orderNumber) {
-          //   if (_.some(data.dataVals, { [md.code]: item.code })) {
-          //     item.disabled = true;
-          //   } else {
-          //     item.disabled = false;
-          //   }
-          // }
-        });
-      }
+    const eventPayload = transformEvent({
+      ...currentEvent,
+      _isDirty: true,
+      occurredAt,
+      dueDate: occurredAt,
+      dataValues,
     });
-    return metadata;
+
+    console.log({ eventPayload });
+    dispatch(submitEvent(eventPayload));
   };
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
@@ -190,7 +170,8 @@ const InterviewDetailTable = ({
     });
 
     // WARNING: if it's hidden, the data will be removed
-    metadata[INTERVIEW_ID_DATAELEMENT_ID].disabled = true;
+    metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].hidden = true;
+    data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = generateUid();
 
     // Respondent ID - SrFa2O3m6ff
     metadata["C4b8S7zjs0g"].disabled = true;
@@ -200,22 +181,45 @@ const InterviewDetailTable = ({
   const handleDeleteRow = (e, row) => {
     e.stopPropagation();
 
-    dispatch(deleteEvent(row.id));
+    try {
+      // need to delete all events relative interview id
+      const interviewId = row[HOUSEHOLD_INTERVIEW_ID_DE_ID];
+      const householdEvents = currentEvents.reduce(
+        (acc, e) =>
+          e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewId
+            ? [...acc, e.event]
+            : acc,
+        []
+      );
+      const householdMemberEvents = currentInterviewCascade[interviewId].reduce(
+        (acc, row) => {
+          row.events.forEach((e) => {
+            acc.push(e.event);
+          });
+          return acc;
+        },
+        []
+      );
 
-    let rows = data.filter((d) => d.id != row.id);
+      const listId = [row.id]
+        .concat(householdEvents)
+        .concat(householdMemberEvents);
 
-    callbackFunction(metadata, rows, null, "delete_member");
-    setData([...rows]);
+      console.log("delete interviews", listId);
+      // reload tei for the last index === listId.length - 1
+      listId.forEach((eventId, index) =>
+        dispatch(deleteEvent(eventId, index === listId.length - 1))
+      );
+      let rows = data.filter((d) => d.id != row.id);
 
-    let updatedMetadata = updateMetadata(metadata, rows);
-    setMetadata([...updatedMetadata]);
-  };
+      callbackFunction(metadata, rows, null, "delete_member");
+      setData([...rows]);
 
-  const handleSelectRow = (e, row, rowIndex) => {
-    console.log("selected", row);
-    setFormStatus(FORM_ACTION_TYPES.EDIT);
-    setSelectedData(row);
-    setSelectedRowIndex(rowIndex);
+      let updatedMetadata = updateMetadata(metadata, rows);
+      setMetadata([...updatedMetadata]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const clearForm = () => {
@@ -227,8 +231,15 @@ const InterviewDetailTable = ({
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
-      if (e.currentTarget && e.currentTarget.contains(e.target))
-        handleSelectRow(e, data[rowIndex], rowIndex);
+      if (
+        e.currentTarget &&
+        e.currentTarget.contains(e.target) &&
+        !row.disabled
+      ) {
+        console.log("selected", row);
+        setSelectedData(row);
+        setSelectedRowIndex(rowIndex);
+      }
     },
   };
 
@@ -241,7 +252,7 @@ const InterviewDetailTable = ({
         return rowIndex + 1;
       },
     },
-    ...columns.filter((c) => c.dataField !== HOUSEHOLD_INTERVIEW_TIME_DE_ID),
+    ...columns,
     // TODO
     {
       dataField: "actions",
@@ -249,26 +260,40 @@ const InterviewDetailTable = ({
       align: "center",
       formatter: (cellContent, row, rowIndex, extraData) => {
         return (
-          <DeleteConfirmationButton
-            variant="outline-danger"
-            size="sm"
-            disabled={extraData !== FORM_ACTION_TYPES.NONE}
-            title={t("delete")}
-            onDelete={(e) => {
-              handleDeleteRow(e, row);
-            }}
-            messageText={t("deleteDialogContent")}
-            cancelText={t("cancel")}
-            deleteText={t("delete")}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            onCancel={(e) => {
-              callbackFunction(metadata, row, rowIndex, "clean");
-            }}
-          >
-            <FontAwesomeIcon icon={faTrash} size="xs" />
-          </DeleteConfirmationButton>
+          <div style={{ display: "flex", gap: 8, padding: "0 8px" }}>
+            <Button
+              size="sm"
+              variant="outline-primary"
+              disabled={extraData !== FORM_ACTION_TYPES.NONE || row.disabled}
+              onClick={() => {
+                setSelectedData(row);
+                setSelectedRowIndex(rowIndex);
+                setFormStatus(FORM_ACTION_TYPES.EDIT);
+              }}
+            >
+              <FontAwesomeIcon icon={faEdit} size="xs" />
+            </Button>
+            <DeleteConfirmationButton
+              variant="outline-danger"
+              size="sm"
+              disabled={extraData !== FORM_ACTION_TYPES.NONE || row.disabled}
+              title={t("delete")}
+              onDelete={(e) => {
+                handleDeleteRow(e, row);
+              }}
+              messageText={t("deleteDialogContent")}
+              cancelText={t("cancel")}
+              deleteText={t("delete")}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              onCancel={(e) => {
+                callbackFunction(metadata, row, rowIndex, "clean");
+              }}
+            >
+              <FontAwesomeIcon icon={faTrash} size="xs" />
+            </DeleteConfirmationButton>
+          </div>
         );
       },
       formatExtraData: formStatus,
@@ -301,7 +326,20 @@ const InterviewDetailTable = ({
   }, []);
 
   return (
-    <div className="px-4">
+    <div className="interview-table px-4">
+      <InterviewDetailModal
+        interviewData={selectedData}
+        formStatus={formStatus}
+        selectedRowIndex={selectedRowIndex}
+        open={
+          selectedRowIndex !== null && formStatus !== FORM_ACTION_TYPES.EDIT
+        }
+        onClose={() => {
+          setSelectedData({});
+          setSelectedRowIndex(null);
+        }}
+      />
+
       <Modal
         backdrop="static"
         size="xl"
@@ -314,12 +352,8 @@ const InterviewDetailTable = ({
         <Modal.Body>
           <Card>
             <Card.Body>
-              <Card.Subtitle className="mb-2 text-muted">
-                {formStatus !== FORM_ACTION_TYPES.ADD_NEW &&
-                  "No." + (selectedRowIndex + 1)}
-              </Card.Subtitle>
               <CaptureForm
-                formProgramMetadata={programMetadata}
+                formProgramMetadata={{ programStages: [foundProgramStage] }}
                 locale={locale}
                 metadata={metadata}
                 rowIndex={selectedRowIndex}
@@ -329,6 +363,7 @@ const InterviewDetailTable = ({
                 handleEditRow={handleEditRow}
                 handleAddNewRow={handleAddNewRow}
                 editRowCallback={editRowCallback}
+                onCancel={clearForm}
                 maxDate={new Date()}
                 minDate={new Date(`1900-12-31`)}
               />
@@ -345,6 +380,7 @@ const InterviewDetailTable = ({
             style={{ width: 160 }}
             className="btn btn-success"
             onClick={handleBeforeAddNewRow}
+            disabled={Boolean(data.find((row) => !row.disabled))}
             aria-controls="collapseExample"
             aria-expanded={formStatus === FORM_ACTION_TYPES.ADD_NEW}
           >
@@ -360,9 +396,9 @@ const InterviewDetailTable = ({
             data={showData}
             columns={columnsC}
             rowEvents={rowEvents}
-            striped
-            hover
+            rowClasses={(row) => row.disabled && "disabled-row"}
             condensed
+            hover
           />
         </div>
       </div>

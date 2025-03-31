@@ -1,6 +1,4 @@
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
-import _ from "lodash";
-import moment from "moment";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { dataApi } from "../../../api";
 import {
@@ -21,7 +19,6 @@ function* handleDeleteMember({ teiId }) {
   // metadata
   const { programMetadataMember } = yield select((state) => state.metadata);
   // data
-  const { year } = yield select((state) => state.data.tei.selectedYear);
 
   let memberTEI = null;
 
@@ -56,22 +53,8 @@ function* handleDeleteMember({ teiId }) {
         yield put(deleteTei(selectedMember.id));
         return;
       } else {
-        // get event by current YEAR
-        let eventByYear = _.filter(
-          memberTEI.enrollments[0].events,
-          function (n) {
-            return moment(n.occurredAt).isBetween(
-              `${year}-01-01`,
-              `${year}-12-31`,
-              undefined,
-              "[]"
-            );
-          }
-        );
-        process.env.NODE_ENV &&
-          console.log("delete member eventByYear", eventByYear);
-
-        // check if event of selected year is exist
+        // TODO
+        const eventByYear = [];
         if (eventByYear.length > 0) {
           // DELETE
           if (selectedMember.isDelete) {

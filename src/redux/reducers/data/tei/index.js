@@ -17,12 +17,14 @@ import currentTei from "./currentTei";
 import currentEvents from "./currentEvents";
 import currentEnrollment from "./currentEnrollment";
 import currentCascade from "./currentCascade";
+import currentInterviewCascade from "./currentInterviewCascade";
 
 const data = combineReducers({
   currentTei,
   currentEvents,
   currentEnrollment,
   currentCascade,
+  currentInterviewCascade,
 });
 
 const loading = (state = false, { type, ...args }) => {
@@ -72,28 +74,10 @@ const currentTab = (state = "1", { type, ...agrs }) => {
       return state;
   }
 };
-const ouPattern = (state = null, { type,payload, ...agrs }) => {
+const ouPattern = (state = null, { type, payload, ...agrs }) => {
   switch (type) {
     case SET_PARENT_OU_PATTERN:
       return payload.pattern;
-    default:
-      return state;
-  }
-};
-
-const lastYear = new Date().getFullYear() - 1;
-const defaultSelectedFamily = { index: 0, year: lastYear, selected6Month: 1 };
-
-const selectedYear = (state = defaultSelectedFamily, { type, ...args }) => {
-  switch (type) {
-    case CHANGE_EVENT_FAMILY:
-      return {
-        index: args.index,
-        year: args.year,
-        selected6Month: args.selected6Month,
-      };
-    case CLEAR:
-      return defaultSelectedFamily;
     default:
       return state;
   }
@@ -127,8 +111,7 @@ export default combineReducers({
   error,
   isEditingAttributes,
   currentTab,
-  selectedYear,
   selectedMember,
   success,
-  ouPattern
+  ouPattern,
 });

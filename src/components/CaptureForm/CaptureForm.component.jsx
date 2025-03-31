@@ -28,7 +28,10 @@ function CaptureForm(props) {
     handleAddNewRow,
     editRowCallback = null,
     formProgramMetadata,
+    saveDisabled,
+    cancelable = true,
     locale,
+    onCancel = () => {},
     ...other
   } = props;
   const { programMetadataMember } = useSelector((state) => state.metadata);
@@ -71,7 +74,6 @@ function CaptureForm(props) {
   }, []);
 
   const editCall = (metadata, prevData, formData, code, value) => {
-    console.log("editCall called");
     let data = _.clone(formData);
     let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
       obj[md.code] = md;
@@ -159,7 +161,9 @@ function CaptureForm(props) {
       return (
         <div className="row">
           <div class="card-body">
-            <h5 class="card-title">{pSection.displayName}</h5>
+            <h5 class="card-title" section-id={pSection.id}>
+              {pSection.displayName}
+            </h5>
             <p class="card-text">
               <div className="row">{generateFields(TEIFormMetadata)}</div>
             </p>
@@ -203,7 +207,9 @@ function CaptureForm(props) {
         return (
           <div className="row">
             <div class="card-body">
-              <h5 class="card-title">{pSection.displayName}</h5>
+              <h5 class="card-title" section-id={pSection.id}>
+                {pSection.displayName}
+              </h5>
               <p class="card-text">
                 <div className="row">{generateFields(programFormMetadata)}</div>
               </p>
@@ -216,6 +222,7 @@ function CaptureForm(props) {
 
   const handleCancelForm = () => {
     setFormStatus(FORM_ACTION_TYPES.NONE);
+    onCancel();
   };
 
   const handleOnSubmit = (e, action) => {
@@ -257,6 +264,7 @@ function CaptureForm(props) {
                 <button
                   type="button"
                   className="btn btn-success"
+                  disabled={saveDisabled}
                   onClick={(e) => handleOnSubmit(e, "add")}
                 >
                   {t("save")}
@@ -272,13 +280,14 @@ function CaptureForm(props) {
                 <button
                   type="button"
                   className="btn btn-success"
+                  disabled={saveDisabled}
                   onClick={(e) => handleOnSubmit(e, "edit")}
                 >
                   {t("save")}
                 </button>
               </div>
             )}
-            {formStatus !== FORM_ACTION_TYPES.NONE && (
+            {cancelable && formStatus !== FORM_ACTION_TYPES.NONE && (
               <div
                 className="btn-group mr-2"
                 role="group"

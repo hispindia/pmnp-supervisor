@@ -1,0 +1,61 @@
+export const updateMetadata = (metadata, data) => {
+  metadata.forEach((md) => {
+    // Options
+    if (md.valueSet) {
+      md.valueSet.forEach((item) => {
+        // Compulsory
+        if (md.existCompulsory) {
+          if (data.length == 0) {
+            if (item.compulsory && !_.some(data, { [md.code]: item.value })) {
+              item.isDisabled = false;
+            } else {
+              item.isDisabled = true;
+            }
+          } else {
+            item.isDisabled = false;
+          }
+        }
+
+        // Unique
+        if (item.unique) {
+          if (_.some(data, { [md.code]: item.value })) {
+            item.isDisabled = true;
+          }
+        }
+
+        // Number column
+        // if (item.orderNumber) {
+        //   if (_.some(data.dataVals, { [md.code]: item.code })) {
+        //     item.disabled = true;
+        //   } else {
+        //     item.disabled = false;
+        //   }
+        // }
+      });
+    }
+  });
+  return metadata;
+};
+
+export const compareObject = (obj1, obj2) => {
+  const filtered = Object.keys(obj1).filter((key) => {
+    // case property is object
+    if (typeof obj1[key] === "object") {
+      //case object 2 don't have this property (add new case)
+      if (obj2?.[key] === undefined || obj2?.[key] === null) return true;
+      //case object 1 don't have this property (delete case)
+      if (obj1?.[key] === undefined || obj1?.[key] === null) return true;
+
+      return !compareObject(obj1[key], obj2[key]);
+    }
+
+    // case object 2 don't have this property (add new case)
+    if (obj2?.[key] === undefined || obj2?.[key] === null) return true;
+    // case object 1 don't have this property (delete case)
+    if (obj1?.[key] === undefined || obj1?.[key] === null) return true;
+
+    return obj1[key] !== obj2[key];
+  });
+
+  return !filtered.length;
+};

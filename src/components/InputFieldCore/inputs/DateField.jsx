@@ -11,23 +11,20 @@ import MomentUtils from "@date-io/moment";
 import "moment/locale/lo";
 import { useTranslation } from "react-i18next";
 
-const DateField = (
-  {
-    value,
-    handleChange,
-    periodType,
-    handleBlur,
-    maxDate,
-    minDate,
-    maxDateMessage,
-    minDateMessage,
-    locale,
-    variant,
-  },
-  props
-) => {
+const DateField = ({
+  value,
+  handleChange,
+  periodType,
+  handleBlur,
+  maxDate,
+  minDate,
+  maxDateMessage,
+  minDateMessage,
+  locale,
+  variant,
+  disabled = false,
+}) => {
   const { t } = useTranslation();
-  const { disabled = false, ...other } = props;
   let fieldValue = value;
   // console.log('fieldValue :>> ', fieldValue);
 

@@ -46,7 +46,6 @@ export const convertValue = (valueType, value) => {
     case "DATETIME":
       return moment(value);
     case "TIME":
-      return moment(value);
     case "BOOLEAN":
       return value;
     case "TRUE_ONLY":

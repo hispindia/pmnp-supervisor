@@ -15,7 +15,7 @@ export default function* deleteEventSaga() {
   yield takeEvery(DELETE_FAMILY_EVENT, handleDeleteFamilyEvent);
 }
 
-function* handleDeleteEvent({ eventId }) {
+function* handleDeleteEvent({ eventId, refreshTei = true }) {
   const { offlineStatus } = yield select((state) => state.common);
   const { currentTei } = yield select((state) => state.data.tei.data);
 
@@ -31,7 +31,7 @@ function* handleDeleteEvent({ eventId }) {
 
     yield all([
       put(getTeisSuccessMessage(`Delete event ${eventId} successfully`)),
-      put(getTei(currentTei.trackedEntity)),
+      refreshTei && put(getTei(currentTei.trackedEntity)),
     ]);
   } catch (e) {
     yield put(getTeisErrorMessage(e.message));
@@ -44,7 +44,9 @@ function* handleDeleteFamilyEvent({ eventId }) {
   const { currentTei, currentEvents } = yield select(
     (state) => state.data.tei.data
   );
-  const { year } = yield select((state) => state.data.tei.selectedYear);
+
+  // TODO
+  const year = 2025;
 
   const eventsByYear = getEventsByYear(currentEvents, year);
   const eventIds = eventsByYear.map((e) => e.event);
@@ -80,14 +82,6 @@ function* handleDeleteFamilyEvent({ eventId }) {
     }
 
     const payload = eventsIdToDeletePayload([...eventIds, ...memberEventsIds]);
-
-    console.log("handleDeleteFamilyEvent", {
-      payload,
-      year,
-      currentTei,
-      eventId,
-      memberEventsIds,
-    });
 
     if (offlineStatus) {
       yield call(eventManager.deleteEvents, {

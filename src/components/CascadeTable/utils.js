@@ -5,11 +5,10 @@ import { FAMILY_UID_ATTRIBUTE_ID } from "@/constants/app-config";
 
 const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
   const cols = [];
-
   metadata
-    .filter((e) => !e.hiddenCol)
+    .filter((e) => !e?.hiddenCol)
     .forEach((ele) => {
-      let textFields = !_.isEmpty(ele.translations)
+      let textFields = !_.isEmpty(ele?.translations)
         ? ele.translations[locale]
         : ele.displayName;
       const colC = {

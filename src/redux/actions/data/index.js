@@ -55,12 +55,11 @@ export const initData = (trackedEntity) => ({
   trackedEntity,
 });
 
-export const setSelectedParentOuPattern = (pattern=null) => ({
+export const setSelectedParentOuPattern = (pattern = null) => ({
   type: SET_PARENT_OU_PATTERN,
   payload: {
-    pattern
-  }
-
+    pattern,
+  },
 });
 
 export const initDataMember = (trackedEntity, programMetadata) => ({
@@ -78,10 +77,11 @@ export const submitAttributes = (attributes) => {
   };
 };
 
-export const submitEvent = (event) => {
+export const submitEvent = (event, refreshTei = true) => {
   return {
     type: SUBMIT_EVENTS,
     event,
+    refreshTei,
   };
 };
 

@@ -2,7 +2,6 @@ import { Button, Col, Form, Row, Table, Tabs } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import SideBarContainer from "@/containers/SideBar";
 import withDhis2FormItem from "@/hocs/withDhis2Field";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../InputField";
@@ -12,12 +11,7 @@ import useHouseholdSurveyForm from "@/hooks/useHouseholdSurveyForm";
 import "./index.css";
 import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
 
-const CensusDetailForm = ({
-  onSubmit,
-  selected6Month,
-  onTabChange,
-  values,
-}) => {
+const CensusDetailForm = ({ onSubmit, onTabChange, values }) => {
   const programStages = useSelector(
     (state) => state.metadata.programMetadata.programStages
   );
@@ -423,8 +417,6 @@ const CensusDetailForm = ({
     >
       <div className="d-md-flex">
         <Col className="leftBar mr-2 mt-2">
-          <SideBarContainer />
-
           <Row justify="center">
             <Button
               type="primary"

@@ -1,0 +1,9 @@
+.interview-table .selected-row,
+.interview-table .selected-row:hover {
+  background-color: rgba(22, 119, 255, 0.1);
+}
+
+.interview-table .disabled-row {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #212529;
+}

@@ -20,8 +20,12 @@ const locale = {
     lo: "ສະມາຊິກຄອບຄົວ (ບ 1 ກ)",
   },
   interviewDetails: {
-    en: "Interview Details",
-    lo: "Interview Details",
+    en: "Scorecard Interview",
+    lo: "Scorecard Interview",
+  },
+  interviewResult: {
+    en: "Interview Result",
+    lo: "Interview Result",
   },
   censusDetails: {
     en: "Census Details",

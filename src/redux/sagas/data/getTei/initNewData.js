@@ -16,7 +16,6 @@ function* handleInitNewData() {
   } = yield select((state) => state.metadata);
 
   const { ouPattern } = yield select((state) => state.data.tei);
-  console.log({ ouPattern });
 
   const generatedTeiId = generateUid();
   const generatedEnrollmentId = generateUid();

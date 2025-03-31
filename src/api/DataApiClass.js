@@ -53,7 +53,7 @@ export default class DataApiClass extends BaseApiClass {
       [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
     );
 
-  getAllTrackedEntityInstancesByIDs = (program, teiList) =>
+  getAllTrackedEntityInstancesByIDs = ({ program, teiList }) =>
     pull(
       this.baseUrl,
       this.username,
@@ -62,7 +62,11 @@ export default class DataApiClass extends BaseApiClass {
       {
         paging: false,
       },
-      [`fields=*`, `trackedEntity=${teiList.join(";")}`, `program=${program}`]
+      [
+        `fields=*`,
+        `trackedEntity=${teiList.join(";")}`,
+        program ? `program=${program}` : null,
+      ].filter((e) => Boolean(e))
     );
 
   getAllTrackedEntityInstanceList = (orgUnit, program) =>
@@ -261,9 +265,11 @@ export default class DataApiClass extends BaseApiClass {
       this.password,
       `/api/organisationUnits/${id}.json`,
       { paging: false },
-      ['fields=id,displayName,attributeValues[attribute[id,displayName],value],parent[name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value]]]]']
+      [
+        "fields=id,displayName,attributeValues[attribute[id,displayName],value],parent[name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value]]]]",
+      ]
     );
-  }
+  };
 
   getTrackedEntityInstanceByQuery = (ou, filters, attributes) => {
     console.log("getTrackedEntityInstanceByQuery");
@@ -281,8 +287,13 @@ export default class DataApiClass extends BaseApiClass {
     );
   };
 
-  getTrackedEntityInstances = (ou, filters, attributes, program) => {
-    console.log("trackedEntities");
+  getTrackedEntityInstances = ({
+    ou,
+    filters,
+    attributes,
+    program,
+    trackedEntityType,
+  }) => {
     return pull(
       this.baseUrl,
       this.username,
@@ -291,10 +302,11 @@ export default class DataApiClass extends BaseApiClass {
       {},
       [
         `orgUnit=${ou}`,
-        `program=${program}`,
+        program ? `program=${program}` : null,
+        trackedEntityType ? `trackedEntityType=${trackedEntityType}` : null,
         filters.join("&"),
         attributes.map((e) => "attribute=" + e).join("&"),
-      ]
+      ].filter((e) => Boolean(e))
     );
   };
 
