@@ -166,6 +166,11 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     onClose();
   };
 
+  const DEs = {
+    Q511: "RXWSlNxAwq1",
+    Q512: "zLJX0cTUhbU",
+  };
+
   const editRowCallback = (metadata, previousData, data, code, value) => {
     console.log("HouseHoldMemberTable", {
       metadata,
@@ -294,6 +299,20 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
           });
         }
       });
+    }
+
+    switch (data[DEs.Q511]) {
+      case "1":
+        metadata[DEs.Q512].hidden = true;
+        break;
+      case "2":
+      case "3":
+      case "4":
+        metadata[DEs.Q512].hidden = false;
+        break;
+      default:
+        metadata[DEs.Q512].hidden = true;
+        break;
     }
 
     // clear data for hidden items

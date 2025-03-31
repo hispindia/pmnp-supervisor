@@ -113,6 +113,15 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
     onClose();
   };
 
+  const DEs = {
+    Q801: "dtTG7cjn1CH",
+    Q802: "RC5B8EETrOM",
+    PleaseSpecifyTheOtherGovernment: "b918Rl73Eu0",
+
+    Q900: "dxag8YT8w46",
+    Q901: "gNBFmUFtW6a",
+  };
+
   const editRowCallback = (metadata, previousData, newData, code, value) => {
     console.log("HouseHoldSurveyForm change", {
       defaultData,
@@ -136,6 +145,12 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
         interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
       setFormDirty(true);
     }
+
+    metadata[DEs.Q802].hidden = newData[DEs.Q801] !== "true";
+    metadata[DEs.PleaseSpecifyTheOtherGovernment].hidden =
+      newData[DEs.Q802] !== "Others";
+
+    metadata[DEs.Q900].hidden = newData[DEs.Q901] !== "5";
 
     if (previousData) setFormDirty(true);
   };
