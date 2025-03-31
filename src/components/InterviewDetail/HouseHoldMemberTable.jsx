@@ -198,6 +198,15 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     }
 
     // Name of IP group (Ethnicity)	Only show when 'IP membership' = Yes /1
+    if (data["OiOvGqVEyY9"] === "2" || data["OiOvGqVEyY9"] === "3") {
+      metadata["g276qF2fXHi"].hidden = true;
+      metadata["wxN2PuLymoY"].hidden = true;
+    } else {
+      metadata["g276qF2fXHi"].hidden = false;
+      metadata["wxN2PuLymoY"].hidden = false;
+    }
+
+    // Name of IP group (Ethnicity)	Only show when 'IP membership' = Yes /1
     if (data["WbgQ0SZFiAU"] !== "1") {
       metadata["qlt8LOSENj8"].hidden = true;
     } else {
