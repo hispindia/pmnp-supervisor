@@ -184,56 +184,21 @@ const FamilyMemberForm = ({
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
-    data["xDSSvssuNFs"] = weeks;
 
-    if (weeks >= 52) {
-      metadata["xDSSvssuNFs"].hidden = true;
-      metadata["H42aYY9JMIR"].hidden = false;
-    } else {
-      metadata["xDSSvssuNFs"].hidden = false;
-      metadata["H42aYY9JMIR"].hidden = true;
-    }
+    // hide ages
+    // if (weeks >= 52) {
+    //   metadata["xDSSvssuNFs"].hidden = true;
+    //   metadata["H42aYY9JMIR"].hidden = false;
+    // } else {
+    //   metadata["xDSSvssuNFs"].hidden = false;
+    //   metadata["H42aYY9JMIR"].hidden = true;
+    // }
+    metadata["d2n5w4zpxuo"].hidden = true;
+    metadata["xDSSvssuNFs"].hidden = true;
+    metadata["X2Oln1OyP5o"].hidden = true;
+    metadata["H42aYY9JMIR"].hidden = true;
 
     data["H42aYY9JMIR"] = years;
-
-    let shownSections = [];
-    let hiddenSections = [
-      "IxbqFSJPfEN",
-      "A2TBfLOW8HG",
-      "tlNWZDOWfP2",
-      "jV8O1ZITgIn",
-      "E4FpYkBzAsW",
-    ];
-
-    const pregnancyStatus = data["ycBIHr9bYyw"];
-    if (pregnancyStatus === "1") {
-      hiddenSections = hiddenSections.filter((h) => h !== "IxbqFSJPfEN");
-      shownSections.push("IxbqFSJPfEN");
-    }
-    if (pregnancyStatus === "2") {
-      hiddenSections = hiddenSections.filter((h) => h !== "A2TBfLOW8HG");
-      shownSections.push("A2TBfLOW8HG");
-    }
-    if (dateOfbirth) {
-      if (years <= 5) {
-        hiddenSections = hiddenSections.filter(
-          (h) => h !== "tlNWZDOWfP2" || h !== "jV8O1ZITgIn"
-        );
-        shownSections.push("tlNWZDOWfP2");
-        shownSections.push("jV8O1ZITgIn");
-      }
-
-      const sex = data["Qt4YSwPxw0X"];
-      if (
-        years >= 10 &&
-        years <= 49 &&
-        sex === "1" &&
-        (pregnancyStatus === "2" || pregnancyStatus === "3")
-      ) {
-        hiddenSections = hiddenSections.filter((h) => h !== "E4FpYkBzAsW");
-        shownSections.push("E4FpYkBzAsW");
-      }
-    }
 
     // clear data for hidden items
     for (let meta in metadata) {

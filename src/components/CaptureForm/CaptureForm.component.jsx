@@ -143,7 +143,12 @@ function CaptureForm(props) {
       const TEIFormMetadata = formMetadata.filter((f) =>
         trackedEntityAttributes.includes(f.id)
       );
-      return <div className="row">{generateFields(TEIFormMetadata)}</div>;
+      return (
+        <div className="row" style={{ alignItems: "flex-end" }}>
+          {" "}
+          {generateFields(TEIFormMetadata)}
+        </div>
+      );
     }
 
     return programSections.map((pSection) => {
@@ -165,7 +170,10 @@ function CaptureForm(props) {
               {pSection.displayName}
             </h5>
             <p class="card-text">
-              <div className="row">{generateFields(TEIFormMetadata)}</div>
+              <div className="row" style={{ alignItems: "flex-end" }}>
+                {" "}
+                {generateFields(TEIFormMetadata)}
+              </div>
             </p>
           </div>
         </div>
@@ -183,7 +191,12 @@ function CaptureForm(props) {
           dataElements.includes(f.id)
         );
 
-        return <div className="row">{generateFields(programFormMetadata)}</div>;
+        return (
+          <div className="row" style={{ alignItems: "flex-end" }}>
+            {" "}
+            {generateFields(programFormMetadata)}
+          </div>
+        );
       });
     }
 
@@ -211,7 +224,10 @@ function CaptureForm(props) {
                 {pSection.displayName}
               </h5>
               <p class="card-text">
-                <div className="row">{generateFields(programFormMetadata)}</div>
+                <div className="row" style={{ alignItems: "flex-end" }}>
+                  {" "}
+                  {generateFields(programFormMetadata)}
+                </div>
               </p>
             </div>
           </div>
@@ -248,7 +264,6 @@ function CaptureForm(props) {
         <div className="col-md-12">
           {generateSectionFields()}
           {generateProgramStageSectionFields()}
-
           {/* {generateFields(formMetadata)} */}
         </div>
       </div>

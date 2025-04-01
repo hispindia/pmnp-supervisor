@@ -32,6 +32,7 @@ import {
 import "../CustomStyles/css/bootstrap.min.css";
 import "./interview-detail-table.css";
 import { updateMetadata } from "./utils";
+import { differenceInWeeks, differenceInYears } from "date-fns";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -187,6 +188,28 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     data["C4b8S7zjs0g"] = data[MEMBER_HOUSEHOLD_UID];
     metadata["C4b8S7zjs0g"].disabled = true;
 
+    // ages
+    metadata["d2n5w4zpxuo"].hidden = true;
+    metadata["xDSSvssuNFs"].hidden = true;
+    metadata["X2Oln1OyP5o"].hidden = true;
+    metadata["H42aYY9JMIR"].hidden = true;
+
+    const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
+    const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
+    const years = differenceInYears(eventDate, dateOfbirth);
+    const weeks = differenceInWeeks(eventDate, dateOfbirth);
+
+    data["Hc9Vgt4LXjb"] = years;
+    data["Gds5wTiXoSK"] = weeks;
+
+    if (!weeks || weeks >= 52) {
+      metadata["Gds5wTiXoSK"].hidden = true;
+      metadata["Hc9Vgt4LXjb"].hidden = false;
+    } else {
+      metadata["Gds5wTiXoSK"].hidden = false;
+      metadata["Hc9Vgt4LXjb"].hidden = true;
+    }
+
     // Menstrual history should be NA for males and questions on LMP, pregnancy status should be hidden
     if (data["Qt4YSwPxw0X"] === "2" || data["WbgQ0SZFiAU"] === "3") {
       metadata["qlt8LOSENj8"].hidden = true;
@@ -235,18 +258,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     } else {
       metadata["Yp6gJAdu4yX"].hidden = false;
     }
-
-    const weeks = Number(data["xDSSvssuNFs"] || 0);
-    const years = Number(data["H42aYY9JMIR"] || 0);
     const dateOfBirth = data["fJPZFs2yYJQ"];
-
-    if (!weeks || weeks >= 52) {
-      metadata["xDSSvssuNFs"].hidden = true;
-      metadata["H42aYY9JMIR"].hidden = false;
-    } else {
-      metadata["xDSSvssuNFs"].hidden = false;
-      metadata["H42aYY9JMIR"].hidden = true;
-    }
 
     let shownSections = [];
     let hiddenSections = [
