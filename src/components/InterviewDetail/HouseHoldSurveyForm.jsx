@@ -150,7 +150,9 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
     metadata[DEs.PleaseSpecifyTheOtherGovernment].hidden =
       newData[DEs.Q802] !== "Others";
 
-    metadata[DEs.Q900].hidden = newData[DEs.Q901] !== "5";
+    metadata[DEs.Q901].hidden = newData[DEs.Q900] !== "true";
+    // SHOW 'Other social and behaviour Change (SBC) sessions' if 'social and behaviour Change (SBC) sessions (Q 901)' = 'Others'
+    metadata["S6aWPoAIthD"].hidden = newData["gNBFmUFtW6a"] !== "5";
 
     if (previousData) setFormDirty(true);
   };
