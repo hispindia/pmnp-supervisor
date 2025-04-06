@@ -23,6 +23,7 @@ import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEnt
 import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import { getMetadataSet } from "@/utils/offline";
+import { setMe } from "@/redux/actions/me";
 
 const AppSkeletonLoading = withSkeletonLoading(AppSkeleton)(App);
 
@@ -109,8 +110,9 @@ const AppContainer = () => {
           dispatch(setSelectedOrgUnit(orgUnitJsonData));
           // history.push("/list");
         }
-
+        console.log({ results });
         dispatch(setOrgUnits(results[5].organisationUnits));
+        dispatch(setMe(results[2]));
         setLoading(false);
         setLoaded(true);
       });

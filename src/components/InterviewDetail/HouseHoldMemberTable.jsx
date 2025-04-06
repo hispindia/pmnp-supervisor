@@ -424,6 +424,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     metadata["s3q2EVu3qe0"].hidden = years > 5;
     // CN - MUAC (cm)	Child < 5 y
     metadata["sCOCt8eF0Fr"].hidden = years > 5;
+    // Mother's member ID number
+    metadata["q0WEgMBwi0p"].hidden = years > 5;
 
     // clear data for hidden items
     for (let meta in metadata) {

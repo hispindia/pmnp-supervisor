@@ -200,6 +200,10 @@ const FamilyMemberForm = ({
 
     data["H42aYY9JMIR"] = years;
 
+    // Show if 'Relationship with HH Head' has option code 1,2,3,4,5,6,7,8
+    metadata["BbdQMKOObps"].hidden =
+      data["QAYXozgCOHu"] == "1" || !data["QAYXozgCOHu"];
+
     // clear data for hidden items
     for (let meta in metadata) {
       if (SHOULD_NOT_CLEAR_LIST.includes(meta)) {

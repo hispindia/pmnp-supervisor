@@ -49,8 +49,6 @@ const InterviewDetailTable = ({
     (state) => state.data.tei.data.currentEvents
   );
 
-  console.log("InterviewDetailTable", { data });
-
   const dispatch = useDispatch();
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
@@ -61,6 +59,7 @@ const InterviewDetailTable = ({
   const { programMetadata, selectedOrgUnit } = useSelector(
     (state) => state.metadata
   );
+  const { me } = useSelector((state) => state);
   const foundProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
   );
@@ -163,6 +162,7 @@ const InterviewDetailTable = ({
   const InterviewDetails_DEs = {
     HouseholdUpdate_DE: "WBZ6d5BF26K",
     HouseholdUpdateOthers_DE: "DX407PNjTii",
+    InterviewerName_DE: "I7TcNuraOlE",
   };
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
@@ -174,11 +174,12 @@ const InterviewDetailTable = ({
       value,
     });
 
-    console.log({ data });
-
-    // WARNING: if it's hidden, the data will be removed
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].hidden = true;
     data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = generateUid();
+
+    // Interviewer's name
+    metadata[InterviewDetails_DEs.InterviewerName_DE].disabled = true;
+    data[InterviewDetails_DEs.InterviewerName_DE] = me.name || me.displayName;
 
     // InterviewDetails_DEs
     metadata[InterviewDetails_DEs.HouseholdUpdateOthers_DE].hidden = true;
