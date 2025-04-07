@@ -15,6 +15,8 @@ import CaptureForm from "../CaptureForm";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import { getQuarterlyFromDate } from "@/utils/date";
+import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
+import { calculateHouseHoldFields } from "./calculateHouseHoldFields";
 
 const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
   const i18n = useTranslation();
@@ -24,6 +26,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
   const currentEvents = useSelector(
     (state) => state.data.tei.data.currentEvents
   );
+  const { interviewCascadeData } = useInterviewCascadeData(interviewData);
   const { selectedOrgUnit, programMetadata } = useSelector(
     (state) => state.metadata
   );
@@ -45,12 +48,15 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
   const [formStatus, setFormStatus] = useState(null);
   const [formDirty, setFormDirty] = useState(false);
 
-  console.log("HouseHoldSurveyForm", { formDirty, interviewData });
+  console.log("HouseHoldSurveyForm", {
+    formDirty,
+    interviewData,
+    interviewCascadeData,
+  });
 
   const handleAddNew = (e, newData, continueAdd) => {
     console.trace("row:>>>", newData);
 
-    console.log({ newData });
     // Add new data
 
     setData(newData);
@@ -153,6 +159,10 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
     metadata[DEs.Q901].hidden = newData[DEs.Q900] !== "true";
     // SHOW 'Other social and behaviour Change (SBC) sessions' if 'social and behaviour Change (SBC) sessions (Q 901)' = 'Others'
     metadata["S6aWPoAIthD"].hidden = newData["gNBFmUFtW6a"] !== "5";
+
+    // Calculate fields
+    // Score_Number of 4Ps Members
+    calculateHouseHoldFields(newData, interviewCascadeData);
 
     if (previousData) setFormDirty(true);
   };
