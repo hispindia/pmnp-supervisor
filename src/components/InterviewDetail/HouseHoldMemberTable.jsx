@@ -4,11 +4,7 @@ import { Button, Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  FORM_ACTION_TYPES,
-  HAS_INITIAN_NOVALUE,
-  MEMBER_HOUSEHOLD_UID,
-} from "../constants";
+import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOLD_UID } from "../constants";
 
 // Icon
 
@@ -26,18 +22,11 @@ import { transformEvent } from "@/utils/event";
 import _ from "lodash";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
-import {
-  transformData,
-  transformMetadataToColumns,
-} from "../CascadeTable/utils";
+import { transformData, transformMetadataToColumns } from "../CascadeTable/utils";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./interview-detail-table.css";
 import { updateMetadata } from "./utils";
-import {
-  differenceInMonths,
-  differenceInWeeks,
-  differenceInYears,
-} from "date-fns";
+import { differenceInMonths, differenceInWeeks, differenceInYears } from "date-fns";
 import { getQuarterlyFromDate } from "@/utils/date";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
@@ -48,22 +37,16 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
   const locale = i18n.language || "en";
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
 
-  const { currentInterviewCascade } = useSelector(
-    (state) => state.data.tei.data
-  );
+  const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
 
-  const { programMetadataMember, selectedOrgUnit } = useSelector(
-    (state) => state.metadata
-  );
+  const { programMetadataMember, selectedOrgUnit, programMetadata } = useSelector((state) => state.metadata);
 
   const getInterviewCascadeData = () => {
     if (!currentInterviewCascade?.[interviewId]) return [];
     return currentInterviewCascade?.[interviewId].map((r) => r.memberData);
   };
 
-  const [originMetadata, stageDataElements] = convertOriginMetadata(
-    programMetadataMember
-  );
+  const [originMetadata, stageDataElements] = convertOriginMetadata(programMetadataMember);
 
   const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
@@ -72,9 +55,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
 
-  const [columns, setColumns] = useState(
-    transformMetadataToColumns(metadata, locale)
-  );
+  const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
 
   const showData = useMemo(() => {
     return transformData(metadata, data, dataValuesTranslate, locale);
@@ -92,19 +73,16 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     setMetadata([...updatedMetadata]);
 
     // save event
-    const interviewEvents =
-      currentInterviewCascade[interviewId][selectedRowIndex]?.events || [];
+    const interviewEvents = currentInterviewCascade[interviewId][selectedRowIndex]?.events || [];
 
     const demographicDataValues = {};
     const scorecardSurveyDataValues = {};
     stageDataElements[MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID].forEach((de) => {
       if (row[de.id]) demographicDataValues[de.id] = row[de.id];
     });
-    stageDataElements[MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID].forEach(
-      (de) => {
-        if (row[de.id]) scorecardSurveyDataValues[de.id] = row[de.id];
-      }
-    );
+    stageDataElements[MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID].forEach((de) => {
+      if (row[de.id]) scorecardSurveyDataValues[de.id] = row[de.id];
+    });
 
     // init new event
     const trackedEntity = row.id;
@@ -126,9 +104,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     };
 
     let demographicEventPayload;
-    const foundDemographicEvent = interviewEvents.find(
-      (e) => e.programStage === MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID
-    );
+    const foundDemographicEvent = interviewEvents.find((e) => e.programStage === MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID);
     if (!foundDemographicEvent) {
       demographicEventPayload = transformEvent({
         ...newEvent,
@@ -195,9 +171,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     metadata["C4b8S7zjs0g"].disabled = true;
 
     metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
-    data[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(
-      interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]
-    );
+    data[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     // ages
     metadata["d2n5w4zpxuo"].hidden = true;
@@ -270,14 +244,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     const dateOfBirth = data["fJPZFs2yYJQ"];
 
     let shownSections = [];
-    let hiddenSections = [
-      "IxbqFSJPfEN",
-      "A2TBfLOW8HG",
-      "tlNWZDOWfP2",
-      "jV8O1ZITgIn",
-      "E4FpYkBzAsW",
-      "fVGAPxIFZoO",
-    ];
+    let hiddenSections = ["IxbqFSJPfEN", "A2TBfLOW8HG", "tlNWZDOWfP2", "jV8O1ZITgIn", "E4FpYkBzAsW", "fVGAPxIFZoO"];
 
     const pregnancyStatus = data["ycBIHr9bYyw"];
     if (pregnancyStatus === "1") {
@@ -293,20 +260,13 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     }
     if (dateOfBirth) {
       if (years <= 5) {
-        hiddenSections = hiddenSections.filter(
-          (s) => s !== "tlNWZDOWfP2" || s !== "jV8O1ZITgIn"
-        );
+        hiddenSections = hiddenSections.filter((s) => s !== "tlNWZDOWfP2" || s !== "jV8O1ZITgIn");
         shownSections.push("tlNWZDOWfP2");
         shownSections.push("jV8O1ZITgIn");
       }
 
       const sex = data["Qt4YSwPxw0X"];
-      if (
-        years >= 10 &&
-        years <= 49 &&
-        sex === "1" &&
-        (pregnancyStatus === "2" || pregnancyStatus === "3")
-      ) {
+      if (years >= 10 && years <= 49 && sex === "1" && (pregnancyStatus === "2" || pregnancyStatus === "3")) {
         hiddenSections = hiddenSections.filter((h) => h !== "E4FpYkBzAsW");
         shownSections.push("E4FpYkBzAsW");
       }
@@ -525,9 +485,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
         return obj;
       }, {});
 
-    setColumns(
-      transformMetadataToColumns(metadata, locale, tempDataValuesTranslate)
-    );
+    setColumns(transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
@@ -553,20 +511,13 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
 
   return (
     <div className="interview-table px-4">
-      <Modal
-        backdrop={false}
-        size="xl"
-        scrollable
-        keyboard={false}
-        show={formStatus === FORM_ACTION_TYPES.EDIT}
-      >
+      <Modal backdrop={false} size="xl" scrollable keyboard={false} show={formStatus === FORM_ACTION_TYPES.EDIT}>
         <Modal.Body>
           <Card>
             <Card.Body>
               <Card.Title>{t("familyMemberDetails")}</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">
-                {formStatus !== FORM_ACTION_TYPES.ADD_NEW &&
-                  "No." + (selectedRowIndex + 1)}
+                {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)}
               </Card.Subtitle>
               <CaptureForm
                 locale={locale}
@@ -614,19 +565,22 @@ const convertOriginMetadata = (programMetadataMember) => {
 
   metadata.push(...programMetadataMember.trackedEntityAttributes);
 
-  const programStagesDataElements = programMetadataMember.programStages.reduce(
-    (acc, stage) => {
-      stage.dataElements.forEach((de) => {
-        de.code = de.id;
-        de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
-      });
+  const programStagesDataElements = programMetadataMember.programStages.reduce((acc, stage) => {
+    stage.programStageSections.forEach((pss) =>
+      pss.dataElements.forEach((de) => {
+        if (de.id === "Wj1Re9XKW5P") console.log(pss);
+      })
+    );
+    stage.dataElements.forEach((de) => {
+      if (de.id === "Wj1Re9XKW5P") console.log(de);
+      de.code = de.id;
+      de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
+    });
 
-      stageDataElements[stage.id] = [...stage.dataElements];
+    stageDataElements[stage.id] = [...stage.dataElements];
 
-      return [...acc, ...stage.dataElements];
-    },
-    []
-  );
+    return [...acc, ...stage.dataElements];
+  }, []);
 
   metadata.push(...programStagesDataElements);
 
