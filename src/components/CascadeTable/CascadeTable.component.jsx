@@ -46,14 +46,10 @@ const CascadeTable = (props) => {
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
   const { currentCascade } = useSelector((state) => state.data.tei.data);
   const dispatch = useDispatch();
-  const [columns, setColumns] = useState(
-    transformMetadataToColumns(metadata, locale)
-  );
+  const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
   const profile = useSelector((state) => state.data.tei.data.currentTei);
 
-  const [showData, setShowData] = useState(
-    transformData(metadata, props.data, dataValuesTranslate, locale)
-  );
+  const [showData, setShowData] = useState(transformData(metadata, props.data, dataValuesTranslate, locale));
 
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
@@ -63,8 +59,7 @@ const CascadeTable = (props) => {
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
       // if (isImmutableYear(year, immutableYear)) return;
-      if (e.currentTarget && e.currentTarget.contains(e.target))
-        handleSelectRow(e, data[rowIndex], rowIndex);
+      if (e.currentTarget && e.currentTarget.contains(e.target)) handleSelectRow(e, data[rowIndex], rowIndex);
     },
   };
 
@@ -118,13 +113,9 @@ const CascadeTable = (props) => {
       rows: data,
     };
 
-    callbackFunction &&
-      callbackFunction(metadata, dataRows, dataRows["rows"].length - 1, "add");
+    callbackFunction && callbackFunction(metadata, dataRows, dataRows["rows"].length - 1, "add");
 
-    changeEventDataValue(
-      "oC9jreyd9SD",
-      JSON.stringify({ dataVals: dataRows["rows"] })
-    );
+    changeEventDataValue("oC9jreyd9SD", JSON.stringify({ dataVals: dataRows["rows"] }));
 
     setData([...dataRows["rows"]]);
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
@@ -149,12 +140,8 @@ const CascadeTable = (props) => {
       rows: data.filter((d) => d.id != row.id),
     };
 
-    callbackFunction &&
-      callbackFunction(metadata, dataRows, null, "delete_member");
-    changeEventDataValue(
-      "oC9jreyd9SD",
-      JSON.stringify({ dataVals: dataRows["rows"] })
-    );
+    callbackFunction && callbackFunction(metadata, dataRows, null, "delete_member");
+    changeEventDataValue("oC9jreyd9SD", JSON.stringify({ dataVals: dataRows["rows"] }));
     setData([...dataRows["rows"]]);
     let updatedMetadata = updateMetadata(metadata, dataRows["rows"]);
 
@@ -205,12 +192,7 @@ const CascadeTable = (props) => {
   };
 
   useEffect(() => {
-    let transformedData = transformData(
-      metadata,
-      props.data,
-      dataValuesTranslate,
-      locale
-    );
+    let transformedData = transformData(metadata, props.data, dataValuesTranslate, locale);
     setShowData(transformedData);
     setData(props.data);
     let updatedMetadata = updateMetadata(metadata, props.data); // should not transformedData
@@ -228,12 +210,7 @@ const CascadeTable = (props) => {
   }, [JSON.stringify(props.data)]);
 
   useEffect(() => {
-    let transformedData = transformData(
-      metadata,
-      data,
-      dataValuesTranslate,
-      locale
-    );
+    let transformedData = transformData(metadata, data, dataValuesTranslate, locale);
     setShowData(transformedData);
   }, [JSON.stringify(data)]);
 
@@ -251,9 +228,7 @@ const CascadeTable = (props) => {
         return obj;
       }, {});
 
-    setColumns(
-      transformMetadataToColumns(metadata, locale, tempDataValuesTranslate)
-    );
+    setColumns(transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
@@ -332,18 +307,14 @@ const CascadeTable = (props) => {
             backdrop="static"
             size="xl"
             keyboard={false}
-            show={
-              formStatus === FORM_ACTION_TYPES.ADD_NEW ||
-              formStatus === FORM_ACTION_TYPES.EDIT
-            }
+            show={formStatus === FORM_ACTION_TYPES.ADD_NEW || formStatus === FORM_ACTION_TYPES.EDIT}
           >
             <Modal.Body>
               <Card>
                 <Card.Body>
                   <Card.Title>{t("familyMemberDetails")}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    {formStatus !== FORM_ACTION_TYPES.ADD_NEW &&
-                      "No." + (selectedRowIndex + 1)}
+                  <Card.Subtitle className="mb-4 text-muted">
+                    {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)}
                   </Card.Subtitle>
                   <CaptureForm
                     locale={locale}

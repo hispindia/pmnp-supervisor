@@ -16,22 +16,13 @@ import { changeMember } from "../../redux/actions/data/tei";
 // Import utils
 
 // Styles
-import {
-  FAMILY_UID_ATTRIBUTE_ID,
-  HOUSEHOLD_ID_ATTR_ID,
-  SHOULD_NOT_CLEAR_LIST,
-} from "@/constants/app-config";
+import { FAMILY_UID_ATTRIBUTE_ID, HOUSEHOLD_ID_ATTR_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
 import { getMaxHHMemberID } from "@/utils/member";
 import { getOrganisationUnitById } from "@/utils/organisation";
 import { differenceInWeeks, differenceInYears, lastDayOfYear } from "date-fns";
 import moment from "moment";
 import "../../index.css";
-import {
-  HAS_INITIAN_NOVALUE,
-  HOUSEHOLD_MEMBER_ID,
-  MEMBER_HOUSEHOLD_UID,
-  PMNP_ID,
-} from "../constants";
+import { HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
 import styles from "./FamilyMemberForm.module.css";
 
 const { familyMemberFormContainer } = styles;
@@ -49,28 +40,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const convertOriginMetadata = ({ programMetadata, eventIncluded = true }) => {
-  let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map(
-    (attr) => {
-      return {
-        ...attr,
-        code: attr.id,
-      };
-    }
-  );
+  let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map((attr) => {
+    return {
+      ...attr,
+      code: attr.id,
+    };
+  });
 
   let programStagesDataElements = [];
   if (eventIncluded) {
-    programStagesDataElements = programMetadata.programStages.reduce(
-      (acc, stage) => {
-        stage.dataElements.forEach((de) => {
-          de.code = de.id;
-          de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
-        });
+    programStagesDataElements = programMetadata.programStages.reduce((acc, stage) => {
+      stage.dataElements.forEach((de) => {
+        de.code = de.id;
+        de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
+      });
 
-        return [...acc, ...stage.dataElements];
-      },
-      []
-    );
+      return [...acc, ...stage.dataElements];
+    }, []);
   }
 
   return [...trackedEntityAttributes, ...programStagesDataElements];
@@ -107,12 +93,8 @@ const FamilyMemberForm = ({
 
   const dispatch = useDispatch();
 
-  const attributes = useSelector(
-    (state) => state.data.tei.data.currentTei.attributes
-  );
-  const currentCascade = useSelector(
-    (state) => state.data.tei.data.currentCascade
-  );
+  const attributes = useSelector((state) => state.data.tei.data.currentTei.attributes);
+  const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
 
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
 
@@ -158,9 +140,7 @@ const FamilyMemberForm = ({
     // metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].hidden = true;
 
     metadata[HOUSEHOLD_MEMBER_ID].disabled = true;
-    data[HOUSEHOLD_MEMBER_ID] = data.isNew
-      ? getMaxHHMemberID(currentCascade)
-      : data[HOUSEHOLD_MEMBER_ID];
+    data[HOUSEHOLD_MEMBER_ID] = data.isNew ? getMaxHHMemberID(currentCascade) : data[HOUSEHOLD_MEMBER_ID];
 
     metadata[MEMBER_HOUSEHOLD_UID].disabled = true;
     data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];
@@ -170,9 +150,7 @@ const FamilyMemberForm = ({
     // data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
     metadata[PMNP_ID].disabled = true;
-    data[
-      PMNP_ID
-    ] = `${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
+    data[PMNP_ID] = `${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
 
     const memberId = data[HOUSEHOLD_MEMBER_ID];
     if (!memberId) {
@@ -201,8 +179,7 @@ const FamilyMemberForm = ({
     data["H42aYY9JMIR"] = years;
 
     // Show if 'Relationship with HH Head' has option code 1,2,3,4,5,6,7,8
-    metadata["BbdQMKOObps"].hidden =
-      data["QAYXozgCOHu"] == "1" || !data["QAYXozgCOHu"];
+    metadata["BbdQMKOObps"].hidden = data["QAYXozgCOHu"] == "1" || !data["QAYXozgCOHu"];
 
     // clear data for hidden items
     for (let meta in metadata) {
@@ -219,12 +196,7 @@ const FamilyMemberForm = ({
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
   };
 
-  const callbackFunction = (
-    metadata,
-    dataRows,
-    rowIndex = null,
-    actionType
-  ) => {
+  const callbackFunction = (metadata, dataRows, rowIndex = null, actionType) => {
     // clean selected member
     if (actionType === "clean") {
       dispatch(changeMember({}));

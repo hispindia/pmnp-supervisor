@@ -137,9 +137,7 @@ const InputField = ({
             maxLength={attribute && attribute.maxLength}
             onInput={(e) => {
               if (attribute && attribute.maxLength) {
-                e.target.value = Math.max(0, parseInt(e.target.value))
-                  .toString()
-                  .slice(0, attribute.maxLength);
+                e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, attribute.maxLength);
               }
             }}
             {...props}
@@ -149,8 +147,12 @@ const InputField = ({
       case "PERCENTAGE":
       case "PHONE_NUMBER":
       case "EMAIL":
+        return <TextField value={value} handleChange={onChange} handleBlur={onBlur} disabled={disabled} {...props} />;
+      case "LONG_TEXT":
         return (
           <TextField
+            multiline
+            rows={3}
             value={value}
             handleChange={onChange}
             handleBlur={onBlur}
@@ -169,21 +171,17 @@ const InputField = ({
             // maxLength={attribute && attribute.maxLength}
             onInput={(e) => {
               if (attribute && attribute.maxLength) {
-                e.target.value = Math.max(0, parseInt(e.target.value))
-                  .toString()
-                  .slice(0, attribute.maxLength);
+                e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, attribute.maxLength);
               }
               // check max
               if (attribute && attribute.max) {
-                e.target.value =
-                  parseInt(e.target.value) > attribute.max
-                    ? attribute.max
-                    : parseInt(e.target.value);
+                e.target.value = parseInt(e.target.value) > attribute.max ? attribute.max : parseInt(e.target.value);
               }
             }}
             {...props}
           />
         );
+
       case "TIME":
         return (
           <MuiPickersUtilsProvider utils={MomentUtils} locale={locale || "en"}>
@@ -217,10 +215,7 @@ const InputField = ({
             onInput={(e) => {
               if (attribute && attribute.maxLength) {
                 e.target.value = e.target.value.replace(/^0+/, "");
-                if (
-                  e.target.value.split("").length <= attribute.maxLength &&
-                  e.target.value.split("").length > 0
-                ) {
+                if (e.target.value.split("").length <= attribute.maxLength && e.target.value.split("").length > 0) {
                   let arr = [];
                   e.target.value.split("").forEach((da) => {
                     arr.push(da);
@@ -234,9 +229,7 @@ const InputField = ({
                   });
                   e.target.value = arrValue.join("");
                 } else {
-                  e.target.value = Math.max(0, parseInt(e.target.value))
-                    .toString()
-                    .slice(0, attribute.maxLength);
+                  e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, attribute.maxLength);
                 }
               }
             }}
@@ -247,16 +240,16 @@ const InputField = ({
   };
 
   return (
-    <div
-      className="input-field-container"
-      data-element-id={props["data-element-id"]}
-    >
+    <div className="input-field-container" data-element-id={props["data-element-id"]}>
       {label && <div className="input-field-label">{label}</div>}
       <div className="h-10">{generateInput()}</div>
       {warning && <div className="input-field-warning">{warning}</div>}
       {error && <div className="input-field-error">{error}</div>}
-      {helperText && (
-        <div className="input-field-helper-text">{helperText}</div>
+      {helperText && <div className="input-field-helper-text">{helperText}</div>}
+      {!warning && !error && !helperText && (
+        <div className="input-field-error" style={{ visibility: "hidden" }}>
+          align
+        </div>
       )}
     </div>
   );

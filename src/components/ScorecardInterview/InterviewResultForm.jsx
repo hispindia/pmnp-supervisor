@@ -17,27 +17,20 @@ import CaptureForm from "../CaptureForm";
 import _ from "lodash";
 import { ca } from "date-fns/locale";
 import { Next } from "react-bootstrap/esm/PageItem";
+import { format } from "date-fns";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
   const i18n = useTranslation();
   const locale = i18n.language || "en";
 
   const dispatch = useDispatch();
-  const currentEvents = useSelector(
-    (state) => state.data.tei.data.currentEvents
-  );
-  const { selectedOrgUnit, programMetadata } = useSelector(
-    (state) => state.metadata
-  );
+  const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
+  const { selectedOrgUnit, programMetadata } = useSelector((state) => state.metadata);
   const foundProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID
   );
-  const trackedEntity = useSelector(
-    (state) => state.data.tei.data.currentTei.trackedEntity
-  );
-  const enrollment = useSelector(
-    (state) => state.data.tei.data.currentEnrollment.enrollment
-  );
+  const trackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
+  const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
 
   const originMetadata = convertOriginMetadata(foundProgramStage);
 
@@ -128,9 +121,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
 
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
-    newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(
-      interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]
-    );
+    newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     // InterviewResult_DEs
     metadata[InterviewResult_DEs.Order_DE].hidden = true;
@@ -148,10 +139,11 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
     }
 
     if (!newData[HOUSEHOLD_INTERVIEW_ID_DE_ID]) {
-      newData[HOUSEHOLD_INTERVIEW_ID_DE_ID] =
-        interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
+      newData[HOUSEHOLD_INTERVIEW_ID_DE_ID] = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
       setFormDirty(true);
     }
+
+    if (newData["K2ySLF5Qnri"] === "Completed") newData["Zk72MWfJJKU"] = format(new Date(), "HH:mm");
 
     if (previousData) setFormDirty(true);
   };
@@ -166,8 +158,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
     const found = currentEvents.find(
       (e) =>
         e.programStage === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID &&
-        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] ===
-          interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
+        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
     );
 
     if (found) {

@@ -193,6 +193,9 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     metadata["Gds5wTiXoSK"].hidden = !weeks || weeks >= 52;
     metadata["Hc9Vgt4LXjb"].hidden = !(!weeks || weeks >= 52);
 
+    // Menstrual history should be NA (option code 3) for females under 10 and older than 49
+    if (years < 10 || years > 49) data["WbgQ0SZFiAU"] = "3";
+
     // Menstrual history should be NA for males and questions on LMP, pregnancy status should be hidden
     if (data["Qt4YSwPxw0X"] === "2" || data["WbgQ0SZFiAU"] === "3") {
       metadata["qlt8LOSENj8"].hidden = true;
@@ -387,11 +390,16 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     // Mother's member ID number
     metadata["q0WEgMBwi0p"].hidden = years > 5;
 
-    // clear data for hidden items
-    for (let meta in metadata) {
-      if (metadata[meta].hidden) {
-        delete data[meta];
-      }
+    // If CN_MUAC (cm) < 11.5 cm ; CN_MUAC findings = Severe Acute Malnutrition (SAM)
+    // If CN_MUAC (cm) >= 11.5 AND < 12.5 cm ; CN_MUAC findings = Moderate Acute Malnutrition (MAM)
+    // if CN_MUAC (cm) >= 12.5 cm ; CN_MUAC findings = Normal
+    const cm = +data["sCOCt8eF0Fr"];
+    if (cm > 0 && cm < 11.5) {
+      data["s3q2EVu3qe0"] = "Severe Acute Malnutrition (SAM)";
+    } else if (cm >= 11.5 && cm < 12.5) {
+      data["s3q2EVu3qe0"] = "Moderate Acute Malnutrition (MAM)";
+    } else if (cm >= 12.5) {
+      data["s3q2EVu3qe0"] = "Normal";
     }
   };
 
@@ -438,37 +446,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
       },
     },
     ...columns,
-    // TODO
-    // {
-    //   dataField: "actions",
-    //   text: "Actions",
-    //   align: "center",
-    //   formatter: (cellContent, row, rowIndex, extraData) => {
-    //     return (
-    //       <DeleteConfirmationButton
-    //         variant="outline-danger"
-    //         size="sm"
-    //         disabled={extraData !== FORM_ACTION_TYPES.NONE}
-    //         title={t("delete")}
-    //         onDelete={(e) => {
-    //           handleDeleteRow(e, row);
-    //         }}
-    //         messageText={t("deleteDialogContent")}
-    //         cancelText={t("cancel")}
-    //         deleteText={t("delete")}
-    //         onClick={(e) => {
-    //           e.stopPropagation();
-    //         }}
-    //         onCancel={(e) => {
-    //           callbackFunction(metadata, row, rowIndex, "clean");
-    //         }}
-    //       >
-    //         <FontAwesomeIcon icon={faTrash} size="xs" />
-    //       </DeleteConfirmationButton>
-    //     );
-    //   },
-    //   formatExtraData: formStatus,
-    // },
   ];
 
   useEffect(() => {
@@ -558,21 +535,16 @@ const convertOriginMetadata = (programMetadataMember) => {
   const metadata = [];
   const stageDataElements = {};
 
-  programMetadataMember.trackedEntityAttributes.forEach((attr) => {
-    attr.code = attr.id;
-    attr.disabled = true;
-  });
+  const trackedEntityAttributes = programMetadataMember.trackedEntityAttributes.map((attr) => ({
+    ...attr,
+    code: attr.id,
+    disabled: true,
+  }));
 
-  metadata.push(...programMetadataMember.trackedEntityAttributes);
+  metadata.push(...trackedEntityAttributes);
 
   const programStagesDataElements = programMetadataMember.programStages.reduce((acc, stage) => {
-    stage.programStageSections.forEach((pss) =>
-      pss.dataElements.forEach((de) => {
-        if (de.id === "Wj1Re9XKW5P") console.log(pss);
-      })
-    );
     stage.dataElements.forEach((de) => {
-      if (de.id === "Wj1Re9XKW5P") console.log(de);
       de.code = de.id;
       de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
     });

@@ -1,3 +1,12 @@
+export const clearHiddenFieldData = (metadata, data) => {
+  // clear data for hidden items
+  for (let meta in metadata) {
+    if (metadata[meta].hidden) {
+      delete data[meta];
+    }
+  }
+};
+
 export const updateMetadata = (metadata, data) => {
   metadata.forEach((md) => {
     // Options

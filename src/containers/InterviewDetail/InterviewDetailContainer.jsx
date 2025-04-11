@@ -2,7 +2,7 @@ import { HAS_INITIAN_NOVALUE } from "@/components/constants";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import InterviewDetailTable from "@/components/InterviewDetail/InterviewDetailTable";
+import InterviewDetailTable from "@/components/ScorecardInterview/InterviewDetailTable";
 import {
   HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
@@ -14,13 +14,9 @@ import { getHouseholdMemberIDs } from "@/utils/member";
 import _ from "lodash";
 
 const InterviewDetailContainer = () => {
-  const currentEvents = useSelector(
-    (state) => state.data.tei.data.currentEvents
-  );
+  const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
   const { programMetadata } = useSelector((state) => state.metadata);
-  const currentCascade = useSelector(
-    (state) => state.data.tei.data.currentCascade
-  );
+  const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
   const originMetadata = convertOriginMetadata(programMetadata, currentCascade);
 
   const [data, setData] = useState([]);
@@ -72,10 +68,7 @@ const InterviewDetailContainer = () => {
     const disabledInterviews = interviewResultEvents.reduce((acc, curr) => {
       const interviewId = curr.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID];
       acc[interviewId] = true;
-      if (
-        curr.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] ===
-        "Partially Completed"
-      ) {
+      if (curr.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] === "Partially Completed") {
         acc[interviewId] = false;
       }
       return acc;
@@ -84,8 +77,7 @@ const InterviewDetailContainer = () => {
     const transformed = interviewEvents.map((e) => ({
       id: e.event,
       ...e.dataValues,
-      disabled:
-        disabledInterviews[e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID]] || false,
+      disabled: disabledInterviews[e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID]] || false,
     }));
 
     setData(transformed);
@@ -132,8 +124,7 @@ const convertOriginMetadata = (programMetadata, currentCascade) => {
       ...de,
       code: de.id,
       hidden: HAS_INITIAN_NOVALUE.includes(de.id),
-      valueType:
-        de.id === HOUSEHOLD_INTERVIEW_TIME_DE_ID ? "QUARTERLY" : de.valueType,
+      valueType: de.id === HOUSEHOLD_INTERVIEW_TIME_DE_ID ? "QUARTERLY" : de.valueType,
     };
   });
 

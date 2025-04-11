@@ -21,8 +21,9 @@ function* handleSubmitEvent({ event, refreshTei = true }) {
       yield call(dataApi.pushEvents, { events: [event] });
     }
   } catch (e) {
-    console.error("handleSubmitEvent", e.message);
-    yield put(getTeiError(e.message));
+    console.error("handleSubmitEvent", e);
+    // comment because cannot refresh tei
+    // yield put(getTeiError("save event failed!"));
   } finally {
     // refresh TEI
     if (refreshTei) yield put(getTei(currentTei.trackedEntity));

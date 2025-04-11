@@ -25,8 +25,7 @@ const useForm = (metadata, data, uiLocale) => {
     switch (type) {
       case "compulsory":
         if (value == "" || value == null || value == undefined) {
-          if (warningLocale && warningLocale.compulsory)
-            return { text: warningLocale.compulsory };
+          if (warningLocale && warningLocale.compulsory) return { text: warningLocale.compulsory };
           return { text: "This field is required" };
         }
 
@@ -49,19 +48,11 @@ const useForm = (metadata, data, uiLocale) => {
           if (formData[ele]) {
             console.log(
               "(Number(formData[ele]) <= elements[ele].min) || (Number(formData[ele]) >= elements[ele].max) :>> ",
-              Number(formData[ele]) <= elements[ele].min &&
-                Number(formData[ele]) >= elements[ele].max
+              Number(formData[ele]) <= elements[ele].min && Number(formData[ele]) >= elements[ele].max
             );
-            if (
-              Number(formData[ele]) <= elements[ele].min ||
-              Number(formData[ele]) >= elements[ele].max
-            ) {
+            if (Number(formData[ele]) <= elements[ele].min || Number(formData[ele]) >= elements[ele].max) {
               valText[ele] = {
-                text:
-                  "Value range:Minimum " +
-                  elements[ele].min +
-                  " and maximum " +
-                  elements[ele].max,
+                text: "Value range:Minimum " + elements[ele].min + " and maximum " + elements[ele].max,
               };
             } else delete valText[ele];
           }
@@ -245,15 +236,9 @@ const useForm = (metadata, data, uiLocale) => {
     let temp = JSON.parse(JSON.stringify(formData));
     prevData.current = { ...temp };
 
-    if (
-      property == FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER &&
-      value.length < 9
-    ) {
+    if (property == FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER && value.length < 9) {
       formData[property] = value;
-    } else if (
-      property == FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER &&
-      value.length > 8
-    ) {
+    } else if (property == FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER && value.length > 8) {
     } else formData[property] = value;
 
     // formData[property] = value;
@@ -293,14 +278,11 @@ const useForm = (metadata, data, uiLocale) => {
     }
 
     customValidationCheck("min_max", MIN_MAX_TEXT, valText);
-    customValidationCheck(
-      "contact",
-      FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER,
-      valText
-    );
+    customValidationCheck("contact", FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER, valText);
 
     // custom fileds validations
 
+    console.log({ valText });
     setValidationText(valText);
 
     return _.isEmpty(valText);

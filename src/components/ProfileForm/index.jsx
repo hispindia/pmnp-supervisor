@@ -1,10 +1,5 @@
 import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
-import {
-  CloseOutlined,
-  EditOutlined,
-  RightOutlined,
-  SaveOutlined,
-} from "@ant-design/icons";
+import { CloseOutlined, EditOutlined, RightOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Form, Space } from "antd";
 import { isEqual } from "lodash";
 import moment from "moment";
@@ -15,6 +10,8 @@ import withDhis2FormItem from "../../hocs/withDhis2Field";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
 import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
+
+const disabledFields = [HOUSEHOLD_ID_ATTR_ID, "eMYBznRdn0t", "CNqaoQva9S2"];
 
 const ProfileForm = ({
   onSubmit,
@@ -28,17 +25,10 @@ const ProfileForm = ({
   const { minDate, maxDate } = useSelector((state) => state.metadata);
   const {
     selectedOrgUnit,
-    programMetadata: {
-      trackedEntityAttributes,
-      organisationUnits,
-      villageHierarchy,
-    },
+    programMetadata: { trackedEntityAttributes, organisationUnits, villageHierarchy },
   } = useSelector((state) => state.metadata);
   const profile = useSelector((state) => state.data.tei.data.currentTei);
-  const Dhis2FormItem = useMemo(
-    () => withDhis2FormItem(trackedEntityAttributes)(CFormControl),
-    []
-  );
+  const Dhis2FormItem = useMemo(() => withDhis2FormItem(trackedEntityAttributes)(CFormControl), []);
 
   const randomNumber = useMemo(() => {
     return Math.floor(1000 + Math.random() * 9000);
@@ -56,9 +46,7 @@ const ProfileForm = ({
       organisationUnits?.find((ou) => ou.id === selectedOrgUnit?.id).code,
       unitOfVillage ? unitOfVillage : "< >",
       houseNumber ? houseNumber : "< >",
-      temporaryFamilyBookNumber
-        ? temporaryFamilyBookNumber.split("_")[5]
-        : randomNumber,
+      temporaryFamilyBookNumber ? temporaryFamilyBookNumber.split("_")[5] : randomNumber,
     ];
     return values.join("_");
   };
@@ -70,9 +58,7 @@ const ProfileForm = ({
     let village = "";
     let find = organisationUnits?.find((e) => e.id === profile.orgUnit);
     if (find) {
-      let findVillageHierarchy = villageHierarchy.find(
-        (e) => e.value === find.code
-      );
+      let findVillageHierarchy = villageHierarchy.find((e) => e.value === find.code);
       if (findVillageHierarchy) {
         let array = findVillageHierarchy.path.split("/");
         province = array[0] ? array[0] : "";
@@ -94,6 +80,10 @@ const ProfileForm = ({
 
   // const cleanFormData = (values) => pickBy(values, identity);
 
+  const items = trackedEntityAttributes
+    .filter(({ displayInList }) => displayInList)
+    .map((attr) => ({ ...attr, disabled: disabledFields.includes(attr.id) || !isEdit }));
+
   return (
     <Form
       className=""
@@ -112,65 +102,22 @@ const ProfileForm = ({
               disabled={!profile.isNew}
               size="large"
               valueType="YEAR"
-              disabledDate={(date) =>
-                date < moment([minDate]) || date > moment([maxDate])
-              }
+              disabledDate={(date) => date < moment([minDate]) || date > moment([maxDate])}
             />
           </Dhis2FormItem>
         </div>
       </div>
       <div className="row col-lg-12">
-        {/* <div className="col-lg-3">
-          <FormNoInputContainer
-            id="G9KYJZ8dW76"
-            initialValue={profile.attributes.G9KYJZ8dW76}
-            disabled={!isEdit}
-            size="large"
-            form={form}
-          />
-        </div> */}
-        <div className="col-lg-3">
-          <Dhis2FormItem
-            id={HOUSEHOLD_ID_ATTR_ID}
-            // displayFormName={t("Household ID")}
-          >
-            <InputField size="large" disabled={true} />
-          </Dhis2FormItem>
-        </div>
-        <div className="col-lg-3">
-          <Dhis2FormItem
-            id="eMYBznRdn0t"
-            // displayFormName={t("Barangay")}
-          >
-            <InputField size="large" disabled={true} />
-          </Dhis2FormItem>
-        </div>
-
-        <div className="col-lg-3">
-          <Dhis2FormItem
-            id="J2KmQw53CRl"
-            //Purok / Zone
-          >
-            <InputField size="large" disabled={!isEdit} />
-          </Dhis2FormItem>
-        </div>
-
-        <div className="col-lg-3">
-          <Dhis2FormItem
-            id="HYNM3CJYLje"
-            // displayFormName={t("Street Address")}
-          >
-            <InputField size="large" disabled={!isEdit} />
-          </Dhis2FormItem>
-        </div>
-        {/* <div className="col-lg-3">
-          <Dhis2FormItem
-            id="SHPW4d00NnM"
-            // displayFormName={t("houseNumber")}
-          >
-            <InputField size="large" disabled={!isEdit} />
-          </Dhis2FormItem>
-        </div> */}
+        {items.map((item) => (
+          <div className="col-lg-3">
+            <Dhis2FormItem
+              id={item.id}
+              // displayFormName={t("Household ID")}
+            >
+              <InputField size="large" disabled={item.disabled} />
+            </Dhis2FormItem>
+          </div>
+        ))}
       </div>
       {/* <div className="row col-lg-12">
         <div className="col-lg-3">
@@ -332,7 +279,7 @@ const ProfileForm = ({
           </div>
         </div>
       </div> */}
-      <Space>
+      <Space style={{ marginLeft: 15, marginTop: 5, marginBottom: 20 }}>
         <Button.Group style={{ alignItems: "center" }}>
           {!isEdit ? (
             <Button
@@ -395,12 +342,7 @@ const ProfileForm = ({
             <CloseOutlined /> {t("cancel")}
           </Button>
         </Button.Group>
-        <Button
-          onClick={onNextClick}
-          size="large"
-          disabled={isEdit || !hasTeiParam}
-          type="primary"
-        >
+        <Button onClick={onNextClick} size="large" disabled={isEdit || !hasTeiParam} type="primary">
           {t("next")} <RightOutlined />
         </Button>
       </Space>

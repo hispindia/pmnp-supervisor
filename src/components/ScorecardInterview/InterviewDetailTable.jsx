@@ -23,31 +23,20 @@ import { transformEvent } from "@/utils/event";
 import _ from "lodash";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
-import {
-  transformData,
-  transformMetadataToColumns,
-} from "../CascadeTable/utils";
+import { transformData, transformMetadataToColumns } from "../CascadeTable/utils";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./interview-detail-table.css";
 import InterviewDetailModal from "./InterviewDetailModal";
 import { updateMetadata } from "./utils";
 import { Box } from "@material-ui/core";
+import { format } from "date-fns";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
-const InterviewDetailTable = ({
-  data,
-  setData,
-  metadata,
-  originMetadata,
-  setMetadata,
-  callbackFunction,
-}) => {
+const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMetadata, callbackFunction }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
-  const currentEvents = useSelector(
-    (state) => state.data.tei.data.currentEvents
-  );
+  const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
 
   const dispatch = useDispatch();
 
@@ -56,23 +45,15 @@ const InterviewDetailTable = ({
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
 
-  const { programMetadata, selectedOrgUnit } = useSelector(
-    (state) => state.metadata
-  );
+  const { programMetadata, selectedOrgUnit } = useSelector((state) => state.metadata);
   const { me } = useSelector((state) => state);
   const foundProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
   );
-  const [columns, setColumns] = useState(
-    transformMetadataToColumns(metadata, locale)
-  );
+  const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
   const currentTei = useSelector((state) => state.data.tei.data.currentTei);
-  const currentInterviewCascade = useSelector(
-    (state) => state.data.tei.data.currentInterviewCascade
-  );
-  const enrollment = useSelector(
-    (state) => state.data.tei.data.currentEnrollment.enrollment
-  );
+  const currentInterviewCascade = useSelector((state) => state.data.tei.data.currentInterviewCascade);
+  const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
   const { attributes } = currentTei;
 
   const showData = useMemo(() => {
@@ -190,6 +171,10 @@ const InterviewDetailTable = ({
     // Respondent ID - SrFa2O3m6ff
     metadata["C4b8S7zjs0g"].disabled = true;
     data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
+
+    // AUTO assign date and time
+    if (!data["oUi6zQUzT2S"]) data["oUi6zQUzT2S"] = format(new Date(), "yyyy-MM-dd");
+    if (!data["j3xi4RiKG5X"]) data["j3xi4RiKG5X"] = format(new Date(), "HH:mm");
   };
 
   const handleDeleteRow = (e, row) => {
@@ -199,31 +184,21 @@ const InterviewDetailTable = ({
       // need to delete all events relative interview id
       const interviewId = row[HOUSEHOLD_INTERVIEW_ID_DE_ID];
       const householdEvents = currentEvents.reduce(
-        (acc, e) =>
-          e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewId
-            ? [...acc, e.event]
-            : acc,
+        (acc, e) => (e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewId ? [...acc, e.event] : acc),
         []
       );
-      const householdMemberEvents = currentInterviewCascade[interviewId].reduce(
-        (acc, row) => {
-          row.events.forEach((e) => {
-            acc.push(e.event);
-          });
-          return acc;
-        },
-        []
-      );
+      const householdMemberEvents = currentInterviewCascade[interviewId].reduce((acc, row) => {
+        row.events.forEach((e) => {
+          acc.push(e.event);
+        });
+        return acc;
+      }, []);
 
-      const listId = [row.id]
-        .concat(householdEvents)
-        .concat(householdMemberEvents);
+      const listId = concat(householdEvents).concat(householdMemberEvents);
 
       console.log("delete interviews", listId);
       // reload tei for the last index === listId.length - 1
-      listId.forEach((eventId, index) =>
-        dispatch(deleteEvent(eventId, index === listId.length - 1))
-      );
+      listId.forEach((eventId, index) => dispatch(deleteEvent(eventId, index === listId.length - 1)));
       let rows = data.filter((d) => d.id != row.id);
 
       callbackFunction(metadata, rows, null, "delete_member");
@@ -245,11 +220,7 @@ const InterviewDetailTable = ({
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
-      if (
-        e.currentTarget &&
-        e.currentTarget.contains(e.target) &&
-        !row.disabled
-      ) {
+      if (e.currentTarget && e.currentTarget.contains(e.target) && !row.disabled) {
         console.log("selected", row);
         setSelectedData(row);
         setSelectedRowIndex(rowIndex);
@@ -328,9 +299,7 @@ const InterviewDetailTable = ({
         return obj;
       }, {});
 
-    setColumns(
-      transformMetadataToColumns(metadata, locale, tempDataValuesTranslate)
-    );
+    setColumns(transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
@@ -345,9 +314,7 @@ const InterviewDetailTable = ({
         interviewData={selectedData}
         formStatus={formStatus}
         selectedRowIndex={selectedRowIndex}
-        open={
-          selectedRowIndex !== null && formStatus !== FORM_ACTION_TYPES.EDIT
-        }
+        open={selectedRowIndex !== null && formStatus !== FORM_ACTION_TYPES.EDIT}
         onClose={() => {
           setSelectedData({});
           setSelectedRowIndex(null);
@@ -358,13 +325,10 @@ const InterviewDetailTable = ({
         backdrop="static"
         size="xl"
         keyboard={false}
-        show={
-          formStatus === FORM_ACTION_TYPES.ADD_NEW ||
-          formStatus === FORM_ACTION_TYPES.EDIT
-        }
+        show={formStatus === FORM_ACTION_TYPES.ADD_NEW || formStatus === FORM_ACTION_TYPES.EDIT}
       >
         <Modal.Body>
-          <Card>
+          <Card style={{ border: 0 }}>
             <Card.Body>
               <CaptureForm
                 formProgramMetadata={{ programStages: [foundProgramStage] }}

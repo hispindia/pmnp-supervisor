@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 // components
 import InputField from "../InputFieldCore/InputField.component.jsx";
 import { useTranslation } from "react-i18next";
+import { clearHiddenFieldData } from "../ScorecardInterview/utils";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -35,8 +36,7 @@ function CaptureForm(props) {
     ...other
   } = props;
   const { programMetadataMember } = useSelector((state) => state.metadata);
-  const { programSections, programStages } =
-    formProgramMetadata || programMetadataMember;
+  const { programSections, programStages } = formProgramMetadata || programMetadataMember;
   const {
     formData,
     prevData,
@@ -102,29 +102,15 @@ function CaptureForm(props) {
               valueSet={f.valueSet}
               pattern={f.pattern}
               valueType={f.valueType}
-              label={
-                !_.isEmpty(f.translations)
-                  ? f.translations[locale]
-                  : f.displayFormName
-              }
+              label={!_.isEmpty(f.translations) ? f.translations[locale] : f.displayFormName}
               attribute={f.attribute}
               value={formData[f.code] || ""}
-              onBlur={(value) =>
-                editCall(
-                  formMetadata,
-                  prevData.current,
-                  formData,
-                  f.code,
-                  value
-                )
-              }
+              onBlur={(value) => editCall(formMetadata, prevData.current, formData, f.code, value)}
               onChange={(value) => {
                 changeValue(f.code, value);
               }}
               InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">{f.prefix}</InputAdornment>
-                ),
+                startAdornment: <InputAdornment position="start">{f.prefix}</InputAdornment>,
               }}
               error={validation(f.code)}
               maxDate={props.maxDate}
@@ -138,11 +124,8 @@ function CaptureForm(props) {
 
   const generateSectionFields = () => {
     if (!programSections || programSections.length === 0) {
-      const trackedEntityAttributes =
-        programMetadataMember.trackedEntityAttributes.map((t) => t.id);
-      const TEIFormMetadata = formMetadata.filter((f) =>
-        trackedEntityAttributes.includes(f.id)
-      );
+      const trackedEntityAttributes = programMetadataMember.trackedEntityAttributes.map((t) => t.id);
+      const TEIFormMetadata = formMetadata.filter((f) => trackedEntityAttributes.includes(f.id));
       return (
         <div className="row" style={{ alignItems: "flex-end" }}>
           {" "}
@@ -152,15 +135,12 @@ function CaptureForm(props) {
     }
 
     return programSections.map((pSection) => {
-      const trackedEntityAttributes = pSection.trackedEntityAttributes.map(
-        (tea) => tea.id
-      );
+      const trackedEntityAttributes = pSection.trackedEntityAttributes.map((tea) => tea.id);
       const TEIFormMetadata = formMetadata
         .filter((f) => trackedEntityAttributes.includes(f.id))
         .sort(
           (a, b) =>
-            trackedEntityAttributes.indexOf(a.id) -
-              trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
+            trackedEntityAttributes.indexOf(a.id) - trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
         );
 
       return (
@@ -182,14 +162,10 @@ function CaptureForm(props) {
   };
 
   const generateProgramStageSectionFields = () => {
-    if (
-      programStages?.some((pStage) => pStage.programStageSections.length === 0)
-    ) {
+    if (programStages?.some((pStage) => pStage.programStageSections.length === 0)) {
       return programStages.map((pStage) => {
         const dataElements = pStage.dataElements.map((t) => t.id);
-        const programFormMetadata = formMetadata.filter((f) =>
-          dataElements.includes(f.id)
-        );
+        const programFormMetadata = formMetadata.filter((f) => dataElements.includes(f.id));
 
         return (
           <div className="row" style={{ alignItems: "flex-end" }}>
@@ -207,11 +183,7 @@ function CaptureForm(props) {
         const dataElements = pSection.dataElements.map((tea) => tea.id);
         const programFormMetadata = formMetadata
           .filter((f) => dataElements.includes(f.id))
-          .sort(
-            (a, b) =>
-              dataElements.indexOf(a.id) - dataElements.indexOf(b.id) ||
-              a.id.localeCompare(b.id)
-          );
+          .sort((a, b) => dataElements.indexOf(a.id) - dataElements.indexOf(b.id) || a.id.localeCompare(b.id));
 
         // if all field hidden => hide the section
         const filtered = programFormMetadata.filter((f) => !f.hidden);
@@ -271,11 +243,7 @@ function CaptureForm(props) {
         <div className="col-md-12">
           <div className="btn-toolbar" role="toolbar">
             {formStatus === FORM_ACTION_TYPES.ADD_NEW && (
-              <div
-                className="btn-group mr-2"
-                role="group"
-                aria-label="First group"
-              >
+              <div className="btn-group mr-2" role="group" aria-label="First group">
                 <button
                   type="button"
                   className="btn btn-success"
@@ -287,11 +255,7 @@ function CaptureForm(props) {
               </div>
             )}
             {formStatus === FORM_ACTION_TYPES.EDIT && (
-              <div
-                className="btn-group mr-2"
-                role="group"
-                aria-label="First group"
-              >
+              <div className="btn-group mr-2" role="group" aria-label="First group">
                 <button
                   type="button"
                   className="btn btn-success"
@@ -303,16 +267,8 @@ function CaptureForm(props) {
               </div>
             )}
             {cancelable && formStatus !== FORM_ACTION_TYPES.NONE && (
-              <div
-                className="btn-group mr-2"
-                role="group"
-                aria-label="First group"
-              >
-                <button
-                  type="button"
-                  className="btn btn-light"
-                  onClick={(e) => handleCancelForm()}
-                >
+              <div className="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" className="btn btn-light" onClick={(e) => handleCancelForm()}>
                   {t("cancel")}
                 </button>
               </div>
