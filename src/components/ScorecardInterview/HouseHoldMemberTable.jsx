@@ -26,7 +26,7 @@ import { transformData, transformMetadataToColumns } from "../CascadeTable/utils
 import "../CustomStyles/css/bootstrap.min.css";
 import "./interview-detail-table.css";
 import { updateMetadata } from "./utils";
-import { differenceInMonths, differenceInWeeks, differenceInYears } from "date-fns";
+import { differenceInMonths, differenceInWeeks, differenceInYears, differenceInDays } from "date-fns";
 import { getQuarterlyFromDate } from "@/utils/date";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
@@ -184,9 +184,12 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     const years = differenceInYears(eventDate, dateOfbirth);
     const months = differenceInMonths(eventDate, dateOfbirth);
     const weeks = differenceInWeeks(eventDate, dateOfbirth);
+    const days = differenceInDays(eventDate, dateOfbirth);
 
     data["Hc9Vgt4LXjb"] = years;
+    data["RoSxLAB5cfo"] = months;
     data["Gds5wTiXoSK"] = weeks;
+    data["ICbJBQoOsVt"] = days;
     metadata["Gds5wTiXoSK"].disabled = true;
     metadata["Hc9Vgt4LXjb"].disabled = true;
 
@@ -400,6 +403,37 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
       data["s3q2EVu3qe0"] = "Moderate Acute Malnutrition (MAM)";
     } else if (cm >= 12.5) {
       data["s3q2EVu3qe0"] = "Normal";
+    }
+
+    // For age >23 months, hide data element Adequate Diet Diversity
+    metadata["RLms3EMK6Lx"].hidden = months > 23;
+
+    // adequate diet diversity
+    // For Children less than 6 mos, the ADD is yes if (Q501=Yes),
+    if (months < 6 && data["SMfz85dxBrG"] === "false") {
+      data["RLms3EMK6Lx"] = "false";
+    } else if (months >= 6 && months <= 23) {
+      // For children 6–23 months the ADD is yes if the child was breastfed in the last 24 hours and consumed at least 5 of the 7 food group
+      // , which means - (Q 502 (A) = Yes AND (SUM of below 7 data elements > 4))
+      const deIds = [
+        "iiAjifuwYOE",
+        "xbPC3AWgDrB",
+        "hQgU2xbT2CL",
+        "aIMeDdwzVQQ",
+        "nVFnpIJFBtP",
+        "qfYU7s0EylE",
+        "ZxGgsjfOje1",
+      ];
+      const countOfTrue = deIds.reduce((acc, id) => {
+        if (data[id] === "true") {
+          acc++;
+        }
+        return acc;
+      }, 0);
+
+      if (data["YJEM6K4r8B6"] == "false" || countOfTrue < 5) {
+        data["RLms3EMK6Lx"] = "false";
+      }
     }
   };
 

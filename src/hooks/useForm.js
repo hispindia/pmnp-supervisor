@@ -282,7 +282,6 @@ const useForm = (metadata, data, uiLocale) => {
 
     // custom fileds validations
 
-    console.log({ valText });
     setValidationText(valText);
 
     return _.isEmpty(valText);
