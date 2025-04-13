@@ -1,14 +1,13 @@
-import React, { useEffect } from "react";
-import { FORM_ACTION_TYPES } from "../constants";
-import useForm from "../../hooks/useForm";
 import { InputAdornment } from "@material-ui/core";
 import _ from "lodash";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import useForm from "../../hooks/useForm";
+import { FORM_ACTION_TYPES } from "../constants";
 
 // components
-import InputField from "../InputFieldCore/InputField.component.jsx";
 import { useTranslation } from "react-i18next";
-import { clearHiddenFieldData } from "../ScorecardInterview/utils";
+import InputField from "../InputFieldCore/InputField.component.jsx";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),

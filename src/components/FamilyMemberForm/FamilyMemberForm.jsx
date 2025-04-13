@@ -135,6 +135,13 @@ const FamilyMemberForm = ({
       currentCascade,
     });
 
+    // clear all "error"
+    for (let meta in metadata) {
+      if (metadata[meta].error) {
+        metadata[meta].error = "";
+      }
+    }
+
     // WARNING: if it's hidden, the data will be removed
     metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
     // metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].hidden = true;
@@ -162,6 +169,16 @@ const FamilyMemberForm = ({
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
+
+    // Household head should more than 18 years old
+    if (data["QAYXozgCOHu"] === "1" && years < 18) {
+      metadata["QAYXozgCOHu"].error = "Household head should be more than 18 years old";
+    }
+
+    // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
+    if (data["QAYXozgCOHu"] === "2" && years < 15) {
+      metadata["QAYXozgCOHu"].error = "Spouse should be more than 15 years old";
+    }
 
     // hide ages
     // if (weeks >= 52) {

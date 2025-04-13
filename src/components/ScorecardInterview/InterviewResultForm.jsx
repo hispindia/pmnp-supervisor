@@ -4,20 +4,18 @@ import {
   HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
 } from "@/constants/app-config";
-import { generateUid } from "@/utils";
-import { useEffect, useState } from "react";
-import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE } from "../constants";
-import { compareObject, updateMetadata } from "./utils";
-import { useDispatch, useSelector } from "react-redux";
 import { submitEvent } from "@/redux/actions/data";
-import { transformEvent } from "@/utils/event";
-import { useTranslation } from "react-i18next";
+import { generateUid } from "@/utils";
 import { getQuarterlyFromDate } from "@/utils/date";
-import CaptureForm from "../CaptureForm";
-import _ from "lodash";
-import { ca } from "date-fns/locale";
-import { Next } from "react-bootstrap/esm/PageItem";
+import { transformEvent } from "@/utils/event";
 import { format } from "date-fns";
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import CaptureForm from "../CaptureForm";
+import { FORM_ACTION_TYPES } from "../constants";
+import { updateMetadata } from "./utils";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
   const i18n = useTranslation();
@@ -29,6 +27,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
   const foundProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID
   );
+  const currentInterviewCascade = useSelector((state) => state.data.tei.data.currentInterviewCascade);
   const trackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
 
@@ -41,9 +40,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
   const [formDirty, setFormDirty] = useState(false);
 
   const handleAddNew = (e, newData, continueAdd) => {
-    console.trace("row:>>>", newData);
     // Add new data
-
     setData(newData);
     let updatedMetadata = updateMetadata(metadata, data);
     setMetadata([...updatedMetadata]);
@@ -68,7 +65,6 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
       _isDirty: true,
     });
 
-    console.log({ eventPayload });
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
     onClose();
@@ -96,7 +92,6 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
       dataValues,
     });
 
-    console.log({ eventPayload });
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
     onClose();
@@ -122,6 +117,9 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
     newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
+
+    // Visit number
+    newData["Wdg76PCqsBn"] = Object.keys(currentInterviewCascade).length;
 
     // InterviewResult_DEs
     metadata[InterviewResult_DEs.Order_DE].hidden = true;

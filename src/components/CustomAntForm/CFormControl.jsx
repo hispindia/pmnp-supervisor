@@ -4,11 +4,7 @@ import { Form } from "antd";
 const withFormControlProps =
   (children) =>
   ({ ...props }) => {
-    return (
-      React.Children.map(children, (child) =>
-        React.cloneElement(child, { ...props, ...child.props })
-      ) || null
-    );
+    return React.Children.map(children, (child) => React.cloneElement(child, { ...props, ...child.props })) || null;
   };
 
 const CFormControl = ({
@@ -30,17 +26,13 @@ const CFormControl = ({
   let forwardedForm = null;
   const ForwardedFormControlProps = withFormControlProps(children);
   const shouldUpdate = (prevValues, curValues) => {
-    return dependentFields.some(
-      (field) => prevValues[field] !== curValues[field]
-    );
+    return dependentFields.some((field) => prevValues[field] !== curValues[field]);
   };
   return (
     <Form.Item noStyle shouldUpdate={shouldUpdate}>
       {(form) => {
         forwardedForm = form;
-        const dependentValues = dependentFields.map((field) =>
-          form.getFieldValue(field)
-        );
+        const dependentValues = dependentFields.map((field) => form.getFieldValue(field));
         const childProps = childPropsFunc(dependentValues) || {};
         const isShow = showFieldFunc(dependentValues);
         onDependentFieldsChange(dependentValues);
@@ -70,12 +62,7 @@ const CFormControl = ({
               form={form}
               {...props}
             >
-              <ForwardedFormControlProps
-                valueType={valueType}
-                valueSet={valueSet}
-                form={form}
-                {...childProps}
-              />
+              <ForwardedFormControlProps valueType={valueType} valueSet={valueSet} form={form} {...childProps} />
             </Form.Item>
           ) : (
             <ForwardedFormControlProps

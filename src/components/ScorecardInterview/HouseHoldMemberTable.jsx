@@ -408,28 +408,36 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     // For age >23 months, hide data element Adequate Diet Diversity
     metadata["RLms3EMK6Lx"].hidden = months > 23;
 
-    // adequate diet diversity
+    // adequate diet diversity (ADD)
+    // For children 6–23 months the ADD is yes if the child was breastfed in the last 24 hours and consumed at least 5 of the 7 food group
+    // , which means - (Q 502 (A) = Yes AND (SUM of below 7 data elements > 4))
+    const deIds = [
+      "iiAjifuwYOE",
+      "xbPC3AWgDrB",
+      "hQgU2xbT2CL",
+      "aIMeDdwzVQQ",
+      "nVFnpIJFBtP",
+      "qfYU7s0EylE",
+      "ZxGgsjfOje1",
+    ];
+    const countOfTrue = deIds.reduce((acc, id) => {
+      if (data[id] === "true") {
+        acc++;
+      }
+      return acc;
+    }, 0);
+
     // For Children less than 6 mos, the ADD is yes if (Q501=Yes),
-    if (months < 6 && data["SMfz85dxBrG"] === "false") {
-      data["RLms3EMK6Lx"] = "false";
+    if (months < 6) {
+      if (data["SMfz85dxBrG"] === "false") {
+        data["RLms3EMK6Lx"] = "false";
+      } else {
+        data["RLms3EMK6Lx"] = "true";
+      }
     } else if (months >= 6 && months <= 23) {
-      // For children 6–23 months the ADD is yes if the child was breastfed in the last 24 hours and consumed at least 5 of the 7 food group
-      // , which means - (Q 502 (A) = Yes AND (SUM of below 7 data elements > 4))
-      const deIds = [
-        "iiAjifuwYOE",
-        "xbPC3AWgDrB",
-        "hQgU2xbT2CL",
-        "aIMeDdwzVQQ",
-        "nVFnpIJFBtP",
-        "qfYU7s0EylE",
-        "ZxGgsjfOje1",
-      ];
-      const countOfTrue = deIds.reduce((acc, id) => {
-        if (data[id] === "true") {
-          acc++;
-        }
-        return acc;
-      }, 0);
+      if (data["YJEM6K4r8B6"] === "true" && countOfTrue >= 5 && countOfTrue <= 7) {
+        data["RLms3EMK6Lx"] = "true";
+      }
 
       if (data["YJEM6K4r8B6"] == "false" || countOfTrue < 5) {
         data["RLms3EMK6Lx"] = "false";

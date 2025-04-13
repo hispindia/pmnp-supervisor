@@ -12,14 +12,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
   HOUSEHOLD_ID_ATTR_ID,
-  HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_DATE_DE_ID,
-  HOUSEHOLD_INTERVIEW_TIME_DE_ID,
+  HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
 } from "@/constants/app-config";
 import { submitEvent } from "@/redux/actions/data";
 import { deleteEvent } from "@/redux/actions/data/tei";
 import { transformEvent } from "@/utils/event";
+import { format } from "date-fns";
 import _ from "lodash";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
@@ -28,8 +28,6 @@ import "../CustomStyles/css/bootstrap.min.css";
 import "./interview-detail-table.css";
 import InterviewDetailModal from "./InterviewDetailModal";
 import { updateMetadata } from "./utils";
-import { Box } from "@material-ui/core";
-import { format } from "date-fns";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
