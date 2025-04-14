@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CaptureForm from "../CaptureForm";
 import { FORM_ACTION_TYPES } from "../constants";
 import { updateMetadata } from "./utils";
+import { submitAttributes } from "../../redux/actions/data";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
   const i18n = useTranslation();
@@ -28,6 +29,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID
   );
   const currentInterviewCascade = useSelector((state) => state.data.tei.data.currentInterviewCascade);
+  const attributes = useSelector((state) => state.data.tei.data.currentTei.attributes);
   const trackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
 
@@ -38,6 +40,15 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
   const [formStatus, setFormStatus] = useState(null);
   const [formDirty, setFormDirty] = useState(false);
+
+  const getHHStatus = (interviewResult) => {
+    if (!interviewResult || interviewResult === "Postponed" || interviewResult === "Not at home") {
+      return "Pending";
+    }
+    if (interviewResult === "Refused" || interviewResult === "Others") return "Refused";
+    if (interviewResult === "Partially Completed") return "Ongoing";
+    if (interviewResult === "Completed") return "Completed";
+  };
 
   const handleAddNew = (e, newData, continueAdd) => {
     // Add new data
@@ -65,6 +76,8 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
       _isDirty: true,
     });
 
+    const hhStatus = getHHStatus(newData["K2ySLF5Qnri"]);
+    dispatch(submitAttributes({ ...attributes, CNqaoQva9S2: hhStatus }));
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
     onClose();
@@ -92,6 +105,8 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
       dataValues,
     });
 
+    const hhStatus = getHHStatus(newData["K2ySLF5Qnri"]);
+    dispatch(submitAttributes({ ...attributes, CNqaoQva9S2: hhStatus }));
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
     onClose();
@@ -117,9 +132,6 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
     newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
-
-    // Visit number
-    newData["Wdg76PCqsBn"] = Object.keys(currentInterviewCascade).length;
 
     // InterviewResult_DEs
     metadata[InterviewResult_DEs.Order_DE].hidden = true;

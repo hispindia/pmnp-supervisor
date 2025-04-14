@@ -166,6 +166,10 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       metadata[InterviewDetails_DEs.HouseholdUpdateOthers_DE].hidden = false;
     }
 
+    // Visit number
+    data["Wdg76PCqsBn"] = Object.keys(currentInterviewCascade).length + 1;
+    metadata["Wdg76PCqsBn"].disabled = true;
+
     // Respondent ID - SrFa2O3m6ff
     metadata["C4b8S7zjs0g"].disabled = true;
     data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
