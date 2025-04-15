@@ -1,10 +1,5 @@
 import { put, select, takeLatest, call, all } from "redux-saga/effects";
-import {
-  GET_TEIS,
-  TABLE_CHANGE_PAGE,
-  TABLE_FILTER,
-  TABLE_SORT,
-} from "../types/teis";
+import { GET_TEIS, TABLE_CHANGE_PAGE, TABLE_FILTER, TABLE_SORT } from "../types/teis";
 import { dataApi } from "../../api";
 import {
   changePager,
@@ -32,12 +27,8 @@ function* getTeis(newPayload = {}) {
       orderString,
     };
     const nextPayload = Object.assign(currentPayload, newPayload);
-    const selectedOrgUnit = yield select(
-      (state) => state.metadata.selectedOrgUnit
-    );
-    const programMetadata = yield select(
-      (state) => state.metadata.programMetadata
-    );
+    const selectedOrgUnit = yield select((state) => state.metadata.selectedOrgUnit);
+    const programMetadata = yield select((state) => state.metadata.programMetadata);
     let instanceList = {};
 
     // OFFLINE MODE
@@ -47,9 +38,7 @@ function* getTeis(newPayload = {}) {
         program: programMetadata.id,
         pageSize: nextPayload.pageSize,
         page: nextPayload.page,
-        filters: returnFilterString(nextPayload.filters)
-          .split("&")
-          .filter(Boolean),
+        filters: returnFilterString(nextPayload.filters).split("&").filter(Boolean),
         ouMode: "DESCENDANTS",
       });
 
@@ -81,9 +70,7 @@ function* getTeis(newPayload = {}) {
         })
       ),
     ]);
-    yield put(
-      getTeisSuccessMessage("Get tracked entity instances successfully")
-    );
+    yield put(getTeisSuccessMessage("Get tracked entity instances successfully"));
   } catch (e) {
     const result = yield e.json();
 

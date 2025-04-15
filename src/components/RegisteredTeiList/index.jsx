@@ -1,10 +1,11 @@
-import { DeleteTwoTone } from "@ant-design/icons";
+import { DeleteTwoTone, LinkOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Table } from "antd";
 import { useTranslation } from "react-i18next";
 import { TableColumn, TableFilter } from "../../utils";
 import "./index.css";
 import { isImmutableYear } from "@/utils/event";
 import { useSelector } from "react-redux";
+import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
 
 const RegisteredTeiList = ({
   teis,
@@ -44,15 +45,35 @@ const RegisteredTeiList = ({
             type="text"
             size="small"
             danger
-            disabled={
-              record?.BUEzQEErqa7
-                ? isImmutableYear(record.BUEzQEErqa7, immutableYear)
-                : false
-            }
+            disabled={record?.BUEzQEErqa7 ? isImmutableYear(record.BUEzQEErqa7, immutableYear) : false}
           />
         </Popconfirm>
       </div>
     ),
+  };
+
+  const reportObject = {
+    dataIndex: "report",
+    title: t("Report"),
+    key: "report",
+    render: (text, record, index) => {
+      return (
+        <a
+          href={`/pmnp_is/dhis-web-reports/index.html#/standard-report/view/qO8KrYdmKWi?event=${record.theLatestHHSurveyEvent}&tei=${record.teiId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <LinkOutlined twoToneColor="#1677ff" />
+        </a>
+      );
+    },
   };
 
   const createColumns = () => {
@@ -64,13 +85,7 @@ const RegisteredTeiList = ({
           dataIndex: tea.id,
           key: tea.id,
           sorter: true,
-          filterDropdown: (
-            <TableFilter
-              placeholder={tea.displayFormName}
-              metadata={tea}
-              onFilter={onFilter}
-            />
-          ),
+          filterDropdown: <TableFilter placeholder={tea.displayFormName} metadata={tea} onFilter={onFilter} />,
           render: (value) => <TableColumn metadata={tea} value={value} />,
         };
 
@@ -87,16 +102,11 @@ const RegisteredTeiList = ({
       //   type: "DATE",
       // }),
       render: (value) => {
-        return (
-          <TableColumn
-            metadata={null}
-            external={{ name: "updatedAt", type: "DATE" }}
-            value={value}
-          />
-        );
+        return <TableColumn metadata={null} external={{ name: "updatedAt", type: "DATE" }} value={value} />;
       },
     };
     columns.unshift(lastUpdatedObject);
+
     return columns;
   };
 
@@ -110,6 +120,21 @@ const RegisteredTeiList = ({
 
       rowObject.teiId = tei.trackedEntity;
 
+      if (tei.enrollments && tei.enrollments.length > 0) {
+        const enrolment = tei.enrollments[0];
+        const HHSurveyEvents = enrolment.events.filter((event) => {
+          return event.programStage === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID;
+        });
+
+        const theLatestHHSurveyEvent = HHSurveyEvents.sort((a, b) => {
+          return new Date(b.occurredAt) - new Date(a.occurredAt);
+        });
+
+        if (theLatestHHSurveyEvent.length > 0) {
+          rowObject.theLatestHHSurveyEvent = theLatestHHSurveyEvent[0].event;
+        }
+      }
+
       columns.forEach((column) => {
         const attribute = tei.attributes.find((attr) => {
           return attr.attribute === column.dataIndex;
@@ -118,30 +143,6 @@ const RegisteredTeiList = ({
       });
 
       rowObject.updatedAt = tei.updatedAt;
-      return rowObject;
-    });
-
-    return data;
-  };
-
-  const createDataSourceQuery = () => {
-    const columns = createColumns();
-
-    const data = teis.rows.map((row, index) => {
-      const rowObject = {
-        key: index,
-      };
-
-      const teiIdIndex = teis.headers.findIndex((h) => h.name === "instance");
-      rowObject.teiId = row[teiIdIndex];
-
-      columns.forEach((column) => {
-        const columnIndex = teis.headers.findIndex((h) => {
-          return h.name === column.dataIndex;
-        });
-        rowObject[column.dataIndex] =
-          columnIndex !== -1 ? row[columnIndex] : "";
-      });
       return rowObject;
     });
 
@@ -159,7 +160,7 @@ const RegisteredTeiList = ({
       }}
       // sticky
       // tableLayout={"fixed"}
-      columns={[deleteColumn].concat(createColumns())}
+      columns={[deleteColumn, reportObject].concat(createColumns())}
       dataSource={createDataSource()}
       scroll={{ /*y: "calc(100vh - 268px)",*/ x: 900 }}
       bordered={true}
@@ -171,12 +172,7 @@ const RegisteredTeiList = ({
         total: total,
         onChange: onChangePage,
       }}
-      onChange={(
-        pagination,
-        filters,
-        sorter,
-        { currentDataSource: [], action }
-      ) => {
+      onChange={(pagination, filters, sorter, { currentDataSource: [], action }) => {
         if (action === "sort") {
           onSort(sorter);
         }

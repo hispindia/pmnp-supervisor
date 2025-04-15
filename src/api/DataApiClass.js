@@ -21,22 +21,10 @@ export default class DataApiClass extends BaseApiClass {
         page: page,
         filter: filter,
       },
-      [
-        `orgUnit=${orgUnit}`,
-        `ouMode=SELECTED`,
-        `order=created:desc`,
-        `program=${program}`,
-      ]
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `order=created:desc`, `program=${program}`]
     );
 
-  getTrackedEntityInstanceListByQuery = (
-    orgUnit,
-    program,
-    pageSize,
-    page,
-    filter,
-    order
-  ) =>
+  getTrackedEntityInstanceListByQuery = (orgUnit, program, pageSize, page, filter, order) =>
     pull(
       this.baseUrl,
       this.username,
@@ -50,7 +38,7 @@ export default class DataApiClass extends BaseApiClass {
         filter: filter,
         order: order,
       },
-      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`, "fields=:all"]
     );
 
   getAllTrackedEntityInstancesByIDs = ({ program, teiList }) =>
@@ -62,11 +50,9 @@ export default class DataApiClass extends BaseApiClass {
       {
         paging: false,
       },
-      [
-        `fields=*`,
-        `trackedEntity=${teiList.join(";")}`,
-        program ? `program=${program}` : null,
-      ].filter((e) => Boolean(e))
+      [`fields=*`, `trackedEntity=${teiList.join(";")}`, program ? `program=${program}` : null].filter((e) =>
+        Boolean(e)
+      )
     );
 
   getAllTrackedEntityInstanceList = (orgUnit, program) =>
@@ -149,34 +135,11 @@ export default class DataApiClass extends BaseApiClass {
   };
 
   search = (ouId, ouMode, queryUrl, program, attribute, pager, paging) => {
-    var url = this.getSearchUrl(
-      ouId,
-      ouMode,
-      queryUrl,
-      program,
-      attribute,
-      pager,
-      paging
-    );
-    return pull(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/trackedEntityInstances/query`,
-      {},
-      [url]
-    );
+    var url = this.getSearchUrl(ouId, ouMode, queryUrl, program, attribute, pager, paging);
+    return pull(this.baseUrl, this.username, this.password, `/api/trackedEntityInstances/query`, {}, [url]);
   };
 
-  getSearchUrl = (
-    ouId,
-    ouMode,
-    queryUrl,
-    program,
-    attribute,
-    pager,
-    paging
-  ) => {
+  getSearchUrl = (ouId, ouMode, queryUrl, program, attribute, pager, paging) => {
     var url = "";
     url += "orgUnit=" + ouId + "&ouMode=" + ouMode;
 
@@ -211,16 +174,11 @@ export default class DataApiClass extends BaseApiClass {
   getEventUrl = (eventFilter) => {
     var eventUrl = "";
     if (eventFilter) {
-      if (eventFilter.eventStatus)
-        eventUrl = "eventStatus=" + eventFilter.eventStatus;
+      if (eventFilter.eventStatus) eventUrl = "eventStatus=" + eventFilter.eventStatus;
       if (eventFilter.eventCreatedPeriod) {
         if (eventUrl) eventUrl += "&";
-        eventUrl +=
-          "eventStartDate=" +
-          this.getPeriodDate(eventFilter.eventCreatedPeriod.periodFrom);
-        eventUrl +=
-          "&eventEndDate=" +
-          this.getPeriodDate(eventFilter.eventCreatedPeriod.periodTo);
+        eventUrl += "eventStartDate=" + this.getPeriodDate(eventFilter.eventCreatedPeriod.periodFrom);
+        eventUrl += "&eventEndDate=" + this.getPeriodDate(eventFilter.eventCreatedPeriod.periodTo);
       }
       if (eventFilter.programStage) {
         if (eventUrl) eventUrl += "&";
@@ -259,41 +217,21 @@ export default class DataApiClass extends BaseApiClass {
   };
 
   getParentsByOuId = (id) => {
-    return pull(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/organisationUnits/${id}.json`,
-      { paging: false },
-      [
-        "fields=id,displayName,attributeValues[attribute[id,displayName],value],parent[name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value]]]]",
-      ]
-    );
+    return pull(this.baseUrl, this.username, this.password, `/api/organisationUnits/${id}.json`, { paging: false }, [
+      "fields=id,displayName,attributeValues[attribute[id,displayName],value],parent[name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value],parent[id,name,attributeValues[attribute[id,displayName],value]]]]",
+    ]);
   };
 
   getTrackedEntityInstanceByQuery = (ou, filters, attributes) => {
     console.log("getTrackedEntityInstanceByQuery");
-    return pull(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/trackedEntityInstances/query.json`,
-      {},
-      [
-        `orgUnit=${ou}`,
-        filters.join("&"),
-        attributes.map((e) => "attribute=" + e).join("&"),
-      ]
-    );
+    return pull(this.baseUrl, this.username, this.password, `/api/trackedEntityInstances/query.json`, {}, [
+      `orgUnit=${ou}`,
+      filters.join("&"),
+      attributes.map((e) => "attribute=" + e).join("&"),
+    ]);
   };
 
-  getTrackedEntityInstances = ({
-    ou,
-    filters,
-    attributes,
-    program,
-    trackedEntityType,
-  }) => {
+  getTrackedEntityInstances = ({ ou, filters, attributes, program, trackedEntityType }) => {
     return pull(
       this.baseUrl,
       this.username,
@@ -310,13 +248,7 @@ export default class DataApiClass extends BaseApiClass {
     );
   };
 
-  getWorkingListDataWithMultipleEventFilters = (
-    workingList,
-    ou,
-    program,
-    pager,
-    sortColumn
-  ) =>
+  getWorkingListDataWithMultipleEventFilters = (workingList, ou, program, pager, sortColumn) =>
     new Promise((resolve) => {
       var promises = [];
       workingList.eventFilters.forEach((eventFilter) => {
@@ -345,11 +277,8 @@ export default class DataApiClass extends BaseApiClass {
 
         response.forEach((responseData) => {
           data.headers =
-            data.headers && data.headers.length > responseData.headers.length
-              ? data.headers
-              : responseData.headers;
-          data.width =
-            data.width > responseData.width ? data.width : responseData.width;
+            data.headers && data.headers.length > responseData.headers.length ? data.headers : responseData.headers;
+          data.width = data.width > responseData.width ? data.width : responseData.width;
           allRows = allRows.concat(responseData.rows);
         });
 
@@ -366,34 +295,14 @@ export default class DataApiClass extends BaseApiClass {
     });
 
   pushTrackedEntityInstance = (tei, program) =>
-    push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/tracker?async=false&program=${program}`,
-      tei
-    );
+    push(this.baseUrl, this.username, this.password, `/api/tracker?async=false&program=${program}`, tei);
 
   postTrackedEntityInstance = async (tei) => {
-    const result = await push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/tracker?async=false`,
-      tei,
-      "POST"
-    );
+    const result = await push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, tei, "POST");
   };
 
   postTrackedEntityInstances = async (teis) => {
-    return await push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/tracker?async=false`,
-      teis,
-      "POST"
-    );
+    return await push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, teis, "POST");
   };
 
   putTrackedEntityInstance = async (tei, program) => {
@@ -412,20 +321,11 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      [`/api/tracker?async=false`, program ? `&program=${program}` : null]
-        .filter((e) => Boolean(e))
-        .join(""),
+      [`/api/tracker?async=false`, program ? `&program=${program}` : null].filter((e) => Boolean(e)).join(""),
       enrollment
     );
 
-  pushEvents = (events) =>
-    push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/tracker?async=false`,
-      events
-    );
+  pushEvents = (events) => push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, events);
 
   deleteEvent = async (event) => {
     const result = await push(
@@ -439,13 +339,7 @@ export default class DataApiClass extends BaseApiClass {
   };
 
   deleteTei = async (tei) => {
-    const result = await push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/tracker?importStrategy=DELETE`,
-      tei
-    );
+    const result = await push(this.baseUrl, this.username, this.password, `/api/tracker?importStrategy=DELETE`, tei);
     return result.status == "OK";
   };
 }
