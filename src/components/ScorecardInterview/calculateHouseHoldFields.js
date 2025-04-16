@@ -84,9 +84,10 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData) => {
     XWVLpGEyr0e: "saTG1WrWtEW",
     pOaMwFxZFmw: "JoD2AagclsB",
     Xsi5z2a7JMY: "SMfz85dxBrG",
+    sXCoUlbEULM: "YgK3LWUrA6f",
   };
 
-  const yesNoNa = { YES: "1", NO: "0", NA: "-" };
+  const yesNoNa = { YES: "1", NO: "0", NA: "NA" };
   Object.keys(mapDE).map((surveyDe) => {
     const HH_DE = mapDE[surveyDe];
     const [count_true, count_false] = countValues(interviewCascadeData, HH_DE, ["true", "false"]);

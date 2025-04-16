@@ -166,8 +166,8 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       metadata[InterviewDetails_DEs.HouseholdUpdateOthers_DE].hidden = false;
     }
 
-    // Visit number
-    data["Wdg76PCqsBn"] = Object.keys(currentInterviewCascade).length + 1;
+    // Visit number length
+    if (!data["Wdg76PCqsBn"]) data["Wdg76PCqsBn"] = Object.keys(currentInterviewCascade).length + 1;
     metadata["Wdg76PCqsBn"].disabled = true;
 
     // Respondent ID - SrFa2O3m6ff
@@ -196,7 +196,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
         return acc;
       }, []);
 
-      const listId = concat(householdEvents).concat(householdMemberEvents);
+      const listId = householdEvents.concat(householdMemberEvents);
 
       console.log("delete interviews", listId);
       // reload tei for the last index === listId.length - 1
