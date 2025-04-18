@@ -7,7 +7,7 @@ import {
 import { generateUid } from "@/utils";
 import { useEffect, useState } from "react";
 import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE } from "../constants";
-import { compareObject, updateMetadata } from "./utils";
+import { clearHiddenFieldData, compareObject, updateMetadata } from "./utils";
 import { useDispatch, useSelector } from "react-redux";
 import { submitEvent } from "@/redux/actions/data";
 import { transformEvent } from "@/utils/event";
@@ -23,24 +23,18 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
   const locale = i18n.language || "en";
 
   const dispatch = useDispatch();
-  const currentEvents = useSelector(
-    (state) => state.data.tei.data.currentEvents
-  );
+  const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
   const { interviewCascadeData } = useInterviewCascadeData(interviewData);
-  const { selectedOrgUnit, programMetadata } = useSelector(
-    (state) => state.metadata
-  );
+  const { selectedOrgUnit, programMetadata } = useSelector((state) => state.metadata);
   const foundProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID
   );
-  const trackedEntity = useSelector(
-    (state) => state.data.tei.data.currentTei.trackedEntity
-  );
-  const enrollment = useSelector(
-    (state) => state.data.tei.data.currentEnrollment.enrollment
-  );
+  const trackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
+  const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
 
   const originMetadata = convertOriginMetadata(foundProgramStage);
+
+  console.log({ originMetadata });
 
   const [data, setData] = useState(null);
   const [defaultData, setDefaultData] = useState({});
@@ -142,19 +136,15 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
 
     // Quaterly update
     metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
-    newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(
-      interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]
-    );
+    newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     if (!newData[HOUSEHOLD_INTERVIEW_ID_DE_ID]) {
-      newData[HOUSEHOLD_INTERVIEW_ID_DE_ID] =
-        interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
+      newData[HOUSEHOLD_INTERVIEW_ID_DE_ID] = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
       setFormDirty(true);
     }
 
     metadata[DEs.Q802].hidden = newData[DEs.Q801] !== "true";
-    metadata[DEs.PleaseSpecifyTheOtherGovernment].hidden =
-      newData[DEs.Q802] !== "Others";
+    metadata[DEs.PleaseSpecifyTheOtherGovernment].hidden = newData[DEs.Q802] !== "Others";
 
     metadata[DEs.Q901].hidden = newData[DEs.Q900] !== "true";
     // SHOW 'Other social and behaviour Change (SBC) sessions' if 'social and behaviour Change (SBC) sessions (Q 901)' = 'Others'
@@ -164,6 +154,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
     // Score_Number of 4Ps Members
     calculateHouseHoldFields(newData, interviewCascadeData);
 
+    clearHiddenFieldData(metadata, data);
     if (previousData) setFormDirty(true);
   };
 
@@ -177,8 +168,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
     const found = currentEvents.find(
       (e) =>
         e.programStage === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID &&
-        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] ===
-          interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
+        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
     );
 
     if (found) {

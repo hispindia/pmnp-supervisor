@@ -27,7 +27,7 @@ import { transformData, transformMetadataToColumns } from "../CascadeTable/utils
 import "../CustomStyles/css/bootstrap.min.css";
 import "./interview-detail-table.css";
 import InterviewDetailModal from "./InterviewDetailModal";
-import { updateMetadata } from "./utils";
+import { clearHiddenFieldData, updateMetadata } from "./utils";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -177,6 +177,8 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     // AUTO assign date and time
     if (!data["oUi6zQUzT2S"]) data["oUi6zQUzT2S"] = format(new Date(), "yyyy-MM-dd");
     if (!data["j3xi4RiKG5X"]) data["j3xi4RiKG5X"] = format(new Date(), "HH:mm");
+
+    clearHiddenFieldData(metadata, data);
   };
 
   const handleDeleteRow = (e, row) => {

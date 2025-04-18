@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import CaptureForm from "../CaptureForm";
 import { FORM_ACTION_TYPES } from "../constants";
-import { updateMetadata } from "./utils";
+import { clearHiddenFieldData, updateMetadata } from "./utils";
 import { submitAttributes } from "../../redux/actions/data";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
@@ -155,6 +155,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
 
     if (newData["K2ySLF5Qnri"] === "Completed") newData["Zk72MWfJJKU"] = format(new Date(), "HH:mm");
 
+    clearHiddenFieldData(metadata, data);
     if (previousData) setFormDirty(true);
   };
 
