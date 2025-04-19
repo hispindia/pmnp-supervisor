@@ -153,7 +153,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       value,
     });
 
-    metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].hidden = true;
+    metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = generateUid();
 
     // Interviewer's name

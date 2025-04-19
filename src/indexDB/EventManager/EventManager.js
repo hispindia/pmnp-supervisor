@@ -45,9 +45,10 @@ export const getEventsRawData = async (pager, org, program) => {
 };
 
 export const getEventsAnalyticsTable = async (pager, org, program) => {
-  const dataElementIds = program.programStages[0].dataElements.map(
-    (de) => de.id
-  );
+  const dataElementIds = program.programStages.reduce((acc, ps) => {
+    const dataElements = ps.dataElements.map((de) => de.id);
+    return acc.concat(dataElements);
+  }, []);
 
   return await dataApi.get(
     `/api/analytics/events/query/${program.id}`,
@@ -65,10 +66,7 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
   );
 };
 
-export const pull = async ({
-  handleDispatchCurrentOfflineLoading,
-  offlineSelectedOrgUnits,
-}) => {
+export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
   try {
     // Delete the table
     await db[TABLE_NAME].clear();
@@ -99,17 +97,11 @@ export const pull = async ({
               program
             );
 
-            if (
-              !result.rows ||
-              result.rows.length === 0 ||
-              page > result.metaData.pager.pageCount
-            ) {
+            if (!result.rows || result.rows.length === 0 || page > result.metaData.pager.pageCount) {
               break;
             }
 
-            console.log(
-              `EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`
-            );
+            console.log(`EVENT = (page=${page}/${result.metaData.pager.pageCount}, count=${result.rows.length})`);
 
             await persist(await beforePersistAnalyticsData(result, program));
 
@@ -163,9 +155,7 @@ const findOffline = async () => {
 };
 
 const markOnline = async (eventIds) => {
-  return await db[TABLE_NAME].where("event")
-    .anyOf(eventIds)
-    .modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("event").anyOf(eventIds).modify({ isOnline: 1 });
 };
 
 const pushAndMarkOnline = async (events) => {
@@ -254,14 +244,25 @@ const findHeaderIndex = (headers, name) => {
   return headers.findIndex((header) => header.name === name);
 };
 
-export const getEventsByQuery = async ({
-  program,
-  programStage,
-  orgUnit,
-  filters,
-  startDate,
-  endDate,
-}) => {
+const findHeader = (headers, name) => {
+  const header = headers.find((header) => header.name === name);
+  if (!header) {
+    throw new Error(`Header ${name} not found`);
+  }
+  return header;
+};
+
+const convertValue = (metadata, datavalue) => {
+  switch (metadata.valueType) {
+    case "BOOLEAN":
+      return datavalue === "1" ? "true" : "false";
+
+    default:
+      return datavalue;
+  }
+};
+
+export const getEventsByQuery = async ({ program, programStage, orgUnit, filters, startDate, endDate }) => {
   let queryBuilder = db[TABLE_NAME].where("orgUnit").equals(orgUnit);
 
   if (filters && filters.length > 0) {
@@ -318,9 +319,10 @@ const beforePersistAnalyticsData = async (result, program) => {
     return objects;
   }
 
-  const dataElementIds = program.programStages[0].dataElements.map(
-    (de) => de.id
-  );
+  const dataElementIds = program.programStages.reduce((acc, ps) => {
+    const dataElements = ps.dataElements.map((de) => de.id);
+    return acc.concat(dataElements);
+  }, []);
 
   for (const ev of events) {
     const event = {
@@ -344,12 +346,13 @@ const beforePersistAnalyticsData = async (result, program) => {
     ids.push(event.event);
 
     for (const de of dataElementIds) {
+      const metadataHeader = findHeader(result.headers, de);
       const dataValue = ev[findHeaderIndex(result.headers, de)];
 
       if (dataValue) {
         const value = Object.assign({}, event, {
           dataElement: de,
-          value: ev[findHeaderIndex(result.headers, de)],
+          value: convertValue(metadataHeader, dataValue),
           isProvidedElsewhere: 0, // dv.providedElsewhere || false,
         });
 
