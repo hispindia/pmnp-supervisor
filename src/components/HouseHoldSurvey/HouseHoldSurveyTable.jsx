@@ -10,37 +10,22 @@ import { FORM_ACTION_TYPES } from "../constants";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import {
-  HOUSEHOLD_SURVEY_TIME_DE_ID,
-  HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
-} from "@/constants/app-config";
+import { HOUSEHOLD_SURVEY_TIME_DE_ID, HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
 import { submitEvent } from "@/redux/actions/data";
 import { deleteEvent } from "@/redux/actions/data/tei";
 import { transformEvent } from "@/utils/event";
 import _ from "lodash";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
-import {
-  transformData,
-  transformMetadataToColumns,
-} from "../CascadeTable/utils";
+import { transformData, transformMetadataToColumns } from "../CascadeTable/utils";
 import "../CustomStyles/css/bootstrap.min.css";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
-const HouseHoldSurveyTable = ({
-  data,
-  setData,
-  metadata,
-  originMetadata,
-  setMetadata,
-  callbackFunction,
-}) => {
+const HouseHoldSurveyTable = ({ data, setData, metadata, originMetadata, setMetadata, callbackFunction }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
-  const currentEvents = useSelector(
-    (state) => state.data.tei.data.currentEvents
-  );
+  const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
 
   const dispatch = useDispatch();
 
@@ -48,12 +33,8 @@ const HouseHoldSurveyTable = ({
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const { programMetadata } = useSelector((state) => state.metadata);
-  const [columns, setColumns] = useState(
-    transformMetadataToColumns(metadata, locale)
-  );
-  const attributes = useSelector(
-    (state) => state.data.tei.data.currentTei.attributes
-  );
+  const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
+  const attributes = useSelector((state) => state.data.tei.data.currentTei.attributes);
 
   const showData = useMemo(() => {
     return transformData(metadata, data, dataValuesTranslate, locale);
@@ -218,8 +199,7 @@ const HouseHoldSurveyTable = ({
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
-      if (e.currentTarget && e.currentTarget.contains(e.target))
-        handleSelectRow(e, data[rowIndex], rowIndex);
+      if (e.currentTarget && e.currentTarget.contains(e.target)) handleSelectRow(e, data[rowIndex], rowIndex);
     },
   };
 
@@ -280,9 +260,7 @@ const HouseHoldSurveyTable = ({
         return obj;
       }, {});
 
-    setColumns(
-      transformMetadataToColumns(metadata, locale, tempDataValuesTranslate)
-    );
+    setColumns(transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
@@ -297,17 +275,13 @@ const HouseHoldSurveyTable = ({
         backdrop="static"
         size="xl"
         keyboard={false}
-        show={
-          formStatus === FORM_ACTION_TYPES.ADD_NEW ||
-          formStatus === FORM_ACTION_TYPES.EDIT
-        }
+        show={formStatus === FORM_ACTION_TYPES.ADD_NEW || formStatus === FORM_ACTION_TYPES.EDIT}
       >
         <Modal.Body>
           <Card>
             <Card.Body>
               <Card.Subtitle className="mb-2 text-muted">
-                {formStatus !== FORM_ACTION_TYPES.ADD_NEW &&
-                  "No." + (selectedRowIndex + 1)}
+                {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)}
               </Card.Subtitle>
               <CaptureForm
                 formProgramMetadata={programMetadata}
@@ -322,6 +296,7 @@ const HouseHoldSurveyTable = ({
                 editRowCallback={editRowCallback}
                 maxDate={new Date()}
                 minDate={new Date(`1900-12-31`)}
+                formName="HouseHoldSurveyTable"
               />
             </Card.Body>
           </Card>

@@ -207,6 +207,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {} }) => {
         editRowCallback={editRowCallback}
         maxDate={new Date()}
         minDate={new Date(`1900-12-31`)}
+        formName="InterviewResultForm"
       />
     )
   );

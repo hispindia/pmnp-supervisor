@@ -287,7 +287,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
     const interviewCascadeData = getInterviewCascadeData();
     setData(interviewCascadeData);
 
-    console.log({ currentInterviewCascade, interviewCascadeData });
     if (selectedRowIndex !== null) {
       console.log("select interview interview cascadeData", {
         interviewCascadeData,
@@ -308,19 +307,22 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
               <Card.Subtitle className="mb-2 text-muted">
                 {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)}
               </Card.Subtitle>
-              <CaptureForm
-                locale={locale}
-                metadata={metadata}
-                rowIndex={selectedRowIndex}
-                data={_.cloneDeep(selectedData)}
-                formStatus={formStatus}
-                setFormStatus={setFormStatus}
-                handleEditRow={handleEditRow}
-                handleAddNewRow={() => {}}
-                editRowCallback={editRowCallback}
-                maxDate={new Date()}
-                minDate={new Date(`1900-12-31`)}
-              />
+              {selectedData ? (
+                <CaptureForm
+                  locale={locale}
+                  metadata={metadata}
+                  rowIndex={selectedRowIndex}
+                  data={_.cloneDeep(selectedData)}
+                  formStatus={formStatus}
+                  setFormStatus={setFormStatus}
+                  handleEditRow={handleEditRow}
+                  handleAddNewRow={() => {}}
+                  editRowCallback={editRowCallback}
+                  maxDate={new Date()}
+                  minDate={new Date(`1900-12-31`)}
+                  formName="HouseHoldMemberTable"
+                />
+              ) : null}
             </Card.Body>
           </Card>
         </Modal.Body>

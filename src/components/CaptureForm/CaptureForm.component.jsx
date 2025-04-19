@@ -31,6 +31,7 @@ function CaptureForm(props) {
     saveDisabled,
     cancelable = true,
     locale,
+    formName,
     onCancel = () => {},
     ...other
   } = props;
@@ -62,6 +63,7 @@ function CaptureForm(props) {
     if (data) {
       editRowCallback(cloneMetadata, null, data, null, null);
     }
+
     changeMetadata([...Object.values(cloneMetadata)]);
   }, [data.id]);
 

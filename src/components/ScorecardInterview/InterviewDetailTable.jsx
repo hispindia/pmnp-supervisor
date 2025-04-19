@@ -348,6 +348,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
                 onCancel={clearForm}
                 maxDate={new Date()}
                 minDate={new Date(`1900-12-31`)}
+                formName="InterviewDetailForm"
               />
             </Card.Body>
           </Card>

@@ -110,7 +110,7 @@ const AppContainer = () => {
           dispatch(setSelectedOrgUnit(orgUnitJsonData));
           // history.push("/list");
         }
-        console.log({ results });
+
         dispatch(setOrgUnits(results[5].organisationUnits));
         dispatch(setMe(results[2]));
         setLoading(false);
@@ -119,13 +119,6 @@ const AppContainer = () => {
     })();
   }, []);
 
-  return (
-    <AppSkeletonLoading
-      loading={loading}
-      loaded={loaded}
-      mask={true}
-      metadata={metadata}
-    />
-  );
+  return <AppSkeletonLoading loading={loading} loaded={loaded} mask={true} metadata={metadata} />;
 };
 export default AppContainer;

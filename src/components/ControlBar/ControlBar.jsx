@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import OrgUnitContainer from "../../containers/ControlBar/OrgUnit";
 import ReportButtonContainer from "../../containers/ControlBar/ReportButton";
 import { setSelectedOrgUnit } from "../../redux/actions/metadata";
+import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButtonsContainer";
 
 const { controlBarContainer } = styles;
 
@@ -75,6 +76,8 @@ const ControlBar = () => {
             <ListButtonContainer />
           </div>
         </div>
+
+        <RightSideButtonsContainer />
       </div>
     </>
   );
