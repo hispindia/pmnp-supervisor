@@ -165,7 +165,7 @@ const FamilyMemberForm = ({
       // data["Cn37lbyhz6f"] = Math.floor(100 + Math.random() * 900);
     }
 
-    const enrollmentDate = lastDayOfYear(new Date(currentEvent.occurredAt));
+    const enrollmentDate = data.isNew ? new Date() : lastDayOfYear(new Date(currentEvent.occurredAt));
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);

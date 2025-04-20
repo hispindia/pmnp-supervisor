@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-// import { TableColumn, TableFilter } from "../../utils/index";
+
 /* REDUX */
 import { submitEventDataValues } from "../../redux/actions/data/tei/currentEvent";
-/* REDUX */
 import { useDispatch, useSelector } from "react-redux";
 
 /* Components */
@@ -21,8 +20,9 @@ const FamilyMemberFormContainer = () => {
   const dispatch = useDispatch();
   const eventData = events && events.length > 0 ? events[0] : null;
 
-  const { event, initEvent, changeEvent, changeEventDataValue, setEventDirty } =
-    useEvent(eventData ? JSON.parse(JSON.stringify(eventData)) : []);
+  const { event, initEvent, changeEvent, changeEventDataValue, setEventDirty } = useEvent(
+    eventData ? JSON.parse(JSON.stringify(eventData)) : []
+  );
 
   useEffect(() => {
     console.log("Trigger save immediately when event is changed");
