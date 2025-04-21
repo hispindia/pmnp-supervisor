@@ -20,6 +20,7 @@ import CaptureForm from "../CaptureForm";
 import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
 import { transformData, transformMetadataToColumns } from "./utils";
+import { useUser } from "@/hooks/useUser";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -43,6 +44,7 @@ const CascadeTable = (props) => {
     ...other
   } = props;
   const { t } = useTranslation();
+  const { isSuperuser } = useUser();
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
   const { currentCascade } = useSelector((state) => state.data.tei.data);
   const dispatch = useDispatch();
@@ -268,6 +270,7 @@ const CascadeTable = (props) => {
       text: "Actions",
       align: "center",
       formatter: (cellContent, row, rowIndex, extraData) => {
+        if (!isSuperuser) return null;
         return (
           <DeleteConfirmationButton
             variant="outline-danger"

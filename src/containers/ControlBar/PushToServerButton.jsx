@@ -1,10 +1,7 @@
 import { toDhis2Enrollments } from "@/indexDB/data/enrollment";
 import { toDhis2Events } from "@/indexDB/data/event";
 import { toDhis2TrackedEntities } from "@/indexDB/data/trackedEntity"; // Import the color from Ant Design
-import {
-  pushToServer,
-  resetCurrentOfflineLoading,
-} from "@/redux/actions/common";
+import { pushToServer, resetCurrentOfflineLoading } from "@/redux/actions/common";
 import { findChangedData } from "@/utils/offline";
 import { blue } from "@ant-design/colors";
 import { UploadOutlined } from "@ant-design/icons";
@@ -23,9 +20,7 @@ const PushToServerButton = () => {
   const { exportExcel } = useExcel();
 
   const [pushModalOpen, setPushModalOpen] = useState(false);
-  const [pushData, setPushData] = useState(
-    pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {})
-  );
+  const [pushData, setPushData] = useState(pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {}));
 
   const handleCancelPush = () => {
     setPushModalOpen(false);
@@ -83,7 +78,7 @@ const PushToServerButton = () => {
         type="primary"
         icon={<UploadOutlined />}
       >
-        {t("push")}
+        {t("sync")}
       </Button>
       <Button
         onClick={exportExcel}

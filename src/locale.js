@@ -185,11 +185,10 @@ const locale = {
     en: "8. How many children age 5 to 19 years died?",
     lo: "8. ໃນຄອບຄົວຂອງທ່ານ ມີຄົນອາຍຸແຕ່ 5 – 19 ປີ ເສຍຊີວິດຈັກຄົນ?",
   },
-  "How many women died due to pregnancy, delivery or within 42 days after giving birth?":
-    {
-      en: "9. How many women died due to pregnancy, delivery or within 42 days after giving birth?",
-      lo: "9. ໃນຄອບຄົວທ່ານມີແມ່ຍິງທີ່ເສຍຊີວິດຍ້ອນການຖືພາ, ການເກີດລູກ ຫຼື ພາຍໃນ 42 ມື້ ຫລັງເກີດລູກຈັກຄົນ?)",
-    },
+  "How many women died due to pregnancy, delivery or within 42 days after giving birth?": {
+    en: "9. How many women died due to pregnancy, delivery or within 42 days after giving birth?",
+    lo: "9. ໃນຄອບຄົວທ່ານມີແມ່ຍິງທີ່ເສຍຊີວິດຍ້ອນການຖືພາ, ການເກີດລູກ ຫຼື ພາຍໃນ 42 ມື້ ຫລັງເກີດລູກຈັກຄົນ?)",
+  },
 
   "How many people died in total in the family?": {
     en: "5. How many people died in total in the family?",
@@ -234,16 +233,14 @@ const locale = {
     en: "12.1. Number of women(15-49) in the family who need family plaining",
     lo: "12.1. ຈໍານວນແມ່ຍິງ  (15-49 ປີ) ໃນຄອບຄົວທີ່ມີຄວາມຕ້ອງການໃຊ້ການວາງແຜນຄອບຄົວ?",
   },
-  "Number of women (15-49 years) in the family who need to use family planning?":
-    {
-      en: "12.1 Number of women (15-49 years) in the family who need to use family planning?",
-      lo: "12.1 ຈໍານວນແມ່ຍິງ (15-49 ປີ) ໃນຄອບຄົວທີ່ມີຄວາມຕ້ອງການໃຊ້ການວາງແຜນຄອບຄົວ?)",
-    },
-  "How many women (15-49 years) or their partners are using family planning and what types are they using?":
-    {
-      en: "12.2 How many women (15-49 years) or their partners are using family planning and what types are they using?",
-      lo: "12.2 ຈຳນວນແມ່ຍິງ (15-49 ປີ) ຫຼື ຄູ່ຄອງທີ່ກຳລັງນຳໃຊ້ການວາງແຜນຄອບຄົວຢູ່ ແລະ ປະເພດໃດເເດ່ທີ່ໃຊ້ເປັນຫຼັກ?",
-    },
+  "Number of women (15-49 years) in the family who need to use family planning?": {
+    en: "12.1 Number of women (15-49 years) in the family who need to use family planning?",
+    lo: "12.1 ຈໍານວນແມ່ຍິງ (15-49 ປີ) ໃນຄອບຄົວທີ່ມີຄວາມຕ້ອງການໃຊ້ການວາງແຜນຄອບຄົວ?)",
+  },
+  "How many women (15-49 years) or their partners are using family planning and what types are they using?": {
+    en: "12.2 How many women (15-49 years) or their partners are using family planning and what types are they using?",
+    lo: "12.2 ຈຳນວນແມ່ຍິງ (15-49 ປີ) ຫຼື ຄູ່ຄອງທີ່ກຳລັງນຳໃຊ້ການວາງແຜນຄອບຄົວຢູ່ ແລະ ປະເພດໃດເເດ່ທີ່ໃຊ້ເປັນຫຼັກ?",
+  },
   "contraceptive pill": {
     en: "1. contraceptive pill",
     lo: "1. ຢາຄຸມຊະນິດກິນ?",
@@ -282,11 +279,10 @@ const locale = {
   },
 
   // 12.3
-  "How many women (15-49 years old) use family planning services at which location?":
-    {
-      en: "12.3. How many women (15-49 years old) use family planning services at which location?",
-      lo: "12.3. ຈຳນວນແມ່ຍິງ (15-49 ປີ) ໃຊ້ບໍລິການວາງແຜນຄອບຄົວຢູ່ສະຖານທີໃດ?",
-    },
+  "How many women (15-49 years old) use family planning services at which location?": {
+    en: "12.3. How many women (15-49 years old) use family planning services at which location?",
+    lo: "12.3. ຈຳນວນແມ່ຍິງ (15-49 ປີ) ໃຊ້ບໍລິການວາງແຜນຄອບຄົວຢູ່ສະຖານທີໃດ?",
+  },
   "in public facility": {
     en: "1. in public facility",
     lo: "ກ. ຢູ່ສະຖານທີ່ບໍລິການຂອງລັດ",
@@ -313,11 +309,10 @@ const locale = {
   },
 
   // 10
-  "The main source of drinking water and water for family use that can be found within 30 minutes":
-    {
-      en: "10. The main source of drinking water and water for family use that can be found within 30 minutes",
-      lo: "10. ແຫລ່ງນໍ້າຫລັກທີ່ໃຊ້ດື່ມ ແລະ ນ້ຳໃຊ້ ໃນຄອບຄົວ ທີ່ສາມາດຫາໄດ້ ພາຍໃນ 30 ນາທີ?",
-    },
+  "The main source of drinking water and water for family use that can be found within 30 minutes": {
+    en: "10. The main source of drinking water and water for family use that can be found within 30 minutes",
+    lo: "10. ແຫລ່ງນໍ້າຫລັກທີ່ໃຊ້ດື່ມ ແລະ ນ້ຳໃຊ້ ໃນຄອບຄົວ ທີ່ສາມາດຫາໄດ້ ພາຍໃນ 30 ນາທີ?",
+  },
   "Pied water": {
     en: "1. Pied water",
     lo: "1. ນໍ້າປະປາ",
@@ -792,6 +787,10 @@ const locale = {
   push: {
     en: "PUSH",
     lo: "ສົ່ງ",
+  },
+  sync: {
+    en: "Sync",
+    lo: "ລົງທະບຽນ",
   },
   exportExcel: {
     en: "Export Excel",

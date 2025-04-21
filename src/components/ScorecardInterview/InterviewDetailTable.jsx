@@ -28,6 +28,7 @@ import "../CustomStyles/css/bootstrap.min.css";
 import "./interview-detail-table.css";
 import InterviewDetailModal from "./InterviewDetailModal";
 import { clearHiddenFieldData, updateMetadata } from "./utils";
+import { useUser } from "@/hooks/useUser";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -37,6 +38,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
 
   const dispatch = useDispatch();
+  const { isSuperuser } = useUser();
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
   const [selectedData, setSelectedData] = useState({});
@@ -248,6 +250,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       text: "Actions",
       align: "center",
       formatter: (cellContent, row, rowIndex, extraData) => {
+        if (!isSuperuser) return null;
         return (
           <div style={{ display: "flex", gap: 8, padding: "0 8px" }}>
             <Button

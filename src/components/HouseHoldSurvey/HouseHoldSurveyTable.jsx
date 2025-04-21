@@ -19,6 +19,7 @@ import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
 import { transformData, transformMetadataToColumns } from "../CascadeTable/utils";
 import "../CustomStyles/css/bootstrap.min.css";
+import { useUser } from "@/hooks/useUser";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -26,7 +27,7 @@ const HouseHoldSurveyTable = ({ data, setData, metadata, originMetadata, setMeta
   const { t, i18n } = useTranslation();
   const locale = i18n.language || "en";
   const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
-
+  const { isSuperuser } = useUser();
   const dispatch = useDispatch();
 
   const [dataValuesTranslate, setDataValuesTranslate] = useState(null);
@@ -219,6 +220,7 @@ const HouseHoldSurveyTable = ({ data, setData, metadata, originMetadata, setMeta
       text: "Actions",
       align: "center",
       formatter: (cellContent, row, rowIndex, extraData) => {
+        if (!isSuperuser) return null;
         return (
           <DeleteConfirmationButton
             variant="outline-danger"

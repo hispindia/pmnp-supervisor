@@ -59,7 +59,7 @@ const RegisteredTeiList = ({
     render: (text, record, index) => {
       return (
         <a
-          href={`/pmnp_is/dhis-web-reports/index.html#/standard-report/view/W3Ryrjl5sbd?event=${record.theLatestHHSurveyEvent}&tei=${record.teiId}`}
+          href={`/pmnp_is/dhis-web-reports/index.html#/standard-report/view/RmcaT49JERK?event=${record.theLatestHHSurveyEvent}&tei=${record.teiId}`}
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => {

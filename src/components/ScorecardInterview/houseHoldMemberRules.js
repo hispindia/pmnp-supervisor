@@ -84,6 +84,10 @@ export const demographicDetailRules = (metadata, data, { years }) => {
 };
 
 export const childHeathRules = (metadata, data, { months, years }) => {
+  if (years > 5) {
+    return;
+  }
+
   // CH - BCG vaccine date	If 'CH - BCG vaccine given' = Yes
   metadata["K37pq3b5Qra"].hidden = data["v98slN2SMpf"] !== "true";
   // CH - Pentavalent 1 vaccine date	If 'CH - Pentavalent 1 vaccine given' = Yes
@@ -290,6 +294,7 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years 
     hiddenSections = hiddenSections.filter((h) => h !== "fVGAPxIFZoO");
     shownSections.push("fVGAPxIFZoO");
   }
+
   if (years <= 5) {
     hiddenSections = hiddenSections.filter((s) => s !== "tlNWZDOWfP2" || s !== "jV8O1ZITgIn");
     shownSections.push("tlNWZDOWfP2");
