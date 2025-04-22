@@ -226,7 +226,8 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
-      if (e.currentTarget && e.currentTarget.contains(e.target) && !row.disabled) {
+      if (e.currentTarget && e.currentTarget.contains(e.target)) {
+        if (row.disabled) setFormStatus(FORM_ACTION_TYPES.VIEW);
         console.log("selected", row);
         setSelectedData(row);
         setSelectedRowIndex(rowIndex);
@@ -325,6 +326,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
         onClose={() => {
           setSelectedData({});
           setSelectedRowIndex(null);
+          setFormStatus(FORM_ACTION_TYPES.NONE);
         }}
       />
 

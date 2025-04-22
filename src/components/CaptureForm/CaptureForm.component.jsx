@@ -95,7 +95,7 @@ function CaptureForm(props) {
         return (
           <div className="col-lg-3 mb-3" key={`${f.code}-${index}`}>
             <InputField
-              disabled={f.disabled}
+              disabled={f.disabled || formStatus === FORM_ACTION_TYPES.VIEW}
               locale={locale}
               {...(_.has(f, "periodType") && {
                 periodType: f.periodType,

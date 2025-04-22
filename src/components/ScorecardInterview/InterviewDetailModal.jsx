@@ -13,21 +13,23 @@ const InterviewDetailModal = ({ open, onClose, interviewData, selectedRowIndex, 
   const [currentTab, setCurrentTab] = useState();
   const { t } = useTranslation();
 
+  const disabled = formStatus === FORM_ACTION_TYPES.VIEW;
+
   const items = [
     {
       label: t("householdMembers"),
       key: "1",
-      children: <HouseHoldMemberTable interviewData={interviewData} onClose={onClose} />,
+      children: <HouseHoldMemberTable interviewData={interviewData} onClose={onClose} disabled={disabled} />,
     },
     {
       label: t("Household Survey"),
       key: "2",
-      children: <HouseHoldSurveyForm interviewData={interviewData} onClose={onClose} />,
+      children: <HouseHoldSurveyForm interviewData={interviewData} onClose={onClose} disabled={disabled} />,
     },
     {
       label: t("interviewResult"),
       key: "3",
-      children: <InterviewResultForm interviewData={interviewData} onClose={onClose} />,
+      children: <InterviewResultForm interviewData={interviewData} onClose={onClose} disabled={disabled} />,
     },
   ];
 

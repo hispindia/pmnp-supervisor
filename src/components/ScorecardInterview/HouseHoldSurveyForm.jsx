@@ -18,7 +18,7 @@ import { getQuarterlyFromDate } from "@/utils/date";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 import { calculateHouseHoldFields } from "./calculateHouseHoldFields";
 
-const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
+const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
   const i18n = useTranslation();
   const locale = i18n.language || "en";
 
@@ -199,7 +199,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {} }) => {
         metadata={metadata}
         data={data}
         formProgramMetadata={{ programStages: [foundProgramStage] }}
-        formStatus={formStatus}
+        formStatus={!disabled ? formStatus : FORM_ACTION_TYPES.VIEW}
         setFormStatus={setFormStatus}
         handleEditRow={handleEdit}
         handleAddNewRow={handleAddNew}

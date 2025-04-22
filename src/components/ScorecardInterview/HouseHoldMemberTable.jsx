@@ -38,7 +38,7 @@ import {
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
-const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
+const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const locale = i18n.language || "en";
@@ -313,7 +313,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {} }) => {
                   metadata={metadata}
                   rowIndex={selectedRowIndex}
                   data={_.cloneDeep(selectedData)}
-                  formStatus={formStatus}
+                  formStatus={!disabled ? formStatus : FORM_ACTION_TYPES.VIEW}
                   setFormStatus={setFormStatus}
                   handleEditRow={handleEditRow}
                   handleAddNewRow={() => {}}

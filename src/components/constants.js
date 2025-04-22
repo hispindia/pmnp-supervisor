@@ -6,6 +6,7 @@ const CODE_VARIANTS = {
 const FORM_ACTION_TYPES = {
   ADD_NEW: "ADD_NEW",
   EDIT: "EDIT",
+  VIEW: "VIEW",
   NONE: "NONE",
 };
 
@@ -88,12 +89,7 @@ export const MOTHER_CHILD_SECTION = [
   "JgHcoI8Vs9v",
   "BdVVPG3a82M",
 ];
-export const HHM2_PRENGENT = [
-  "pxqEppI9NuY",
-  "CszAgcZlA2I",
-  "KfRuikfQldK",
-  "DBKh0M3rsKO",
-];
+export const HHM2_PRENGENT = ["pxqEppI9NuY", "CszAgcZlA2I", "KfRuikfQldK", "DBKh0M3rsKO"];
 export const HHM2_DIABETESDOCTOR_SECTION = [
   "yi3wYvQ9aAt",
   "n5n0yLyVwuA",
@@ -102,15 +98,8 @@ export const HHM2_DIABETESDOCTOR_SECTION = [
   "ywmbicYTIhw",
   "MY7X9t0l8r3",
 ];
-export const HHM2_BLOODSUGER_MEASERD_SECTION = [
-  "QY3jBX7waUm",
-  ...HHM2_DIABETESDOCTOR_SECTION,
-];
-export const HHM2_HYPERTENSION_DIAGNOSIS_BY_DOCTOR = [
-  "ow3jWPZceeS",
-  "lQZCEKfKrvx",
-  "Oi1PtLq78V8",
-];
+export const HHM2_BLOODSUGER_MEASERD_SECTION = ["QY3jBX7waUm", ...HHM2_DIABETESDOCTOR_SECTION];
+export const HHM2_HYPERTENSION_DIAGNOSIS_BY_DOCTOR = ["ow3jWPZceeS", "lQZCEKfKrvx", "Oi1PtLq78V8"];
 export const HHM2_BLOODSUGER_MEASERDBY_DOCTOR = [
   "k0xgunv5thB",
   "RlTylqBRM17",
@@ -122,18 +111,10 @@ export const HHM2_SPORTS_MODERATE_INTENSITY = ["ckV0yOEytlG", "t90UIe4vFSX"];
 export const HHM2_INTENSE_SPORTS = ["egLB4q5WL2n", "ZLQF5qBLWlQ"];
 export const HHM2_MINS_CYCLING = ["x4rAVIrHNQW", "v6h7EhZw5Ui"];
 export const HHM2_MODERATE_EXERTION = ["RoH08osPgJe", "rhOQjp901FX"];
-export const HHM2_WORK_RELATED_PHYSICAL_EXERTION = [
-  "I09jWdGQDsn",
-  "NAZ7d8bUbjd",
-];
+export const HHM2_WORK_RELATED_PHYSICAL_EXERTION = ["I09jWdGQDsn", "NAZ7d8bUbjd"];
 export const HHM2_WEEKLY_VEGETABLE_CONSUMTION = ["Nt3mxnRg81J"];
 export const HHM2_WEEKLY_FRUIT_CONSUMTION = ["Di8AmkzbgVG"];
-export const HHM2_ALCOHOL_CONSUMTION_FREQUENCY = [
-  "kb8mwrpjGGU",
-  "IWmyyzSPchd",
-  "xOAkG4s0XYb",
-  "A4cdhctkNzu",
-];
+export const HHM2_ALCOHOL_CONSUMTION_FREQUENCY = ["kb8mwrpjGGU", "IWmyyzSPchd", "xOAkG4s0XYb", "A4cdhctkNzu"];
 export const HHM2_ALCOHAL_CONSUMPTION12_MONTH = [
   "Y8Y097LoIrP",
   "kb8mwrpjGGU",
@@ -152,11 +133,7 @@ export const HHM2_ALCOHOL_CONSUMPTION = [
   "XbokNSO2zVH",
   "LRWUTlsJIQP",
 ];
-export const HHM2_ARECANUT_CONSUMPTION_FREQUENCY = [
-  "nZgJU0CKihb",
-  "vQUMCUTDtzn",
-  "I064ESZkgag",
-];
+export const HHM2_ARECANUT_CONSUMPTION_FREQUENCY = ["nZgJU0CKihb", "vQUMCUTDtzn", "I064ESZkgag"];
 export const HHM2_ARECANUT_CONSUMPTION = [
   "WgCarY7Ko0w",
   "ZcfMOSb2YAW",
@@ -166,11 +143,7 @@ export const HHM2_ARECANUT_CONSUMPTION = [
   "x4Vn8TFDtol",
   "TC0ysGa0ji0",
 ];
-export const HHM2_TABACCO_PRODUCTS_FREQUENCY = [
-  "ZTjoxxpLJRt",
-  "KJ05f4WOeCO",
-  "EKGSw9xQZSC",
-];
+export const HHM2_TABACCO_PRODUCTS_FREQUENCY = ["ZTjoxxpLJRt", "KJ05f4WOeCO", "EKGSw9xQZSC"];
 export const HHM2_TOBACCO_PRODUCTS = [
   "DlZeFlKCRGr",
   "fhcVXetFGxn",
@@ -179,11 +152,7 @@ export const HHM2_TOBACCO_PRODUCTS = [
   "EKGSw9xQZSC",
   "TT3KCBECRUZ",
 ];
-export const HHM2_SMOKING_FREQUENCY = [
-  "NJYj8K15jBK",
-  "UzYD7jqOBqp",
-  "l9A9zUdal3y",
-];
+export const HHM2_SMOKING_FREQUENCY = ["NJYj8K15jBK", "UzYD7jqOBqp", "l9A9zUdal3y"];
 export const HHM2_SMOKED_TOBACCO_PRODUCTS = [
   "ytkIZFQcene",
   "PsY5SWSq583",
@@ -248,14 +217,8 @@ export const TOBACCO_USE = [
   "KLQOqxBSInZ",
   "qaBIOjngXpL",
 ];
-export const AREANUT_CONSUMPTION = [
-  "Tb38VQldkEr",
-  ...HHM2_ARECANUT_CONSUMPTION,
-];
-export const FULL_ALCOHAL_CONSUMPTION = [
-  ...HHM2_ALCOHOL_CONSUMPTION,
-  "dmBGs4QGUbu",
-];
+export const AREANUT_CONSUMPTION = ["Tb38VQldkEr", ...HHM2_ARECANUT_CONSUMPTION];
+export const FULL_ALCOHAL_CONSUMPTION = [...HHM2_ALCOHOL_CONSUMPTION, "dmBGs4QGUbu"];
 export const HHM2_DIET = [
   ...HHM2_WEEKLY_VEGETABLE_CONSUMTION,
   "xl2mqLHkDff",
@@ -275,14 +238,8 @@ export const PHYSICAL_ACTIVITY_RECREATIONAL = [
   "vuQ97rrVTZH",
   ...HHM2_SPORTS_MODERATE_INTENSITY,
 ];
-export const HISTORY_RISEDBLOOD_PRESSURE = [
-  "hWWA6W6Vvgf",
-  ...HHM2_BLOODSUGER_MEASERDBY_DOCTOR,
-];
-export const HISTORY_OF_DIABETES = [
-  "cMd8GGJgTLT",
-  ...HHM2_BLOODSUGER_MEASERD_SECTION,
-];
+export const HISTORY_RISEDBLOOD_PRESSURE = ["hWWA6W6Vvgf", ...HHM2_BLOODSUGER_MEASERDBY_DOCTOR];
+export const HISTORY_OF_DIABETES = ["cMd8GGJgTLT", ...HHM2_BLOODSUGER_MEASERD_SECTION];
 export const HISTORY_OF_CHOLESTEROL = [
   "N3aQ8FrbXga",
   "TBo8Lw8Rfis",
@@ -291,36 +248,15 @@ export const HISTORY_OF_CHOLESTEROL = [
   "aUFofe87M5z",
   "gKEcTk9bVeg",
 ];
-export const HISTORY_OF_CARDIOVASCULAR = [
-  "PBDkdqR3yWo",
-  "eWjobHqRmVR",
-  "En7TKezqhAz",
-];
+export const HISTORY_OF_CARDIOVASCULAR = ["PBDkdqR3yWo", "eWjobHqRmVR", "En7TKezqhAz"];
 export const HEIGHT_WEIGHT = ["iWaeCiMpBV9", "pxqEppI9NuY", "CszAgcZlA2I"];
 export const WAISE_HIP_CIRCUMFERENCE = ["KfRuikfQldK", "DBKh0M3rsKO"];
 
-export const BLOOD_PRESSURE_READING1 = [
-  "CMyXmIIL2Pg",
-  "RDXCYFo4Uv8",
-  "kzp9TltHi2M",
-];
-export const BLOOD_PRESSURE_READING2 = [
-  "ZwfMynjw1Ys",
-  "ofyknwue3kI",
-  "JJoDq26kmmy",
-];
-export const BLOOD_PRESSURE_READING3 = [
-  "wEWyO97SUBc",
-  "Bf0l1lc8HdR",
-  "whGSwuEwp6B",
-];
+export const BLOOD_PRESSURE_READING1 = ["CMyXmIIL2Pg", "RDXCYFo4Uv8", "kzp9TltHi2M"];
+export const BLOOD_PRESSURE_READING2 = ["ZwfMynjw1Ys", "ofyknwue3kI", "JJoDq26kmmy"];
+export const BLOOD_PRESSURE_READING3 = ["wEWyO97SUBc", "Bf0l1lc8HdR", "whGSwuEwp6B"];
 
-const defaultProgramTrackedEntityAttributeDisable = [
-  "hDE1WNqTTwF",
-  "BaiVwt8jVfg",
-  "xDSSvssuNFs",
-  "H42aYY9JMIR",
-];
+const defaultProgramTrackedEntityAttributeDisable = ["hDE1WNqTTwF", "BaiVwt8jVfg", "xDSSvssuNFs", "H42aYY9JMIR"];
 
 const FAMILY_MEMBER_METADATA_CUSTOMUPDATE = {
   DOB: "rB3psCPmxwE",
