@@ -1,10 +1,6 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 
-import {
-  PUSH_TO_SERVER,
-  SET_OFFLINE_LOADING_STATUS,
-  SET_OFFLINE_STATUS,
-} from "@/redux/actions/common/type";
+import { PUSH_TO_SERVER, SET_OFFLINE_LOADING_STATUS, SET_OFFLINE_STATUS } from "@/redux/actions/common/type";
 import { notification } from "antd";
 
 import * as meManager from "@/indexDB/MeManager/MeManager";
@@ -16,11 +12,7 @@ import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManage
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 import { mainStore } from "@/redux/store";
-import {
-  setCurrentOfflineLoading,
-  setOfflineLoadingStatus,
-  setOfflineStatus,
-} from "@/redux/actions/common";
+import { setCurrentOfflineLoading, setOfflineLoadingStatus, setOfflineStatus } from "@/redux/actions/common";
 
 function handleDispatchCurrentOfflineLoading({ id, percent }) {
   mainStore.dispatch(setCurrentOfflineLoading({ id, percent }));
@@ -90,9 +82,7 @@ function* handlePushResult(result, message) {
       }
 
       const errorMessages = errors.map((error) =>
-        error.validationReport.errorReports
-          .map((errorReport) => errorReport.message)
-          .join("\n")
+        error.validationReport.errorReports.map((errorReport) => errorReport.message).join("\n")
       );
 
       console.log({ errorMessages });
@@ -115,17 +105,17 @@ function* handlePushToServer() {
 
     // push tracked entities
     const teiPushResults = yield call(trackedEntityManager.push);
-    yield handlePushResult(teiPushResults, "Push tracked entities failed: ");
+    yield handlePushResult(teiPushResults, "Sync tracked entities failed: ");
     yield put(setCurrentOfflineLoading({ id: "tei", percent: 100 }));
 
     // push enrollments
     const enrPushResults = yield call(enrollmentManager.push);
-    yield handlePushResult(enrPushResults, "Push enrollments failed: ");
+    yield handlePushResult(enrPushResults, "Sync enrollments failed: ");
     yield put(setCurrentOfflineLoading({ id: "enr", percent: 100 }));
 
     // push events
     const eventPushRetuls = yield call(eventManager.push);
-    yield handlePushResult(eventPushRetuls, "Push events failed: ");
+    yield handlePushResult(eventPushRetuls, "Sync events failed: ");
     yield put(setCurrentOfflineLoading({ id: "event", percent: 100 }));
 
     // if there is no error, set offline status to false
@@ -149,9 +139,6 @@ function* handlePushToServer() {
 
 export default function* commonSaga() {
   yield takeLatest(SET_OFFLINE_STATUS, handleOfflineStatusChange);
-  yield takeLatest(
-    SET_OFFLINE_LOADING_STATUS,
-    handleOfflineLoadingStatusChange
-  );
+  yield takeLatest(SET_OFFLINE_LOADING_STATUS, handleOfflineLoadingStatusChange);
   yield takeLatest(PUSH_TO_SERVER, handlePushToServer);
 }

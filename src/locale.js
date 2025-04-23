@@ -748,6 +748,10 @@ const locale = {
     en: "Sync changed data",
     lo: "ສົ່ງຂໍ້ມູນ",
   },
+  syncChangedData: {
+    en: "Sync changed data",
+    lo: "ສົ່ງຂໍ້ມູນ",
+  },
   pleasePushChangedData: {
     en: "Please sync changed data.",
     lo: "ແຈ້ງເຕືອນ.",

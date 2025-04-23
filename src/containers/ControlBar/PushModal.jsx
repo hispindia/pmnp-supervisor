@@ -6,9 +6,9 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export const pushMapping = [
-  { id: "tei", label: "Push tracked entities" },
-  { id: "enr", label: "Push enrollments" },
-  { id: "event", label: "Push events" },
+  { id: "tei", label: "Sync tracked entities" },
+  { id: "enr", label: "Sync enrollments" },
+  { id: "event", label: "Sync events" },
 ];
 
 const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
@@ -30,19 +30,17 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
 
   return (
     <Modal
-      title={t("pushChangedData")}
+      title={t("syncChangedData")}
       open={open}
       centered
       closeIcon={null}
       maskClosable={false}
       onCancel={onCancel}
       onOk={onOk}
-      okText={t("push")}
+      okText={t("sync")}
     >
       {pushMapping.map(({ label, id }, step) => {
-        const currentStep = pushMapping.findIndex(
-          ({ id }) => id === currentOfflineLoading.id
-        );
+        const currentStep = pushMapping.findIndex(({ id }) => id === currentOfflineLoading.id);
 
         let percent = 0;
         if (currentStep > -1) {
