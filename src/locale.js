@@ -745,11 +745,11 @@ const locale = {
     lo: "ປະຊາກອນທັງໝົດ",
   },
   pushChangedData: {
-    en: "Push changed data",
+    en: "Sync changed data",
     lo: "ສົ່ງຂໍ້ມູນ",
   },
   pleasePushChangedData: {
-    en: "Please push changed data.",
+    en: "Please sync changed data.",
     lo: "ແຈ້ງເຕືອນ.",
   },
   somethingWentWrong: {
@@ -785,7 +785,7 @@ const locale = {
     lo: "ແຈ້ງເຕືອນ",
   },
   push: {
-    en: "PUSH",
+    en: "SYNC",
     lo: "ສົ່ງ",
   },
   sync: {

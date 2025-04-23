@@ -26,13 +26,18 @@ function* getTeis(newPayload = {}) {
     const currentPayload = {
       page: pager.page,
       pageSize: pager.pageSize,
-      filters: [...filters, { teiId: DATA_COLLECT_ATTRIBUTE_ID, value: me.username }],
+      filters,
       orderString,
     };
     const nextPayload = Object.assign(currentPayload, newPayload);
     const selectedOrgUnit = yield select((state) => state.metadata.selectedOrgUnit);
     const programMetadata = yield select((state) => state.metadata.programMetadata);
     let instanceList = {};
+
+    const found = nextPayload.filters.find((f) => f.teiId === DATA_COLLECT_ATTRIBUTE_ID);
+    if (!found) {
+      nextPayload.filters.push({ teiId: DATA_COLLECT_ATTRIBUTE_ID, value: me.username });
+    }
 
     // OFFLINE MODE
     if (offlineStatus) {
