@@ -25,6 +25,7 @@ export const MEMBER_TRACKED_ENTITY_TYPE_ID = "xL84sWQlxxK";
 // APP configurations
 export const FAMILY_UID_ATTRIBUTE_ID = "gv9xX5w4kKt"; // Use to link between household and family members
 export const MEMBER_FAMILY_UID_ATTRIBUTE_ID = "ig2YSpQdP55"; // Use to store Family UID in member TEI
+export const DATA_COLLECT_ATTRIBUTE_ID = "AaFN0HwuzeK"; // use to filter HH by collector
 
 export const MEMBER_FIRST_NAME_ATTRIBUTE_ID = "PIGLwIaw0wy";
 export const MEMBER_LAST_NAME_ATTRIBUTE_ID = "IENWcinF8lM";

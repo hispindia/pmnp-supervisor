@@ -157,16 +157,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   };
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
-    const HouseHoldMemberTable = { metadata, previousData, data, code, value };
-    console.log("HouseHoldMemberTable", HouseHoldMemberTable);
-
     // WARNING: if it's hidden, the data will be removed
 
-    // ages attribute
-    metadata["d2n5w4zpxuo"].hidden = true;
-    metadata["xDSSvssuNFs"].hidden = true;
-    metadata["X2Oln1OyP5o"].hidden = true;
-    metadata["H42aYY9JMIR"].hidden = true;
+    const HouseHoldMemberTable = { metadata, previousData, data, code, value };
+    console.log("HouseHoldMemberTable", HouseHoldMemberTable);
 
     // Hide rest of the form if Membership status = "Deceased" or Migrated to "Non-PMNP Area" or "Not part of the HH"
     const hhMemberStatus = data["Rb0k4fOdysI"];
@@ -184,6 +178,13 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       });
     }
 
+    // ages attribute
+    metadata["d2n5w4zpxuo"].hidden = true;
+    metadata["xDSSvssuNFs"].hidden = true;
+    metadata["X2Oln1OyP5o"].hidden = true;
+    metadata["H42aYY9JMIR"].hidden = true;
+
+    // stage
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = interviewId;
 

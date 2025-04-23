@@ -12,9 +12,12 @@ import {
 } from "../actions/teis";
 import { returnFilterString } from "../../utils";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import { DATA_COLLECT_ATTRIBUTE_ID } from "@/constants/app-config";
 
 function* getTeis(newPayload = {}) {
   const { offlineStatus } = yield select((state) => state.common);
+  const me = yield select((state) => state.me);
+
   const { pager, filters, orderString } = yield select((state) => state.teis);
   yield put(loadTeis(true));
   yield put(getTeisSuccessMessage(null));
@@ -23,7 +26,7 @@ function* getTeis(newPayload = {}) {
     const currentPayload = {
       page: pager.page,
       pageSize: pager.pageSize,
-      filters,
+      filters: [...filters, { teiId: DATA_COLLECT_ATTRIBUTE_ID, value: me.username }],
       orderString,
     };
     const nextPayload = Object.assign(currentPayload, newPayload);
