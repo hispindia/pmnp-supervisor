@@ -118,6 +118,7 @@ function CaptureForm(props) {
               maxDate={props.maxDate}
               minDate={"1900-12-31"}
               data-element-id={f.code}
+              hyperlink={f.url}
             />
           </div>
         );

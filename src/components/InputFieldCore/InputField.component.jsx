@@ -5,6 +5,7 @@ import { DateField, SelectField, TextField } from "./inputs/index";
 import { onKeyDown } from "@/utils";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
@@ -241,7 +242,17 @@ const InputField = ({
 
   return (
     <div className="input-field-container" data-element-id={props["data-element-id"]}>
-      {label && <div className="input-field-label">{label}</div>}
+      {label && (
+        <div className="input-field-label">
+          {label}
+          {props.hyperlink ? (
+            <a href={props.hyperlink} target="_blank" rel="noopener noreferrer">
+              &nbsp;
+              <InfoCircleOutlined />
+            </a>
+          ) : null}
+        </div>
+      )}
       <div className="h-10">{generateInput()}</div>
       {warning && <div className="input-field-warning">{warning}</div>}
       {error && <div className="input-field-error">{error}</div>}
