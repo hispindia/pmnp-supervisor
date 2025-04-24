@@ -1,12 +1,11 @@
 import { generateUid } from "@/utils";
 import { useEffect, useState } from "react";
-import { Button, Card, Modal } from "react-bootstrap";
-import BootstrapTable from "react-bootstrap-table-next";
 import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES } from "../constants";
+import BootstrapTable from "react-bootstrap-table-next";
 
 // Icon
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 /* SELECTOR */
@@ -21,6 +20,8 @@ import "../CustomStyles/css/bootstrap.min.css";
 import "./CascadeTable.styles.css";
 import { transformData, transformMetadataToColumns } from "./utils";
 import { useUser } from "@/hooks/useUser";
+import { Button } from "antd";
+import { Card, Modal } from "react-bootstrap";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -273,8 +274,8 @@ const CascadeTable = (props) => {
         if (!isSuperuser) return null;
         return (
           <DeleteConfirmationButton
-            variant="outline-danger"
-            size="sm"
+            size="small"
+            danger
             disabled={
               extraData !== FORM_ACTION_TYPES.NONE
               // || isImmutableYear(year, immutableYear)
@@ -343,13 +344,13 @@ const CascadeTable = (props) => {
         <div className="row">
           <div className="mb-4 mr-auto mr-sm-0">
             <Button
-              type="button"
+              type="primary"
               size="sm"
               style={{ width: 160 }}
-              className="btn btn-success"
               onClick={() => handleBeforeAddNewRow()}
               aria-controls="collapseExample"
               aria-expanded={formStatus === FORM_ACTION_TYPES.ADD_NEW}
+              icon={<FontAwesomeIcon icon={faPlus} />}
             >
               {t("addNewMember")}
             </Button>

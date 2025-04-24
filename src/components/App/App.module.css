@@ -1,3 +1,19 @@
+:root {
+  --primary: #f68e22;
+  --primary-light: rgba(246, 142, 34, 0.9);
+
+  --danger-red: #ec3a29;
+  --orange: #f68e22;
+  --green: #158d46;
+  --orange-light: rgba(246, 142, 34, 0.5);
+  --red-light: rgba(236, 58, 41, 0.5);
+  --white: #fff;
+  --gray-light: #9b9b9b;
+  --gray-bg: #898989;
+  --badge-orange: rgb(250, 198, 144);
+  --logo-bg: #fbf9f3;
+}
+
 .app {
   width: 100%;
   height: 100%;
@@ -14,11 +30,40 @@
   padding: 10px;
 }
 
-.appContentContainer>div {
+.appContentContainer > div {
   width: 100%;
   height: 100%;
   overflow: auto;
   -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+table th {
+  background-color: var(--gray-bg) !important;
+  color: #fff !important;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2 !important;
+}
+
+table th svg {
+  color: #fff !important;
+}
+
+.ant-table-wrapper .ant-table-tbody > tr > td {
+  transition: none !important;
+}
+
+table > tr > td.ant-table-cell.ant-table-cell-row-hover {
+  background: #000 !important;
+}
+
+table tbody tr:hover {
+  background: linear-gradient(to right, #ffa33c, #ecb400) !important;
+}
+
+table tbody tr:hover td {
+  color: #fff;
 }

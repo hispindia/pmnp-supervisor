@@ -49,8 +49,8 @@ const PushToServerButton = () => {
           const found = results.find((r) => r.length > 0);
           if (!found) {
             notification.info({
-              message: "No data to push",
-              description: "There is no data to push to the server",
+              message: "No data to sync",
+              description: "There is no data to sync to the server",
               placement: "bottomRight",
               duration: 5,
             });

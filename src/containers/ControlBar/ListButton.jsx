@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { filter } from "@/redux/actions/teis";
 import ReportButton from "../../components/ControlBar/ReportButton";
 import withOrgUnitRequired from "../../hocs/withOrgUnitRequired";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons";
 
 const ListButtonContainer = () => {
   const { t } = useTranslation();
@@ -16,6 +18,8 @@ const ListButtonContainer = () => {
     <ReportButton
       variant="contained"
       color="primary"
+      type="primary"
+      icon={<FontAwesomeIcon icon={faList} />}
       onClick={() => {
         if (history.location.pathname === "/list") {
           dispatch(setSelectedOrgUnit({ ...selectedOrgUnit }));

@@ -5,12 +5,7 @@ import { useTranslation } from "react-i18next";
 import FMLayoutContainer from "../../containers/FMLayout";
 import ProfileFormContainer from "../../containers/ProfileForm";
 
-const MainForm = ({
-  onCloseClick,
-  currentTab,
-  onTabChange,
-  isEditingAttributes,
-}) => {
+const MainForm = ({ onCloseClick, currentTab, onTabChange, isEditingAttributes }) => {
   const { t } = useTranslation();
 
   const items = [
@@ -40,7 +35,7 @@ const MainForm = ({
   ];
 
   return (
-    <Card size="small">
+    <Card size="small" style={{ borderRadius: 0, borderTop: 0 }}>
       <Tabs
         style={{
           overflow: "visible",

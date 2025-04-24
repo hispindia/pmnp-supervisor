@@ -261,7 +261,7 @@ const FamilyMemberForm = ({
   return (
     <div className={familyMemberFormContainer}>
       {blockEntry && <div className={"modalBackdrop"}></div>}
-      <Paper className={classes.paper}>
+      <Paper elevation={0} className={classes.paper}>
         <LoadingCascadeTable
           loading={loading}
           mask

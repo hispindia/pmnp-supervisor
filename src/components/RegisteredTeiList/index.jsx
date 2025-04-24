@@ -158,12 +158,11 @@ const RegisteredTeiList = ({
           },
         };
       }}
-      // sticky
-      // tableLayout={"fixed"}
+      rowHoverable={false}
       columns={[deleteColumn, reportObject].concat(createColumns())}
       dataSource={createDataSource()}
       scroll={{ /*y: "calc(100vh - 268px)",*/ x: 900 }}
-      bordered={true}
+      className="my-2 px-1"
       pagination={{
         position: ["bottomCenter"],
         showSizeChanger: true,

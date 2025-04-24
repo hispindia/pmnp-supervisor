@@ -1,0 +1,6 @@
+label[data-test="dhis2-uicore-checkbox"] .icon .indeterminate .background,
+label[data-test="dhis2-uicore-checkbox"] .icon .checked .background,
+div[data-test="dhis2-uiwidgets-orgunittree"] .node .checked {
+  fill: #f68e22 !important;
+  background-color: #f68e22 !important;
+}

@@ -1,13 +1,13 @@
 import { generateUid } from "@/utils";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Card, Modal } from "react-bootstrap";
+import { Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES } from "../constants";
 
 // Icon
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
@@ -29,6 +29,7 @@ import "./interview-detail-table.css";
 import InterviewDetailModal from "./InterviewDetailModal";
 import { clearHiddenFieldData, updateMetadata } from "./utils";
 import { useUser } from "@/hooks/useUser";
+import { Button } from "antd";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -255,8 +256,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
         return (
           <div style={{ display: "flex", gap: 8, padding: "0 8px" }}>
             <Button
-              size="sm"
-              variant="outline-primary"
+              size="small"
               disabled={extraData !== FORM_ACTION_TYPES.NONE || row.disabled}
               onClick={() => {
                 setSelectedData(row);
@@ -267,8 +267,8 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
               <FontAwesomeIcon icon={faEdit} size="xs" />
             </Button>
             <DeleteConfirmationButton
-              variant="outline-danger"
-              size="sm"
+              size="small"
+              danger
               disabled={extraData !== FORM_ACTION_TYPES.NONE || row.disabled}
               title={t("delete")}
               onDelete={(e) => {
@@ -317,7 +317,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   }, []);
 
   return (
-    <div className="interview-table px-4">
+    <div className="interview-table px-3 mt-2">
       <InterviewDetailModal
         interviewData={selectedData}
         formStatus={formStatus}
@@ -361,16 +361,16 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       </Modal>
 
       <div className="row">
-        <div className="mb-4 mr-auto mr-sm-0">
+        <div className="mb-4 mr-auto mr-sm-0 mt-1">
           <Button
-            type="button"
+            type="primary"
             size="sm"
             style={{ width: 160 }}
-            className="btn btn-success"
             onClick={handleBeforeAddNewRow}
             disabled={Boolean(data.find((row) => !row.disabled))}
             aria-controls="collapseExample"
             aria-expanded={formStatus === FORM_ACTION_TYPES.ADD_NEW}
+            icon={<FontAwesomeIcon icon={faPlus} />}
           >
             {t("addNewInterview")}
           </Button>

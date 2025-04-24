@@ -34,8 +34,11 @@ function* getTeis(newPayload = {}) {
     const programMetadata = yield select((state) => state.metadata.programMetadata);
     let instanceList = {};
 
+    console.log({ me });
+
+    const isSuperuser = me?.userRoles.some((role) => role.code === "Superuser");
     const found = nextPayload.filters.find((f) => f.teiId === DATA_COLLECT_ATTRIBUTE_ID);
-    if (!found) {
+    if (!found && !isSuperuser) {
       nextPayload.filters.push({ teiId: DATA_COLLECT_ATTRIBUTE_ID, value: me.username });
     }
 

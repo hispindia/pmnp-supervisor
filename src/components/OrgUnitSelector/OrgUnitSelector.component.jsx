@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import LoadingMask from "../LoadingMask/LoadingMask.component.jsx";
 import useApi from "../../hooks/useApi.js";
 import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
+import "./OrgUnitSelector.css";
 
 const OrgUnitSelector = ({ singleSelection, limit, selectedOrgUnit, handleSelectOrgUnit, filter }) => {
   const { metadataApi } = useApi();

@@ -7,6 +7,7 @@ import { FORM_ACTION_TYPES } from "../constants";
 
 // components
 import { useTranslation } from "react-i18next";
+import { Button } from "antd";
 import InputField from "../InputFieldCore/InputField.component.jsx";
 
 CaptureForm.defaultProps = {
@@ -245,33 +246,23 @@ function CaptureForm(props) {
           <div className="btn-toolbar" role="toolbar">
             {formStatus === FORM_ACTION_TYPES.ADD_NEW && (
               <div className="btn-group mr-2" role="group" aria-label="First group">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  disabled={saveDisabled}
-                  onClick={(e) => handleOnSubmit(e, "add")}
-                >
+                <Button size="large" type="primary" disabled={saveDisabled} onClick={(e) => handleOnSubmit(e, "add")}>
                   {t("save")}
-                </button>
+                </Button>
               </div>
             )}
             {formStatus === FORM_ACTION_TYPES.EDIT && (
               <div className="btn-group mr-2" role="group" aria-label="First group">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  disabled={saveDisabled}
-                  onClick={(e) => handleOnSubmit(e, "edit")}
-                >
+                <Button size="large" type="primary" disabled={saveDisabled} onClick={(e) => handleOnSubmit(e, "edit")}>
                   {t("save")}
-                </button>
+                </Button>
               </div>
             )}
             {cancelable && formStatus !== FORM_ACTION_TYPES.NONE && (
               <div className="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" className="btn btn-light" onClick={(e) => handleCancelForm()}>
+                <Button size="large" color="primary" onClick={(e) => handleCancelForm()}>
                   {t("cancel")}
-                </button>
+                </Button>
               </div>
             )}
           </div>

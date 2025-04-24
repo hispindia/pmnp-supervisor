@@ -6,15 +6,10 @@ import styles from "../../components/App/App.module.css";
 
 import HeaderBar from "@/components/HeaderBar/HeaderBar.component";
 import { useDisableSwipeDownRefresh, useIsPwa } from "@/hooks";
+import { ConfigProvider } from "antd";
 const { app, headerBarContainer } = styles;
-
-const theme = createTheme({
-  typography: {
-    button: {
-      textTransform: "none",
-    },
-  },
-});
+import antdThemeConfig from "@/antdTheme";
+import muiTheme from "@/muiTheme";
 
 const Layout = ({ children }) => {
   const isPwa = useIsPwa();
@@ -23,15 +18,17 @@ const Layout = ({ children }) => {
   return (
     <SnackbarProvider maxSnack={3}>
       <AppContextProvider>
-        <ThemeProvider theme={theme}>
-          <div className={app}>
-            {!isPwa && (
-              <div className={headerBarContainer}>
-                <HeaderBar title="Scorecard Survey" />
-              </div>
-            )}
-            {children}
-          </div>
+        <ThemeProvider theme={muiTheme}>
+          <ConfigProvider theme={antdThemeConfig}>
+            <div className={app}>
+              {!isPwa && (
+                <div className={headerBarContainer}>
+                  <HeaderBar title="Scorecard Survey" />
+                </div>
+              )}
+              {children}
+            </div>
+          </ConfigProvider>
         </ThemeProvider>
       </AppContextProvider>
     </SnackbarProvider>
