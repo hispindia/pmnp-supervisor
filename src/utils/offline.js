@@ -1,8 +1,5 @@
 import { metadataApi } from "@/api";
-import {
-  MEMBER_PROGRAM_ID,
-  HOUSEHOLD_PROGRAM_ID,
-} from "@/constants/app-config";
+import { MEMBER_PROGRAM_ID, HOUSEHOLD_PROGRAM_ID } from "@/constants/app-config";
 import * as meManager from "@/indexDB/MeManager/MeManager";
 import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
 import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
@@ -29,18 +26,14 @@ export const getMetadataSet = (isOfflineMode) => {
       metadataApi.getOrgUnitLevels(),
       metadataApi.getProgramMetadata(MEMBER_PROGRAM_ID),
       metadataApi.getUserOrgUnits(),
+      metadataApi.getReportId(),
     ];
   }
 };
 
 // MEMBER_PROGRAM_ID
 
-export const findOffline = (TABLE_NAME) =>
-  db[TABLE_NAME].where("isOnline").anyOf(0).toArray();
+export const findOffline = (TABLE_NAME) => db[TABLE_NAME].where("isOnline").anyOf(0).toArray();
 
 export const findChangedData = () =>
-  Promise.all([
-    findOffline("enrollment"),
-    findOffline("event"),
-    findOffline("trackedEntity"),
-  ]);
+  Promise.all([findOffline("enrollment"), findOffline("event"), findOffline("trackedEntity")]);

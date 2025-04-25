@@ -5,6 +5,7 @@ import {
   RESET_CURRENT_OFFLINE_LOADING,
   PUSH_TO_SERVER,
   SET_OFFLINE_SELECTED_ORGUNITS,
+  SET_REPORT_ID,
 } from "./type";
 
 export const setOfflineStatus = (offlineStatus) => ({
@@ -29,6 +30,11 @@ export const setOfflineSelectedOrgUnits = (offlineSelectedOrgUnits) => ({
 
 export const resetCurrentOfflineLoading = () => ({
   type: RESET_CURRENT_OFFLINE_LOADING,
+});
+
+export const setReportId = (reportId) => ({
+  type: SET_REPORT_ID,
+  reportId,
 });
 
 export const pushToServer = () => ({

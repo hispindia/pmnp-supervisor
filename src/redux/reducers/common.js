@@ -9,6 +9,7 @@ import {
   GET_CURRENT_OFFLINE_LOADING,
   RESET_CURRENT_OFFLINE_LOADING,
   SET_OFFLINE_SELECTED_ORGUNITS,
+  SET_REPORT_ID,
 } from "@/redux/actions/common/type";
 
 const savedOfflineStatus = localStorage.getItem("offlineStatus");
@@ -16,6 +17,7 @@ const savedOfflineStatus = localStorage.getItem("offlineStatus");
 const initialState = {
   offlineStatus: savedOfflineStatus === "true" ? true : false,
   offlineLoading: false,
+  reportId: null,
   currentOfflineLoading: {
     id: null,
     percent: 0,
@@ -52,6 +54,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         offlineSelectedOrgUnits: action.offlineSelectedOrgUnits,
+      };
+    }
+    case SET_REPORT_ID: {
+      return {
+        ...state,
+        reportId: action.reportId,
       };
     }
     default:

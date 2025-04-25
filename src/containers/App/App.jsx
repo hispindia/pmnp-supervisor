@@ -24,6 +24,7 @@ import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManage
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import { getMetadataSet } from "@/utils/offline";
 import { setMe } from "@/redux/actions/me";
+import { setReportId } from "@/redux/actions/common";
 
 const AppSkeletonLoading = withSkeletonLoading(AppSkeleton)(App);
 
@@ -95,7 +96,6 @@ const AppContainer = () => {
           ...results[0],
         };
 
-        console.log({ programMetadata });
         dispatch(setProgramMetadata(programMetadata));
         dispatch(setProgramMetadataMember(results[4]));
         dispatch(setOrgUnitLevels(results[3].organisationUnitLevels));
@@ -113,6 +113,7 @@ const AppContainer = () => {
         }
 
         dispatch(setOrgUnits(results[5].organisationUnits));
+        dispatch(setReportId(results[6]));
         dispatch(setMe(results[2]));
         setLoading(false);
         setLoaded(true);

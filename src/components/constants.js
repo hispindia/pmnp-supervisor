@@ -77,6 +77,8 @@ const TYPE_OF_ACTION = {
 export const HOUSEHOLD_MEMBER_ID = "Cn37lbyhz6f";
 export const PMNP_ID = "NOKzq4dAKF7";
 export const MEMBER_HOUSEHOLD_UID = "RDQQ3t9oXw5";
+export const REPORT_ID_CONSTANT = "lfMDT7HdaFh";
+export const REPORT_ID_CONSTANT_ATTRIBUTE_ID = "TElcDF7Vzyx";
 
 export const MOTHER_CHILD_SECTION = [
   "Z4zfIkKCP7R",

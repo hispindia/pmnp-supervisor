@@ -1,8 +1,29 @@
 import { pull } from "./Fetch";
 import dev_data from "./dev_data";
 import BaseApiClass from "./BaseApiClass";
-import { defaultProgramTrackedEntityAttributeDisable, HAS_INITIAN_NOVALUE } from "@/components/constants";
+import {
+  defaultProgramTrackedEntityAttributeDisable,
+  HAS_INITIAN_NOVALUE,
+  REPORT_ID_CONSTANT,
+  REPORT_ID_CONSTANT_ATTRIBUTE_ID,
+} from "@/components/constants";
 export default class MetadataApiClass extends BaseApiClass {
+  getReportId = async () => {
+    const res = await pull(
+      this.baseUrl,
+      this.username,
+      this.password,
+      "/api/constants/" + REPORT_ID_CONSTANT,
+      { paging: false },
+      ["fields=id,name,attributeValues"]
+    );
+
+    const found = res.attributeValues.find((attribute) => attribute.attribute.id === REPORT_ID_CONSTANT_ATTRIBUTE_ID);
+    if (found) {
+      return found.value;
+    }
+    return null;
+  };
   getMe = () =>
     pull(this.baseUrl, this.username, this.password, "/api/me", { paging: false }, [
       "fields=:all,userRoles[code,name,id]",
