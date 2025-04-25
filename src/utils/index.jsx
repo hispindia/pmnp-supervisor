@@ -15,10 +15,7 @@ const sample = (d, fn = Math.random) => {
 };
 
 export const generateUid = (limit = 11, fn = Math.random) => {
-  const allowedLetters = [
-    "abcdefghijklmnopqrstuvwxyz",
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  ].join("");
+  const allowedLetters = ["abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join("");
   const allowedChars = ["0123456789", allowedLetters].join("");
   const arr = [sample(allowedLetters, fn)];
   for (let i = 0; i < limit - 1; i++) {
@@ -40,6 +37,7 @@ export const convertValue = (valueType, value) => {
     case "PHONE_NUMBER":
     case "EMAIL":
     case "LONG_TEXT":
+    case "USERNAME":
       return value;
     case "DATE":
       return moment(value).format("YYYY-MM-DD");
@@ -69,6 +67,7 @@ export const convertValueBack = (valueType, value) => {
     case "PHONE_NUMBER":
     case "EMAIL":
     case "LONG_TEXT":
+    case "USERNAME":
       return value;
     case "DATE":
       return moment(value).format("YYYY-MM-DD");
@@ -90,45 +89,27 @@ export const convertValueBack = (valueType, value) => {
 export const generateDhis2Payload = (data, programMetadata) => {
   const newData = JSON.parse(JSON.stringify(data));
   let { currentTei, currentEnrollment, currentEvents } = newData;
-  currentTei.attributes = Object.keys(currentTei.attributes).map(
-    (attribute) => {
-      const attributeMetadata = programMetadata.trackedEntityAttributes.find(
-        (attr) => attr.id === attribute
-      );
-      return {
-        attribute,
-        value: convertValueBack(
-          attributeMetadata.valueType,
-          currentTei.attributes[attribute]
-        ),
-        valueType: attributeMetadata.valueType,
-        displayName: attributeMetadata.displayName,
-        lastUpdated: currentTei.lastUpdated,
-      };
-    }
-  );
-  currentEnrollment.enrolledAt = moment(currentEnrollment.enrolledAt).format(
-    "YYYY-MM-DD"
-  );
-  currentEnrollment.incidentDate = moment(
-    currentEnrollment.incidentDate
-  ).format("YYYY-MM-DD");
+  currentTei.attributes = Object.keys(currentTei.attributes).map((attribute) => {
+    const attributeMetadata = programMetadata.trackedEntityAttributes.find((attr) => attr.id === attribute);
+    return {
+      attribute,
+      value: convertValueBack(attributeMetadata.valueType, currentTei.attributes[attribute]),
+      valueType: attributeMetadata.valueType,
+      displayName: attributeMetadata.displayName,
+      lastUpdated: currentTei.lastUpdated,
+    };
+  });
+  currentEnrollment.enrolledAt = moment(currentEnrollment.enrolledAt).format("YYYY-MM-DD");
+  currentEnrollment.incidentDate = moment(currentEnrollment.incidentDate).format("YYYY-MM-DD");
 
   currentEvents = currentEvents.map((event) => {
-    const programStage = programMetadata.programStages.find(
-      (ps) => ps.id === event.programStage
-    );
+    const programStage = programMetadata.programStages.find((ps) => ps.id === event.programStage);
 
     event.dataValues = Object.keys(event.dataValues).map((dataElement) => {
-      const dataElementMetadata = programStage.dataElements.find(
-        (de) => de.id === dataElement
-      );
+      const dataElementMetadata = programStage.dataElements.find((de) => de.id === dataElement);
       return {
         dataElement,
-        value: convertValueBack(
-          dataElementMetadata.valueType,
-          event.dataValues[dataElement]
-        ),
+        value: convertValueBack(dataElementMetadata.valueType, event.dataValues[dataElement]),
       };
     });
     event.occurredAt = moment(event.occurredAt).format("YYYY-MM-DD");
@@ -188,10 +169,7 @@ export const TableFilter = ({ metadata, onFilter, external, placeholder }) => {
               id={external.name}
               style={{ width: 250 }}
               onChange={(value) => {
-                onFilter(
-                  value ? moment(value).format("YYYY-MM-DD") : value,
-                  external.name
-                );
+                onFilter(value ? moment(value).format("YYYY-MM-DD") : value, external.name);
               }}
             />
           </div>
@@ -244,10 +222,7 @@ export const TableFilter = ({ metadata, onFilter, external, placeholder }) => {
                 id={metadata.id}
                 style={{ width: 250 }}
                 onChange={(value) => {
-                  onFilter(
-                    value ? moment(value).format("YYYY-MM-DD") : value,
-                    metadata.id
-                  );
+                  onFilter(value ? moment(value).format("YYYY-MM-DD") : value, metadata.id);
                 }}
               />
             </div>

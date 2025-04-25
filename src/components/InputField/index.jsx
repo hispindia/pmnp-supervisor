@@ -51,6 +51,7 @@ const InputField = (props) => {
       case "INTEGER":
       case "PHONE_NUMBER":
       case "EMAIL":
+      case "USERNAME":
         return (
           <Input
             addonBefore={addonBefore}

@@ -67,6 +67,7 @@ const InputField = ({
       );
 
     case "TEXT":
+    case "USERNAME":
     case "EMAIL":
       return (
         <Input

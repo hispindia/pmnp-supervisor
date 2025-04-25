@@ -70,11 +70,16 @@ const InterviewDetailContainer = () => {
     const disabledInterviews = interviewResultEvents.reduce((acc, curr) => {
       const interviewId = curr.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID];
       acc[interviewId] = true;
-      if (curr.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] === "Partially Completed") {
+      if (
+        curr.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] === "Partially Completed" ||
+        !curr.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]
+      ) {
         acc[interviewId] = false;
       }
       return acc;
     }, {});
+
+    console.log({ disabledInterviews });
 
     const transformed = interviewEvents.map((e) => ({
       id: e.event,
