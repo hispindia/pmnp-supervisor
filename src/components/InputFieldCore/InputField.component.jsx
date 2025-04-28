@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
+import MultipleTrueOnlyDEs from "./inputs/MultipleTrueOnlyDEs";
 
 const InputField = ({
   valueType,
@@ -21,6 +22,7 @@ const InputField = ({
   helperText,
   onChange,
   onBlur = null,
+  changeValue,
   disabled,
   pattern,
   locale,
@@ -36,6 +38,19 @@ const InputField = ({
   };
 
   const generateInput = () => {
+    if (valueType === "MULTIPLE_TRUE_ONLY_DES") {
+      return (
+        <MultipleTrueOnlyDEs
+          valueSet={valueSet}
+          locale={locale}
+          changeValue={changeValue}
+          disabled={disabled}
+          onBlur={onBlur}
+          {...props}
+        />
+      );
+    }
+
     if (valueSet) {
       return (
         <SelectField

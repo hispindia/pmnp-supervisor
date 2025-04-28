@@ -111,6 +111,8 @@ function CaptureForm(props) {
               onChange={(value) => {
                 changeValue(f.code, value);
               }}
+              formData={formData}
+              changeValue={changeValue}
               InputProps={{
                 startAdornment: <InputAdornment position="start">{f.prefix}</InputAdornment>,
               }}

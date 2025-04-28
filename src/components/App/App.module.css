@@ -56,8 +56,9 @@ table th svg {
   transition: none !important;
 }
 
-table > tr > td.ant-table-cell.ant-table-cell-row-hover {
-  background: #000 !important;
+table tr td {
+  background: unset !important;
+  transition: none;
 }
 
 table tbody tr:hover {

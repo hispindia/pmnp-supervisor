@@ -6,17 +6,17 @@ import {
 } from "@/constants/app-config";
 import { generateUid } from "@/utils";
 import { useEffect, useState } from "react";
-import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE } from "../constants";
+import { FORM_ACTION_TYPES, GOV_PROGRAMS_DE_ID, HAS_INITIAN_NOVALUE, SOCIAL_AND_BEHAVIOR_DE_ID } from "../constants";
 import { clearHiddenFieldData, compareObject, updateMetadata } from "./utils";
 import { useDispatch, useSelector } from "react-redux";
 import { submitEvent } from "@/redux/actions/data";
 import { transformEvent } from "@/utils/event";
 import CaptureForm from "../CaptureForm";
-import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import { getQuarterlyFromDate } from "@/utils/date";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 import { calculateHouseHoldFields } from "./calculateHouseHoldFields";
+import _ from "lodash";
 
 const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
   const i18n = useTranslation();
@@ -34,19 +34,13 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
   const originMetadata = convertOriginMetadata(foundProgramStage);
 
-  console.log({ originMetadata });
-
   const [data, setData] = useState(null);
   const [defaultData, setDefaultData] = useState({});
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
   const [formStatus, setFormStatus] = useState(null);
   const [formDirty, setFormDirty] = useState(false);
 
-  console.log("HouseHoldSurveyForm", {
-    formDirty,
-    interviewData,
-    interviewCascadeData,
-  });
+  console.log("HouseHoldSurveyForm", { formDirty, interviewData, interviewCascadeData });
 
   const handleAddNew = (e, newData, continueAdd) => {
     console.trace("row:>>>", newData);
@@ -113,24 +107,9 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
     onClose();
   };
 
-  const DEs = {
-    Q801: "dtTG7cjn1CH",
-    Q802: "RC5B8EETrOM",
-    PleaseSpecifyTheOtherGovernment: "b918Rl73Eu0",
-
-    Q900: "dxag8YT8w46",
-    Q901: "gNBFmUFtW6a",
-  };
-
   const editRowCallback = (metadata, previousData, newData, code, value) => {
-    console.log("HouseHoldSurveyForm change", {
-      defaultData,
-      metadata,
-      previousData,
-      newData,
-      code,
-      value,
-    });
+    const editRowCallback = { defaultData, metadata, previousData, newData, code, value };
+    console.log("HouseHoldSurveyForm change", editRowCallback);
 
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
 
@@ -149,6 +128,20 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
     metadata[DEs.Q901].hidden = newData[DEs.Q900] !== "true";
     // SHOW 'Other social and behaviour Change (SBC) sessions' if 'social and behaviour Change (SBC) sessions (Q 901)' = 'Others'
     metadata["S6aWPoAIthD"].hidden = newData["gNBFmUFtW6a"] !== "5";
+
+    // if Q801 = No, clear all data 802
+    if (newData["dtTG7cjn1CH"] === "false" || !newData["dtTG7cjn1CH"]) {
+      metadata[GOV_PROGRAMS_DE_ID].valueSet.forEach((option) => {
+        newData[option.trueOnlyDeId] = null;
+      });
+    }
+
+    // if Q900 = No, clear all data 801
+    if (newData["dxag8YT8w46"] === "false" || !newData["dxag8YT8w46"]) {
+      metadata[SOCIAL_AND_BEHAVIOR_DE_ID].valueSet.forEach((option) => {
+        newData[option.trueOnlyDeId] = null;
+      });
+    }
 
     // Calculate fields
     // Score_Number of 4Ps Members
@@ -212,16 +205,59 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
   );
 };
 
+const DEs = {
+  Q801: "dtTG7cjn1CH",
+  Q802: "RC5B8EETrOM",
+  PleaseSpecifyTheOtherGovernment: "b918Rl73Eu0",
+  Q900: "dxag8YT8w46",
+  Q901: "gNBFmUFtW6a",
+};
+
 const convertOriginMetadata = (foundProgramStage) => {
   const dataElements = foundProgramStage.dataElements.map((de) => {
-    return {
-      ...de,
-      code: de.id,
-      hidden: HAS_INITIAN_NOVALUE.includes(de.id),
-    };
+    const cloned = { ...de };
+    cloned.code = de.id;
+    cloned.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
+    if (de.id === GOV_PROGRAMS_DE_ID) {
+      cloned.valueType = "MULTIPLE_TRUE_ONLY_DES";
+      cloned.valueSet = cloned.valueSet.map((v) => ({ ...v, trueOnlyDeId: GOV_PROGRAMS_MAP[v.value] }));
+    }
+    if (de.id === SOCIAL_AND_BEHAVIOR_DE_ID) {
+      cloned.valueType = "MULTIPLE_TRUE_ONLY_DES";
+      cloned.valueSet = cloned.valueSet.map((v) => ({ ...v, trueOnlyDeId: SOCIAL_MAP[v.value] }));
+    }
+
+    return cloned;
   });
 
   return dataElements;
+};
+
+const GOV_PROGRAMS_MAP = {
+  "Conditional cash transfer (4ps)": "EHarklYlTLs",
+  "Sustainable livelihood program (slp)": "DoYnclQM17A",
+  "Pag-abot program": "yCvjacN3cOQ",
+  "Unconditional cash": "q6VmG07hLSn",
+  "Walang gutom": "cJ0kjwz8Wn2",
+  "Cash for work": "rarFeNRcsHD",
+  "Assistance to": "lKwZndL5FVt",
+  Malasakit: "NkievhX4GVH",
+  "LGU medical program": "kXAv2Gft7HK",
+  "LGU social assistance": "ePwVN929ctj",
+  Ayuda: "aGTNmzg89b4",
+  AKAP: "UvD526OKXd3",
+  TUPAD: "ixGznRVHxD4",
+  MAIFP: "nugyL4vNljG",
+  AICS: "Z6BWGPH0rir",
+  Others: "SKZZ4LQ7bWS",
+};
+
+const SOCIAL_MAP = {
+  "Family development": "HUmVCV5nxQk",
+  "Sessions (SDS)": "QbV0Z7XBrQa",
+  "Idol ko si nanay": "QGADXm7RHxd",
+  "Idol ko si tatay": "bWEr2kYS1Hu",
+  "Other sessions": "qIS82s8psRN",
 };
 
 export default HouseHoldSurveyForm;
