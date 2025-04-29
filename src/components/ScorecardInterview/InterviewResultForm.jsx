@@ -17,6 +17,7 @@ import CaptureForm from "../CaptureForm";
 import { FORM_ACTION_TYPES } from "../constants";
 import { clearHiddenFieldData, updateMetadata } from "./utils";
 import { submitAttributes } from "../../redux/actions/data";
+import moment from "moment";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
   const i18n = useTranslation();
@@ -143,7 +144,11 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
         metadata[InterviewResult_DEs.Order_DE].hidden = false;
         break;
       case "Postponed":
+        // future date
+        metadata[InterviewResult_DEs.NextVisitDate_DE].maxDate = moment().add(1, "Y").format("YYYY-MM-DD");
         metadata[InterviewResult_DEs.NextVisitDate_DE].hidden = false;
+
+        metadata[InterviewResult_DEs.NextVisitTime_DE].maxDate = moment().add(1, "Y").format("YYYY-MM-DD");
         metadata[InterviewResult_DEs.NextVisitTime_DE].hidden = false;
         break;
     }

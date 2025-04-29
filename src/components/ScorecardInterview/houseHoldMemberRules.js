@@ -31,7 +31,10 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
 
 export const demographicDetailRules = (metadata, data, { years }) => {
   // Menstrual history should be NA (option code 3) for females under 10 and older than 49
-  if (years < 10 || years > 49) data["WbgQ0SZFiAU"] = "3";
+  if (years < 10 || years > 49) {
+    data["WbgQ0SZFiAU"] = "3";
+    metadata["WdnS7uGEKJT"].hidden = true;
+  }
 
   // Menstrual history should be NA for males and questions on LMP, pregnancy status should be hidden
   if (data["Qt4YSwPxw0X"] === "2" || data["WbgQ0SZFiAU"] === "3") {

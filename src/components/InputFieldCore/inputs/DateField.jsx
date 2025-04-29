@@ -1,10 +1,6 @@
-import React, { useState } from "react";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-  DatePicker,
-} from "@material-ui/pickers";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import moment from "moment";
+import React from "react";
 
 // Date Picker
 import MomentUtils from "@date-io/moment";
@@ -59,14 +55,11 @@ const DateField = ({
         })}
         variant={variant}
         disabled={disabled}
-        value={
-          value ? moment(fieldValue, switchFormatMoment(periodType)) : null
-        }
+        value={value ? moment(fieldValue, switchFormatMoment(periodType)) : null}
         defaultValue=""
         onChange={(date) => {
           handleChange(moment(date).format(switchFormatMoment(periodType)));
-          handleBlur &&
-            handleBlur(moment(date).format(switchFormatMoment(periodType)));
+          handleBlur && handleBlur(moment(date).format(switchFormatMoment(periodType)));
         }}
         format={switchFormatMoment(periodType)}
         invalidDateMessage={value ? "Invalid Date Format" : ""}

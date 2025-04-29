@@ -117,7 +117,7 @@ function CaptureForm(props) {
                 startAdornment: <InputAdornment position="start">{f.prefix}</InputAdornment>,
               }}
               error={validation(f.code)}
-              maxDate={props.maxDate}
+              maxDate={f.maxDate || props.maxDate}
               minDate={"1900-12-31"}
               data-element-id={f.code}
               hyperlink={f.url}
