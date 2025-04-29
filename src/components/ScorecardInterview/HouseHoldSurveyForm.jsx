@@ -17,6 +17,7 @@ import { getQuarterlyFromDate } from "@/utils/date";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 import { calculateHouseHoldFields } from "./calculateHouseHoldFields";
 import _ from "lodash";
+import { houseHoldSurveyRules } from "./houseHoldSurveyRules";
 
 const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
   const i18n = useTranslation();
@@ -122,30 +123,10 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
       setFormDirty(true);
     }
 
-    metadata[DEs.Q802].hidden = newData[DEs.Q801] !== "true";
-    metadata[DEs.PleaseSpecifyTheOtherGovernment].hidden = newData[DEs.Q802] !== "Others";
-
-    metadata[DEs.Q901].hidden = newData[DEs.Q900] !== "true";
-    // SHOW 'Other social and behaviour Change (SBC) sessions' if 'social and behaviour Change (SBC) sessions (Q 901)' = 'Others'
-    metadata["S6aWPoAIthD"].hidden = newData["gNBFmUFtW6a"] !== "5";
-
-    // if Q801 = No, clear all data 802
-    if (newData["dtTG7cjn1CH"] === "false" || !newData["dtTG7cjn1CH"]) {
-      metadata[GOV_PROGRAMS_DE_ID].valueSet.forEach((option) => {
-        newData[option.trueOnlyDeId] = null;
-      });
-    }
-
-    // if Q900 = No, clear all data 801
-    if (newData["dxag8YT8w46"] === "false" || !newData["dxag8YT8w46"]) {
-      metadata[SOCIAL_AND_BEHAVIOR_DE_ID].valueSet.forEach((option) => {
-        newData[option.trueOnlyDeId] = null;
-      });
-    }
-
     // Calculate fields
     // Score_Number of 4Ps Members
     calculateHouseHoldFields(newData, interviewCascadeData);
+    houseHoldSurveyRules(metadata, newData);
 
     clearHiddenFieldData(metadata, data);
     if (previousData) setFormDirty(true);
@@ -203,14 +184,6 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
       />
     )
   );
-};
-
-const DEs = {
-  Q801: "dtTG7cjn1CH",
-  Q802: "RC5B8EETrOM",
-  PleaseSpecifyTheOtherGovernment: "b918Rl73Eu0",
-  Q900: "dxag8YT8w46",
-  Q901: "gNBFmUFtW6a",
 };
 
 const convertOriginMetadata = (foundProgramStage) => {

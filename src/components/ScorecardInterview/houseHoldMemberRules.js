@@ -157,7 +157,7 @@ export const childHeathRules = (metadata, data, { months, years }) => {
   // MMR 1 or MCV 1 or any measles-containing vaccine given	Hide when age in months < 9 month
   metadata["r3zAoTxKpTt"].hidden = months < 9;
   // MMR 2 or MCV 2 vaccine given	Hide when age in years < 1 year
-  metadata["tQbe491SjPw"].hidden = months < 9;
+  metadata["tQbe491SjPw"].hidden = years < 1;
 };
 
 const DEs = {
