@@ -38,7 +38,7 @@ const countRangeValue = (data, de_ids, min, max) => {
   return count.length;
 };
 
-export const calculateHouseHoldFields = (newData, interviewCascadeData) => {
+export const calculateHouseHoldFields = (newData, interviewCascadeData, interviewData) => {
   //Score_Number of 4Ps Members
   newData["MQxRIx9bGdi"] = countValue(interviewCascadeData, "wxN2PuLymoY", "1");
   //Score_Number of IPs
@@ -173,4 +173,14 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData) => {
   // Child less than 5 yrs identified in the HH	Ud7pdtnOz0p	Age in years	Hc9Vgt4LXjb	Yes, if any member has Age in years < 5
   const count_age_lt_5 = countRangeValue(interviewCascadeData, "Hc9Vgt4LXjb", 0, 4);
   newData["Ud7pdtnOz0p"] = count_age_lt_5 > 0 ? "true" : undefined;
+
+  const respondent = interviewCascadeData.find((item) => item["Cn37lbyhz6f"] === interviewData["SrFa2O3m6ff"]);
+
+  if (respondent) {
+    newData["lVOceUugk7C"] = respondent["OiOvGqVEyY9"];
+    newData["TKSp7xKJEan"] = respondent["wxN2PuLymoY"];
+    newData["nJ9peoKuLoX"] = respondent["JjFcU1L7Ll1"];
+    newData["MKR5nlRe5EJ"] = respondent["NOKzq4dAKF7"];
+    newData["WGqRCnEYzux"] = respondent["Wdg76PCqsBn"];
+  }
 };

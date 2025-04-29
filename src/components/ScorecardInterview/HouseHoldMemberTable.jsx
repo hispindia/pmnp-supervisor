@@ -159,7 +159,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const editRowCallback = (metadata, previousData, data, code, value) => {
     // WARNING: if it's hidden, the data will be removed
 
-    const HouseHoldMemberTable = { metadata, previousData, data, code, value };
+    const HouseHoldMemberTable = { metadata, previousData, data, code, value, interviewData };
     console.log("HouseHoldMemberTable", HouseHoldMemberTable);
 
     // Hide rest of the form if Membership status = "Deceased" or Migrated to "Non-PMNP Area" or "Not part of the HH"
@@ -205,6 +205,9 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     data["RoSxLAB5cfo"] = months;
     data["Gds5wTiXoSK"] = weeks;
     data["ICbJBQoOsVt"] = days;
+
+    // INT_Visit number
+    data["Wdg76PCqsBn"] = interviewData["Wdg76PCqsBn"];
 
     const ages = { years, months, weeks, days };
     handleAgeFields(metadata, ages);
