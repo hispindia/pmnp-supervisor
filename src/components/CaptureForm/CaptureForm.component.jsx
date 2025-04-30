@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import useForm from "../../hooks/useForm";
 import { FORM_ACTION_TYPES } from "../constants";
+import { BASE64_IMAGES } from "@/constants/base64Images";
 
 // components
 import { useTranslation } from "react-i18next";
@@ -37,6 +38,7 @@ function CaptureForm(props) {
     ...other
   } = props;
   const { programMetadataMember } = useSelector((state) => state.metadata);
+  const { offlineStatus } = useSelector((state) => state.common);
   const { programSections, programStages } = formProgramMetadata || programMetadataMember;
   const {
     formData,
@@ -93,6 +95,8 @@ function CaptureForm(props) {
       .filter((f) => !f.additionCol)
       .filter((f) => !f.hidden)
       .map((f, index) => {
+        const base64Object = offlineStatus ? BASE64_IMAGES[f.code] : null;
+
         return (
           <div className="col-lg-3 mb-3" key={`${f.code}-${index}`}>
             <InputField
@@ -121,6 +125,7 @@ function CaptureForm(props) {
               minDate={"1900-12-31"}
               data-element-id={f.code}
               hyperlink={f.url}
+              base64={base64Object}
             />
           </div>
         );

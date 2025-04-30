@@ -5,12 +5,12 @@ import { DateField, SelectField, TextField } from "./inputs/index";
 import { onKeyDown } from "@/utils";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import MultipleTrueOnlyDEs from "./inputs/MultipleTrueOnlyDEs";
+import HyperLink from "./HyperLink";
 
 const InputField = ({
   valueType,
@@ -260,12 +260,8 @@ const InputField = ({
       {label && (
         <div className="input-field-label">
           {label}
-          {props.hyperlink ? (
-            <a href={props.hyperlink} target="_blank" rel="noopener noreferrer">
-              &nbsp;
-              <InfoCircleOutlined />
-            </a>
-          ) : null}
+          &nbsp;
+          <HyperLink hyperlink={props.hyperlink} base64={props.base64} />
         </div>
       )}
       <div className="h-10">{generateInput()}</div>
