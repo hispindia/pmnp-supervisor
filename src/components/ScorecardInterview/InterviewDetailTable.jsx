@@ -380,13 +380,13 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       <div className="row">
         <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive pl-0">
           <BootstrapTable
+            classes="disabled-triple"
             keyField="id"
             data={showData}
             columns={columnsC}
             rowEvents={rowEvents}
             rowClasses={(row) => row.disabled && "disabled-row"}
             condensed
-            hover
           />
         </div>
       </div>

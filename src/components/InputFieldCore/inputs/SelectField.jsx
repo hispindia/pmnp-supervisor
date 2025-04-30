@@ -8,16 +8,13 @@ const SelectField = ({
   handleBlur,
   locale,
   disabled,
+  isSearchable = false,
   ...props
 }) => {
   const { t } = useTranslation();
 
   const options = valueSet.map((e) => {
-    e.label = locale
-      ? locale != "en"
-        ? e.translations[locale]
-        : e.label
-      : e.label;
+    e.label = locale ? (locale != "en" ? e.translations[locale] : e.label) : e.label;
     return e;
   });
 
@@ -38,6 +35,7 @@ const SelectField = ({
         handleChange(selected.value);
         handleBlur && handleBlur(selected.value);
       }}
+      isSearchable={isSearchable}
       styles={{
         control: (provided) => ({
           ...provided,

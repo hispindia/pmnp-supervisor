@@ -334,15 +334,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
       <div className="row">
         <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive pl-0">
-          <BootstrapTable
-            keyField="id"
-            data={showData}
-            columns={columnsC}
-            rowEvents={rowEvents}
-            hover
-            striped
-            condensed
-          />
+          <BootstrapTable keyField="id" data={showData} columns={columnsC} rowEvents={rowEvents} hover condensed />
         </div>
       </div>
     </div>
