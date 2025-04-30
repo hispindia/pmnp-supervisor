@@ -1,9 +1,8 @@
-.interview-table .selected-row,
-.interview-table .selected-row:hover {
-  background-color: rgba(22, 119, 255, 0.1);
+table.disable-triple tr:nth-child(even) {
+  background-color: unset !important;
 }
 
-.interview-table .disabled-row {
-  background-color: rgba(0, 0, 0, 0.05);
+table.disable-triple tr.disabled-row {
+  background-color: rgba(0, 0, 0, 0.05) !important;
   color: #212529;
 }

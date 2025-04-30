@@ -39,16 +39,16 @@
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
-table:not(.disable-triple) th {
+table th {
   background-color: var(--gray-bg) !important;
   color: #fff !important;
 }
 
-table:not(.disable-triple) tr:nth-child(even) {
+table tr:nth-child(even) {
   background-color: #f2f2f2 !important;
 }
 
-table:not(.disable-triple) th svg {
+table th svg {
   color: #fff !important;
 }
 
@@ -56,15 +56,15 @@ table:not(.disable-triple) th svg {
   transition: none !important;
 }
 
-table:not(.disable-triple) tr td {
+table tr td {
   background: unset !important;
   transition: none;
 }
 
-table:not(.disable-triple) tbody tr:hover {
+table tbody tr:hover {
   background: linear-gradient(to right, #ffa33c, #ecb400) !important;
 }
 
-table:not(.disable-triple) tbody tr:hover td {
+table tbody tr:hover td {
   color: #fff;
 }
