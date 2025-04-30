@@ -80,7 +80,7 @@ const PushToServerButton = () => {
       >
         {t("sync")}
       </Button>
-      <Button
+      {/* <Button
         onClick={exportExcel}
         style={{
           marginRight: "10px",
@@ -92,9 +92,9 @@ const PushToServerButton = () => {
         icon={<UploadOutlined />}
       >
         {t("exportExcel")}
-      </Button>
+      </Button> */}
 
-      <ExcelImportButton />
+      {/* <ExcelImportButton /> */}
 
       {/* TEST BUTTONS */}
       <BulkImportButton />
