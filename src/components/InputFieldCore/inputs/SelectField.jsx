@@ -27,8 +27,8 @@ const SelectField = ({
       placeholder={value ? value : t("select")}
       onChange={(selected) => {
         if (!selected) {
-          handleChange(null);
-          handleBlur && handleBlur(null);
+          handleChange("");
+          handleBlur && handleBlur("");
           return;
         }
 
