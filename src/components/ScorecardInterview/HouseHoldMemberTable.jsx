@@ -85,10 +85,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const demographicDataValues = {};
     const scorecardSurveyDataValues = {};
     stageDataElements[MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID].forEach((de) => {
-      if (row[de.id]) demographicDataValues[de.id] = row[de.id];
+      demographicDataValues[de.id] = row[de.id];
     });
     stageDataElements[MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID].forEach((de) => {
-      if (row[de.id]) scorecardSurveyDataValues[de.id] = row[de.id];
+      scorecardSurveyDataValues[de.id] = row[de.id];
     });
 
     // init new event
@@ -152,7 +152,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     dispatch(submitEvent(scorecardSurveyEventPayload));
 
     const events = [demographicEventPayload, scorecardSurveyEventPayload];
-    console.log("update member events:", { events });
+    console.log("update member events:", { events, scorecardSurveyDataValues });
     onClose();
   };
 

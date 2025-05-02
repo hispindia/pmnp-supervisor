@@ -25,7 +25,6 @@ const FamilyMemberFormContainer = () => {
   );
 
   useEffect(() => {
-    console.log("Trigger save immediately when event is changed");
     handleSaveButton();
   }, [JSON.stringify(event)]);
 

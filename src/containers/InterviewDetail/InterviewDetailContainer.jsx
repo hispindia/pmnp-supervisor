@@ -79,15 +79,11 @@ const InterviewDetailContainer = () => {
       return acc;
     }, {});
 
-    console.log({ disabledInterviews });
-
     const transformed = interviewEvents.map((e) => ({
       id: e.event,
       ...e.dataValues,
       disabled: disabledInterviews[e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID]] || false,
     }));
-
-    console.log({ transformed });
 
     setData(transformed);
   }, [currentEvents]);

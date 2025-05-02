@@ -72,7 +72,6 @@ function CaptureForm(props) {
 
   useEffect(() => {
     return () => {
-      console.log("Cascade form unmounted");
       clear();
     };
   }, []);

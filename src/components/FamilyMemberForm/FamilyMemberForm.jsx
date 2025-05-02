@@ -209,7 +209,6 @@ const FamilyMemberForm = ({
       }
     }
 
-    console.log("dispatch:data :>> ", data);
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
   };
 
