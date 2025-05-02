@@ -158,7 +158,6 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
     }
 
     return () => {
-      console.log("form unmounted");
       clearForm();
     };
   }, [currentEvents]);

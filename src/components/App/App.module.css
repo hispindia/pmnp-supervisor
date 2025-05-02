@@ -44,9 +44,9 @@ table th {
   color: #fff !important;
 }
 
-table tr:nth-child(even) {
+/* table tr:nth-child(even) {
   background-color: #f2f2f2 !important;
-}
+} */
 
 table th svg {
   color: #fff !important;

@@ -1,6 +1,6 @@
 import { generateUid } from "@/utils";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Card, Modal } from "react-bootstrap";
+import { Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,16 +18,13 @@ import {
 } from "@/constants/app-config";
 import { submitEvent } from "@/redux/actions/data";
 import { deleteEvent } from "@/redux/actions/data/tei";
+import { getQuarterlyFromDate } from "@/utils/date";
 import { transformEvent } from "@/utils/event";
+import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears } from "date-fns";
 import _ from "lodash";
-import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
 import CaptureForm from "../CaptureForm";
 import { transformData, transformMetadataToColumns } from "../CascadeTable/utils";
 import "../CustomStyles/css/bootstrap.min.css";
-import "./interview-detail-table.css";
-import { clearHiddenFieldData, updateMetadata } from "./utils";
-import { differenceInMonths, differenceInWeeks, differenceInYears, differenceInDays } from "date-fns";
-import { getQuarterlyFromDate } from "@/utils/date";
 import {
   childHeathRules,
   childNutritionRules,
@@ -35,23 +32,30 @@ import {
   handleAgeFields,
   hideSectionRules,
 } from "./houseHoldMemberRules";
+import "./interview-detail-table.css";
+import { clearHiddenFieldData, updateMetadata } from "./utils";
 
-const DeleteConfirmationButton = withDeleteConfirmation(Button);
+const getInterviewCascadeData = (currentInterviewCascade, interviewId) => {
+  if (!currentInterviewCascade?.[interviewId]) return [];
+  const memberData = currentInterviewCascade?.[interviewId].map((r) => {
+    const isSaved = r.events.length > 0;
+
+    return {
+      ...r.memberData,
+      isSaved,
+    };
+  });
+
+  return memberData;
+};
 
 const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const locale = i18n.language || "en";
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
-
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
-
-  const { programMetadataMember, selectedOrgUnit, programMetadata } = useSelector((state) => state.metadata);
-
-  const getInterviewCascadeData = () => {
-    if (!currentInterviewCascade?.[interviewId]) return [];
-    return currentInterviewCascade?.[interviewId].map((r) => r.memberData);
-  };
+  const { programMetadataMember, selectedOrgUnit } = useSelector((state) => state.metadata);
 
   const [originMetadata, stageDataElements] = convertOriginMetadata(programMetadataMember);
 
@@ -61,6 +65,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
+  console.log({ data, currentInterviewCascade });
 
   const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
 
@@ -282,13 +287,12 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
-      console.log("Cascade table unmounted");
       clearForm();
     };
   }, []);
 
   useEffect(() => {
-    const interviewCascadeData = getInterviewCascadeData();
+    const interviewCascadeData = getInterviewCascadeData(currentInterviewCascade, interviewId);
     setData(interviewCascadeData);
 
     if (selectedRowIndex !== null) {
@@ -300,6 +304,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       setSelectedData(interviewCascadeData[selectedRowIndex]);
     }
   }, [currentInterviewCascade]);
+
+  const rowClasses = (row, rowIndex) => {
+    if (row.isSaved) {
+      return "disabled-row";
+    } else {
+      return "open-row";
+    }
+  };
 
   return (
     <div className="interview-table px-4">
@@ -334,7 +346,15 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
       <div className="row">
         <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive pl-0">
-          <BootstrapTable keyField="id" data={showData} columns={columnsC} rowEvents={rowEvents} hover condensed />
+          <BootstrapTable
+            keyField="id"
+            data={showData}
+            columns={columnsC}
+            rowEvents={rowEvents}
+            hover
+            condensed
+            rowClasses={rowClasses}
+          />
         </div>
       </div>
     </div>

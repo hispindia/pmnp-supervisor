@@ -54,6 +54,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
   const currentTei = useSelector((state) => state.data.tei.data.currentTei);
   const currentInterviewCascade = useSelector((state) => state.data.tei.data.currentInterviewCascade);
+  console.log({ currentInterviewCascade });
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
   const { attributes } = currentTei;
 
@@ -104,8 +105,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     // init new event
     dispatch(submitEvent(eventPayload));
   };
-
-  console.log({ currentInterviewCascade });
 
   const handleEditRow = (e, row, rowIndex) => {
     // Update data
@@ -311,7 +310,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
-      console.log("Cascade table unmounted");
       clearForm();
     };
   }, []);
@@ -385,7 +383,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
             data={showData}
             columns={columnsC}
             rowEvents={rowEvents}
-            rowClasses={(row) => row.disabled && "disabled-row"}
+            rowClasses={(row) => (row.disabled ? "disabled-row" : "open-row")}
             condensed
           />
         </div>

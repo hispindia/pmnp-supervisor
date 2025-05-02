@@ -235,7 +235,6 @@ const CascadeTable = (props) => {
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
-      console.log("Cascade table unmounted");
       clearForm();
     };
   }, []);
