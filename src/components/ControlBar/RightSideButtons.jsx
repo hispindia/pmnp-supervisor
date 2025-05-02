@@ -9,12 +9,7 @@ import styles from "./ControlBar.module.css";
 
 const { exitBtn, helpBtn, barContainer } = styles;
 
-const RightSideButtons = ({
-  onClickHelp,
-  onClickExit,
-  helpLabel,
-  exitLabel,
-}) => {
+const RightSideButtons = ({ onClickHelp, onClickExit, helpLabel, exitLabel }) => {
   const location = useLocation();
   const shouldShowExit = location.pathname !== "/form";
 
@@ -27,13 +22,15 @@ const RightSideButtons = ({
 
       {shouldShowExit ? (
         <>
-          <div className={helpBtn}>
-            <Tooltip title={helpLabel} placement="left">
-              <IconButton size="small">
-                <HelpIcon onClick={onClickHelp} />
-              </IconButton>
-            </Tooltip>
-          </div>
+          {helpLabel ? (
+            <div className={helpBtn}>
+              <Tooltip title={helpLabel} placement="left">
+                <IconButton size="small">
+                  <HelpIcon onClick={onClickHelp} />
+                </IconButton>
+              </Tooltip>
+            </div>
+          ) : null}
 
           <div className={exitBtn}>
             <Button
