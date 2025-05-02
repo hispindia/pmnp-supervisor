@@ -171,7 +171,7 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
   newData["usT2QWekRjm"] = count_menstrual_history > 0 ? "true" : undefined;
 
   // Child less than 5 yrs identified in the HH	Ud7pdtnOz0p	Age in years	Hc9Vgt4LXjb	Yes, if any member has Age in years < 5
-  const count_age_lt_5 = countRangeValue(interviewCascadeData, "Hc9Vgt4LXjb", 0, 4);
+  const count_age_lt_5 = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 0, 60);
   newData["Ud7pdtnOz0p"] = count_age_lt_5 > 0 ? "true" : undefined;
 
   const respondent = interviewCascadeData.find((item) => item["Cn37lbyhz6f"] === interviewData["SrFa2O3m6ff"]);
