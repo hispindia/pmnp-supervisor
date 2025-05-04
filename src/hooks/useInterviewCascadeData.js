@@ -29,7 +29,6 @@ export const useInterviewCascadeData = (interviewData) => {
 
     // Filter
     const filteredMemberData = memberData.filter((member) => !filterMalesMoreThan5(eventDate)(member));
-    console.log({ filteredMemberData, memberData });
 
     return filteredMemberData;
   };
