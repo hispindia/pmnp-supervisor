@@ -142,7 +142,7 @@ const FamilyMemberForm = ({
       }
     }
 
-    const householdHeadMember = currentCascade.find((member) => member["QAYXozgCOHu"] === "1");
+    const householdHeadMember = currentCascade?.find((member) => member["QAYXozgCOHu"] === "1");
 
     // WARNING: if it's hidden, the data will be removed
     metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
