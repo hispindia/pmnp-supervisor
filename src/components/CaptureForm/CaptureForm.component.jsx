@@ -72,7 +72,7 @@ function CaptureForm(props) {
     displayDEs
   );
 
-  const disableSaveButton = saveDisabled || !isFormFulfilled;
+  const disableSaveButton = saveDisabled;
 
   useEffect(() => {
     initFromData(data);

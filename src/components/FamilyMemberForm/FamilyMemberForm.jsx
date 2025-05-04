@@ -142,6 +142,8 @@ const FamilyMemberForm = ({
       }
     }
 
+    const householdHeadMember = currentCascade.find((member) => member["QAYXozgCOHu"] === "1");
+
     // WARNING: if it's hidden, the data will be removed
     metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
 
@@ -169,9 +171,16 @@ const FamilyMemberForm = ({
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
 
-    // Household head should more than 18 years old
-    if (data["QAYXozgCOHu"] === "1" && years < 18) {
-      metadata["QAYXozgCOHu"].error = "Household head should be more than 18 years old";
+    if (data["QAYXozgCOHu"] === "1") {
+      // Household head should more than 18 years old
+      if (years < 18) {
+        metadata["QAYXozgCOHu"].error = "Household head should be more than 18 years old";
+      }
+
+      // Allow only one household head per household
+      if (householdHeadMember && householdHeadMember.id != data.id) {
+        metadata["QAYXozgCOHu"].error = "Only one household head is allowed";
+      }
     }
 
     // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs

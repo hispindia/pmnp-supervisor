@@ -174,7 +174,18 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const hhMemberStatus = data["Rb0k4fOdysI"];
     if (hhMemberStatus === "001" || hhMemberStatus === "004" || hhMemberStatus === "002") {
       Object.keys(metadata).forEach((de) => {
-        if (de === "Rb0k4fOdysI" || de === HOUSEHOLD_INTERVIEW_ID_DE_ID || metadata[de].isAttribute) return;
+        if (
+          [
+            HOUSEHOLD_INTERVIEW_ID_DE_ID,
+            "Rb0k4fOdysI",
+            "Hc9Vgt4LXjb",
+            "RoSxLAB5cfo",
+            "Gds5wTiXoSK",
+            "ICbJBQoOsVt",
+          ].includes(de) ||
+          metadata[de].isAttribute
+        )
+          return;
         metadata[de].hidden = true;
       });
 

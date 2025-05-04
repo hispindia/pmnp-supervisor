@@ -12,7 +12,13 @@ import InputField from "../CustomAntForm/InputField";
 import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 import { useUser } from "@/hooks/useUser";
 
-const disabledFields = [HOUSEHOLD_ID_ATTR_ID, "eMYBznRdn0t", "CNqaoQva9S2", HOUSEHOLD_DATA_COLLECTOR_ATTR_ID];
+const disabledFields = [
+  HOUSEHOLD_ID_ATTR_ID,
+  "eMYBznRdn0t",
+  "CNqaoQva9S2",
+  HOUSEHOLD_DATA_COLLECTOR_ATTR_ID,
+  "GXs8SDJL19y",
+];
 
 const ProfileForm = ({
   onSubmit,

@@ -9,9 +9,8 @@ import { getTeiError, getTeiSuccessMessage, loadTei } from "../../actions/data/t
 import { mutateAttributes, updateNewStatus } from "../../actions/data/tei/currentTei";
 import { SUBMIT_ATTRIBUTES } from "../../types/data/tei";
 import { getTeiId } from "./utils";
-import { DATA_COLLECT_ATTRIBUTE_ID } from "@/constants/app-config";
 
-function* handleSubmitAttributes({ attributes }) {
+export function* handleSubmitAttributes({ attributes }) {
   yield put(loadTei(true));
 
   const teiId = yield call(getTeiId);

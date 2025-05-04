@@ -6,13 +6,9 @@ import { generateTEIDhis2Payload } from "./utils";
 
 import { dataApi } from "@/api";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
-import {
-  deleteMember,
-  getTeiError,
-  getTeiSuccessMessage,
-  loadTei,
-} from "../../actions/data/tei";
+import { deleteMember, getTeiError, getTeiSuccessMessage, loadTei } from "../../actions/data/tei";
 import { updateCascade } from "../../actions/data/tei/currentCascade";
+import submitAttributes, { handleSubmitAttributes } from "./submitAttributes";
 
 function* handleSubmitEventDataValues({ dataValues }) {
   console.log("handleSubmitEventDataValues", { dataValues });
@@ -27,13 +23,10 @@ function* handleSubmitEventDataValues({ dataValues }) {
   // metadata
   const { programMetadataMember } = yield select((state) => state.metadata);
 
-  const { currentTei, currentCascade } = yield select(
-    (state) => state.data.tei.data
-  );
+  const { currentTei, currentCascade } = yield select((state) => state.data.tei.data);
   const { selectedMember } = yield select((state) => state.data.tei);
 
   process.env.NODE_ENV && console.log({ selectedMember });
-
   process.env.NODE_ENV && console.log({ currentTei });
   process.env.NODE_ENV && console.log({ currentCascade });
 
@@ -56,9 +49,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
     // if (!currentCascade) return;
 
     // Update cascade to REDUX store
-    const newCurrentCascade = currentCascade
-      ? JSON.parse(JSON.stringify(currentCascade))
-      : {};
+    const newCurrentCascade = currentCascade ? JSON.parse(JSON.stringify(currentCascade)) : {};
 
     process.env.NODE_ENV && console.log({ newCurrentCascade });
     yield put(updateCascade(newCurrentCascade));
@@ -69,20 +60,13 @@ function* handleSubmitEventDataValues({ dataValues }) {
       // OFFLINE MODE
       let memberTEI = {};
       if (offlineStatus) {
-        memberTEI = yield call(
-          trackedEntityManager.getTrackedEntityInstanceById,
-          {
-            trackedEntity: selectedMember.id,
-            program: programMetadataMember.id,
-          }
-        );
+        memberTEI = yield call(trackedEntityManager.getTrackedEntityInstanceById, {
+          trackedEntity: selectedMember.id,
+          program: programMetadataMember.id,
+        });
       } else {
         // In Online mode - if cannot find TEI -> catch errors
-        memberTEI = yield call(
-          dataApi.getTrackedEntityInstanceById,
-          selectedMember.id,
-          programMetadataMember.id
-        );
+        memberTEI = yield call(dataApi.getTrackedEntityInstanceById, selectedMember.id, programMetadataMember.id);
       }
 
       process.env.NODE_ENV && console.log({ memberTEI, selectedMember });
@@ -110,8 +94,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
                 },
                 programMetadataMember
               );
-              process.env.NODE_ENV &&
-                console.log("all TEI,ERN exist", updatedMemberTei);
+              process.env.NODE_ENV && console.log("all TEI,ERN exist", updatedMemberTei);
               yield call(pushTEI, updatedMemberTei);
             } catch (error) {
               console.log("all TEI,ERN exist", error);
@@ -184,6 +167,9 @@ function* handleSubmitEventDataValues({ dataValues }) {
 function* pushTEI(updatedMemberTei) {
   console.log("pushTEI", updatedMemberTei.data);
   const { offlineStatus } = yield select((state) => state.common);
+  const { attributes } = yield select((state) => state.data.tei.data.currentTei);
+  const { selectedMember } = yield select((state) => state.data.tei);
+
   let pushTie;
   try {
     // OFFLINE MODE
@@ -196,6 +182,8 @@ function* pushTEI(updatedMemberTei) {
         trackedEntities: [updatedMemberTei.data],
       });
     }
+
+    yield call(handleSubmitAttributes, { attributes: { ...attributes, GXs8SDJL19y: selectedMember["PIGLwIaw0wy"] } });
     yield put(getTeiSuccessMessage(`Created successfully`));
   } catch (e) {
     // console.log('pushTie :>> ', pushTie);
@@ -204,6 +192,6 @@ function* pushTEI(updatedMemberTei) {
   }
 }
 
-export default function* submitAttributes() {
+export default function* submitEventDataValues() {
   yield takeLatest(SUBMIT_EVENT_DATA_VALUES, handleSubmitEventDataValues);
 }
