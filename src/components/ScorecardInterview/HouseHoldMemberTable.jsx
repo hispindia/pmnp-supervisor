@@ -34,6 +34,7 @@ import {
 } from "./houseHoldMemberRules";
 import "./interview-detail-table.css";
 import { clearHiddenFieldData, updateMetadata } from "./utils";
+import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 
 const getInterviewCascadeData = (currentInterviewCascade, interviewId) => {
   if (!currentInterviewCascade?.[interviewId]) return [];
@@ -56,8 +57,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
   const { programMetadataMember, selectedOrgUnit } = useSelector((state) => state.metadata);
-
   const [originMetadata, stageDataElements] = convertOriginMetadata(programMetadataMember);
+  const { interviewCascadeData } = useInterviewCascadeData(interviewData);
 
   const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
@@ -65,7 +66,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const [selectedData, setSelectedData] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
-  console.log({ data, currentInterviewCascade });
 
   const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
 
@@ -167,11 +167,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const HouseHoldMemberTable = { metadata, previousData, data, code, value, interviewData };
     console.log("HouseHoldMemberTable", HouseHoldMemberTable);
 
+    // stage
+    metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
+
     // Hide rest of the form if Membership status = "Deceased" or Migrated to "Non-PMNP Area" or "Not part of the HH"
     const hhMemberStatus = data["Rb0k4fOdysI"];
     if (hhMemberStatus === "001" || hhMemberStatus === "004" || hhMemberStatus === "002") {
       Object.keys(metadata).forEach((de) => {
-        if (de === "Rb0k4fOdysI" || metadata[de].isAttribute) return;
+        if (de === "Rb0k4fOdysI" || de === HOUSEHOLD_INTERVIEW_ID_DE_ID || metadata[de].isAttribute) return;
         metadata[de].hidden = true;
       });
 
@@ -189,8 +192,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     metadata["X2Oln1OyP5o"].hidden = true;
     metadata["H42aYY9JMIR"].hidden = true;
 
-    // stage
-    metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = interviewId;
 
     data["C4b8S7zjs0g"] = data[MEMBER_HOUSEHOLD_UID];
@@ -222,6 +223,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     childNutritionRules(metadata, data, ages);
 
     clearHiddenFieldData(metadata, data);
+
+    console.log({ HOUSEHOLD_INTERVIEW_ID_DE_ID, interviewId, data });
   };
 
   const handleDeleteRow = (e, row) => {
@@ -292,7 +295,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   }, []);
 
   useEffect(() => {
-    const interviewCascadeData = getInterviewCascadeData(currentInterviewCascade, interviewId);
     setData(interviewCascadeData);
 
     if (selectedRowIndex !== null) {

@@ -29,7 +29,6 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
   const foundProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID
   );
-  const currentInterviewCascade = useSelector((state) => state.data.tei.data.currentInterviewCascade);
   const attributes = useSelector((state) => state.data.tei.data.currentTei.attributes);
   const trackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);

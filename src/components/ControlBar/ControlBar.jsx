@@ -16,10 +16,10 @@ import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButt
 const { controlBarContainer } = styles;
 
 const items = [
-  // {
-  //   key: "1",
-  //   label: <AddNewFamilyButtonContainer />,
-  // },
+  {
+    key: "1",
+    label: <AddNewFamilyButtonContainer />,
+  },
   {
     key: "2",
     label: <ReportButtonContainer />,
@@ -64,9 +64,9 @@ const ControlBar = () => {
             </Dropdown>
           </div>
 
-          {/* <div className="mr-3 d-none d-lg-block">
+          <div className="mr-3 d-none d-lg-block">
             <AddNewFamilyButtonContainer />
-          </div> */}
+          </div>
 
           {/* <div className="mr-3 d-none d-lg-block">
             <ReportButtonContainer />

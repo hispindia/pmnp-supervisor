@@ -4,20 +4,20 @@ import {
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
   HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
 } from "@/constants/app-config";
-import { generateUid } from "@/utils";
-import { useEffect, useState } from "react";
-import { FORM_ACTION_TYPES, GOV_PROGRAMS_DE_ID, HAS_INITIAN_NOVALUE, SOCIAL_AND_BEHAVIOR_DE_ID } from "../constants";
-import { clearHiddenFieldData, compareObject, updateMetadata } from "./utils";
-import { useDispatch, useSelector } from "react-redux";
-import { submitEvent } from "@/redux/actions/data";
-import { transformEvent } from "@/utils/event";
-import CaptureForm from "../CaptureForm";
-import { useTranslation } from "react-i18next";
-import { getQuarterlyFromDate } from "@/utils/date";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
-import { calculateHouseHoldFields } from "./calculateHouseHoldFields";
+import { submitEvent } from "@/redux/actions/data";
+import { generateUid } from "@/utils";
+import { getQuarterlyFromDate } from "@/utils/date";
+import { transformEvent } from "@/utils/event";
 import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import CaptureForm from "../CaptureForm";
+import { FORM_ACTION_TYPES, GOV_PROGRAMS_DE_ID, HAS_INITIAN_NOVALUE, SOCIAL_AND_BEHAVIOR_DE_ID } from "../constants";
+import { calculateHouseHoldFields } from "./calculateHouseHoldFields";
 import { houseHoldSurveyRules } from "./houseHoldSurveyRules";
+import { clearHiddenFieldData, updateMetadata } from "./utils";
 
 const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
   const i18n = useTranslation();

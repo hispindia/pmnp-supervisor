@@ -144,7 +144,6 @@ const FamilyMemberForm = ({
 
     // WARNING: if it's hidden, the data will be removed
     metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
-    // metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].hidden = true;
 
     metadata[HOUSEHOLD_MEMBER_ID].disabled = true;
     data[HOUSEHOLD_MEMBER_ID] = data.isNew ? getMaxHHMemberID(currentCascade) : data[HOUSEHOLD_MEMBER_ID];

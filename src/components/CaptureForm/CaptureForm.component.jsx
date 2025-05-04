@@ -10,6 +10,7 @@ import { BASE64_IMAGES } from "@/constants/base64Images";
 import { useTranslation } from "react-i18next";
 import { Button } from "antd";
 import InputField from "../InputFieldCore/InputField.component.jsx";
+import { check } from "prettier";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -40,9 +41,20 @@ function CaptureForm(props) {
   const { programMetadataMember } = useSelector((state) => state.metadata);
   const { offlineStatus } = useSelector((state) => state.common);
   const { programSections, programStages } = formProgramMetadata || programMetadataMember;
+
+  const displayDEs = programStages.reduce((acc, pStage) => {
+    const dataElements = pStage.programStageSections.reduce((acc, pSection) => {
+      const dataElements = pSection.dataElements.map((de) => de.id);
+      return [...acc, ...dataElements];
+    }, []);
+    return [...acc, ...dataElements];
+  }, []);
+
   const {
     formData,
     prevData,
+    isFormFulfilled,
+    checkFormFulfilled,
     setFormData,
     changeValue,
     formMetadata,
@@ -51,9 +63,16 @@ function CaptureForm(props) {
     validation,
     onSubmit,
     clear,
-  } = useForm(_.cloneDeep(metadata), data, {
-    compulsory: t("thisFieldIsRequired"),
-  });
+  } = useForm(
+    _.cloneDeep(metadata),
+    data,
+    {
+      compulsory: t("thisFieldIsRequired"),
+    },
+    displayDEs
+  );
+
+  const disableSaveButton = saveDisabled || !isFormFulfilled;
 
   useEffect(() => {
     initFromData(data);
@@ -84,6 +103,7 @@ function CaptureForm(props) {
     }, {});
 
     editRowCallback(cloneMetadata, prevData, data, code, value);
+    // checkFormFulfilled();
 
     setFormData({ ...data });
     changeMetadata([...Object.values(cloneMetadata)]);
@@ -253,14 +273,24 @@ function CaptureForm(props) {
           <div className="btn-toolbar" role="toolbar">
             {formStatus === FORM_ACTION_TYPES.ADD_NEW && (
               <div className="btn-group mr-2" role="group" aria-label="First group">
-                <Button size="large" type="primary" disabled={saveDisabled} onClick={(e) => handleOnSubmit(e, "add")}>
+                <Button
+                  size="large"
+                  type="primary"
+                  disabled={disableSaveButton}
+                  onClick={(e) => handleOnSubmit(e, "add")}
+                >
                   {t("save")}
                 </Button>
               </div>
             )}
             {formStatus === FORM_ACTION_TYPES.EDIT && (
               <div className="btn-group mr-2" role="group" aria-label="First group">
-                <Button size="large" type="primary" disabled={saveDisabled} onClick={(e) => handleOnSubmit(e, "edit")}>
+                <Button
+                  size="large"
+                  type="primary"
+                  disabled={disableSaveButton}
+                  onClick={(e) => handleOnSubmit(e, "edit")}
+                >
                   {t("save")}
                 </Button>
               </div>

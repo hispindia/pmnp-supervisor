@@ -9,9 +9,10 @@ import { useSelector } from "react-redux";
 import withDhis2FormItem from "../../hocs/withDhis2Field";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
-import { HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
+import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
+import { useUser } from "@/hooks/useUser";
 
-const disabledFields = [HOUSEHOLD_ID_ATTR_ID, "eMYBznRdn0t", "CNqaoQva9S2"];
+const disabledFields = [HOUSEHOLD_ID_ATTR_ID, "eMYBznRdn0t", "CNqaoQva9S2", HOUSEHOLD_DATA_COLLECTOR_ATTR_ID];
 
 const ProfileForm = ({
   onSubmit,
@@ -23,6 +24,8 @@ const ProfileForm = ({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const { minDate, maxDate } = useSelector((state) => state.metadata);
+  const { user } = useUser();
+
   const {
     selectedOrgUnit,
     programMetadata: { trackedEntityAttributes, organisationUnits, villageHierarchy },
@@ -78,8 +81,6 @@ const ProfileForm = ({
     return value;
   };
 
-  // const cleanFormData = (values) => pickBy(values, identity);
-
   const items = trackedEntityAttributes
     .filter(({ displayInList }) => displayInList)
     .map((attr) => ({ ...attr, disabled: disabledFields.includes(attr.id) || !isEdit }));
@@ -91,7 +92,6 @@ const ProfileForm = ({
       form={form}
       name="familyRegistration"
       onFinish={(fieldsValue) => {
-        // onSubmit(cleanFormData(fieldsValue));
         onSubmit(fieldsValue);
       }}
     >
@@ -110,14 +110,16 @@ const ProfileForm = ({
       <div className="row col-lg-12">
         {items.map((item) => (
           <div className="col-lg-3">
-            <Dhis2FormItem
-              id={item.id}
-              // displayFormName={t("Household ID")}
-            >
+            <Dhis2FormItem id={item.id}>
               <InputField size="large" disabled={item.disabled} />
             </Dhis2FormItem>
           </div>
         ))}
+        <div className="col-lg-3">
+          <Dhis2FormItem id={HOUSEHOLD_DATA_COLLECTOR_ATTR_ID}>
+            <InputField size="large" disabled={true} />
+          </Dhis2FormItem>
+        </div>
       </div>
       {/* <div className="row col-lg-12">
         <div className="col-lg-3">

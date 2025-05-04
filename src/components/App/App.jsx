@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import RegisteredTeiListContainer from "../../containers/RegisteredTeiList";
 import ControlBar from "../ControlBar/ControlBar";
 import MainForm from "../../containers/MainForm";
@@ -9,6 +9,9 @@ const App = () => {
     <>
       <Route path="/" render={() => <ControlBar />} />
       <Switch>
+        <Route exact path="/">
+          <Redirect to="/list" />
+        </Route>
         <Route path="/list" component={RegisteredTeiListContainer} />
         <Route path="/form" component={MainForm} />
         <Route path="/report" component={ReportContainer} />

@@ -28,7 +28,6 @@ export function* getParentOuPatern() {
   } else {
     try {
       let parent = yield call(dataApi.getParentsByOuId, orgUnit);
-      console.log({ parent });
       parent = extractValues(parent);
       yield put(setSelectedParentOuPattern(randomNumber));
     } catch (error) {

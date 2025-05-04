@@ -1,6 +1,7 @@
 export const HOUSEHOLD_PROGRAM_ID = "oSNoNtcmLXL";
 export const HOUSEHOLD_TRACKED_ENTITY_TYPE_ID = "XXmSdjaI4vU";
 export const HOUSEHOLD_ID_ATTR_ID = "IKOSsYJJZis";
+export const HOUSEHOLD_DATA_COLLECTOR_ATTR_ID = "AaFN0HwuzeK";
 
 // Interview Details
 export const HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID = "KR9p7PHH0DV";

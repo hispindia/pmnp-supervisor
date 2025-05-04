@@ -2,11 +2,12 @@ import { FAMILY_MEMBER_METADATA_CUSTOMUPDATE, MIN_MAX_TEXT, MOBILE_NUM_REGEX } f
 import _ from "lodash";
 import { useRef, useState } from "react";
 
-const useForm = (metadata, data, uiLocale) => {
+const useForm = (metadata, data, uiLocale, displayFields) => {
   const [formMetadata, setMetadata] = useState(metadata);
   const [formData, setFormData] = useState(data);
   const [warningLocale, setWarningLocale] = useState(uiLocale);
   const [validationText, setValidationText] = useState({});
+  const [isFormFulfilled, setIsFormFulfilled] = useState(true); // TRUE to skip validation for now [WIP]
 
   const validationTypes = ["compulsory"];
   const prevData = useRef(data);
@@ -22,6 +23,25 @@ const useForm = (metadata, data, uiLocale) => {
       default:
         return null;
     }
+  };
+
+  const checkFormFulfilled = () => {
+    const filableFields = formMetadata
+      .filter((md) => !md.hidden && !md.disabled)
+      .filter((md) => displayFields.includes(md.code));
+    const filableFieldCodes = filableFields.map((md) => md.code || md.id);
+
+    const currentValuesKeys = [];
+    for (const key in formData) {
+      if (formData[key]) {
+        currentValuesKeys.push(key);
+      }
+    }
+
+    const isFulfilled = filableFieldCodes.every((code) => currentValuesKeys.includes(code));
+    // const fulfilledList = filableFieldCodes.filter((code) => !currentValuesKeys.includes(code));
+    // console.log({ currentValuesKeys, formData, fulfilledList, isFulfilled });
+    setIsFormFulfilled(isFulfilled);
   };
 
   const customValidationCheck = (type, elements, valText) => {
@@ -77,7 +97,6 @@ const useForm = (metadata, data, uiLocale) => {
     } else if (property == FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER && value.length > 8) {
     } else formData[property] = value;
 
-    // formData[property] = value;
     setFormData({ ...formData });
   };
 
@@ -138,6 +157,8 @@ const useForm = (metadata, data, uiLocale) => {
   return {
     formMetadata,
     prevData,
+    isFormFulfilled,
+    checkFormFulfilled,
     changeMetadata,
     formData,
     setFormData,
