@@ -12,15 +12,15 @@ const HyperLink = ({ hyperlink, base64 }) => {
     );
   }
 
-  if (!hyperlink || offlineStatus) {
-    return null;
-  }
+  // if (!hyperlink || offlineStatus) {
+  //   return null;
+  // }
 
-  return (
-    <a href={hyperlink} target="_blank" rel="noopener noreferrer">
-      <InfoCircleOutlined />
-    </a>
-  );
+  // return (
+  //   <a href={hyperlink} target="_blank" rel="noopener noreferrer">
+  //     <InfoCircleOutlined />
+  //   </a>
+  // );
 };
 
 export default HyperLink;

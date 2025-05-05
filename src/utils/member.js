@@ -33,3 +33,11 @@ export const getHouseholdMemberIDs = (cascadeData) => {
 
   return uniqueMemberIDs;
 };
+
+export const isHeadOfHousehold = (member) => {
+  if (!member) {
+    return false;
+  }
+
+  return member["QAYXozgCOHu"] === "1";
+};

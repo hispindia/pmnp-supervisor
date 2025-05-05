@@ -9,6 +9,7 @@ import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEnt
 import { deleteMember, getTeiError, getTeiSuccessMessage, loadTei } from "../../actions/data/tei";
 import { updateCascade } from "../../actions/data/tei/currentCascade";
 import submitAttributes, { handleSubmitAttributes } from "./submitAttributes";
+import { isHeadOfHousehold } from "@/utils/member";
 
 function* handleSubmitEventDataValues({ dataValues }) {
   console.log("handleSubmitEventDataValues", { dataValues });
@@ -183,7 +184,10 @@ function* pushTEI(updatedMemberTei) {
       });
     }
 
-    yield call(handleSubmitAttributes, { attributes: { ...attributes, GXs8SDJL19y: selectedMember["PIGLwIaw0wy"] } });
+    if (isHeadOfHousehold(selectedMember)) {
+      yield call(handleSubmitAttributes, { attributes: { ...attributes, GXs8SDJL19y: selectedMember["PIGLwIaw0wy"] } });
+    }
+
     yield put(getTeiSuccessMessage(`Created successfully`));
   } catch (e) {
     // console.log('pushTie :>> ', pushTie);

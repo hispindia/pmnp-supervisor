@@ -114,7 +114,7 @@ function CaptureForm(props) {
       .filter((f) => !f.additionCol)
       .filter((f) => !f.hidden)
       .map((f, index) => {
-        const base64Object = offlineStatus ? BASE64_IMAGES[f.code] : null;
+        const base64Object = BASE64_IMAGES[f.code];
 
         return (
           <div className="col-lg-3 mb-3" key={`${f.code}-${index}`}>
