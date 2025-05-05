@@ -25,6 +25,7 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   // Normal	:1:	- 2 >= WFA = < 0
   // underweight	:2:	- 3 < WFA < -2
   // Severely underweight	:3:	WFA < -3
+  // overweight / obese	:4:	WFA > 0
   const zScoreWFA = getZScoreWFA(ageInMonths, weight, gender);
   if (zScoreWFA >= -2 && zScoreWFA < 0) {
     data["Wj1Re9XKW5P"] = "1";
@@ -34,6 +35,9 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   }
   if (zScoreWFA < -3) {
     data["Wj1Re9XKW5P"] = "3";
+  }
+  if (zScoreWFA > 0) {
+    data["Wj1Re9XKW5P"] = "4";
   }
 
   // WFH status	RXWSlNxAwq1
