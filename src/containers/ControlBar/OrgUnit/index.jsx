@@ -1,19 +1,14 @@
-import React, { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 /* REDUX */
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedOrgUnit } from "../../../redux/actions/metadata";
 /*       */
-import OrgUnit from "../../../components/ControlBar/OrgUnit";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import OrgUnit from "../../../components/ControlBar/OrgUnit";
 
-const OrgUnitContainer = ({
-  singleSelection = true,
-  onChange,
-  limit,
-  value,
-}) => {
+const OrgUnitContainer = ({ singleSelection = true, onChange, limit, value }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -21,16 +16,8 @@ const OrgUnitContainer = ({
   const currentSelectedOrgUnit = value || selectedOrgUnit;
 
   const buttonLabel = useMemo(() => {
-    if (
-      singleSelection ||
-      !orgUnits ||
-      !currentSelectedOrgUnit?.selected?.length
-    ) {
-      return currentSelectedOrgUnit?.displayName ? (
-        <b>{currentSelectedOrgUnit.displayName} </b>
-      ) : (
-        t("select")
-      );
+    if (singleSelection || !orgUnits || !currentSelectedOrgUnit?.selected?.length) {
+      return currentSelectedOrgUnit?.displayName ? <b>{currentSelectedOrgUnit.displayName} </b> : t("select");
     }
 
     return currentSelectedOrgUnit.selected
@@ -59,7 +46,7 @@ const OrgUnitContainer = ({
       limit={limit}
       singleSelection={singleSelection}
       orgUnitSelectorFilter={orgUnits}
-      orgUnitLabel={t("enrollingVillage")}
+      orgUnitLabel={t("barangay")}
       handleSelectOrgUnit={onChange || handleSelectOrgUnit}
       onVisibleChange={onVisibleChange}
       buttonLabel={buttonLabel}

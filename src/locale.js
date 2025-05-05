@@ -7,8 +7,8 @@ const locale = {
     en: "Add New Household",
     lo: "ເພີ່ມຄອບຄົວໃໝ່",
   },
-  enrollingVillage: {
-    en: "Organisation Unit",
+  barangay: {
+    en: "Barangay",
     lo: "ລົງທະບຽນບ້ານ",
   },
   familyRegistration: {
