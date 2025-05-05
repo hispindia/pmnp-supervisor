@@ -9,9 +9,7 @@ import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEnt
 const LoadingFormNoInput = withSkeletonLoading()(FormNoInput);
 
 const FormNoInputContainer = ({ id, initialValue, ...props }) => {
-  const { programMetadata, selectedOrgUnit } = useSelector(
-    (state) => state.metadata
-  );
+  const { programMetadata, selectedOrgUnit } = useSelector((state) => state.metadata);
 
   const { offlineStatus } = useSelector((state) => state.common);
 
@@ -43,7 +41,6 @@ const FormNoInputContainer = ({ id, initialValue, ...props }) => {
     }
 
     return findTei.then((json) => {
-      console.log({ json });
       setLoading(false);
       if (json.instances) {
         if (json.instances.length > 0) {
@@ -63,16 +60,7 @@ const FormNoInputContainer = ({ id, initialValue, ...props }) => {
     });
   };
 
-  return (
-    <LoadingFormNoInput
-      loading={loading}
-      mask
-      loaded={true}
-      checkUnique={checkUnique}
-      id={id}
-      {...props}
-    />
-  );
+  return <LoadingFormNoInput loading={loading} mask loaded={true} checkUnique={checkUnique} id={id} {...props} />;
 };
 
 export default FormNoInputContainer;

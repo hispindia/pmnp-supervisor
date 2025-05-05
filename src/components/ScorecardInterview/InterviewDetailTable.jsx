@@ -101,7 +101,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       _isDirty: true,
     });
 
-    console.log({ eventPayload });
     // init new event
     dispatch(submitEvent(eventPayload));
   };
@@ -136,7 +135,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       dataValues,
     });
 
-    console.log({ eventPayload });
     dispatch(submitEvent(eventPayload));
   };
 

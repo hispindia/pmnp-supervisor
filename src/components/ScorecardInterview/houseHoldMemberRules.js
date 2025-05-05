@@ -1,4 +1,62 @@
 import { MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
+import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.angular.services";
+
+export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) => {
+  // HFA status	TON0hSWcaw7
+  // Normal	:1:	- 2 >= HFA = < 0
+  // 	stunted	:2:	- 3 < HFA < -2
+  // 	severely stunted 	:3:	HFA < -3
+  // 	tall	:4:	HFA > 0
+  const zScoreHFA = getZScoreHFA(ageInMonths, heightInCm, gender);
+  if (zScoreHFA >= -2 && zScoreHFA < 0) {
+    data["TON0hSWcaw7"] = "1";
+  }
+  if (zScoreHFA < -2 && zScoreHFA > -3) {
+    data["TON0hSWcaw7"] = "2";
+  }
+  if (zScoreHFA < -3) {
+    data["TON0hSWcaw7"] = "3";
+  }
+  if (zScoreHFA > 0) {
+    data["TON0hSWcaw7"] = "4";
+  }
+
+  // WFA status	Wj1Re9XKW5P
+  // Normal	:1:	- 2 >= WFA = < 0
+  // underweight	:2:	- 3 < WFA < -2
+  // Severely underweight	:3:	WFA < -3
+  const zScoreWFA = getZScoreWFA(ageInMonths, weight, gender);
+  if (zScoreWFA >= -2 && zScoreWFA < 0) {
+    data["Wj1Re9XKW5P"] = "1";
+  }
+  if (zScoreWFA < -2 && zScoreWFA > -3) {
+    data["Wj1Re9XKW5P"] = "2";
+  }
+  if (zScoreWFA < -3) {
+    data["Wj1Re9XKW5P"] = "3";
+  }
+
+  // WFH status	RXWSlNxAwq1
+  // Normal	:1:	- 2 >= WFH = < 0
+  // moderately wasted	:2:	- 3 < WFH < -2
+  // severely wasted	:3:	WFH < -3
+  // overweight / obese	:4:	WFH > 0
+  const zScoreWFH = getZScoreWFH(heightInCm, weight, gender);
+  if (zScoreWFH >= -2 && zScoreWFH < 0) {
+    data["RXWSlNxAwq1"] = "1";
+  }
+  if (zScoreWFH < -2 && zScoreWFH > -3) {
+    data["RXWSlNxAwq1"] = "2";
+  }
+  if (zScoreWFH < -3) {
+    data["RXWSlNxAwq1"] = "3";
+  }
+  if (zScoreWFH > 0) {
+    data["RXWSlNxAwq1"] = "4";
+  }
+
+  console.log({ zScoreHFA, zScoreWFA, zScoreWFH });
+};
 
 export const handleAgeFields = (metadata, { weeks, months, years }) => {
   metadata["Hc9Vgt4LXjb"].disabled = true;

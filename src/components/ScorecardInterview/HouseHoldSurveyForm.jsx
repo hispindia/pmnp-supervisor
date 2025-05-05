@@ -74,7 +74,6 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
       _isDirty: true,
     });
 
-    console.log({ eventPayload });
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
     onClose();
@@ -102,7 +101,6 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
       dataValues,
     });
 
-    console.log({ eventPayload });
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
     onClose();

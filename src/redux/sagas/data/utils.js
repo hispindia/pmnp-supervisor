@@ -1,9 +1,5 @@
 import { calculateDataElements } from "@/components/FamilyMemberForm/FormCalculationUtils";
-import {
-  FAMILY_UID_ATTRIBUTE_ID,
-  MEMBER_PROGRAM_ID,
-  MEMBER_TRACKED_ENTITY_TYPE_ID,
-} from "@/constants/app-config";
+import { FAMILY_UID_ATTRIBUTE_ID, MEMBER_PROGRAM_ID, MEMBER_TRACKED_ENTITY_TYPE_ID } from "@/constants/app-config";
 import { getEventByYearAndHalt6Month, getEventsByYear } from "@/utils/event";
 import moment from "moment";
 import queryString from "query-string";
@@ -24,32 +20,25 @@ export function* getHeaderIndexes(payload) {
 
 export function* getSelectedOrgUnitByOuId(ouId) {
   const useOrgUnits = yield select((state) => state.metadata.orgUnits);
-  const maxLevel = useOrgUnits.reduce(
-    (max, { level }) => (level < max ? level : max),
-    useOrgUnits[0].level
-  );
+  const maxLevel = useOrgUnits.reduce((max, { level }) => (level < max ? level : max), useOrgUnits[0].level);
 
   const ou = useOrgUnits.find((o) => o.id === ouId);
   const splittedPath = ou.path.split("/");
   // [0] is ""
-  const selectedPath = [splittedPath[0]]
-    .concat(splittedPath.slice(maxLevel, splittedPath.length))
-    .join("/");
+  const selectedPath = [splittedPath[0]].concat(splittedPath.slice(maxLevel, splittedPath.length)).join("/");
 
   return { ...ou, selected: [selectedPath] } || null;
 }
 
 export function* transformEvent(event) {
   const transformed = { ...event };
-  transformed.dataValues = Object.keys(transformed.dataValues).map(
-    (dataElement) => {
-      const dv = {
-        dataElement,
-        value: transformed.dataValues[dataElement],
-      };
-      return dv;
-    }
-  );
+  transformed.dataValues = Object.keys(transformed.dataValues).map((dataElement) => {
+    const dv = {
+      dataElement,
+      value: transformed.dataValues[dataElement],
+    };
+    return dv;
+  });
   return transformed;
 }
 
@@ -174,6 +163,5 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
     tei.enrollments.push(enrollmentPayload);
   }
 
-  console.log({ tei, memberDetails });
   return { data: tei, memberDetails };
 }

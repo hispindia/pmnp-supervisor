@@ -30,11 +30,13 @@ import {
   childNutritionRules,
   demographicDetailRules,
   handleAgeFields,
+  handleZScore,
   hideSectionRules,
 } from "./houseHoldMemberRules";
 import "./interview-detail-table.css";
 import { clearHiddenFieldData, updateMetadata } from "./utils";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
+import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.angular.services";
 
 const getInterviewCascadeData = (currentInterviewCascade, interviewId) => {
   if (!currentInterviewCascade?.[interviewId]) return [];
@@ -223,6 +225,18 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     data["Gds5wTiXoSK"] = weeks;
     data["ICbJBQoOsVt"] = days;
 
+    // z-score
+    // Height	CY4OTulUceX
+    // Weight	iFiOPAxrJIF
+    // Age in months	RoSxLAB5cfo
+    // Gender	Qt4YSwPxw0X
+    handleZScore(data, {
+      ageInMonths: months,
+      heightInCm: data["CY4OTulUceX"],
+      weight: data["iFiOPAxrJIF"],
+      gender: data["Qt4YSwPxw0X"],
+    });
+
     // INT_Visit number
     data["Wdg76PCqsBn"] = interviewData["Wdg76PCqsBn"];
 
@@ -234,8 +248,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     childNutritionRules(metadata, data, ages);
 
     clearHiddenFieldData(metadata, data);
-
-    console.log({ HOUSEHOLD_INTERVIEW_ID_DE_ID, interviewId, data });
   };
 
   const handleDeleteRow = (e, row) => {

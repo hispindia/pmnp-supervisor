@@ -23,21 +23,12 @@ export const useExcel = () => {
       const enrSheetName = workbook.SheetNames[1];
       const enrSheet = workbook.Sheets[enrSheetName];
 
-      if (
-        sheetNames.includes(teiSheetName) &&
-        teiSheet &&
-        sheetNames.includes(enrSheetName) &&
-        enrSheet
-      ) {
-        const teisData = toDhis2TrackedEntities(
-          XLSX.utils.sheet_to_json(teiSheet)
-        );
+      if (sheetNames.includes(teiSheetName) && teiSheet && sheetNames.includes(enrSheetName) && enrSheet) {
+        const teisData = toDhis2TrackedEntities(XLSX.utils.sheet_to_json(teiSheet));
         const enrsData = toDhis2Enrollments(XLSX.utils.sheet_to_json(enrSheet));
 
         teisData.forEach((tei) => {
-          const enr = enrsData.find(
-            (enr) => enr.trackedEntity === tei.trackedEntity
-          );
+          const enr = enrsData.find((enr) => enr.trackedEntity === tei.trackedEntity);
 
           if (enr) {
             tei.enrollments = [enr];
@@ -119,7 +110,6 @@ export const useExcel = () => {
   const autoExportExcel = async () => {
     // get user local folder path
     const exportPath = dialog.showOpenDialog({ properties: ["openDirectory"] });
-    console.log({ exportPath });
 
     // const exportPath =
   };

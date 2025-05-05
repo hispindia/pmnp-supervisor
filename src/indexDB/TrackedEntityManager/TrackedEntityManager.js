@@ -328,8 +328,6 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, filters, pr
       const teisMatchFilter = await teisFilterQueryBuilder.toArray();
       const teisMatchFilterIds = teisMatchFilter.map((tei) => tei.trackedEntity);
 
-      console.log({ teisMatchFilterIds });
-
       queryBuilder = queryBuilder.and((enr) => teisMatchFilterIds.includes(enr.trackedEntity));
     }
 
