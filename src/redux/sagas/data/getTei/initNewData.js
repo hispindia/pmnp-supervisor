@@ -33,8 +33,7 @@ function* handleInitNewData() {
     isSaved: false,
     trackedEntityType,
     attributes: {
-      BUEzQEErqa7: moment().subtract(1, "y").format("YYYY"),
-      // BUEzQEErqa7: moment().format("YYYY"),
+      BUEzQEErqa7: moment().format("YYYY"),
       [HOUSEHOLD_ID_ATTR_ID]: ouPattern,
       eMYBznRdn0t: code,
       [HOUSEHOLD_DATA_COLLECTOR_ATTR_ID]: me ? me.username : "",
