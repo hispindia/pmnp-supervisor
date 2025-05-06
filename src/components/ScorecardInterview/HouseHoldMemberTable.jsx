@@ -87,7 +87,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     setMetadata([...updatedMetadata]);
 
     // save event
-    const interviewEvents = currentInterviewCascade[interviewId][selectedRowIndex]?.events || [];
+    const interviewEvents = interviewCascadeData[selectedRowIndex]?.events || [];
 
     const demographicDataValues = {};
     const scorecardSurveyDataValues = {};
