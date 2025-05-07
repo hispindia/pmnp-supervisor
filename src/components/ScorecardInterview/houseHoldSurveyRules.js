@@ -59,14 +59,13 @@ export const houseHoldSurveyRules = (metadata, newData) => {
   };
 
   const yesNoNaListToBool = (values = []) => {
-    if (values.filter(Boolean).filter((v) => v !== "NA").length === 0) return null;
+    if (values.filter((v) => v && v !== "NA").length === 0) return null;
 
     let value;
-    values.forEach((value) => {
-      if (value) {
-        if (value === "1") value = true;
-      }
+    values.forEach((v) => {
+      if (v === "1") value = true;
     });
+
     if (value) return "true";
     return "false";
   };
@@ -101,7 +100,7 @@ export const houseHoldSurveyRules = (metadata, newData) => {
   ];
 
   let finalScore;
-  if (scores.filter(Boolean).length === 0) {
+  if (scores.filter((v) => v && v !== "NA").length === 0) {
     finalScore = "NA";
   } else {
     scores.forEach((score) => {

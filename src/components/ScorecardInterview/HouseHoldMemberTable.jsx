@@ -40,15 +40,7 @@ import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.ang
 
 const getInterviewCascadeData = (currentInterviewCascade, interviewId) => {
   if (!currentInterviewCascade?.[interviewId]) return [];
-  const memberData = currentInterviewCascade?.[interviewId].map((r) => {
-    const isSaved = r.events.length > 0;
-
-    return {
-      ...r.memberData,
-      isSaved,
-    };
-  });
-
+  const memberData = currentInterviewCascade?.[interviewId].map((r) => r.memberData);
   return memberData;
 };
 
@@ -247,6 +239,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     childHeathRules(metadata, data, ages);
     childNutritionRules(metadata, data, ages);
 
+    console.log(data["RoSxLAB5cfo"]);
+
     clearHiddenFieldData(metadata, data);
   };
 
@@ -318,8 +312,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   }, []);
 
   useEffect(() => {
-    setData(interviewCascadeData);
-
+    setData(interviewCascadeData.map((i) => i.memberData));
     if (selectedRowIndex !== null) {
       console.log("select interview interview cascadeData", {
         interviewCascadeData,

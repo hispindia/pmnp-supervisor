@@ -33,6 +33,8 @@ const countRangeValue = (data, de_ids, min, max) => {
     // convert to number
     const itemValue = Number(item[de_ids]);
 
+    if (de_ids === "RoSxLAB5cfo") console.log(item[de_ids], { itemValue });
+
     return itemValue >= min && itemValue <= max;
   });
   return count.length;
@@ -57,7 +59,7 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
   //Score_Eligible Children less than 6 mos old
   newData["XcSzUYAghmc"] = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 0, 5);
   //Score_Eligible Children 6-23 mos old
-  newData["kT9vaHCgFDZ"] = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 6, 23);
+  newData["dCux2E2IbaS"] = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 6, 23);
   //Score_Eligible Children 24-59 mos old
   newData["kT9vaHCgFDZ"] = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 24, 59);
 

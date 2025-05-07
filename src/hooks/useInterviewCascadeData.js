@@ -15,13 +15,17 @@ export const useInterviewCascadeData = (interviewData) => {
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
 
   const getInterviewCascadeData = () => {
-    if (!currentInterviewCascade?.[interviewId]) return [];
+    if (!currentInterviewCascade?.[interviewId]) return { memberData: [] };
+
     const memberData = currentInterviewCascade?.[interviewId].map((r) => {
       const isSaved = r.events.length > 0;
 
       return {
-        ...r.memberData,
-        isSaved,
+        ...r,
+        memberData: {
+          ...r.memberData,
+          isSaved,
+        },
       };
     });
 
