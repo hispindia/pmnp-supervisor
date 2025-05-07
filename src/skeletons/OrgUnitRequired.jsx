@@ -5,8 +5,8 @@ const OrgUnitRequired = () => {
   const Component = useMemo(() => withError()(() => null), []);
   return (
     <Component
-      errorMessage={"Please select org unit to continue"}
-      errorDisplaying={"Please select org unit to continue"}
+      errorMessage={"Please select barangay continue"}
+      errorDisplaying={"Please select barangay to continue"}
     />
   );
 };
