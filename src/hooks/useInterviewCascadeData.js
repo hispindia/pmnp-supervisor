@@ -15,9 +15,9 @@ export const useInterviewCascadeData = (interviewData) => {
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
 
   const getInterviewCascadeData = () => {
-    if (!currentInterviewCascade?.[interviewId]) return { memberData: [] };
+    if (!currentInterviewCascade?.[interviewId]) return { memberData: [], events: [] };
 
-    const memberData = currentInterviewCascade?.[interviewId].map((r) => {
+    const addSavedData = currentInterviewCascade?.[interviewId].map((r) => {
       const isSaved = r.events.length > 0;
 
       return {
@@ -32,7 +32,7 @@ export const useInterviewCascadeData = (interviewData) => {
     const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     // Filter
-    const filteredMemberData = memberData.filter((member) => !filterMalesMoreThan5(eventDate)(member));
+    const filteredMemberData = addSavedData.filter((member) => !filterMalesMoreThan5(eventDate)(member.memberData));
 
     return filteredMemberData;
   };
