@@ -7,6 +7,7 @@ import {
   REPORT_ID_CONSTANT,
   REPORT_ID_CONSTANT_ATTRIBUTE_ID,
 } from "@/components/constants";
+import { MULTIPLE_SELECTION_ATTRIBUTE_ID } from "@/constants/app-config";
 export default class MetadataApiClass extends BaseApiClass {
   getReportId = async () => {
     const res = await pull(
@@ -212,6 +213,16 @@ export default class MetadataApiClass extends BaseApiClass {
         id: ps.id,
         displayName: ps.displayName,
         dataElements: ps.programStageDataElements.map((psde) => {
+          let valueType = psde.dataElement.valueType;
+
+          const foundAttr = psde.dataElement.attributeValues.find(
+            (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID
+          );
+          if (foundAttr && foundAttr.value === "true") {
+            console.log(psde);
+            valueType = "MULTIPLE_TRUE_ONLY_DES";
+          }
+
           const dataElement = {
             compulsory: psde.compulsory,
             id: psde.dataElement.id,
@@ -220,9 +231,9 @@ export default class MetadataApiClass extends BaseApiClass {
               ? psde.dataElement.displayFormName
               : psde.dataElement.displayShortName,
             description: psde.dataElement.description,
-            valueType: psde.dataElement.valueType,
             valueSet: null,
             url: psde.dataElement.url,
+            valueType,
           };
           if (psde.dataElement.optionSet) {
             dataElement.valueSet = optionSets.optionSets

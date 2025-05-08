@@ -32,9 +32,6 @@ const countRangeValue = (data, de_ids, min, max) => {
   const count = data.filter((item) => {
     // convert to number
     const itemValue = Number(item[de_ids]);
-
-    if (de_ids === "RoSxLAB5cfo") console.log(item[de_ids], { itemValue });
-
     return itemValue >= min && itemValue <= max;
   });
   return count.length;

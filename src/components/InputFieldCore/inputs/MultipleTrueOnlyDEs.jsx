@@ -10,11 +10,11 @@ const MultipleTrueOnlyDEs = ({ valueSet, locale, disabled, changeValue, formData
   const handleChange = (newValue) => {
     if (newValue) {
       valueSet.forEach((option) => {
-        const found = newValue.find((value) => value.trueOnlyDeId === option.trueOnlyDeId);
+        const found = newValue.find((v) => v.value === option.value);
         if (found) {
-          changeValue(option.trueOnlyDeId, "true");
+          changeValue(option.value, "true");
         } else {
-          changeValue(option.trueOnlyDeId, null);
+          changeValue(option.value, null);
         }
       });
     }
@@ -33,9 +33,9 @@ const MultipleTrueOnlyDEs = ({ valueSet, locale, disabled, changeValue, formData
     return e;
   });
 
-  const valueStr = valueSet.map((v) => formData[v.trueOnlyDeId]).join(",");
+  const valueStr = valueSet.map((v) => formData[v.value]).join(",");
   useEffect(() => {
-    setValue(valueSet.filter((v) => formData[v.trueOnlyDeId]));
+    setValue(valueSet.filter((v) => formData[v.value]));
   }, [valueStr]);
 
   return (

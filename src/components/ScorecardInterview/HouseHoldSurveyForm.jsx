@@ -188,14 +188,6 @@ const convertOriginMetadata = (foundProgramStage) => {
     const cloned = { ...de };
     cloned.code = de.id;
     cloned.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
-    if (de.id === GOV_PROGRAMS_DE_ID) {
-      cloned.valueType = "MULTIPLE_TRUE_ONLY_DES";
-      cloned.valueSet = cloned.valueSet.map((v) => ({ ...v, trueOnlyDeId: GOV_PROGRAMS_MAP[v.value] }));
-    }
-    if (de.id === SOCIAL_AND_BEHAVIOR_DE_ID) {
-      cloned.valueType = "MULTIPLE_TRUE_ONLY_DES";
-      cloned.valueSet = cloned.valueSet.map((v) => ({ ...v, trueOnlyDeId: SOCIAL_MAP[v.value] }));
-    }
 
     return cloned;
   });

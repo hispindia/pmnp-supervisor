@@ -11,14 +11,14 @@ export const houseHoldSurveyRules = (metadata, newData) => {
   // if Q801 = No, clear all data 802
   if (newData["dtTG7cjn1CH"] === "false" || !newData["dtTG7cjn1CH"]) {
     metadata[GOV_PROGRAMS_DE_ID].valueSet.forEach((option) => {
-      newData[option.trueOnlyDeId] = null;
+      newData[option.value] = null;
     });
   }
 
   // if Q900 = No, clear all data 801
   if (newData["dxag8YT8w46"] === "false" || !newData["dxag8YT8w46"]) {
     metadata[SOCIAL_AND_BEHAVIOR_DE_ID].valueSet.forEach((option) => {
-      newData[option.trueOnlyDeId] = null;
+      newData[option.value] = null;
     });
   }
 
