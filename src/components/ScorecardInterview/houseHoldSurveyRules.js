@@ -2,11 +2,11 @@ import { GOV_PROGRAMS_DE_ID, SOCIAL_AND_BEHAVIOR_DE_ID } from "../constants";
 
 export const houseHoldSurveyRules = (metadata, newData) => {
   metadata[DEs.Q802].hidden = newData[DEs.Q801] !== "true";
-  metadata[DEs.PleaseSpecifyTheOtherGovernment].hidden = newData[DEs.Q802] !== "Others";
+  metadata[DEs.PleaseSpecifyTheOtherGovernment].hidden = newData["SKZZ4LQ7bWS"] !== "true";
 
   metadata[DEs.Q901].hidden = newData[DEs.Q900] !== "true";
   // SHOW 'Other social and behaviour Change (SBC) sessions' if 'social and behaviour Change (SBC) sessions (Q 901)' = 'Others'
-  metadata["S6aWPoAIthD"].hidden = newData["gNBFmUFtW6a"] !== "5";
+  metadata["S6aWPoAIthD"].hidden = newData["qIS82s8psRN"] !== "true";
 
   // if Q801 = No, clear all data 802
   if (newData["dtTG7cjn1CH"] === "false" || !newData["dtTG7cjn1CH"]) {

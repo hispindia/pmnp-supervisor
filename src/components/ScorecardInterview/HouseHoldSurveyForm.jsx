@@ -195,31 +195,4 @@ const convertOriginMetadata = (foundProgramStage) => {
   return dataElements;
 };
 
-const GOV_PROGRAMS_MAP = {
-  "Conditional cash transfer (4ps)": "EHarklYlTLs",
-  "Sustainable livelihood program (slp)": "DoYnclQM17A",
-  "Pag-abot program": "yCvjacN3cOQ",
-  "Unconditional cash": "q6VmG07hLSn",
-  "Walang gutom": "cJ0kjwz8Wn2",
-  "Cash for work": "rarFeNRcsHD",
-  "Assistance to": "lKwZndL5FVt",
-  Malasakit: "NkievhX4GVH",
-  "LGU medical program": "kXAv2Gft7HK",
-  "LGU social assistance": "ePwVN929ctj",
-  Ayuda: "aGTNmzg89b4",
-  AKAP: "UvD526OKXd3",
-  TUPAD: "ixGznRVHxD4",
-  MAIFP: "nugyL4vNljG",
-  AICS: "Z6BWGPH0rir",
-  Others: "SKZZ4LQ7bWS",
-};
-
-const SOCIAL_MAP = {
-  "Family development": "HUmVCV5nxQk",
-  "Sessions (SDS)": "QbV0Z7XBrQa",
-  "Idol ko si nanay": "QGADXm7RHxd",
-  "Idol ko si tatay": "bWEr2kYS1Hu",
-  "Other sessions": "qIS82s8psRN",
-};
-
 export default HouseHoldSurveyForm;

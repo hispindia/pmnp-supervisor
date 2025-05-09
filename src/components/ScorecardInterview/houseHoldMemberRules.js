@@ -367,7 +367,7 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years 
   }
 
   const sex = data["Qt4YSwPxw0X"];
-  if (years >= 10 && years <= 49 && sex === "1" && (pregnancyStatus === "2" || pregnancyStatus === "3")) {
+  if (years >= 10 && years <= 49 && sex === "1" && pregnancyStatus === "3") {
     hiddenSections = hiddenSections.filter((h) => h !== "E4FpYkBzAsW");
     shownSections.push("E4FpYkBzAsW");
   }
