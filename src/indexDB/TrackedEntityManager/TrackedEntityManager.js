@@ -152,6 +152,7 @@ const markOnline = async (trackedEntityIds) => {
 export const setTrackedEntityInstance = async ({ trackedEntity }) => {
   try {
     const tei = JSON.parse(JSON.stringify(trackedEntity));
+    tei.updatedAt = new Date().toISOString().slice(0, -1);
 
     const updatedTeis = await beforePersist({ trackedEntities: [tei] }, 0);
 

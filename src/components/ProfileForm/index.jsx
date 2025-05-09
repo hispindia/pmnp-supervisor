@@ -93,6 +93,7 @@ const ProfileForm = ({
 
   return (
     <Form
+      key={profile.updatedAt}
       className=""
       initialValues={profile.attributes}
       form={form}
