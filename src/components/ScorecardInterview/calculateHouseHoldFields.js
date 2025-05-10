@@ -1,6 +1,5 @@
 const countValue = (data, de_ids, value) => {
   const count = data.filter((item) => {
-    // if (de_ids === "ycBIHr9bYyw") console.log(de_ids, item[de_ids]);
     return item[de_ids] === value;
   });
   return count.length;

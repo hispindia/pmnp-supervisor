@@ -138,7 +138,7 @@ export const handleAgeDatavaluesOfEvents = (data, { days, weeks, months, years }
   }
 };
 
-export const demographicDetailRules = (metadata, data, { years }) => {
+export const demographicDetailRules = (metadata, data, { years, months }) => {
   // Menstrual history should be NA (option code 3) for females under 10 and older than 49
   if (years < 10 || years > 49) {
     data["WbgQ0SZFiAU"] = "3";
@@ -165,34 +165,21 @@ export const demographicDetailRules = (metadata, data, { years }) => {
   }
 
   // Name of IP group (Ethnicity)	Only show when 'IP membership' = Yes /1
-  if (data["WbgQ0SZFiAU"] !== "1") {
-    metadata["qlt8LOSENj8"].hidden = true;
-  } else {
-    metadata["qlt8LOSENj8"].hidden = false;
-  }
+  metadata["qlt8LOSENj8"].hidden = data["WbgQ0SZFiAU"] !== "1";
 
   // Name of IP group (Ethnicity)	Only show when 'IP membership' = Yes /1
-  if (data["OiOvGqVEyY9"] !== "1") {
-    metadata["g276qF2fXHi"].hidden = true;
-  } else {
-    metadata["g276qF2fXHi"].hidden = false;
-  }
+  metadata["g276qF2fXHi"].hidden = data["OiOvGqVEyY9"] !== "1";
 
   // 4Ps Household ID number	Only show when '4Ps membership' = Yes / 1
   const psMembership = data["wxN2PuLymoY"];
-  if (psMembership !== "1") {
-    metadata["CEF6Dkpe2jW"].hidden = true;
-  } else {
-    metadata["CEF6Dkpe2jW"].hidden = false;
-  }
+  metadata["CEF6Dkpe2jW"].hidden = psMembership !== "1";
+
+  // Hide Philhealth ques for child <5 y (0-59 mo)
+  metadata["JjFcU1L7Ll1"].hidden = !years > 5;
 
   // PHIC ID	Only show when 'PHIC membership' = Yes / 1
   const PhiCMembership = data["JjFcU1L7Ll1"];
-  if (PhiCMembership !== "1") {
-    metadata["Yp6gJAdu4yX"].hidden = true;
-  } else {
-    metadata["Yp6gJAdu4yX"].hidden = false;
-  }
+  metadata["Yp6gJAdu4yX"].hidden = PhiCMembership !== "1";
 };
 
 export const childHeathRules = (metadata, data, { months, years }) => {
@@ -333,14 +320,23 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
   // CN - MUAC findings	Child < 5 y
   metadata["s3q2EVu3qe0"].hidden = years > 5;
   // CN - MUAC (cm)	Child < 5 y
-  metadata["sCOCt8eF0Fr"].hidden = years > 5;
+  metadata["sCOCt8eF0Fr"].hidden = years > 5 || months < 5;
   // Mother's member ID number
   metadata["q0WEgMBwi0p"].hidden = years > 5;
 
   // If CN_MUAC (cm) < 11.5 cm ; CN_MUAC findings = Severe Acute Malnutrition (SAM)
   // If CN_MUAC (cm) >= 11.5 AND < 12.5 cm ; CN_MUAC findings = Moderate Acute Malnutrition (MAM)
   // if CN_MUAC (cm) >= 12.5 cm ; CN_MUAC findings = Normal
+
   const cm = +data["sCOCt8eF0Fr"];
+
+  // should not accept values less than 5.0 and more than 26.5. Show warning otherwise.
+  if (cm < 5.0 || cm > 26.5) {
+    metadata["sCOCt8eF0Fr"].error = "Please enter a value between 5.0 and 26.5";
+  } else {
+    metadata["sCOCt8eF0Fr"].error = "";
+  }
+
   if (cm > 0 && cm < 11.5) {
     data["s3q2EVu3qe0"] = "Severe Acute Malnutrition (SAM)";
   } else if (cm >= 11.5 && cm < 12.5) {
@@ -350,7 +346,7 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
   }
 
   // For age >23 months, hide data element Adequate Diet Diversity
-  metadata["RLms3EMK6Lx"].hidden = months > 23;
+  metadata["RLms3EMK6Lx"].hidden = months > 23 || months < 6;
 
   // adequate diet diversity (ADD)
   // For children 6–23 months the ADD is yes if the child was breastfed in the last 24 hours and consumed at least 5 of the 7 food group
