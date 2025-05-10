@@ -9,6 +9,27 @@ const filterMalesMoreThan5 = (eventDate) => (member) => {
   return member["Qt4YSwPxw0X"] == "2" && ageInYears > 5;
 };
 
+const filterFemalesIn10And49 = (eventDate) => (member) => {
+  const dateOfbirth = new Date(member["fJPZFs2yYJQ"]);
+  const ageInYears = differenceInYears(eventDate, dateOfbirth);
+
+  return member["Qt4YSwPxw0X"] == "1" && ageInYears >= 10 && ageInYears <= 49;
+};
+
+const filterFemailsSmallerThan10AndLargerThan49 = (eventDate) => (member) => {
+  const dateOfbirth = new Date(member["fJPZFs2yYJQ"]);
+  const ageInYears = differenceInYears(eventDate, dateOfbirth);
+
+  return member["Qt4YSwPxw0X"] == "1" && (ageInYears < 10 || ageInYears > 49);
+};
+
+const filterChildrenUnder5 = (eventDate) => (member) => {
+  const dateOfbirth = new Date(member["fJPZFs2yYJQ"]);
+  const ageInYears = differenceInYears(eventDate, dateOfbirth);
+
+  return ageInYears <= 5;
+};
+
 export const useInterviewCascadeData = (interviewData) => {
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
 
@@ -31,10 +52,15 @@ export const useInterviewCascadeData = (interviewData) => {
 
     const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
-    // Filter
-    const filteredMemberData = addSavedData.filter((member) => !filterMalesMoreThan5(eventDate)(member.memberData));
+    const filterOutMemberData = addSavedData.filter((member) => !filterMalesMoreThan5(eventDate)(member.memberData));
 
-    return filteredMemberData;
+    // Filter
+    const femalesIn10And49 = filterOutMemberData.filter((member) =>
+      filterFemalesIn10And49(eventDate)(member.memberData)
+    );
+    const childrenUnder5 = filterOutMemberData.filter((member) => filterChildrenUnder5(eventDate)(member.memberData));
+
+    return [...femalesIn10And49, ...childrenUnder5];
   };
 
   const interviewCascadeData = getInterviewCascadeData();

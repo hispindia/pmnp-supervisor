@@ -69,7 +69,6 @@ function* makePayload(attributes) {
 function* putTeiToServer({ currentTei, currentEnrollment, attributes }) {
   console.log("putTeiToServer", { currentTei });
   const { offlineStatus } = yield select((state) => state.common);
-  const programMetadataId = yield select((state) => state.metadata.programMetadata.id);
 
   if (offlineStatus) {
     yield call(trackedEntityManager.setTrackedEntityInstance, {
@@ -77,13 +76,9 @@ function* putTeiToServer({ currentTei, currentEnrollment, attributes }) {
     });
   } else {
     // yield call(dataApi.putTrackedEntityInstance, currentTei, programMetadataId);
-    yield call(
-      dataApi.postTrackedEntityInstances,
-      {
-        trackedEntities: [currentTei],
-      },
-      programMetadataId
-    );
+    yield call(dataApi.postTrackedEntityInstances, {
+      trackedEntities: [currentTei],
+    });
   }
 }
 
@@ -106,8 +101,6 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
   if (offlineStatus) {
     const teiWithEnrollment = currentTei;
     teiWithEnrollment.enrollments = [newEnrollment];
-
-    console.log(teiWithEnrollment);
 
     yield call(trackedEntityManager.setTrackedEntityInstance, {
       trackedEntity: teiWithEnrollment,

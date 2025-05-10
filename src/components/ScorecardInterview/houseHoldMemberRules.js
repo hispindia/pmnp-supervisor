@@ -58,8 +58,6 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   if (zScoreWFH > 0) {
     data["RXWSlNxAwq1"] = "4";
   }
-
-  console.log({ zScoreHFA, zScoreWFA, zScoreWFH });
 };
 
 export const handleAgeFields = (metadata, { weeks, months, years }) => {
@@ -67,6 +65,7 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
   metadata["RoSxLAB5cfo"].disabled = true;
   metadata["Gds5wTiXoSK"].disabled = true;
   metadata["ICbJBQoOsVt"].disabled = true;
+  metadata["khD9FKDEw7k"].hidden = false;
 
   if (weeks === 0) {
     metadata["Hc9Vgt4LXjb"].hidden = true;
@@ -88,6 +87,54 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
     metadata["RoSxLAB5cfo"].hidden = true;
     metadata["Gds5wTiXoSK"].hidden = true;
     metadata["ICbJBQoOsVt"].hidden = true;
+  }
+
+  if (months >= 6 && months <= 23) {
+    metadata["khD9FKDEw7k"].hidden = false;
+  }
+};
+
+export const handleAgeAttrsOfTEI = (data, { days, weeks, months, years }) => {
+  const daysAttr = "d2n5w4zpxuo";
+  const weeksAttr = "xDSSvssuNFs";
+  const monthsAttr = "X2Oln1OyP5o";
+  const yearsAttr = "H42aYY9JMIR";
+
+  data[daysAttr] = "";
+  data[weeksAttr] = "";
+  data[monthsAttr] = "";
+  data[yearsAttr] = "";
+
+  if (weeks === 0) {
+    data[daysAttr] = days;
+  } else if (months === 0) {
+    data[weeksAttr] = weeks;
+  } else if (years === 0 || years < 5) {
+    data[monthsAttr] = months;
+  } else if (years > 5) {
+    data[yearsAttr] = years;
+  }
+};
+
+export const handleAgeDatavaluesOfEvents = (data, { days, weeks, months, years }) => {
+  const daysDE = "ICbJBQoOsVt";
+  const weeksDE = "Gds5wTiXoSK";
+  const monthsDE = "RoSxLAB5cfo";
+  const yearsDE = "Hc9Vgt4LXjb";
+
+  data[daysDE] = "";
+  data[weeksDE] = "";
+  data[monthsDE] = "";
+  data[yearsDE] = "";
+
+  if (weeks === 0) {
+    data["ICbJBQoOsVt"] = days;
+  } else if (months === 0) {
+    data["xDSSvssuNFs"] = weeks;
+  } else if (years === 0 || years < 5) {
+    data["X2Oln1OyP5o"] = months;
+  } else if (years > 5) {
+    data["H42aYY9JMIR"] = years;
   }
 };
 

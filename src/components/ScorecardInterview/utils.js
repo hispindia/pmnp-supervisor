@@ -1,3 +1,6 @@
+import { MEMBER_TRACKED_ENTITY_TYPE_ID } from "@/constants/app-config";
+import { convertValueBack } from "@/utils";
+
 export const clearHiddenFieldData = (metadata, data) => {
   // clear data for hidden items
   for (let meta in metadata) {
@@ -67,4 +70,25 @@ export const compareObject = (obj1, obj2) => {
   });
 
   return !filtered.length;
+};
+
+export const generateTEIDhis2Payload = ({ teiData, programMetadata, orgUnit }) => {
+  const { trackedEntityAttributes } = programMetadata;
+
+  // TEI
+  let tei = {
+    orgUnit: orgUnit,
+    trackedEntity: teiData.id,
+    trackedEntityType: MEMBER_TRACKED_ENTITY_TYPE_ID,
+    attributes: [],
+  };
+
+  trackedEntityAttributes.forEach((attr) => {
+    tei.attributes.push({
+      attribute: attr.id,
+      value: convertValueBack(attr.valueType, teiData[attr.id]),
+    });
+  });
+
+  return tei;
 };

@@ -19,10 +19,11 @@ import { changeMember } from "../../redux/actions/data/tei";
 import { FAMILY_UID_ATTRIBUTE_ID, HOUSEHOLD_ID_ATTR_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
 import { getMaxHHMemberID } from "@/utils/member";
 import { getOrganisationUnitById } from "@/utils/organisation";
-import { differenceInWeeks, differenceInYears, lastDayOfYear } from "date-fns";
+import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears, lastDayOfYear } from "date-fns";
 import moment from "moment";
 import "../../index.css";
 import { HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
+import { handleAgeDatavaluesOfEvents } from "../ScorecardInterview/houseHoldMemberRules";
 import styles from "./FamilyMemberForm.module.css";
 
 const { familyMemberFormContainer } = styles;
@@ -128,7 +129,7 @@ const FamilyMemberForm = ({
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
     // keep selected member details
-    console.log("FamilyMemberForm clicked", {
+    console.log("FamilyMemberForm registerform", {
       metadata,
       previousData,
       data,
@@ -169,7 +170,9 @@ const FamilyMemberForm = ({
     const enrollmentDate = data.isNew ? new Date() : lastDayOfYear(new Date(currentEvent.occurredAt));
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
     const years = differenceInYears(enrollmentDate, dateOfbirth);
+    const months = differenceInMonths(enrollmentDate, dateOfbirth);
     const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
+    const days = differenceInDays(enrollmentDate, dateOfbirth);
 
     if (data["QAYXozgCOHu"] === "1") {
       // Household head should more than 18 years old
@@ -188,14 +191,6 @@ const FamilyMemberForm = ({
       metadata["QAYXozgCOHu"].error = "Spouse should be more than 15 years old";
     }
 
-    // hide ages
-    // if (weeks >= 52) {
-    //   metadata["xDSSvssuNFs"].hidden = true;
-    //   metadata["H42aYY9JMIR"].hidden = false;
-    // } else {
-    //   metadata["xDSSvssuNFs"].hidden = false;
-    //   metadata["H42aYY9JMIR"].hidden = true;
-    // }
     metadata["d2n5w4zpxuo"].hidden = true;
     metadata["xDSSvssuNFs"].hidden = true;
     metadata["X2Oln1OyP5o"].hidden = true;
@@ -217,10 +212,20 @@ const FamilyMemberForm = ({
       }
     }
 
+    const ages = { years, months, weeks, days };
+    handleAgeDatavaluesOfEvents(data, ages);
+
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
   };
 
   const callbackFunction = (metadata, dataRows, rowIndex = null, actionType) => {
+    console.log("FamilyMemberForm callbackFunction", {
+      metadata,
+      dataRows,
+      rowIndex,
+      actionType,
+    });
+
     // clean selected member
     if (actionType === "clean") {
       dispatch(changeMember({}));

@@ -54,7 +54,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
   const currentTei = useSelector((state) => state.data.tei.data.currentTei);
   const currentInterviewCascade = useSelector((state) => state.data.tei.data.currentInterviewCascade);
-  console.log({ currentInterviewCascade });
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
   const { attributes } = currentTei;
 

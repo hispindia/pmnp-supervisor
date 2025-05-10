@@ -120,14 +120,10 @@ export const pushAndMarkOnline = async (trackedEntities) => {
   const partitions = chunk(trackedEntities, 20);
 
   for (const partition of partitions) {
-    console.log("postTrackedEntityInstances", { partition });
-
     try {
       const result = await dataApi.postTrackedEntityInstances({
         trackedEntities: partition,
       });
-
-      console.log("postTrackedEntityInstances", { result });
 
       if (result.status === "OK") {
         await markOnline(partition.map((te) => te.trackedEntity));

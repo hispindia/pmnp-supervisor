@@ -1,13 +1,11 @@
-import { pull } from "./Fetch";
-import dev_data from "./dev_data";
-import BaseApiClass from "./BaseApiClass";
 import {
   defaultProgramTrackedEntityAttributeDisable,
-  HAS_INITIAN_NOVALUE,
   REPORT_ID_CONSTANT,
   REPORT_ID_CONSTANT_ATTRIBUTE_ID,
 } from "@/components/constants";
 import { MULTIPLE_SELECTION_ATTRIBUTE_ID } from "@/constants/app-config";
+import BaseApiClass from "./BaseApiClass";
+import { pull } from "./Fetch";
 export default class MetadataApiClass extends BaseApiClass {
   getReportId = async () => {
     const res = await pull(
@@ -219,7 +217,6 @@ export default class MetadataApiClass extends BaseApiClass {
             (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID
           );
           if (foundAttr && foundAttr.value === "true") {
-            console.log(psde);
             valueType = "MULTIPLE_TRUE_ONLY_DES";
           }
 

@@ -63,8 +63,6 @@ const InterviewDetailContainer = () => {
       (e) => e.programStage === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID
     );
 
-    console.log({ currentEvents });
-
     // if having event => disabled = true, except the "partially completed"
     const disabledInterviews = interviewResultEvents.reduce((acc, curr) => {
       const interviewId = curr.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID];

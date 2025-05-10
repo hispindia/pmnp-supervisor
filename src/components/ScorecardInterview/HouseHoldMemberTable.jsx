@@ -16,6 +16,8 @@ import {
   MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID,
   MEMBER_TRACKED_ENTITY_TYPE_ID,
 } from "@/constants/app-config";
+import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
+import { usePushData } from "@/hooks/usePushData";
 import { submitEvent } from "@/redux/actions/data";
 import { deleteEvent } from "@/redux/actions/data/tei";
 import { getQuarterlyFromDate } from "@/utils/date";
@@ -29,23 +31,17 @@ import {
   childHeathRules,
   childNutritionRules,
   demographicDetailRules,
+  handleAgeAttrsOfTEI,
   handleAgeFields,
   handleZScore,
   hideSectionRules,
 } from "./houseHoldMemberRules";
 import "./interview-detail-table.css";
-import { clearHiddenFieldData, updateMetadata } from "./utils";
-import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
-import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.angular.services";
-
-const getInterviewCascadeData = (currentInterviewCascade, interviewId) => {
-  if (!currentInterviewCascade?.[interviewId]) return [];
-  const memberData = currentInterviewCascade?.[interviewId].map((r) => r.memberData);
-  return memberData;
-};
+import { clearHiddenFieldData, generateTEIDhis2Payload, updateMetadata } from "./utils";
 
 const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
   const { t, i18n } = useTranslation();
+  const { pustTei } = usePushData();
   const dispatch = useDispatch();
   const locale = i18n.language || "en";
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
@@ -150,6 +146,16 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // default refresh tei and loading for the last
     dispatch(submitEvent(scorecardSurveyEventPayload));
 
+    // update member TEI
+    const currentTei = newData[rowIndex];
+    let updatedMemberTei = generateTEIDhis2Payload({
+      teiData: currentTei,
+      programMetadata: programMetadataMember,
+      orgUnit,
+    });
+
+    pustTei({ currentTei: updatedMemberTei });
+
     const events = [demographicEventPayload, scorecardSurveyEventPayload];
     console.log("update member events:", { events, scorecardSurveyDataValues });
     onClose();
@@ -176,6 +182,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
             "RoSxLAB5cfo",
             "Gds5wTiXoSK",
             "ICbJBQoOsVt",
+            "d2n5w4zpxuo",
+            "xDSSvssuNFs",
+            "X2Oln1OyP5o",
+            "H42aYY9JMIR",
           ].includes(de) ||
           metadata[de].isAttribute
         )
@@ -239,9 +249,9 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     childHeathRules(metadata, data, ages);
     childNutritionRules(metadata, data, ages);
 
-    console.log(data["RoSxLAB5cfo"]);
-
     clearHiddenFieldData(metadata, data);
+
+    handleAgeAttrsOfTEI(data, ages);
   };
 
   const handleDeleteRow = (e, row) => {
