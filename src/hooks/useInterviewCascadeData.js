@@ -16,6 +16,13 @@ const filterFemalesIn10And49 = (eventDate) => (member) => {
   return member["Qt4YSwPxw0X"] == "1" && ageInYears >= 10 && ageInYears <= 49;
 };
 
+const filterFemalesIn15And49 = (eventDate) => (member) => {
+  const dateOfbirth = new Date(member["fJPZFs2yYJQ"]);
+  const ageInYears = differenceInYears(eventDate, dateOfbirth);
+
+  return member["Qt4YSwPxw0X"] == "1" && ageInYears >= 15 && ageInYears <= 49;
+};
+
 const filterFemailsSmallerThan10AndLargerThan49 = (eventDate) => (member) => {
   const dateOfbirth = new Date(member["fJPZFs2yYJQ"]);
   const ageInYears = differenceInYears(eventDate, dateOfbirth);
@@ -64,6 +71,10 @@ export const useInterviewCascadeData = (interviewData) => {
   };
 
   const interviewCascadeData = getInterviewCascadeData();
+  const femalesIn15And49 =
+    currentInterviewCascade?.[interviewId]?.filter((member) =>
+      filterFemalesIn15And49(new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]))(member.memberData)
+    ) || [];
 
-  return { interviewCascadeData };
+  return { interviewCascadeData, femalesIn15And49 };
 };

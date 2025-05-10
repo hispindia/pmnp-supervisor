@@ -45,10 +45,12 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const dispatch = useDispatch();
   const locale = i18n.language || "en";
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
+  const { interviewCascadeData, femalesIn15And49 } = useInterviewCascadeData(interviewData);
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
   const { programMetadataMember, selectedOrgUnit } = useSelector((state) => state.metadata);
-  const [originMetadata, stageDataElements] = convertOriginMetadata(programMetadataMember);
-  const { interviewCascadeData } = useInterviewCascadeData(interviewData);
+  const cascadeFemalesIn15And49 = femalesIn15And49.map((member) => member.memberData);
+
+  const [originMetadata, stageDataElements] = convertOriginMetadata(programMetadataMember, cascadeFemalesIn15And49);
 
   const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
@@ -389,7 +391,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   );
 };
 
-const convertOriginMetadata = (programMetadataMember) => {
+const convertOriginMetadata = (programMetadataMember, cascadeMembers) => {
   const metadata = [];
   const stageDataElements = {};
 
@@ -402,8 +404,16 @@ const convertOriginMetadata = (programMetadataMember) => {
 
   metadata.push(...trackedEntityAttributes);
 
+  const valueSetListOfFemales = createValueSet(cascadeMembers, "PIGLwIaw0wy", "Cn37lbyhz6f");
+  console.log({ valueSetListOfFemales });
+
   const programStagesDataElements = programMetadataMember.programStages.reduce((acc, stage) => {
     stage.dataElements.forEach((de) => {
+      // Drop down for mother’s name
+      if (de.id === "q0WEgMBwi0p") {
+        de.valueSet = valueSetListOfFemales;
+      }
+
       de.code = de.id;
       de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
     });
@@ -419,3 +429,17 @@ const convertOriginMetadata = (programMetadataMember) => {
 };
 
 export default HouseHoldMemberTable;
+
+const createValueSet = (cascadeMembers, labelID, valueID) => {
+  return cascadeMembers.reduce((acc, curr) => {
+    const label = curr[labelID];
+    const value = curr[valueID];
+
+    acc.push({
+      value,
+      label,
+    });
+
+    return acc;
+  }, []);
+};

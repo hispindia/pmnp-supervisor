@@ -1,6 +1,21 @@
 import { useTranslation } from "react-i18next";
 import Select from "react-select";
 
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    maxWidth: 20, // Adjust as needed
+    overflow: "hidden",
+  }),
+  option: (provided) => ({
+    ...provided,
+    maxWidth: 20, // Adjust as needed
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+  }),
+};
+
 const SelectField = ({
   valueSet,
   value,
@@ -39,7 +54,15 @@ const SelectField = ({
       styles={{
         control: (provided) => ({
           ...provided,
+          // how to show full selected text
           height: 40,
+          whiteSpace: "pre-wrap",
+        }),
+        option: (provided) => ({
+          ...provided,
+          // textOverflow: "ellipsis",
+          // overflow: "hidden",
+          // whiteSpace: "nowrap",
         }),
       }}
     />

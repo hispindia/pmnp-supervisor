@@ -40,29 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const convertOriginMetadata = ({ programMetadata, eventIncluded = true }) => {
-  let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map((attr) => {
-    return {
-      ...attr,
-      code: attr.id,
-    };
-  });
-
-  let programStagesDataElements = [];
-  if (eventIncluded) {
-    programStagesDataElements = programMetadata.programStages.reduce((acc, stage) => {
-      stage.dataElements.forEach((de) => {
-        de.code = de.id;
-        de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
-      });
-
-      return [...acc, ...stage.dataElements];
-    }, []);
-  }
-
-  return [...trackedEntityAttributes, ...programStagesDataElements];
-};
-
 const FamilyMemberForm = ({
   currentEvent,
   changeEventDataValue,
@@ -84,11 +61,6 @@ const FamilyMemberForm = ({
   const selectedOrgUnit = getOrganisationUnitById(orgUnitId, orgUnits);
   const { code: BarangayCode } = selectedOrgUnit;
 
-  const originMetadata = convertOriginMetadata({
-    programMetadata: programMetadataMember,
-    eventIncluded: false,
-  });
-
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -96,6 +68,12 @@ const FamilyMemberForm = ({
 
   const attributes = useSelector((state) => state.data.tei.data.currentTei.attributes);
   const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
+
+  const originMetadata = convertOriginMetadata({
+    programMetadata: programMetadataMember,
+    eventIncluded: false,
+    attributes,
+  });
 
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
 
@@ -297,6 +275,39 @@ const FamilyMemberForm = ({
       </Paper>
     </div>
   );
+};
+
+const convertOriginMetadata = ({ programMetadata, eventIncluded = true, attributes }) => {
+  let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map((attr) => {
+    // The "Family Number" must be drop down, not an input field.
+    if (attr.id === "BbdQMKOObps") {
+      const familyCount = attributes["ZGPJg7g997n"];
+      const valueSet = Array.from({ length: familyCount }, (_, i) => ({
+        value: i + 1,
+        label: `${i + 1}`,
+      }));
+      attr.valueSet = valueSet;
+    }
+
+    return {
+      ...attr,
+      code: attr.id,
+    };
+  });
+
+  let programStagesDataElements = [];
+  if (eventIncluded) {
+    programStagesDataElements = programMetadata.programStages.reduce((acc, stage) => {
+      stage.dataElements.forEach((de) => {
+        de.code = de.id;
+        de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
+      });
+
+      return [...acc, ...stage.dataElements];
+    }, []);
+  }
+
+  return [...trackedEntityAttributes, ...programStagesDataElements];
 };
 
 export default FamilyMemberForm;
