@@ -405,7 +405,6 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers) => {
   metadata.push(...trackedEntityAttributes);
 
   const valueSetListOfFemales = createValueSet(cascadeMembers, "PIGLwIaw0wy", "Cn37lbyhz6f");
-  console.log({ valueSetListOfFemales });
 
   const programStagesDataElements = programMetadataMember.programStages.reduce((acc, stage) => {
     stage.dataElements.forEach((de) => {

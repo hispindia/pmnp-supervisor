@@ -149,7 +149,7 @@ const InputField = ({
             handleChange={onChange}
             handleBlur={onBlur}
             disabled={disabled}
-            inputProps={{ min: "0" }}
+            inputProps={{ min: "0", step: "1" }}
             maxLength={attribute && attribute.maxLength}
             onInput={(e) => {
               if (attribute && attribute.maxLength) {
@@ -184,6 +184,7 @@ const InputField = ({
             handleChange={onChange}
             handleBlur={onBlur}
             disabled={disabled}
+            inputProps={{ min: "0" }}
             // maxLength={attribute && attribute.maxLength}
             onInput={(e) => {
               if (attribute && attribute.maxLength) {

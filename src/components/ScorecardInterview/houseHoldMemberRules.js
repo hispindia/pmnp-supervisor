@@ -65,7 +65,7 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
   metadata["RoSxLAB5cfo"].disabled = true;
   metadata["Gds5wTiXoSK"].disabled = true;
   metadata["ICbJBQoOsVt"].disabled = true;
-  metadata["khD9FKDEw7k"].hidden = false;
+  metadata["khD9FKDEw7k"].hidden = true;
 
   if (weeks === 0) {
     metadata["Hc9Vgt4LXjb"].hidden = true;
@@ -173,11 +173,11 @@ export const demographicDetailRules = (metadata, data, { years, months }) => {
   metadata["CEF6Dkpe2jW"].hidden = psMembership !== "1";
 
   // Hide Philhealth ques for child <5 y (0-59 mo)
-  metadata["JjFcU1L7Ll1"].hidden = !years > 5;
+  metadata["JjFcU1L7Ll1"].hidden = !(years > 5);
 
   // PHIC ID	Only show when 'PHIC membership' = Yes / 1
   const PhiCMembership = data["JjFcU1L7Ll1"];
-  metadata["Yp6gJAdu4yX"].hidden = PhiCMembership !== "1";
+  metadata["Yp6gJAdu4yX"].hidden = PhiCMembership !== "1" || !(years > 5);
 };
 
 export const childHeathRules = (metadata, data, { months, years }) => {
@@ -316,9 +316,9 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
   // CN - Weight for height status (Q 511)	Child < 5 y
   metadata["RXWSlNxAwq1"].hidden = years > 5;
   // CN - MUAC findings	Child < 5 y
-  metadata["s3q2EVu3qe0"].hidden = years > 5;
+  metadata["s3q2EVu3qe0"].hidden = years > 5 || months < 6;
   // CN - MUAC (cm)	Child < 5 y
-  metadata["sCOCt8eF0Fr"].hidden = years > 5 || months < 5;
+  metadata["sCOCt8eF0Fr"].hidden = years > 5 || months < 6;
   // Mother's member ID number
   metadata["q0WEgMBwi0p"].hidden = years > 5;
 
