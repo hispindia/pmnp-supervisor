@@ -46,6 +46,7 @@ const MultipleTrueOnlyDEs = ({ valueSet, locale, disabled, changeValue, formData
       isClearable={true}
       options={options}
       isSearchable={false}
+      blurInputOnSelect={false} // for mobile/tablet
       closeMenuOnSelect={false}
       hideSelectedOptions={false}
       placeholder={value ? value : t("select")}
