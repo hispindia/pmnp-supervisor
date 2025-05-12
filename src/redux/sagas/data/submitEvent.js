@@ -26,8 +26,12 @@ function* handleSubmitEvent({ event, refreshTei = true }) {
     // yield put(getTeiError("save event failed!"));
   } finally {
     // refresh TEI
-    if (refreshTei) yield put(getTei(currentTei.trackedEntity));
     yield put(loadTei(false));
+
+    /**
+     * this line should be placed after the loadTei(false) to keep the loading state
+     *  */
+    if (refreshTei) yield put(getTei(currentTei.trackedEntity));
   }
 }
 

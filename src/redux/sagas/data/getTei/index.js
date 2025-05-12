@@ -1,18 +1,10 @@
-import {
-  FAMILY_UID_ATTRIBUTE_ID,
-  MEMBER_PROGRAM_ID,
-  MEMBER_TRACKED_ENTITY_TYPE_ID,
-} from "@/constants/app-config";
+import { FAMILY_UID_ATTRIBUTE_ID, MEMBER_PROGRAM_ID, MEMBER_TRACKED_ENTITY_TYPE_ID } from "@/constants/app-config";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import { push } from "connected-react-router";
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { dataApi } from "../../../../api";
 import { editingAttributes } from "../../../actions/data";
-import {
-  getTeiError,
-  getTeiSuccessMessage,
-  loadTei,
-} from "../../../actions/data/tei";
+import { getTeiError, getTeiSuccessMessage, loadTei } from "../../../actions/data/tei";
 import { setSelectedOrgUnit } from "../../../actions/metadata";
 import { GET_TEI } from "../../../types/data/tei";
 import { getSelectedOrgUnitByOuId, getTeiId } from "../utils";
@@ -43,9 +35,7 @@ function* handleGetTei() {
       yield call(initExistedDataSaga, teiId);
       yield put(getTeiSuccessMessage(`Get tracked entity instance: ${teiId}`));
     } else {
-      const selectedOu = yield select(
-        (state) => state.metadata.selectedOrgUnit
-      );
+      const selectedOu = yield select((state) => state.metadata.selectedOrgUnit);
       if (!selectedOu) {
         return yield put(push("/"));
       }
@@ -118,13 +108,10 @@ function* initExistedDataSaga() {
 
   if (memberTEIsUid && memberTEIsUid.length > 0) {
     if (offlineStatus) {
-      memberTEIsEvents = yield call(
-        trackedEntityManager.getTrackedEntityInstancesByIDs,
-        {
-          program: MEMBER_PROGRAM_ID,
-          trackedEntities: memberTEIsUid,
-        }
-      );
+      memberTEIsEvents = yield call(trackedEntityManager.getTrackedEntityInstancesByIDs, {
+        program: MEMBER_PROGRAM_ID,
+        trackedEntities: memberTEIsUid,
+      });
     } else {
       memberTEIsEvents = yield call(dataApi.getAllTrackedEntityInstancesByIDs, {
         program: MEMBER_PROGRAM_ID,
@@ -140,11 +127,7 @@ function* initExistedDataSaga() {
   yield put(setSelectedOrgUnit(selectedOrgUnit));
   yield call(handleInitData, teiData);
   yield call(initCascadeDataFromTEIsEvents, memberTEIs, false);
-  yield call(
-    initInterviewCascadeDataFromTEIsEvents,
-    memberTEIsEvents,
-    memberTEIs
-  );
+  yield call(initInterviewCascadeDataFromTEIsEvents, memberTEIsEvents, memberTEIs);
   yield put(editingAttributes(false));
 }
 
