@@ -124,7 +124,11 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
     // Calculate fields
     // Score_Number of 4Ps Members
     houseHoldSurveyRules(metadata, newData);
-    calculateHouseHoldFields(newData, interviewCascadeData, interviewData);
+    calculateHouseHoldFields(
+      newData,
+      interviewCascadeData.map((d) => d.memberData),
+      interviewData
+    );
 
     clearHiddenFieldData(metadata, data);
     if (previousData) setFormDirty(true);
