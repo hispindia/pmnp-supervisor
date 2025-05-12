@@ -65,7 +65,6 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
   metadata["RoSxLAB5cfo"].disabled = true;
   metadata["Gds5wTiXoSK"].disabled = true;
   metadata["ICbJBQoOsVt"].disabled = true;
-  metadata["khD9FKDEw7k"].hidden = true;
 
   if (weeks === 0) {
     metadata["Hc9Vgt4LXjb"].hidden = true;
@@ -87,10 +86,6 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
     metadata["RoSxLAB5cfo"].hidden = true;
     metadata["Gds5wTiXoSK"].hidden = true;
     metadata["ICbJBQoOsVt"].hidden = true;
-  }
-
-  if (months >= 6 && months <= 23) {
-    metadata["khD9FKDEw7k"].hidden = false;
   }
 };
 
@@ -384,7 +379,7 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
   }
 };
 
-export const hideSectionRules = (metadata, data, programMetadataMember, { years }) => {
+export const hideSectionRules = (metadata, data, programMetadataMember, { years, months }) => {
   let shownSections = [];
   let hiddenSections = ["IxbqFSJPfEN", "A2TBfLOW8HG", "tlNWZDOWfP2", "jV8O1ZITgIn", "E4FpYkBzAsW", "fVGAPxIFZoO"];
 
@@ -430,5 +425,10 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years 
         });
       }
     });
+  }
+
+  metadata["khD9FKDEw7k"].hidden = true;
+  if (months >= 6 && months <= 23) {
+    metadata["khD9FKDEw7k"].hidden = false;
   }
 };
