@@ -172,7 +172,9 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
   const count_age_lt_5 = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 0, 60);
   newData["Ud7pdtnOz0p"] = count_age_lt_5 > 0 ? "true" : undefined;
 
-  const respondent = interviewCascadeData.find((item) => item["Cn37lbyhz6f"] === interviewData["SrFa2O3m6ff"]);
+  const respondent = interviewCascadeData.find(
+    (item) => item?.memberData?.["Cn37lbyhz6f"] === interviewData["SrFa2O3m6ff"]
+  );
 
   if (respondent) {
     newData["lVOceUugk7C"] = respondent["OiOvGqVEyY9"];
