@@ -83,6 +83,8 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
     pOaMwFxZFmw: "JoD2AagclsB",
     Xsi5z2a7JMY: "SMfz85dxBrG",
     sXCoUlbEULM: "YgK3LWUrA6f",
+    kL0aNVBx5MS: "RLms3EMK6Lx",
+    nVzXtXKKiGI: "zLJX0cTUhbU",
   };
 
   const yesNoNa = { YES: "1", NO: "0", NA: "NA" };
@@ -109,23 +111,24 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
   // CN_Consumed other fruits and vegetables ZxGgsjfOje1
   // Yes if all of these are yes for a member
 
-  const deIds = [
-    "iiAjifuwYOE",
-    "xbPC3AWgDrB",
-    "hQgU2xbT2CL",
-    "aIMeDdwzVQQ",
-    "nVFnpIJFBtP",
-    "qfYU7s0EylE",
-    "ZxGgsjfOje1",
-  ];
+  // const deIds = [
+  //   "iiAjifuwYOE",
+  //   "xbPC3AWgDrB",
+  //   "hQgU2xbT2CL",
+  //   "aIMeDdwzVQQ",
+  //   "nVFnpIJFBtP",
+  //   "qfYU7s0EylE",
+  //   "ZxGgsjfOje1",
+  // ];
 
-  let yes;
-  interviewCascadeData.forEach((memberData) => {
-    if (deIds.every((id) => memberData[id] === "true")) yes = true;
-  });
-  if (yes) {
-    newData["kL0aNVBx5MS"] = yesNoNa.YES;
-  } else if (newData["kL0aNVBx5MS"]) newData["kL0aNVBx5MS"] = undefined;
+  // let yes;
+  // interviewCascadeData.forEach((memberData) => {
+  //   if (deIds.every((id) => memberData[id] === "true")) yes = true;
+  // });
+
+  // if (yes) {
+  //   newData["kL0aNVBx5MS"] = yesNoNa.YES;
+  // } else if (newData["kL0aNVBx5MS"]) newData["kL0aNVBx5MS"] = undefined;
 
   // Score_Monitoring and Treatment for SAM/MAM/OB/OW	nVzXtXKKiGI	CN_Referred to any health facility for treatment	zLJX0cTUhbU.	Yes, if yes for any member of the HH
   if (countValue(interviewCascadeData, "zLJX0cTUhbU", "true") > 0) newData["nVzXtXKKiGI"] = yesNoNa.YES;
