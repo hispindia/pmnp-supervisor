@@ -114,10 +114,13 @@ const FamilyMemberForm = ({
       currentCascade,
     });
 
-    // clear all "error"
+    // clear all "error" and "warning" messages
     for (let meta in metadata) {
       if (metadata[meta].error) {
         metadata[meta].error = "";
+      }
+      if (metadata[meta].warning) {
+        metadata[meta].warning = "";
       }
     }
 
@@ -154,8 +157,12 @@ const FamilyMemberForm = ({
 
     if (data["QAYXozgCOHu"] === "1") {
       // Household head should more than 18 years old
-      if (years < 18) {
+      if (years < 15) {
         metadata["QAYXozgCOHu"].error = "Household head should be more than 18 years old";
+      }
+
+      if (years >= 15 && years < 18) {
+        metadata["QAYXozgCOHu"].warning = "Are you sure that this person is the Household Head?";
       }
 
       // Allow only one household head per household

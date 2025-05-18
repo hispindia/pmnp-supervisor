@@ -234,12 +234,16 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // Weight	iFiOPAxrJIF
     // Age in months	RoSxLAB5cfo
     // Gender	Qt4YSwPxw0X
-    handleZScore(data, {
-      ageInMonths: months,
-      heightInCm: data["CY4OTulUceX"],
-      weight: data["iFiOPAxrJIF"],
-      gender: data["Qt4YSwPxw0X"],
-    });
+    if (data["uYWxyRYP7GN"]) {
+      const monthsByLastMonitoring = differenceInMonths(new Date(data["uYWxyRYP7GN"]), dateOfbirth);
+
+      handleZScore(data, {
+        ageInMonths: monthsByLastMonitoring,
+        heightInCm: data["CY4OTulUceX"],
+        weight: data["iFiOPAxrJIF"],
+        gender: data["Qt4YSwPxw0X"],
+      });
+    }
 
     // INT_Visit number
     data["Wdg76PCqsBn"] = interviewData["Wdg76PCqsBn"];

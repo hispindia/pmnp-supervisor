@@ -1,16 +1,15 @@
+import { BASE64_IMAGES } from "@/constants/base64Images";
 import { InputAdornment } from "@material-ui/core";
 import _ from "lodash";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import useForm from "../../hooks/useForm";
 import { FORM_ACTION_TYPES } from "../constants";
-import { BASE64_IMAGES } from "@/constants/base64Images";
 
 // components
-import { useTranslation } from "react-i18next";
 import { Button } from "antd";
+import { useTranslation } from "react-i18next";
 import InputField from "../InputFieldCore/InputField.component.jsx";
-import { check } from "prettier";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -61,6 +60,7 @@ function CaptureForm(props) {
     changeMetadata,
     initFromData,
     validation,
+    validationWarning,
     onSubmit,
     clear,
   } = useForm(
@@ -140,6 +140,7 @@ function CaptureForm(props) {
                 startAdornment: <InputAdornment position="start">{f.prefix}</InputAdornment>,
               }}
               error={validation(f.code)}
+              warning={validationWarning(f.code)}
               maxDate={f.maxDate || props.maxDate}
               minDate={"1900-12-31"}
               data-element-id={f.code}

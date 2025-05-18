@@ -3,60 +3,63 @@ import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.ang
 
 export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) => {
   // HFA status	TON0hSWcaw7
+  const HFA_DE = "TON0hSWcaw7";
   // Normal	:1:	- 2 >= HFA = < 0
   // 	stunted	:2:	- 3 < HFA < -2
   // 	severely stunted 	:3:	HFA < -3
   // 	tall	:4:	HFA > 0
   const zScoreHFA = getZScoreHFA(ageInMonths, heightInCm, gender);
   if (zScoreHFA >= -2 && zScoreHFA < 0) {
-    data["TON0hSWcaw7"] = "1";
+    data[HFA_DE] = "1";
   }
   if (zScoreHFA < -2 && zScoreHFA > -3) {
-    data["TON0hSWcaw7"] = "2";
+    data[HFA_DE] = "2";
   }
   if (zScoreHFA < -3) {
-    data["TON0hSWcaw7"] = "3";
+    data[HFA_DE] = "3";
   }
   if (zScoreHFA > 0) {
-    data["TON0hSWcaw7"] = "4";
+    data[HFA_DE] = "4";
   }
 
   // WFA status	Wj1Re9XKW5P
+  const WFA_DE = "Wj1Re9XKW5P";
   // Normal	:1:	- 2 >= WFA = < 0
   // underweight	:2:	- 3 < WFA < -2
   // Severely underweight	:3:	WFA < -3
   // overweight / obese	:4:	WFA > 0
   const zScoreWFA = getZScoreWFA(ageInMonths, weight, gender);
   if (zScoreWFA >= -2 && zScoreWFA < 0) {
-    data["Wj1Re9XKW5P"] = "1";
+    data[WFA_DE] = "1";
   }
   if (zScoreWFA < -2 && zScoreWFA > -3) {
-    data["Wj1Re9XKW5P"] = "2";
+    data[WFA_DE] = "2";
   }
   if (zScoreWFA < -3) {
-    data["Wj1Re9XKW5P"] = "3";
+    data[WFA_DE] = "3";
   }
   if (zScoreWFA > 0) {
-    data["Wj1Re9XKW5P"] = "4";
+    data[WFA_DE] = "4";
   }
 
   // WFH status	RXWSlNxAwq1
+  const WFH_DE = "RXWSlNxAwq1";
   // Normal	:1:	- 2 >= WFH = < 0
   // moderately wasted	:2:	- 3 < WFH < -2
   // severely wasted	:3:	WFH < -3
   // overweight / obese	:4:	WFH > 0
   const zScoreWFH = getZScoreWFH(heightInCm, weight, gender);
   if (zScoreWFH >= -2 && zScoreWFH < 0) {
-    data["RXWSlNxAwq1"] = "1";
+    data[WFH_DE] = "1";
   }
   if (zScoreWFH < -2 && zScoreWFH > -3) {
-    data["RXWSlNxAwq1"] = "2";
+    data[WFH_DE] = "2";
   }
   if (zScoreWFH < -3) {
-    data["RXWSlNxAwq1"] = "3";
+    data[WFH_DE] = "3";
   }
   if (zScoreWFH > 0) {
-    data["RXWSlNxAwq1"] = "4";
+    data[WFH_DE] = "4";
   }
 };
 
@@ -172,6 +175,10 @@ export const demographicDetailRules = (metadata, data, { years, months }) => {
 
   // PHIC ID	Only show when 'PHIC membership' = Yes / 1
   const PhiCMembership = data["JjFcU1L7Ll1"];
+
+  // 12-123456789-1
+  // metadata["Yp6gJAdu4yX"].valueType = "MASK";
+  // metadata["Yp6gJAdu4yX"].pattern = /^\D{2}+$/;
   metadata["Yp6gJAdu4yX"].hidden = PhiCMembership !== "1" || !(years > 5);
 };
 

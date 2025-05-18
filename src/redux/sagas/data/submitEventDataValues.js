@@ -5,11 +5,12 @@ import { SUBMIT_EVENT_DATA_VALUES } from "../../types/data/tei";
 import { generateTEIDhis2Payload } from "./utils";
 
 import { dataApi } from "@/api";
+import { MEMBER_FIRST_NAME_ATTRIBUTE_ID, MEMBER_LAST_NAME_ATTRIBUTE_ID } from "@/constants/app-config";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import { isHeadOfHousehold } from "@/utils/member";
 import { deleteMember, getTeiError, getTeiSuccessMessage, loadTei } from "../../actions/data/tei";
 import { updateCascade } from "../../actions/data/tei/currentCascade";
-import submitAttributes, { handleSubmitAttributes } from "./submitAttributes";
-import { isHeadOfHousehold } from "@/utils/member";
+import { handleSubmitAttributes } from "./submitAttributes";
 
 function* handleSubmitEventDataValues({ dataValues }) {
   console.log("handleSubmitEventDataValues", { dataValues });
@@ -185,7 +186,9 @@ function* pushTEI(updatedMemberTei) {
     }
 
     if (isHeadOfHousehold(selectedMember)) {
-      yield call(handleSubmitAttributes, { attributes: { ...attributes, GXs8SDJL19y: selectedMember["PIGLwIaw0wy"] } });
+      const fullName = `${selectedMember[MEMBER_FIRST_NAME_ATTRIBUTE_ID]} ${selectedMember[MEMBER_LAST_NAME_ATTRIBUTE_ID]}`;
+
+      yield call(handleSubmitAttributes, { attributes: { ...attributes, GXs8SDJL19y: fullName } });
     }
 
     yield put(getTeiSuccessMessage(`Created successfully`));

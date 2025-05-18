@@ -1,8 +1,7 @@
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { FileImageOutlined } from "@ant-design/icons";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
+import { useEffect, useRef, useState } from "react";
 
 const preloadImg = (src) =>
   new Promise((res, rej) => {
@@ -26,7 +25,6 @@ const LoadWidthHeight = ({ children, src }) => {
 };
 
 const HyperLink = ({ hyperlink, base64 }) => {
-  const { offlineStatus } = useSelector((state) => state.common);
   const wrapperRef = useRef();
 
   useEffect(() => {
@@ -85,23 +83,13 @@ const HyperLink = ({ hyperlink, base64 }) => {
         <LoadWidthHeight key={base64.name} src={base64.base64Image}>
           {({ width, height }) => (
             <a href={base64.base64Image} data-pswp-width={width} data-pswp-height={height}>
-              <InfoCircleOutlined />
+              <FileImageOutlined style={{ fontSize: "18px" }} />
             </a>
           )}
         </LoadWidthHeight>
       </div>
     );
   }
-
-  // if (!hyperlink || offlineStatus) {
-  //   return null;
-  // }
-
-  // return (
-  //   <a href={hyperlink} target="_blank" rel="noopener noreferrer">
-  //     <InfoCircleOutlined />
-  //   </a>
-  // );
 };
 
 export default HyperLink;

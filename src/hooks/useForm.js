@@ -7,6 +7,7 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
   const [formData, setFormData] = useState(data);
   const [warningLocale, setWarningLocale] = useState(uiLocale);
   const [validationText, setValidationText] = useState({});
+  const [warningText, setWarningText] = useState({});
   const [isFormFulfilled, setIsFormFulfilled] = useState(true); // TRUE to skip validation for now [WIP]
 
   const validationTypes = ["compulsory"];
@@ -113,8 +114,13 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
     }
   };
 
+  const validationWarning = (code) => {
+    return warningText[code] ? warningText[code].text : null;
+  };
+
   const onSubmit = (external) => {
     let valText = {};
+    let warningText = {};
 
     validationTypes.forEach((vt) => {
       let filterMDbyType = _.filter(formMetadata, { [vt]: true });
@@ -136,6 +142,9 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
         if (mdf.error) {
           valText[mdf.code || mdf.id] = { text: mdf.error };
         }
+        if (mdf.warning) {
+          warningText[mdf.code || mdf.id] = { text: mdf.warning };
+        }
       });
     }
 
@@ -144,6 +153,7 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
 
     // custom fileds validations
     setValidationText(valText);
+    setWarningText(warningText);
 
     return _.isEmpty(valText);
   };
@@ -165,6 +175,7 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
     changeValue,
     initFromData,
     validation,
+    validationWarning,
     onSubmit,
     clear,
     // validateFamilyMemberForm,
