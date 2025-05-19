@@ -58,12 +58,17 @@ const SelectField = ({
           height: 40,
           whiteSpace: "pre-wrap",
         }),
-        option: (provided) => ({
+        option: (provided, state) => ({
           ...provided,
-          // textOverflow: "ellipsis",
-          // overflow: "hidden",
-          // whiteSpace: "nowrap",
+          ...(state.data.color && {
+            backgroundColor: state.data.color,
+            color: "#000",
+          }),
         }),
+        cursor: "pointer",
+        // textOverflow: "ellipsis",
+        // overflow: "hidden",
+        // whiteSpace: "nowrap",
       }}
     />
   );

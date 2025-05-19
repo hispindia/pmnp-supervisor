@@ -6,6 +6,8 @@ import "./index.css";
 import { isImmutableYear } from "@/utils/event";
 import { useSelector } from "react-redux";
 import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
+import { HH_STATUS_ATTR_ID } from "../constants";
+import { Chip } from "@material-ui/core";
 
 const RegisteredTeiList = ({
   teis,
@@ -86,6 +88,7 @@ const RegisteredTeiList = ({
           dataIndex: tea.id,
           key: tea.id,
           sorter: true,
+          valueSet: tea.valueSet,
           filterDropdown: <TableFilter placeholder={tea.displayFormName} metadata={tea} onFilter={onFilter} />,
           render: (value) => <TableColumn metadata={tea} value={value} />,
         };
@@ -140,6 +143,20 @@ const RegisteredTeiList = ({
         const attribute = tei.attributes.find((attr) => {
           return attr.attribute === column.dataIndex;
         });
+
+        if (column.key === HH_STATUS_ATTR_ID && attribute?.value) {
+          const option = column.valueSet && column.valueSet.find((o) => o.value === attribute.value);
+
+          rowObject["CNqaoQva9S2"] = (
+            <Chip
+              size="small"
+              style={{ backgroundColor: option?.color, color: option?.color && "#fff", borderRadius: 4 }}
+              label={attribute ? attribute.value : ""}
+            />
+          );
+          return;
+        }
+
         rowObject[column.dataIndex] = attribute ? attribute.value : "";
       });
 

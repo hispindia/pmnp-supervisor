@@ -75,6 +75,7 @@ const TYPE_OF_ACTION = {
 };
 
 export const HOUSEHOLD_MEMBER_ID = "Cn37lbyhz6f";
+export const HH_STATUS_ATTR_ID = "CNqaoQva9S2";
 export const PMNP_ID = "NOKzq4dAKF7";
 export const MEMBER_HOUSEHOLD_UID = "RDQQ3t9oXw5";
 export const REPORT_ID_CONSTANT = "lfMDT7HdaFh";
