@@ -16,7 +16,7 @@ const OrgUnit = ({
 }) => {
   return (
     <Row justify="left" align="middle">
-      <Col className="d-none d-sm-block">
+      {/* <Col className="d-none d-sm-block">
         <Typography
           color="primary"
           style={{
@@ -25,34 +25,32 @@ const OrgUnit = ({
         >
           {orgUnitLabel}:{" "}
         </Typography>
-      </Col>
-      {
-        <Popover
-          placement="bottomLeft"
-          overlayInnerStyle={{
-            maxHeight: "70vh",
-            overflowY: "auto",
-          }}
-          trigger="click"
-          content={
-            <Col className="orgunit-selector-container">
-              <OrgUnitSelector
-                limit={limit}
-                singleSelection={singleSelection}
-                selectedOrgUnit={selectedOrgUnit}
-                handleSelectOrgUnit={handleSelectOrgUnit}
-                filter={orgUnitSelectorFilter}
-              />
-            </Col>
-          }
-        >
-          <div className="button-container">
-            <Button type="primary" icon={<FontAwesomeIcon icon={faSchoolFlag} fontSize={14} />}>
-              {buttonLabel}
-            </Button>
-          </div>
-        </Popover>
-      }
+      </Col> */}
+      <Popover
+        placement="bottomLeft"
+        overlayInnerStyle={{
+          maxHeight: "70vh",
+          overflowY: "auto",
+        }}
+        trigger="click"
+        content={
+          <Col className="orgunit-selector-container">
+            <OrgUnitSelector
+              limit={limit}
+              singleSelection={singleSelection}
+              selectedOrgUnit={selectedOrgUnit}
+              handleSelectOrgUnit={handleSelectOrgUnit}
+              filter={orgUnitSelectorFilter}
+            />
+          </Col>
+        }
+      >
+        <div className="button-container">
+          <Button type="primary" icon={<FontAwesomeIcon icon={faSchoolFlag} fontSize={14} />}>
+            {buttonLabel}
+          </Button>
+        </div>
+      </Popover>
     </Row>
   );
 };

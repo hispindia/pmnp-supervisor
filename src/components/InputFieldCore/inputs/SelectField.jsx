@@ -52,11 +52,22 @@ const SelectField = ({
       }}
       isSearchable={isSearchable}
       styles={{
-        control: (provided) => ({
+        control: (provided, state) => {
+          return {
+            ...provided,
+            // how to show full selected text
+            height: 40,
+            whiteSpace: "pre-wrap",
+          };
+        },
+        singleValue: (provided, state) => ({
           ...provided,
-          // how to show full selected text
-          height: 40,
-          whiteSpace: "pre-wrap",
+          ...(state.data.color && {
+            backgroundColor: state.data.color,
+            borderRadius: "4px",
+            padding: "0 4px",
+            color: "#000",
+          }),
         }),
         option: (provided, state) => ({
           ...provided,
