@@ -84,7 +84,7 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
     metadata["RoSxLAB5cfo"].hidden = false;
     metadata["Gds5wTiXoSK"].hidden = true;
     metadata["ICbJBQoOsVt"].hidden = true;
-  } else if (years > 5) {
+  } else if (years >= 5) {
     metadata["Hc9Vgt4LXjb"].hidden = false;
     metadata["RoSxLAB5cfo"].hidden = true;
     metadata["Gds5wTiXoSK"].hidden = true;
@@ -109,7 +109,7 @@ export const handleAgeAttrsOfTEI = (data, { days, weeks, months, years }) => {
     data[weeksAttr] = weeks;
   } else if (years === 0 || years < 5) {
     data[monthsAttr] = months;
-  } else if (years > 5) {
+  } else if (years >= 5) {
     data[yearsAttr] = years;
   }
 };
@@ -131,9 +131,11 @@ export const handleAgeDatavaluesOfEvents = (data, { days, weeks, months, years }
     data["xDSSvssuNFs"] = weeks;
   } else if (years === 0 || years < 5) {
     data["X2Oln1OyP5o"] = months;
-  } else if (years > 5) {
+  } else if (years >= 5) {
     data["H42aYY9JMIR"] = years;
   }
+
+  console.log({ days, weeks, months, years });
 };
 
 export const demographicDetailRules = (metadata, data, { years, months }) => {
@@ -403,7 +405,7 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years,
     shownSections.push("fVGAPxIFZoO");
   }
 
-  if (years <= 5) {
+  if (years < 5) {
     hiddenSections = hiddenSections.filter((s) => s !== "tlNWZDOWfP2" || s !== "jV8O1ZITgIn");
     shownSections.push("tlNWZDOWfP2");
     shownSections.push("jV8O1ZITgIn");
