@@ -150,6 +150,7 @@ const FamilyMemberForm = ({
 
     const enrollmentDate = data.isNew ? new Date() : lastDayOfYear(new Date(currentEvent.occurredAt));
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
+
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const months = differenceInMonths(enrollmentDate, dateOfbirth);
     const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
@@ -290,7 +291,7 @@ const convertOriginMetadata = ({ programMetadata, eventIncluded = true, attribut
     if (attr.id === "BbdQMKOObps") {
       const familyCount = attributes["ZGPJg7g997n"];
       const valueSet = Array.from({ length: familyCount }, (_, i) => ({
-        value: i + 1,
+        value: i + 1 + "",
         label: `${i + 1}`,
       }));
       attr.valueSet = valueSet;
