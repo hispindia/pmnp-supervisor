@@ -4,7 +4,7 @@ import { Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOLD_UID } from "../constants";
+import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOLD_UID, VACCINE_DATE_DE_IDS } from "../constants";
 
 // Icon
 
@@ -218,11 +218,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     data[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
-    const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
-    const years = differenceInYears(eventDate, dateOfbirth);
-    const months = differenceInMonths(eventDate, dateOfbirth);
-    const weeks = differenceInWeeks(eventDate, dateOfbirth);
-    const days = differenceInDays(eventDate, dateOfbirth);
+    const dateOBbirth = new Date(data["fJPZFs2yYJQ"]);
+    const years = differenceInYears(eventDate, dateOBbirth);
+    const months = differenceInMonths(eventDate, dateOBbirth);
+    const weeks = differenceInWeeks(eventDate, dateOBbirth);
+    const days = differenceInDays(eventDate, dateOBbirth);
+
+    // vaccine before date of birth
+    VACCINE_DATE_DE_IDS.forEach((id) => (metadata[id].minDate = data["fJPZFs2yYJQ"]));
 
     data["Hc9Vgt4LXjb"] = years;
     data["RoSxLAB5cfo"] = months;
@@ -235,7 +238,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // Age in months	RoSxLAB5cfo
     // Gender	Qt4YSwPxw0X
     if (data["uYWxyRYP7GN"]) {
-      const monthsByLastMonitoring = differenceInMonths(new Date(data["uYWxyRYP7GN"]), dateOfbirth);
+      const monthsByLastMonitoring = differenceInMonths(new Date(data["uYWxyRYP7GN"]), dateOBbirth);
 
       handleZScore(data, {
         ageInMonths: monthsByLastMonitoring,

@@ -142,7 +142,7 @@ function CaptureForm(props) {
               error={validation(f.code)}
               warning={validationWarning(f.code)}
               maxDate={f.maxDate || props.maxDate}
-              minDate={"1900-12-31"}
+              minDate={f.minDate || props.minDate || "1900-12-31"}
               data-element-id={f.code}
               hyperlink={f.url}
               base64={base64Object}

@@ -371,14 +371,8 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
   }, 0);
 
   // For Children less than 6 mos, the ADD is yes if (Q501=Yes),
-  if (months < 6) {
-    if (data["SMfz85dxBrG"] === "false") {
-      data["RLms3EMK6Lx"] = "false";
-    } else {
-      data["RLms3EMK6Lx"] = "true";
-    }
-  } else if (months >= 6 && months <= 23) {
-    if (data["YJEM6K4r8B6"] === "true" && countOfTrue >= 5 && countOfTrue <= 7) {
+  if (months >= 6 && months <= 23) {
+    if (data["YJEM6K4r8B6"] === "true" && countOfTrue > 4) {
       data["RLms3EMK6Lx"] = "true";
     }
 

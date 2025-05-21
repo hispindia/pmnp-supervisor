@@ -330,6 +330,27 @@ const FAMILY_MEMBER_VALUE = {
   EX_COUNTRY: "Ex country",
 };
 
+export const VACCINE_DATE_DE_IDS = [
+  "K37pq3b5Qra",
+  "DHXhabUfBHA",
+  "i4gomCWd0y9",
+  "ew3lMYvyfeV",
+  "bsPGbR6F18a",
+  "LE5EQiIK7Lz",
+  "WfeWZFMoy6E",
+  "NL22zOZXlvb",
+  "vxIQzyyUq1M",
+  "EH1L3NCv2tC",
+  "AVpmlIXDUmW",
+  "qD6ZrhRMGjk",
+  "By0qcLTxEPN",
+  "d5WhzyidsX8",
+  "jnumk6j4OJ3",
+  "kzaCPuPzy6o",
+  "PQS3vSrsIBO",
+  "EhIlZ6OO8Fu",
+];
+
 // const HAS_INITIAN_NOVALUE = ['mt37cOH28F9', 'uQg4s7Jd8WW', 'UjLxTtDk9qc']
 const HAS_INITIAN_NOVALUE = ["uQg4s7Jd8WW", "mt37cOH28F9"];
 
