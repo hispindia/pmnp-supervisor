@@ -38,7 +38,6 @@ function CaptureForm(props) {
     ...other
   } = props;
   const { programMetadataMember } = useSelector((state) => state.metadata);
-  const { offlineStatus } = useSelector((state) => state.common);
   const { programSections, programStages } = formProgramMetadata || programMetadataMember;
 
   const displayDEs = programStages.reduce((acc, pStage) => {
@@ -146,6 +145,7 @@ function CaptureForm(props) {
               data-element-id={f.code}
               hyperlink={f.url}
               base64={base64Object}
+              description={f.description}
             />
           </div>
         );

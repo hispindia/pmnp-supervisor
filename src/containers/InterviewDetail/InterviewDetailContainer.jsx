@@ -101,6 +101,7 @@ const convertOriginMetadata = (programMetadata, currentCascade) => {
   // programMetadata.trackedEntityAttributes.forEach((attr) => {
   //   attr.code = attr.id;
   // });
+
   const householdMemberIDs = getHouseholdMemberIDs(currentCascade);
 
   const householdMembersValueSet = householdMemberIDs.map((id) => ({

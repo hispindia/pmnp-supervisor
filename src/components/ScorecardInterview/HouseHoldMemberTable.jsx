@@ -239,7 +239,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // Gender	Qt4YSwPxw0X
     if (data["uYWxyRYP7GN"]) {
       const monthsByLastMonitoring = differenceInMonths(new Date(data["uYWxyRYP7GN"]), dateOBbirth);
-
+      console.log({ monthsByLastMonitoring }, data["uYWxyRYP7GN"]);
       handleZScore(data, {
         ageInMonths: monthsByLastMonitoring,
         heightInCm: data["CY4OTulUceX"],

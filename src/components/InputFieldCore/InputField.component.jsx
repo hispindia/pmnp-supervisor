@@ -28,6 +28,7 @@ const InputField = ({
   locale,
   attribute = null,
   onInput,
+  description,
   ...props
 }) => {
   const { t } = useTranslation();
@@ -269,6 +270,7 @@ const InputField = ({
       {warning && <div className="input-field-warning">{warning}</div>}
       {error && <div className="input-field-error">{error}</div>}
       {helperText && <div className="input-field-helper-text">{helperText}</div>}
+      {description && <div className="input-field-helper-text">{description}</div>}
       {!warning && !error && !helperText && (
         <div className="input-field-error" style={{ visibility: "hidden" }}>
           align
