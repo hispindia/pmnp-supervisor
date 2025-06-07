@@ -28,9 +28,7 @@ function* handleSubmitEventDataValues({ dataValues }) {
   const { currentTei, currentCascade } = yield select((state) => state.data.tei.data);
   const { selectedMember } = yield select((state) => state.data.tei);
 
-  process.env.NODE_ENV && console.log({ selectedMember });
-  process.env.NODE_ENV && console.log({ currentTei });
-  process.env.NODE_ENV && console.log({ currentCascade });
+  process.env.NODE_ENV && console.log({ selectedMember, currentTei, currentCascade });
 
   try {
     // UPDATE remain dataValue not CascadeData
@@ -46,9 +44,6 @@ function* handleSubmitEventDataValues({ dataValues }) {
     // }
 
     // yield put(updateEvents(newCurrentEvents));
-
-    // // IF missing CASCADE data -> break
-    // if (!currentCascade) return;
 
     // Update cascade to REDUX store
     const newCurrentCascade = currentCascade ? JSON.parse(JSON.stringify(currentCascade)) : {};

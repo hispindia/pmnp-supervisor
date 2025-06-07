@@ -7,12 +7,30 @@ import useForm from "../../hooks/useForm";
 import { FORM_ACTION_TYPES } from "../constants";
 
 // components
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import InputField from "../InputFieldCore/InputField.component.jsx";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
+};
+
+const { confirm } = Modal;
+const showConfirmationModal = (title, onConfirm, onCancel) => {
+  const instance = confirm({
+    title,
+    centered: true,
+    icon: null,
+    okText: "Yes",
+    cancelText: "No",
+    onOk: () => {
+      if (onConfirm) {
+        onConfirm();
+      }
+      instance.destroy();
+    },
+    onCancel: onCancel,
+  });
 };
 
 function CaptureForm(props) {
@@ -89,18 +107,21 @@ function CaptureForm(props) {
   }, [data.id]);
 
   useEffect(() => {
+    checkFormFulfilled();
     return () => {
       clear();
     };
   }, []);
+
   console.log({ isFormFulfilled });
+
   const editCall = (metadata, prevData, formData, code, value) => {
     let data = _.clone(formData);
     let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
       obj[md.code] = md;
       return obj;
     }, {});
-    console.log("checkFormFulfilled");
+
     editRowCallback(cloneMetadata, prevData, data, code, value);
     checkFormFulfilled();
 
@@ -158,7 +179,6 @@ function CaptureForm(props) {
       const TEIFormMetadata = formMetadata.filter((f) => trackedEntityAttributes.includes(f.id));
       return (
         <div className="row" style={{ alignItems: "flex-end" }}>
-          {" "}
           {generateFields(TEIFormMetadata)}
         </div>
       );
@@ -304,8 +324,13 @@ function CaptureForm(props) {
                     size="large"
                     color="green"
                     variant="solid"
-                    // disabled={true}
-                    onClick={(e) => handleOnSubmit(e, "submit")}
+                    disabled={!isFormFulfilled}
+                    onClick={() =>
+                      showConfirmationModal(
+                        "May I confirm if you’ve reviewed your answers and validated that all of it are accurate?",
+                        (e) => handleOnSubmit(e, "edit")
+                      )
+                    }
                   >
                     {t("submit")}
                   </Button>
