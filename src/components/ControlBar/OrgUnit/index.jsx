@@ -1,9 +1,7 @@
-import { Button, Col, Popover, Row } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSchoolFlag } from "@fortawesome/free-solid-svg-icons";
 import OrgUnitSelector from "@/components/OrgUnitSelector/OrgUnitSelector.component";
-import { PRIMARY_COLOR } from "@/constants/app-config";
-import { Typography } from "@material-ui/core";
+import { faSchoolFlag } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Col, Popover, Row } from "antd";
 
 const OrgUnit = ({
   limit,

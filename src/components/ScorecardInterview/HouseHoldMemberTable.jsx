@@ -163,19 +163,26 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     onClose();
   };
 
-  const editRowCallback = (metadata, previousData, data, code, value) => {
+  const editRowCallback = (metadata2, previousData, data, code, value) => {
     // WARNING: if it's hidden, the data will be removed
+
+    let metadata = (metaId) => {
+      if (!metadata2[metaId]) {
+        return {};
+      }
+      return metadata2[metaId];
+    };
 
     const HouseHoldMemberTable = { metadata, previousData, data, code, value, interviewData };
     console.log("HouseHoldMemberTable", HouseHoldMemberTable);
 
     // stage
-    metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
+    metadata(HOUSEHOLD_INTERVIEW_ID_DE_ID).disabled = true;
 
     // Hide rest of the form if Membership status = "Deceased" or Migrated to "Non-PMNP Area" or "Not part of the HH"
     const hhMemberStatus = data["Rb0k4fOdysI"];
     if (hhMemberStatus === "001" || hhMemberStatus === "004" || hhMemberStatus === "002") {
-      Object.keys(metadata).forEach((de) => {
+      Object.keys(metadata2).forEach((de) => {
         if (
           [
             HOUSEHOLD_INTERVIEW_ID_DE_ID,
@@ -189,32 +196,32 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
             "X2Oln1OyP5o",
             "H42aYY9JMIR",
           ].includes(de) ||
-          metadata[de].isAttribute
+          metadata(de).isAttribute
         )
           return;
-        metadata[de].hidden = true;
+        metadata(de).hidden = true;
       });
 
       clearHiddenFieldData(metadata, data);
       return;
     } else {
       Object.keys(metadata).forEach((de) => {
-        metadata[de].hidden = false;
+        metadata(de).hidden = false;
       });
     }
 
     // ages attribute
-    metadata["d2n5w4zpxuo"].hidden = true;
-    metadata["xDSSvssuNFs"].hidden = true;
-    metadata["X2Oln1OyP5o"].hidden = true;
-    metadata["H42aYY9JMIR"].hidden = true;
+    metadata("d2n5w4zpxuo").hidden = true;
+    metadata("xDSSvssuNFs").hidden = true;
+    metadata("X2Oln1OyP5o").hidden = true;
+    metadata("H42aYY9JMIR").hidden = true;
 
     data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = interviewId;
 
     data["C4b8S7zjs0g"] = data[MEMBER_HOUSEHOLD_UID];
-    metadata["C4b8S7zjs0g"].disabled = true;
+    metadata("C4b8S7zjs0g").disabled = true;
 
-    metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
+    metadata(HOUSEHOLD_INTERVIEW_TIME_DE_ID).disabled = true;
     data[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
@@ -225,7 +232,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const days = differenceInDays(eventDate, dateOBbirth);
 
     // vaccine before date of birth
-    VACCINE_DATE_DE_IDS.forEach((id) => (metadata[id].minDate = data["fJPZFs2yYJQ"]));
+    VACCINE_DATE_DE_IDS.forEach((id) => (metadata(id).minDate = data["fJPZFs2yYJQ"]));
 
     data["Hc9Vgt4LXjb"] = years;
     data["RoSxLAB5cfo"] = months;

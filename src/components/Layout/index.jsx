@@ -1,15 +1,14 @@
-import React from "react";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import { SnackbarProvider } from "notistack";
-import AppContextProvider from "../App/App.context";
 import styles from "../../components/App/App.module.css";
+import AppContextProvider from "../App/App.context";
 
+import antdThemeConfig from "@/antdTheme";
 import HeaderBar from "@/components/HeaderBar/HeaderBar.component";
-import { useDisableSwipeDownRefresh, useIsPwa } from "@/hooks";
+import { useIsPwa } from "@/hooks";
+import muiTheme from "@/muiTheme";
 import { ConfigProvider } from "antd";
 const { app, headerBarContainer } = styles;
-import antdThemeConfig from "@/antdTheme";
-import muiTheme from "@/muiTheme";
 
 const Layout = ({ children }) => {
   const isPwa = useIsPwa();

@@ -9,7 +9,6 @@ import {
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import OrgUnitContainer from "./OrgUnit";
-import { PRIMARY_COLOR } from "@/constants/app-config";
 
 const downloadMapping = [
   { id: "metadata", label: "Download metadata" },

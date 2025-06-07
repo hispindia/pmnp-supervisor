@@ -93,16 +93,16 @@ function CaptureForm(props) {
       clear();
     };
   }, []);
-
+  console.log({ isFormFulfilled });
   const editCall = (metadata, prevData, formData, code, value) => {
     let data = _.clone(formData);
     let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
       obj[md.code] = md;
       return obj;
     }, {});
-
+    console.log("checkFormFulfilled");
     editRowCallback(cloneMetadata, prevData, data, code, value);
-    // checkFormFulfilled();
+    checkFormFulfilled();
 
     setFormData({ ...data });
     changeMetadata([...Object.values(cloneMetadata)]);
@@ -256,6 +256,9 @@ function CaptureForm(props) {
           let row = _.clone(formData);
           handleEditRow(e, row, rowIndex);
           break;
+        case "submit":
+          handleEditRow(e, formData, false);
+          break;
       }
     }
   };
@@ -272,7 +275,7 @@ function CaptureForm(props) {
       <div className="row">
         <div className="col-md-12">
           <div className="btn-toolbar" role="toolbar">
-            {formStatus === FORM_ACTION_TYPES.ADD_NEW && (
+            {/* {formStatus === FORM_ACTION_TYPES.ADD_NEW && (
               <div className="btn-group mr-2" role="group" aria-label="First group">
                 <Button
                   size="large"
@@ -283,19 +286,32 @@ function CaptureForm(props) {
                   {t("save")}
                 </Button>
               </div>
-            )}
-            {formStatus === FORM_ACTION_TYPES.EDIT && (
-              <div className="btn-group mr-2" role="group" aria-label="First group">
-                <Button
-                  size="large"
-                  type="primary"
-                  disabled={disableSaveButton}
-                  onClick={(e) => handleOnSubmit(e, "edit")}
-                >
-                  {t("save")}
-                </Button>
-              </div>
-            )}
+            )} */}
+            {formStatus === FORM_ACTION_TYPES.ADD_NEW || formStatus === FORM_ACTION_TYPES.EDIT ? (
+              <>
+                <div className="btn-group mr-2">
+                  <Button
+                    size="large"
+                    type="primary"
+                    disabled={disableSaveButton}
+                    onClick={(e) => handleOnSubmit(e, "edit")}
+                  >
+                    {t("save")}
+                  </Button>
+                </div>
+                <div className="btn-group mr-2" role="group">
+                  <Button
+                    size="large"
+                    color="green"
+                    variant="solid"
+                    // disabled={true}
+                    onClick={(e) => handleOnSubmit(e, "submit")}
+                  >
+                    {t("submit")}
+                  </Button>
+                </div>
+              </>
+            ) : null}
             {cancelable && formStatus !== FORM_ACTION_TYPES.NONE && (
               <div className="btn-group mr-2" role="group" aria-label="First group">
                 <Button size="large" color="primary" onClick={(e) => handleCancelForm()}>
