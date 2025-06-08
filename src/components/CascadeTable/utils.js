@@ -8,9 +8,7 @@ const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
   metadata
     .filter((e) => !e?.hiddenCol)
     .forEach((ele) => {
-      let textFields = !_.isEmpty(ele?.translations)
-        ? ele.translations[locale]
-        : ele.displayName;
+      let textFields = !_.isEmpty(ele?.translations) ? ele.translations[locale] : ele.displayName;
       const colC = {
         dataField: ele.code,
         text: textFields,
@@ -98,12 +96,9 @@ const transformData = (metadata, datas, dataValuesTranslate, locale) => {
         let displayValue = d[md.code];
 
         if (dataValuesTranslate) {
-          const translateDisplayValue =
-            dataValuesTranslate[md.code][d[md.code]];
+          const translateDisplayValue = dataValuesTranslate[md.code][d[md.code]];
 
-          displayValue = translateDisplayValue
-            ? translateDisplayValue
-            : d[md.code];
+          displayValue = translateDisplayValue ? translateDisplayValue : d[md.code];
         }
         d[md.code] = displayValue;
       });

@@ -65,7 +65,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     return transformData(metadata, data, dataValuesTranslate, locale);
   }, [metadata, data, dataValuesTranslate, locale]);
 
-  const handleEditRow = (e, row, rowIndex) => {
+  const handleEditRow = (e, row, rowIndex, type) => {
     // Update data
     let newData = _.cloneDeep(data);
     newData[rowIndex] = { ...row };
@@ -80,10 +80,11 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const interviewEvents = interviewCascadeData[selectedRowIndex]?.events || [];
 
     const demographicDataValues = {};
-    const scorecardSurveyDataValues = {};
     stageDataElements[MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID].forEach((de) => {
       demographicDataValues[de.id] = row[de.id];
     });
+
+    const scorecardSurveyDataValues = {};
     stageDataElements[MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID].forEach((de) => {
       scorecardSurveyDataValues[de.id] = row[de.id];
     });
@@ -107,6 +108,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       _isDirty: true,
     };
 
+    const status = type == "submit" ? "COMPLETED" : "ACTIVE";
+
     let demographicEventPayload;
     const foundDemographicEvent = interviewEvents.find((e) => e.programStage === MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID);
     if (!foundDemographicEvent) {
@@ -114,12 +117,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         ...newEvent,
         event: generateUid(),
         dataValues: demographicDataValues,
+        status,
         programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
       });
     } else {
       demographicEventPayload = transformEvent({
         ...foundDemographicEvent,
         _isDirty: true,
+        status,
         dataValues: demographicDataValues,
       });
     }
@@ -135,12 +140,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         ...newEvent,
         event: generateUid(),
         dataValues: scorecardSurveyDataValues,
+        status,
         programStage: MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID,
       });
     } else {
       scorecardSurveyEventPayload = transformEvent({
         ...foundScorecardSurveyEvent,
         _isDirty: true,
+        status,
         dataValues: scorecardSurveyDataValues,
       });
     }
@@ -377,6 +384,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
                   editRowCallback={editRowCallback}
                   maxDate={new Date()}
                   minDate={new Date(`1900-12-31`)}
+                  showSubmitButtons
                   formName="HouseHoldMemberTable"
                 />
               ) : null}

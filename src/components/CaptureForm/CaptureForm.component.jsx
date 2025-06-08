@@ -10,6 +10,7 @@ import { FORM_ACTION_TYPES } from "../constants";
 import { Button, Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import InputField from "../InputFieldCore/InputField.component.jsx";
+import { useState } from "react";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -53,6 +54,7 @@ function CaptureForm(props) {
     locale,
     formName,
     onCancel = () => {},
+    showSubmitButtons = false,
     ...other
   } = props;
   const { programMetadataMember } = useSelector((state) => state.metadata);
@@ -90,6 +92,8 @@ function CaptureForm(props) {
   );
 
   const disableSaveButton = saveDisabled;
+  const enableEditButton = data?.isSaved && data?.status === "COMPLETED";
+  const [disableForm, setDisableForm] = useState(enableEditButton);
 
   useEffect(() => {
     initFromData(data);
@@ -112,8 +116,6 @@ function CaptureForm(props) {
       clear();
     };
   }, []);
-
-  console.log({ isFormFulfilled });
 
   const editCall = (metadata, prevData, formData, code, value) => {
     let data = _.clone(formData);
@@ -139,7 +141,7 @@ function CaptureForm(props) {
         return (
           <div className="col-lg-3 mb-3" key={`${f.code}-${index}`}>
             <InputField
-              disabled={f.disabled || formStatus === FORM_ACTION_TYPES.VIEW}
+              disabled={f.disabled || formStatus === FORM_ACTION_TYPES.VIEW || disableForm}
               locale={locale}
               {...(_.has(f, "periodType") && {
                 periodType: f.periodType,
@@ -277,7 +279,7 @@ function CaptureForm(props) {
           handleEditRow(e, row, rowIndex);
           break;
         case "submit":
-          handleEditRow(e, formData, false);
+          handleEditRow(e, formData, false, "submit");
           break;
       }
     }
@@ -307,6 +309,7 @@ function CaptureForm(props) {
                 </Button>
               </div>
             )} */}
+
             {formStatus === FORM_ACTION_TYPES.ADD_NEW || formStatus === FORM_ACTION_TYPES.EDIT ? (
               <>
                 <div className="btn-group mr-2">
@@ -319,22 +322,30 @@ function CaptureForm(props) {
                     {t("save")}
                   </Button>
                 </div>
-                <div className="btn-group mr-2" role="group">
-                  <Button
-                    size="large"
-                    color="green"
-                    variant="solid"
-                    disabled={!isFormFulfilled}
-                    onClick={() =>
-                      showConfirmationModal(
-                        "May I confirm if you’ve reviewed your answers and validated that all of it are accurate?",
-                        (e) => handleOnSubmit(e, "edit")
-                      )
-                    }
-                  >
-                    {t("submit")}
-                  </Button>
-                </div>
+                {showSubmitButtons ? (
+                  <div className="btn-group mr-2" role="group">
+                    {disableForm ? (
+                      <Button size="large" color="green" variant="solid" onClick={() => setDisableForm(!disableForm)}>
+                        {t("edit")}
+                      </Button>
+                    ) : (
+                      <Button
+                        size="large"
+                        color="green"
+                        variant="solid"
+                        disabled={!isFormFulfilled}
+                        onClick={() =>
+                          showConfirmationModal(
+                            "May I confirm if you’ve reviewed your answers and validated that all of it are accurate?",
+                            (e) => handleOnSubmit(e, "submit")
+                          )
+                        }
+                      >
+                        {t("submit")}
+                      </Button>
+                    )}
+                  </div>
+                ) : null}
               </>
             ) : null}
             {cancelable && formStatus !== FORM_ACTION_TYPES.NONE && (

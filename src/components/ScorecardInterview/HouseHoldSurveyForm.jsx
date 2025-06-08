@@ -179,6 +179,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
         handleEditRow={handleEdit}
         handleAddNewRow={handleAddNew}
         editRowCallback={editRowCallback}
+        showSubmitButtons
         maxDate={new Date()}
         minDate={new Date(`1900-12-31`)}
         formName="HouseHoldSurveyForm"

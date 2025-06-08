@@ -1,15 +1,9 @@
 import { put, select } from "redux-saga/effects";
-import {
-  getCascadeSuccess,
-  getInterviewCascadeSuccess,
-} from "../../../actions/data/tei";
+import { getCascadeSuccess, getInterviewCascadeSuccess } from "../../../actions/data/tei";
 
 import _ from "lodash";
 import moment from "moment";
-import {
-  HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
-  HOUSEHOLD_INTERVIEW_ID_DE_ID,
-} from "@/constants/app-config";
+import { HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID, HOUSEHOLD_INTERVIEW_ID_DE_ID } from "@/constants/app-config";
 
 // construct data for family form Teis and Events
 function* initInterviewCascadeDataFromTEIsEvents(payload) {
@@ -19,9 +13,7 @@ function* initInterviewCascadeDataFromTEIsEvents(payload) {
 
   let currentInterviewCascade = {};
 
-  const currentEvents = yield select(
-    (state) => state.data.tei.data.currentEvents
-  );
+  const currentEvents = yield select((state) => state.data.tei.data.currentEvents);
 
   const interviewDetailEvents = currentEvents.filter(
     (e) => e.programStage === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
@@ -33,41 +25,38 @@ function* initInterviewCascadeDataFromTEIsEvents(payload) {
     const interviewId = e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID];
 
     if (interviewId) {
-      currentInterviewCascade[interviewId] = memberTEIsWithEvents.reduce(
-        (cas, tei) => {
-          const enr = tei.enrollments[0];
-          const events = enr.events.filter((e) => {
-            const eventInterview = e.dataValues.find(
-              (dv) => dv.dataElement === HOUSEHOLD_INTERVIEW_ID_DE_ID
-            )?.value;
+      currentInterviewCascade[interviewId] = memberTEIsWithEvents.reduce((cas, tei) => {
+        const enr = tei.enrollments[0];
+        const events = enr.events.filter((e) => {
+          const eventInterview = e.dataValues.find((dv) => dv.dataElement === HOUSEHOLD_INTERVIEW_ID_DE_ID)?.value;
 
-            return eventInterview === interviewId;
+          return eventInterview === interviewId;
+        });
+
+        const theTEI = {
+          memberData: { id: tei.trackedEntity, enrId: enr.enrollment },
+          events,
+        };
+
+        tei.attributes.forEach((attr) => {
+          theTEI.memberData[attr.attribute] = attr.value;
+        });
+
+        events.forEach((event) => {
+          event.dataValues.forEach((de) => {
+            const key = de.dataElement;
+            const value = de.value;
+
+            theTEI.memberData[key] = value;
           });
 
-          const theTEI = {
-            memberData: { id: tei.trackedEntity, enrId: enr.enrollment },
-            events,
-          };
+          theTEI.memberData.status = event.status;
+        });
 
-          tei.attributes.forEach((attr) => {
-            theTEI.memberData[attr.attribute] = attr.value;
-          });
+        cas.push(theTEI);
 
-          events.forEach((event) => {
-            event.dataValues.forEach((de) => {
-              const key = de.dataElement;
-              const value = de.value;
-
-              theTEI.memberData[key] = value;
-            });
-          });
-
-          cas.push(theTEI);
-
-          return cas;
-        },
-        []
-      );
+        return cas;
+      }, []);
     }
   });
 
@@ -91,9 +80,7 @@ function* initCascadeData(payload) {
   // );
   let currentCascade = {};
 
-  const currentEvents = yield select(
-    (state) => state.data.tei.data.currentEvents
-  );
+  const currentEvents = yield select((state) => state.data.tei.data.currentEvents);
 
   currentCascade =
     payload &&
