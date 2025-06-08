@@ -40,8 +40,8 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
     }
 
     const isFulfilled = filableFieldCodes.every((code) => currentValuesKeys.includes(code));
-    // const fulfilledList = filableFieldCodes.filter((code) => !currentValuesKeys.includes(code));
-    // console.log({ currentValuesKeys, formData, fulfilledList, isFulfilled });
+    const remainList = filableFieldCodes.filter((code) => !currentValuesKeys.includes(code));
+    console.log({ remainList, isFulfilled });
     setIsFormFulfilled(isFulfilled);
   };
 
@@ -89,7 +89,6 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
 
   // handle validation from form input value basis of prediclated field
   const changeValue = (property, value) => {
-    console.log("changeValue called");
     let temp = JSON.parse(JSON.stringify(formData));
     prevData.current = { ...temp };
 

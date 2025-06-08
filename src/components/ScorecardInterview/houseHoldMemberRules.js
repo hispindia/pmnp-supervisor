@@ -134,8 +134,6 @@ export const handleAgeDatavaluesOfEvents = (data, { days, weeks, months, years }
   } else if (years >= 5) {
     data["H42aYY9JMIR"] = years;
   }
-
-  console.log({ days, weeks, months, years });
 };
 
 export const demographicDetailRules = (metadata, data, { years, months }) => {

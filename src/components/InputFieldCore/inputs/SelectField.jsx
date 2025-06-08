@@ -46,7 +46,6 @@ const SelectField = ({
           handleBlur && handleBlur("");
           return;
         }
-
         handleChange(selected.value);
         handleBlur && handleBlur(selected.value);
       }}

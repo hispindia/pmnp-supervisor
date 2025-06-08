@@ -45,7 +45,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const dispatch = useDispatch();
   const locale = i18n.language || "en";
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
-  const { interviewCascadeData, femalesIn15And49 } = useInterviewCascadeData(interviewData);
+  const { interviewCascadeData, femalesIn15And49, isAllMemberEventsCompleted } = useInterviewCascadeData(interviewData);
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
   const { programMetadataMember, selectedOrgUnit } = useSelector((state) => state.metadata);
   const cascadeFemalesIn15And49 = femalesIn15And49.map((member) => member.memberData);
@@ -250,7 +250,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // Gender	Qt4YSwPxw0X
     if (data["uYWxyRYP7GN"]) {
       const monthsByLastMonitoring = differenceInMonths(new Date(data["uYWxyRYP7GN"]), dateOBbirth);
-      console.log({ monthsByLastMonitoring }, data["uYWxyRYP7GN"]);
       handleZScore(data, {
         ageInMonths: monthsByLastMonitoring,
         heightInCm: data["CY4OTulUceX"],
@@ -354,7 +353,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   }, [currentInterviewCascade]);
 
   const rowClasses = (row, rowIndex) => {
-    if (row.isSaved) {
+    if (row.isSaved && row.status === "COMPLETED") {
       return "disabled-row";
     } else {
       return "open-row";

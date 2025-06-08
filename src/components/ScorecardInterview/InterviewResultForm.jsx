@@ -15,9 +15,10 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import CaptureForm from "../CaptureForm";
 import { FORM_ACTION_TYPES } from "../constants";
-import { clearHiddenFieldData, updateMetadata } from "./utils";
+import { clearHiddenFieldData, updateMetadata, updateMetadataValueSet } from "./utils";
 import { submitAttributes } from "../../redux/actions/data";
 import moment from "moment";
+import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
   const i18n = useTranslation();
@@ -25,6 +26,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
   const dispatch = useDispatch();
   const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
+  const { isAllMemberEventsCompleted } = useInterviewCascadeData(interviewData);
   const { selectedOrgUnit, programMetadata } = useSelector((state) => state.metadata);
   const foundProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID
@@ -128,6 +130,10 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
       code,
       value,
     });
+
+    if (!isAllMemberEventsCompleted) {
+      updateMetadataValueSet(metadata["K2ySLF5Qnri"], "Completed", "isDisabled", true);
+    }
 
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;

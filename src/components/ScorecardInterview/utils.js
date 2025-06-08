@@ -92,3 +92,12 @@ export const generateTEIDhis2Payload = ({ teiData, programMetadata, orgUnit }) =
 
   return tei;
 };
+
+export const updateMetadataValueSet = (selectedMetadata, optionValue, prop, propValue) => {
+  if (!selectedMetadata || !selectedMetadata.valueSet) return;
+
+  const indexOfOption = selectedMetadata.valueSet.findIndex((option) => option.value === optionValue);
+  if (indexOfOption !== -1) {
+    selectedMetadata.valueSet[indexOfOption][prop] = propValue;
+  }
+};

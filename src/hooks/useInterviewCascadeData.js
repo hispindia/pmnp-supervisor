@@ -1,5 +1,6 @@
 import { HOUSEHOLD_INTERVIEW_DATE_DE_ID, HOUSEHOLD_INTERVIEW_ID_DE_ID } from "@/constants/app-config";
 import { differenceInYears } from "date-fns";
+import { is } from "date-fns/locale";
 import { useSelector } from "react-redux";
 
 const filterMalesMoreThan5 = (eventDate) => (member) => {
@@ -43,7 +44,7 @@ export const useInterviewCascadeData = (interviewData) => {
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
 
   const getInterviewCascadeData = () => {
-    if (!currentInterviewCascade?.[interviewId]) return { memberData: [], events: [] };
+    if (!currentInterviewCascade?.[interviewId]) return [];
 
     const addSavedData = currentInterviewCascade?.[interviewId].map((r) => {
       const isSaved = r.events.length > 0;
@@ -76,5 +77,7 @@ export const useInterviewCascadeData = (interviewData) => {
       filterFemalesIn15And49(new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]))(member.memberData)
     ) || [];
 
-  return { interviewCascadeData, femalesIn15And49 };
+  const isAllMemberEventsCompleted = interviewCascadeData?.every((member) => member.memberData.status === "COMPLETED");
+
+  return { interviewCascadeData, femalesIn15And49, isAllMemberEventsCompleted };
 };

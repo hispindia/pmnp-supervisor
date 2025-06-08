@@ -19,6 +19,16 @@ const MultipleTrueOnlyDEs = ({ valueSet, locale, disabled, changeValue, formData
       });
     }
 
+    // mark parent dataElement as valid if at least one DE is selected
+    if (newValue && newValue.length > 0) {
+      // TRICK: have to use the first selected value to mark the parent DE as valid,
+      // because dhis2 only allows value in optionSet
+      const optionValue = newValue[0].value;
+      changeValue(props["data-element-id"], optionValue);
+    } else {
+      changeValue(props["data-element-id"], "");
+    }
+
     onBlur && onBlur(null);
     setValue(newValue);
   };
