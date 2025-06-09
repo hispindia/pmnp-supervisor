@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import CaptureForm from "../CaptureForm";
-import { FORM_ACTION_TYPES } from "../constants";
+import { FORM_ACTION_TYPES, HH_STATUSES } from "../constants";
 import { clearHiddenFieldData, updateMetadata, updateMetadataValueSet } from "./utils";
 import { submitAttributes } from "../../redux/actions/data";
 import moment from "moment";
@@ -45,11 +45,11 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
   const getHHStatus = (interviewResult) => {
     if (!interviewResult || interviewResult === "Postponed" || interviewResult === "Not at home") {
-      return "Pending";
+      return HH_STATUSES.pending;
     }
-    if (interviewResult === "Refused" || interviewResult === "Others") return "Refused";
-    if (interviewResult === "Partially Completed") return "Ongoing";
-    if (interviewResult === "Completed") return "Completed";
+    if (interviewResult === "Refused" || interviewResult === "Others") return HH_STATUSES.refused;
+    if (interviewResult === "Partially Completed") return HH_STATUSES.ongoing;
+    if (interviewResult === "Completed") return HH_STATUSES.submitted;
   };
 
   const handleAddNew = (e, newData, continueAdd) => {

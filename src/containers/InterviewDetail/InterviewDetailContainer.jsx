@@ -69,6 +69,7 @@ const InterviewDetailContainer = () => {
       acc[interviewId] = true;
       if (
         curr.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] === "Partially Completed" ||
+        curr.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] === "Needs_updates" ||
         !curr.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]
       ) {
         acc[interviewId] = false;

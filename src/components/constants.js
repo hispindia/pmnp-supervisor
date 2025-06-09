@@ -82,6 +82,15 @@ export const REPORT_ID_CONSTANT = "lfMDT7HdaFh";
 export const REPORT_ID_CONSTANT_ATTRIBUTE_ID = "TElcDF7Vzyx";
 export const GOV_PROGRAMS_DE_ID = "RC5B8EETrOM";
 export const SOCIAL_AND_BEHAVIOR_DE_ID = "gNBFmUFtW6a";
+export const HH_STATUSES = {
+  pending: "Pending",
+  refused: "Refused",
+  ongoing: "Ongoing",
+  submitted: "Submitted",
+  needsUpdates: "Needs_updates",
+  approved: "Approved",
+  synced: "Synced",
+};
 
 export const MOTHER_CHILD_SECTION = [
   "Z4zfIkKCP7R",

@@ -297,7 +297,7 @@ function CaptureForm(props) {
       <div className="row">
         <div className="col-md-12">
           <div className="btn-toolbar" role="toolbar">
-            {/* {formStatus === FORM_ACTION_TYPES.ADD_NEW && (
+            {formStatus === FORM_ACTION_TYPES.ADD_NEW && (
               <div className="btn-group mr-2" role="group" aria-label="First group">
                 <Button
                   size="large"
@@ -308,9 +308,9 @@ function CaptureForm(props) {
                   {t("save")}
                 </Button>
               </div>
-            )} */}
+            )}
 
-            {formStatus === FORM_ACTION_TYPES.ADD_NEW || formStatus === FORM_ACTION_TYPES.EDIT ? (
+            {formStatus === FORM_ACTION_TYPES.EDIT ? (
               <>
                 <div className="btn-group mr-2">
                   <Button
