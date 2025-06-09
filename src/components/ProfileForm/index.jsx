@@ -11,12 +11,13 @@ import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
 import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 import { useUser } from "@/hooks/useUser";
+import { HH_STATUS_ATTR_ID } from "../constants";
 
 const disabledFields = [
   HOUSEHOLD_ID_ATTR_ID,
-  "eMYBznRdn0t",
-  "CNqaoQva9S2",
+  HH_STATUS_ATTR_ID,
   HOUSEHOLD_DATA_COLLECTOR_ATTR_ID,
+  "eMYBznRdn0t",
   "GXs8SDJL19y",
 ];
 

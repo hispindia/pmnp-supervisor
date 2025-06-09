@@ -4,7 +4,7 @@ import { Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { FORM_ACTION_TYPES } from "../constants";
+import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID, HH_STATUSES } from "../constants";
 
 // Icon
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -16,7 +16,7 @@ import {
   HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
 } from "@/constants/app-config";
-import { submitEvent } from "@/redux/actions/data";
+import { submitAttributes, submitEvent } from "@/redux/actions/data";
 import { deleteEvent } from "@/redux/actions/data/tei";
 import { transformEvent } from "@/utils/event";
 import { format } from "date-fns";
@@ -56,6 +56,8 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   const currentInterviewCascade = useSelector((state) => state.data.tei.data.currentInterviewCascade);
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
   const { attributes } = currentTei;
+  const HH_Status = attributes[HH_STATUS_ATTR_ID];
+  const addableStatus = [HH_STATUSES.approved, HH_STATUSES.refused, HH_STATUSES.synced];
 
   const showData = useMemo(() => {
     return transformData(metadata, data, dataValuesTranslate, locale);
@@ -100,6 +102,10 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       _isDirty: true,
     });
 
+    // change HH status to pending
+    if (addableStatus.includes(HH_Status)) {
+      dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: HH_STATUSES.pending }));
+    }
     // init new event
     dispatch(submitEvent(eventPayload));
   };
@@ -362,7 +368,10 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
             size="sm"
             style={{ width: 160 }}
             onClick={handleBeforeAddNewRow}
-            disabled={Boolean(data.find((row) => !row.disabled))}
+            disabled={
+              HH_Status === HH_STATUSES.submitted ||
+              (Boolean(data.find((row) => !row.disabled)) && !addableStatus.includes(HH_Status))
+            }
             aria-controls="collapseExample"
             aria-expanded={formStatus === FORM_ACTION_TYPES.ADD_NEW}
             icon={<FontAwesomeIcon icon={faPlus} />}

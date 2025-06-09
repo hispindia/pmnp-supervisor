@@ -1,23 +1,22 @@
+import _ from "lodash";
+import moment from "moment";
+import CaptureForm from "../CaptureForm";
 import {
   HOUSEHOLD_INTERVIEW_DATE_DE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
   HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
 } from "@/constants/app-config";
-import { submitEvent } from "@/redux/actions/data";
+import { submitEvent, submitAttributes } from "@/redux/actions/data";
 import { generateUid } from "@/utils";
 import { getQuarterlyFromDate } from "@/utils/date";
 import { transformEvent } from "@/utils/event";
 import { format } from "date-fns";
-import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import CaptureForm from "../CaptureForm";
 import { FORM_ACTION_TYPES, HH_STATUSES } from "../constants";
 import { clearHiddenFieldData, updateMetadata, updateMetadataValueSet } from "./utils";
-import { submitAttributes } from "../../redux/actions/data";
-import moment from "moment";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
