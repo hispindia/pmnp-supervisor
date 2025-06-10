@@ -169,6 +169,7 @@ function CaptureForm(props) {
               hyperlink={f.url}
               base64={base64Object}
               description={f.description}
+              isMultipleTrueOnlyDes={f.isMultipleTrueOnlyDes}
             />
           </div>
         );

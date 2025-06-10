@@ -211,15 +211,6 @@ export default class MetadataApiClass extends BaseApiClass {
         id: ps.id,
         displayName: ps.displayName,
         dataElements: ps.programStageDataElements.map((psde) => {
-          let valueType = psde.dataElement.valueType;
-
-          const foundAttr = psde.dataElement.attributeValues.find(
-            (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID
-          );
-          if (foundAttr && foundAttr.value === "true") {
-            valueType = "MULTIPLE_TRUE_ONLY_DES";
-          }
-
           const dataElement = {
             compulsory: psde.compulsory,
             id: psde.dataElement.id,
@@ -230,8 +221,17 @@ export default class MetadataApiClass extends BaseApiClass {
             description: psde.dataElement.description,
             valueSet: null,
             url: psde.dataElement.url,
-            valueType,
+            valueType: psde.dataElement.valueType,
           };
+
+          const foundAttr = psde.dataElement.attributeValues.find(
+            (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID
+          );
+
+          if (foundAttr && foundAttr.value === "true") {
+            dataElement.isMultipleTrueOnlyDes = true;
+          }
+
           if (psde.dataElement.optionSet) {
             dataElement.valueSet = optionSets.optionSets
               .find((os) => os.id === psde.dataElement.optionSet.id)

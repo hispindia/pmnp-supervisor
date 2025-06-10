@@ -29,6 +29,7 @@ const InputField = ({
   attribute = null,
   onInput,
   description,
+  isMultipleTrueOnlyDes,
   ...props
 }) => {
   const { t } = useTranslation();
@@ -39,7 +40,7 @@ const InputField = ({
   };
 
   const generateInput = () => {
-    if (valueType === "MULTIPLE_TRUE_ONLY_DES") {
+    if (isMultipleTrueOnlyDes) {
       return (
         <MultipleTrueOnlyDEs
           valueSet={valueSet}
