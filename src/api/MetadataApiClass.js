@@ -3,7 +3,7 @@ import {
   REPORT_ID_CONSTANT,
   REPORT_ID_CONSTANT_ATTRIBUTE_ID,
 } from "@/components/constants";
-import { MULTIPLE_SELECTION_ATTRIBUTE_ID } from "@/constants/app-config";
+import { MULTIPLE_SELECTION_ATTRIBUTE_ID, SELECT_SEARCHABLE_ATTRIBUTE_ID } from "@/constants/app-config";
 import BaseApiClass from "./BaseApiClass";
 import { pull } from "./Fetch";
 export default class MetadataApiClass extends BaseApiClass {
@@ -120,7 +120,7 @@ export default class MetadataApiClass extends BaseApiClass {
 
   getProgramMetadata = async (program) => {
     const p = await pull(this.baseUrl, this.username, this.password, `/api/programs/${program}`, { paging: false }, [
-      "fields=programSections[id,name,trackedEntityAttributes,displayName],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[programStageSections[id,dataElements,displayName],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
+      "fields=programSections[id,name,trackedEntityAttributes,displayName],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[attributeValues,id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[programStageSections[id,dataElements,displayName],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
     ]);
 
     return await this.convertProgramMetadata(p);
@@ -196,6 +196,22 @@ export default class MetadataApiClass extends BaseApiClass {
         displayInList: ptea.displayInList,
         disabled: defaultProgramTrackedEntityAttributeDisable.includes(ptea.trackedEntityAttribute.id),
       };
+
+      const foundAttr = ptea.trackedEntityAttribute.attributeValues.find(
+        (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID
+      );
+      const foundSearchableAttr = ptea.trackedEntityAttribute.attributeValues.find(
+        (attr) => attr.attribute.id === SELECT_SEARCHABLE_ATTRIBUTE_ID
+      );
+
+      if (foundAttr && foundAttr.value === "true") {
+        tea.isMultipleTrueOnlyDes = true;
+      }
+
+      if (foundSearchableAttr && foundSearchableAttr.value === "true") {
+        tea.isSelectSearchable = true;
+      }
+
       if (ptea.trackedEntityAttribute.optionSet) {
         tea.valueSet = optionSets.optionSets
           .find((os) => os.id === ptea.trackedEntityAttribute.optionSet.id)
@@ -227,9 +243,16 @@ export default class MetadataApiClass extends BaseApiClass {
           const foundAttr = psde.dataElement.attributeValues.find(
             (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID
           );
+          const foundSearchableAttr = psde.dataElement.attributeValues.find(
+            (attr) => attr.attribute.id === SELECT_SEARCHABLE_ATTRIBUTE_ID
+          );
 
           if (foundAttr && foundAttr.value === "true") {
             dataElement.isMultipleTrueOnlyDes = true;
+          }
+
+          if (foundSearchableAttr && foundSearchableAttr.value === "true") {
+            dataElement.isSelectSearchable = true;
           }
 
           if (psde.dataElement.optionSet) {

@@ -31,6 +31,7 @@ export const DATA_COLLECT_ATTRIBUTE_ID = "AaFN0HwuzeK"; // use to filter HH by c
 export const MEMBER_FIRST_NAME_ATTRIBUTE_ID = "PIGLwIaw0wy";
 export const MEMBER_LAST_NAME_ATTRIBUTE_ID = "IENWcinF8lM";
 export const MULTIPLE_SELECTION_ATTRIBUTE_ID = "C4JIkMYwJlX";
+export const SELECT_SEARCHABLE_ATTRIBUTE_ID = "QExndoSDDhD";
 
 export const PRIMARY_COLOR = "#f68e22";
 

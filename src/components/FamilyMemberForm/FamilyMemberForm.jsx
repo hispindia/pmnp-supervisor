@@ -81,7 +81,8 @@ const FamilyMemberForm = ({
     // load from redux
     setLoading(true);
 
-    setData(currentCascade || []);
+    const sorted = _.sortBy(currentCascade || [], (item) => Number(item["QAYXozgCOHu"] || 0));
+    setData(sorted);
 
     setLoading(false);
   }, [currentCascade]);
@@ -89,9 +90,8 @@ const FamilyMemberForm = ({
   useEffect(() => {
     setLoading(true);
 
-    let cascadeData = currentCascade || [];
-
-    setData(cascadeData);
+    const sorted = _.sortBy(currentCascade || [], (item) => Number(item["QAYXozgCOHu"] || 0));
+    setData(sorted);
 
     if (metadata) {
       let cloneMetadata = metadata.reduce((obj, md) => {
@@ -112,6 +112,8 @@ const FamilyMemberForm = ({
       previousData,
       data,
       currentCascade,
+      code,
+      value,
     });
 
     // clear all "error" and "warning" messages

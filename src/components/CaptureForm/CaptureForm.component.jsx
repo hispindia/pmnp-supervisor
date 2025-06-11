@@ -170,6 +170,7 @@ function CaptureForm(props) {
               base64={base64Object}
               description={f.description}
               isMultipleTrueOnlyDes={f.isMultipleTrueOnlyDes}
+              isSelectSearchable={f.isSelectSearchable}
             />
           </div>
         );

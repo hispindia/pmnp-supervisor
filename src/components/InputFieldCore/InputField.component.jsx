@@ -30,6 +30,7 @@ const InputField = ({
   onInput,
   description,
   isMultipleTrueOnlyDes,
+  isSelectSearchable,
   ...props
 }) => {
   const { t } = useTranslation();
@@ -62,6 +63,7 @@ const InputField = ({
           handleBlur={onBlur}
           handleChange={onChange}
           disabled={disabled}
+          isSearchable={isSelectSearchable}
           {...props}
         />
       );
@@ -157,6 +159,14 @@ const InputField = ({
               if (attribute && attribute.maxLength) {
                 e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, attribute.maxLength);
               }
+              // check 1 decimal
+              const value = e.target.value;
+              if (value.includes(".")) {
+                const [intPart, decimalPart] = value.split(".");
+                if (decimalPart.length > 1) {
+                  e.target.value = `${intPart}.${decimalPart.slice(0, 1)}`;
+                }
+              }
             }}
             {...props}
           />
@@ -186,7 +196,7 @@ const InputField = ({
             handleChange={onChange}
             handleBlur={onBlur}
             disabled={disabled}
-            inputProps={{ min: "0" }}
+            inputProps={{ min: "0", step: "1" }}
             // maxLength={attribute && attribute.maxLength}
             onInput={(e) => {
               if (attribute && attribute.maxLength) {
@@ -195,6 +205,14 @@ const InputField = ({
               // check max
               if (attribute && attribute.max) {
                 e.target.value = parseInt(e.target.value) > attribute.max ? attribute.max : parseInt(e.target.value);
+              }
+              // check 1 decimal
+              const value = e.target.value;
+              if (value.includes(".")) {
+                const [intPart, decimalPart] = value.split(".");
+                if (decimalPart.length > 1) {
+                  e.target.value = `${intPart}.${decimalPart.slice(0, 1)}`;
+                }
               }
             }}
             {...props}
