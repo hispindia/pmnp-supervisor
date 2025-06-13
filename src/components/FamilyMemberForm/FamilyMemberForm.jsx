@@ -25,6 +25,7 @@ import "../../index.css";
 import { HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
 import { handleAgeDatavaluesOfEvents } from "../ScorecardInterview/houseHoldMemberRules";
 import styles from "./FamilyMemberForm.module.css";
+// import { filterFemalesIn15And49 } from "@/hooks/useInterviewCascadeData";
 
 const { familyMemberFormContainer } = styles;
 const LoadingCascadeTable = withSkeletonLoading()(CascadeTable);
@@ -72,6 +73,8 @@ const FamilyMemberForm = ({
   const originMetadata = convertOriginMetadata({
     programMetadata: programMetadataMember,
     eventIncluded: false,
+    currentCascade,
+    currentEvent,
     attributes,
   });
 
@@ -104,6 +107,10 @@ const FamilyMemberForm = ({
 
     setLoading(false);
   }, [currentEvent]);
+
+  useEffect(() => {
+    setMetadata(_.cloneDeep(originMetadata));
+  }, [currentEvent, currentCascade]);
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
     // keep selected member details
@@ -287,7 +294,9 @@ const FamilyMemberForm = ({
   );
 };
 
-const convertOriginMetadata = ({ programMetadata, eventIncluded = true, attributes }) => {
+const convertOriginMetadata = ({ programMetadata, currentEvent, eventIncluded = true, attributes, currentCascade }) => {
+  const valueSetListOfFemales = createValueSet(currentCascade, currentEvent, "PIGLwIaw0wy", "Cn37lbyhz6f");
+
   let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map((attr) => {
     // The "Family Number" must be drop down, not an input field.
     if (attr.id === "BbdQMKOObps") {
@@ -297,6 +306,12 @@ const convertOriginMetadata = ({ programMetadata, eventIncluded = true, attribut
         label: `${i + 1}`,
       }));
       attr.valueSet = valueSet;
+    }
+    if (attr.id === "q0WEgMBwi0p") {
+      attr.valueSet = [
+        ...valueSetListOfFemales,
+        { value: "Not part of the Household", label: "Not part of the Household" },
+      ];
     }
 
     return {
@@ -318,6 +333,30 @@ const convertOriginMetadata = ({ programMetadata, eventIncluded = true, attribut
   }
 
   return [...trackedEntityAttributes, ...programStagesDataElements];
+};
+
+const filterFemalesIn15And49 = (eventDate) => (member) => {
+  const dateOfbirth = new Date(member["fJPZFs2yYJQ"]);
+  const ageInYears = differenceInYears(eventDate, dateOfbirth);
+  return member["Qt4YSwPxw0X"] == "1" && ageInYears >= 15 && ageInYears <= 49;
+};
+
+const createValueSet = (cascadeMembers, currentEvent, labelID, valueID) => {
+  return cascadeMembers.reduce((acc, curr) => {
+    const label = curr[labelID];
+    const value = curr[valueID];
+
+    const enrollmentDate = acc.isNew ? new Date() : lastDayOfYear(new Date(currentEvent.occurredAt));
+
+    if (filterFemalesIn15And49(enrollmentDate)(curr)) {
+      acc.push({
+        value,
+        label,
+      });
+    }
+
+    return acc;
+  }, []);
 };
 
 export default FamilyMemberForm;
