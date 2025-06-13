@@ -1,11 +1,11 @@
-const countValue = (data, de_ids, value) => {
+export const countValue = (data, de_ids, value) => {
   const count = data.filter((item) => {
     return item[de_ids] === value;
   });
   return count.length;
 };
 
-const countValues = (data, de_ids, values = []) => {
+export const countValues = (data, de_ids, values = []) => {
   return data.reduce((acc, item) => {
     values.forEach((value, valueIndex) => {
       if (item[de_ids] === value) acc[valueIndex]++;
@@ -27,7 +27,7 @@ const countValueForEachMember = (data, de_ids = [], value) => {
 };
 
 // count number in range
-const countRangeValue = (data, de_ids, min, max) => {
+export const countRangeValue = (data, de_ids, min, max) => {
   const count = data.filter((item) => {
     // convert to number
     const itemValue = Number(item[de_ids]);

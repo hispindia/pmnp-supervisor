@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CaptureForm from "../CaptureForm";
 import { FORM_ACTION_TYPES, GOV_PROGRAMS_DE_ID, HAS_INITIAN_NOVALUE, SOCIAL_AND_BEHAVIOR_DE_ID } from "../constants";
 import { calculateHouseHoldFields } from "./calculateHouseHoldFields";
-import { houseHoldSurveyRules } from "./houseHoldSurveyRules";
+import { hideSectionRules, houseHoldSurveyRules } from "./houseHoldSurveyRules";
 import { clearHiddenFieldData, updateMetadata } from "./utils";
 
 const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
@@ -123,12 +123,10 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
     // Calculate fields
     // Score_Number of 4Ps Members
+    const memberData = interviewCascadeData.map((d) => d.memberData);
     houseHoldSurveyRules(metadata, newData);
-    calculateHouseHoldFields(
-      newData,
-      interviewCascadeData.map((d) => d.memberData),
-      interviewData
-    );
+    calculateHouseHoldFields(newData, memberData, interviewData);
+    hideSectionRules(metadata, memberData, programMetadata);
 
     clearHiddenFieldData(metadata, data);
     if (previousData) setFormDirty(true);

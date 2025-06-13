@@ -1,4 +1,49 @@
+import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
 import { GOV_PROGRAMS_DE_ID, SOCIAL_AND_BEHAVIOR_DE_ID } from "../constants";
+import { countRangeValue, countValue } from "./calculateHouseHoldFields";
+
+export const hideSectionRules = (metadata, memberData, programMetadata) => {
+  let shownSections = [];
+  let hiddenSections = ["BhQveYSfLtE", "PYu2IlBP7vu", "wJ20JrVcQmh", "FHg89pCuFgU"];
+
+  const pregnancyStatus = countValue(memberData, "ycBIHr9bYyw", "1");
+  if (pregnancyStatus) {
+    hiddenSections = hiddenSections.filter((h) => h !== "BhQveYSfLtE");
+    shownSections.push("BhQveYSfLtE");
+  }
+  const within28days = countValue(memberData, "se8TXlLUzh8", "true");
+  if (within28days) {
+    hiddenSections = hiddenSections.filter((h) => h !== "PYu2IlBP7vu");
+    shownSections.push("PYu2IlBP7vu");
+  }
+  const lessThan6Months = countRangeValue(memberData, "RoSxLAB5cfo", 0, 5);
+  if (lessThan6Months) {
+    hiddenSections = hiddenSections.filter((h) => h !== "wJ20JrVcQmh");
+    shownSections.push("wJ20JrVcQmh");
+  }
+  const form5to60Months = countRangeValue(memberData, "RoSxLAB5cfo", 6, 59);
+  if (form5to60Months) {
+    hiddenSections = hiddenSections.filter((h) => h !== "FHg89pCuFgU");
+    shownSections.push("FHg89pCuFgU");
+  }
+
+  const hhSurveyStage = programMetadata.programStages.find((ps) => ps.id === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID);
+
+  if (hhSurveyStage) {
+    hhSurveyStage.programStageSections.forEach((pss) => {
+      if (hiddenSections.includes(pss.id)) {
+        pss.dataElements.forEach((de) => {
+          metadata[de.id].hidden = true;
+        });
+      }
+      if (shownSections.includes(pss.id)) {
+        pss.dataElements.forEach((de) => {
+          metadata[de.id].hidden = false;
+        });
+      }
+    });
+  }
+};
 
 export const houseHoldSurveyRules = (metadata, newData) => {
   metadata[DEs.Q802].hidden = newData[DEs.Q801] !== "true";
