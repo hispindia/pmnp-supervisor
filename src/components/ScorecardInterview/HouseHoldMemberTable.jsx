@@ -214,7 +214,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       });
     }
 
-    // ages attribute
+    // ages de
     metadata("d2n5w4zpxuo").hidden = true;
     metadata("xDSSvssuNFs").hidden = true;
     metadata("X2Oln1OyP5o").hidden = true;

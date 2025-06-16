@@ -17,7 +17,8 @@ export const hideSectionRules = (metadata, memberData, programMetadata) => {
     shownSections.push("PYu2IlBP7vu");
   }
   const lessThan6Months = countRangeValue(memberData, "RoSxLAB5cfo", 0, 5);
-  if (lessThan6Months) {
+  const lessThan26Weeks = countRangeValue(memberData, "Gds5wTiXoSK", 0, 26);
+  if (lessThan6Months || lessThan26Weeks) {
     hiddenSections = hiddenSections.filter((h) => h !== "wJ20JrVcQmh");
     shownSections.push("wJ20JrVcQmh");
   }

@@ -31,6 +31,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
     (stage) => stage.id === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID
   );
   const trackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
+  const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
 
   const originMetadata = convertOriginMetadata(foundProgramStage);

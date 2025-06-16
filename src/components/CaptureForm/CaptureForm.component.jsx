@@ -7,7 +7,7 @@ import useForm from "../../hooks/useForm";
 import { FORM_ACTION_TYPES } from "../constants";
 
 // components
-import { Button, Modal } from "antd";
+import { Alert, Button, Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import InputField from "../InputFieldCore/InputField.component.jsx";
 import { useState } from "react";
@@ -249,6 +249,7 @@ function CaptureForm(props) {
               <h5 class="card-title" section-id={pSection.id}>
                 {pSection.displayName}
               </h5>
+              {pSection.description && <Alert type="info" message={pSection.description} showIcon />}
               <p class="card-text">
                 <div className="row" style={{ alignItems: "flex-end" }}>
                   {" "}

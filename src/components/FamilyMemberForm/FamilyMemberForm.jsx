@@ -23,7 +23,7 @@ import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYe
 import moment from "moment";
 import "../../index.css";
 import { HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
-import { handleAgeDatavaluesOfEvents } from "../ScorecardInterview/houseHoldMemberRules";
+import { handleAgeAttrsOfTEI } from "../ScorecardInterview/houseHoldMemberRules";
 import styles from "./FamilyMemberForm.module.css";
 // import { filterFemalesIn15And49 } from "@/hooks/useInterviewCascadeData";
 
@@ -151,11 +151,11 @@ const FamilyMemberForm = ({
     metadata[PMNP_ID].disabled = true;
     data[PMNP_ID] = `${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
 
-    const memberId = data[HOUSEHOLD_MEMBER_ID];
-    if (!memberId) {
-      // random 3 digits
-      // data["Cn37lbyhz6f"] = Math.floor(100 + Math.random() * 900);
-    }
+    // const memberId = data[HOUSEHOLD_MEMBER_ID];
+    // if (!memberId) {
+    // random 3 digits
+    // data["Cn37lbyhz6f"] = Math.floor(100 + Math.random() * 900);
+    // }
 
     const enrollmentDate = data.isNew ? new Date() : lastDayOfYear(new Date(currentEvent.occurredAt));
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
@@ -208,8 +208,7 @@ const FamilyMemberForm = ({
     }
 
     const ages = { years, months, weeks, days };
-    handleAgeDatavaluesOfEvents(data, ages);
-
+    handleAgeAttrsOfTEI(data, ages);
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
   };
 

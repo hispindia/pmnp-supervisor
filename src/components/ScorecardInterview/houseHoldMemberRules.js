@@ -126,13 +126,13 @@ export const handleAgeDatavaluesOfEvents = (data, { days, weeks, months, years }
   data[yearsDE] = "";
 
   if (weeks === 0) {
-    data["ICbJBQoOsVt"] = days;
+    data[daysDE] = days;
   } else if (months === 0) {
-    data["xDSSvssuNFs"] = weeks;
+    data[weeksDE] = weeks;
   } else if (years === 0 || years < 5) {
-    data["X2Oln1OyP5o"] = months;
+    data[monthsDE] = months;
   } else if (years >= 5) {
-    data["H42aYY9JMIR"] = years;
+    data[yearsDE] = years;
   }
 };
 
