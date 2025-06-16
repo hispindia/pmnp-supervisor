@@ -147,9 +147,8 @@ export const demographicDetailRules = (metadata, data, { years, months }) => {
   // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)"
   metadata("se8TXlLUzh8").hidden = data["ycBIHr9bYyw"] !== "2";
 
-  //   "Recently gave birth within 28 days (DE UID: se8TXlLUzh8) == true
+  // Recently gave birth within 28 days (DE UID: se8TXlLUzh8) == true
   // Show Date of delivery (DE UID: rvv5Hfyczyh)
-  // Show Maternal Care for Postpartum Woman section"
   metadata("rvv5Hfyczyh").hidden = data["se8TXlLUzh8"] !== "true";
 
   // Menstrual history should be NA for males and questions on LMP, pregnancy status should be hidden
@@ -406,7 +405,7 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years,
     hiddenSections = hiddenSections.filter((h) => h !== "IxbqFSJPfEN");
     shownSections.push("IxbqFSJPfEN");
   }
-  if (pregnancyStatus === "2") {
+  if (pregnancyStatus === "2" && data["se8TXlLUzh8"] === "true") {
     hiddenSections = hiddenSections.filter((h) => h !== "A2TBfLOW8HG");
     shownSections.push("A2TBfLOW8HG");
 
@@ -424,7 +423,7 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years,
   }
 
   const sex = data["Qt4YSwPxw0X"];
-  if (years >= 10 && years <= 49 && sex === "1" && pregnancyStatus === "3") {
+  if (years >= 10 && years <= 49 && sex === "1" && (pregnancyStatus === "3" || data["se8TXlLUzh8"] === "false")) {
     hiddenSections = hiddenSections.filter((h) => h !== "E4FpYkBzAsW");
     shownSections.push("E4FpYkBzAsW");
   }

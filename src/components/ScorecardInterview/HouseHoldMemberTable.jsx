@@ -201,8 +201,9 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
             "H42aYY9JMIR",
           ].includes(de) ||
           metadata(de).isAttribute
-        )
+        ) {
           return;
+        }
         metadata(de).hidden = true;
       });
 
@@ -267,8 +268,9 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     demographicDetailRules(metadata, data, ages);
     childHeathRules(metadata, data, ages);
     childNutritionRules(metadata, data, ages);
-    clearHiddenFieldData(metadata, data);
     handleAgeAttrsOfTEI(data, ages);
+
+    clearHiddenFieldData(metadataOrigin, data);
     // Pregnancy status (DE UID: ycBIHr9bYyw) == 2
     // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)
   };

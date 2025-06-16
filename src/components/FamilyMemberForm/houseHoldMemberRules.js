@@ -25,8 +25,10 @@ export const hhMemberRules = (metadata, data, { years }) => {
   metadata["g276qF2fXHi"].hidden = data["OiOvGqVEyY9"] !== "1";
 
   // 4Ps Household ID number	Only show when '4Ps membership' = Yes / 1
-  const psMembership = data["wxN2PuLymoY"];
-  metadata["CEF6Dkpe2jW"].hidden = psMembership !== "1";
+  metadata["CEF6Dkpe2jW"].hidden = data["wxN2PuLymoY"] !== "1";
+
+  //PWD ID number (E6KdOG1IB6O)	Only show when PWD = 1, (xwMJHEDdpGc)
+  metadata["E6KdOG1IB6O"].hidden = data["xwMJHEDdpGc"] !== "1";
 
   // Hide Philhealth ques for child <5 y (0-59 mo)
   metadata["JjFcU1L7Ll1"].hidden = !(years > 5);

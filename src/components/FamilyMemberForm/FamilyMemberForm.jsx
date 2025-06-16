@@ -296,7 +296,7 @@ const FamilyMemberForm = ({
 };
 
 const convertOriginMetadata = ({ programMetadata, currentEvent, eventIncluded = true, attributes, currentCascade }) => {
-  const valueSetListOfFemales = createValueSet(currentCascade, currentEvent, "PIGLwIaw0wy", "Cn37lbyhz6f");
+  const valueSetListOfFemales = createValueSet(currentCascade || [], currentEvent, "PIGLwIaw0wy", "Cn37lbyhz6f");
 
   let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map((attr) => {
     // The "Family Number" must be drop down, not an input field.
