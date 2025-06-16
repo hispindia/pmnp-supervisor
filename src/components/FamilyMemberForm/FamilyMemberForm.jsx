@@ -23,8 +23,8 @@ import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYe
 import moment from "moment";
 import "../../index.css";
 import { HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
-import { handleAgeAttrsOfTEI } from "../ScorecardInterview/houseHoldMemberRules";
 import styles from "./FamilyMemberForm.module.css";
+import { handleAgeAttrsOfTEI, hhMemberRules } from "./houseHoldMemberRules";
 // import { filterFemalesIn15And49 } from "@/hooks/useInterviewCascadeData";
 
 const { familyMemberFormContainer } = styles;
@@ -164,6 +164,7 @@ const FamilyMemberForm = ({
     const months = differenceInMonths(enrollmentDate, dateOfbirth);
     const weeks = differenceInWeeks(enrollmentDate, dateOfbirth);
     const days = differenceInDays(enrollmentDate, dateOfbirth);
+    const ages = { years, months, weeks, days };
 
     if (data["QAYXozgCOHu"] === "1") {
       // Household head should more than 18 years old
@@ -196,6 +197,8 @@ const FamilyMemberForm = ({
     // Show if 'Relationship with HH Head' has option code 1,2,3,4,5,6,7,8
     metadata["BbdQMKOObps"].hidden = data["QAYXozgCOHu"] == "1" || !data["QAYXozgCOHu"];
 
+    hhMemberRules(metadata, data, ages);
+
     // clear data for hidden items
     for (let meta in metadata) {
       if (SHOULD_NOT_CLEAR_LIST.includes(meta)) {
@@ -207,7 +210,6 @@ const FamilyMemberForm = ({
       }
     }
 
-    const ages = { years, months, weeks, days };
     handleAgeAttrsOfTEI(data, ages);
     dispatch(changeMember({ ...data, isUpdate: true })); //!important
   };

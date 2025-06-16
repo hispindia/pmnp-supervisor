@@ -103,9 +103,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     });
 
     // change HH status to pending
-    if (addableStatus.includes(HH_Status)) {
-      dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: HH_STATUSES.ongoing }));
-    }
+    dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: HH_STATUSES.ongoing }));
     // init new event
     dispatch(submitEvent(eventPayload));
   };

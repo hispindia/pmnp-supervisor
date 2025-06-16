@@ -234,6 +234,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const months = differenceInMonths(eventDate, dateOBbirth);
     const weeks = differenceInWeeks(eventDate, dateOBbirth);
     const days = differenceInDays(eventDate, dateOBbirth);
+    const ages = { years, months, weeks, days };
+    hideSectionRules(metadata, data, programMetadataMember, ages);
 
     // vaccine before date of birth
     VACCINE_DATE_DE_IDS.forEach((id) => (metadata(id).minDate = data["fJPZFs2yYJQ"]));
@@ -261,16 +263,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // INT_Visit number
     data["Wdg76PCqsBn"] = interviewData["Wdg76PCqsBn"];
 
-    const ages = { years, months, weeks, days };
     handleAgeFields(metadata, ages);
     demographicDetailRules(metadata, data, ages);
-    hideSectionRules(metadata, data, programMetadataMember, ages);
     childHeathRules(metadata, data, ages);
     childNutritionRules(metadata, data, ages);
-
     clearHiddenFieldData(metadata, data);
-
     handleAgeAttrsOfTEI(data, ages);
+    // Pregnancy status (DE UID: ycBIHr9bYyw) == 2
+    // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)
   };
 
   const handleDeleteRow = (e, row) => {

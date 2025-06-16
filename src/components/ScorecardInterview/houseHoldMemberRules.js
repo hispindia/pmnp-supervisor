@@ -143,6 +143,15 @@ export const demographicDetailRules = (metadata, data, { years, months }) => {
     metadata("WdnS7uGEKJT").hidden = true;
   }
 
+  //"Pregnancy status (DE UID: ycBIHr9bYyw) == 2
+  // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)"
+  metadata("se8TXlLUzh8").hidden = data["ycBIHr9bYyw"] !== "2";
+
+  //   "Recently gave birth within 28 days (DE UID: se8TXlLUzh8) == true
+  // Show Date of delivery (DE UID: rvv5Hfyczyh)
+  // Show Maternal Care for Postpartum Woman section"
+  metadata("rvv5Hfyczyh").hidden = data["se8TXlLUzh8"] !== "true";
+
   // Menstrual history should be NA for males and questions on LMP, pregnancy status should be hidden
   if (data["Qt4YSwPxw0X"] === "2" || data["WbgQ0SZFiAU"] === "3") {
     metadata("qlt8LOSENj8").hidden = true;
@@ -382,7 +391,15 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
 
 export const hideSectionRules = (metadata, data, programMetadataMember, { years, months }) => {
   let shownSections = [];
-  let hiddenSections = ["IxbqFSJPfEN", "A2TBfLOW8HG", "tlNWZDOWfP2", "jV8O1ZITgIn", "E4FpYkBzAsW", "fVGAPxIFZoO"];
+  let hiddenSections = [
+    "IxbqFSJPfEN",
+    "A2TBfLOW8HG",
+    "tlNWZDOWfP2",
+    "jV8O1ZITgIn",
+    "E4FpYkBzAsW",
+    "fVGAPxIFZoO",
+    "Nh4Bqjoopm3",
+  ];
 
   const pregnancyStatus = data["ycBIHr9bYyw"];
   if (pregnancyStatus === "1") {
@@ -401,6 +418,9 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years,
     hiddenSections = hiddenSections.filter((s) => s !== "tlNWZDOWfP2" || s !== "jV8O1ZITgIn");
     shownSections.push("tlNWZDOWfP2");
     shownSections.push("jV8O1ZITgIn");
+  } else {
+    hiddenSections = hiddenSections.filter((s) => s !== "Nh4Bqjoopm3");
+    shownSections.push("Nh4Bqjoopm3");
   }
 
   const sex = data["Qt4YSwPxw0X"];
@@ -409,12 +429,8 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years,
     shownSections.push("E4FpYkBzAsW");
   }
 
-  const scorecardSurveyStage = programMetadataMember.programStages.find(
-    (ps) => ps.id === MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID
-  );
-
-  if (scorecardSurveyStage) {
-    scorecardSurveyStage.programStageSections.forEach((pss) => {
+  programMetadataMember.programStages.forEach((ps) => {
+    ps.programStageSections.forEach((pss) => {
       if (hiddenSections.includes(pss.id)) {
         pss.dataElements.forEach((de) => {
           metadata(de.id).hidden = true;
@@ -426,7 +442,7 @@ export const hideSectionRules = (metadata, data, programMetadataMember, { years,
         });
       }
     });
-  }
+  });
 
   metadata("khD9FKDEw7k").hidden = true;
   if (months >= 6 && months <= 23) {
