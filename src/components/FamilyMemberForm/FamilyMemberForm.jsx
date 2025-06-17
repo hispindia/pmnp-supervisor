@@ -298,7 +298,7 @@ const convertOriginMetadata = ({
   currentCascade,
 }) => {
   const valueSetListOfFemales = createValueSet(
-    currentCascade,
+    currentCascade || [],
     currentEvent,
     currentEnrollment,
     "PIGLwIaw0wy",
