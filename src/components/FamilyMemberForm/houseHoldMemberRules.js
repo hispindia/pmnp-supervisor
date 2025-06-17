@@ -32,6 +32,7 @@ export const hhMemberRules = (metadata, data, { years }) => {
 
   // Hide Philhealth ques for child <5 y (0-59 mo)
   metadata["JjFcU1L7Ll1"].hidden = !(years > 5);
+  metadata["JjFcU1L7Ll1"].error = !metadata["JjFcU1L7Ll1"].hidden && !data["JjFcU1L7Ll1"] && "This field is required";
 
   // PHIC ID	Only show when 'PHIC membership' = Yes / 1
   const PhiCMembership = data["JjFcU1L7Ll1"];

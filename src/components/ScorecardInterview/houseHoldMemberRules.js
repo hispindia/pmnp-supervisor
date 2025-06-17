@@ -139,7 +139,7 @@ export const handleAgeDatavaluesOfEvents = (data, { days, weeks, months, years }
 
 export const demographicDetailRules = (metadata, data, { years }, eventDate) => {
   const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
-  metadata("AO4P3pcKqek").hidden = !lmpDate || (lmpDate && differenceInWeeks(eventDate, lmpDate) < 12);
+  metadata("ZkoIX2TigZA").hidden = !lmpDate || (lmpDate && differenceInWeeks(eventDate, lmpDate) < 12);
 
   // Menstrual history should be NA (option code 3) for females under 10 and older than 49
   if (years < 10 || years > 49) {
