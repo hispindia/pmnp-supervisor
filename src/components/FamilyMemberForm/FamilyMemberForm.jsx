@@ -68,12 +68,14 @@ const FamilyMemberForm = ({
   const dispatch = useDispatch();
 
   const attributes = useSelector((state) => state.data.tei.data.currentTei.attributes);
+  const currentEnrollment = useSelector((state) => state.data.tei.data.currentEnrollment);
   const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
 
   const originMetadata = convertOriginMetadata({
     programMetadata: programMetadataMember,
     eventIncluded: false,
     currentCascade,
+    currentEnrollment,
     currentEvent,
     attributes,
   });
@@ -144,21 +146,13 @@ const FamilyMemberForm = ({
     metadata[MEMBER_HOUSEHOLD_UID].disabled = true;
     data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
-    // InterviewDetails - Household ID
-    // metadata["C4b8S7zjs0g"].disabled = true;
-    // data["C4b8S7zjs0g"] = attributes[HOUSEHOLD_ID_ATTR_ID];
-
     metadata[PMNP_ID].disabled = true;
     data[PMNP_ID] = `${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
 
-    // const memberId = data[HOUSEHOLD_MEMBER_ID];
-    // if (!memberId) {
-    // random 3 digits
-    // data["Cn37lbyhz6f"] = Math.floor(100 + Math.random() * 900);
-    // }
-
-    const enrollmentDate = data.isNew ? new Date() : lastDayOfYear(new Date(currentEvent.occurredAt));
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
+    const enrollmentDate = data.isNew
+      ? new Date()
+      : lastDayOfYear(new Date(currentEvent.occurredAt || currentEnrollment.enrolledAt));
 
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const months = differenceInMonths(enrollmentDate, dateOfbirth);
@@ -295,8 +289,21 @@ const FamilyMemberForm = ({
   );
 };
 
-const convertOriginMetadata = ({ programMetadata, currentEvent, eventIncluded = true, attributes, currentCascade }) => {
-  const valueSetListOfFemales = createValueSet(currentCascade || [], currentEvent, "PIGLwIaw0wy", "Cn37lbyhz6f");
+const convertOriginMetadata = ({
+  programMetadata,
+  currentEvent,
+  currentEnrollment,
+  eventIncluded = true,
+  attributes,
+  currentCascade,
+}) => {
+  const valueSetListOfFemales = createValueSet(
+    currentCascade,
+    currentEvent,
+    currentEnrollment,
+    "PIGLwIaw0wy",
+    "Cn37lbyhz6f"
+  );
 
   let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map((attr) => {
     // The "Family Number" must be drop down, not an input field.
@@ -342,12 +349,14 @@ const filterFemalesIn15And49 = (eventDate) => (member) => {
   return member["Qt4YSwPxw0X"] == "1" && ageInYears >= 15 && ageInYears <= 49;
 };
 
-const createValueSet = (cascadeMembers, currentEvent, labelID, valueID) => {
+const createValueSet = (cascadeMembers, currentEvent, currentEnrollment, labelID, valueID) => {
   return cascadeMembers.reduce((acc, curr) => {
     const label = curr[labelID];
     const value = curr[valueID];
 
-    const enrollmentDate = acc.isNew ? new Date() : lastDayOfYear(new Date(currentEvent.occurredAt));
+    const enrollmentDate = acc.isNew
+      ? new Date()
+      : lastDayOfYear(new Date(currentEvent.occurredAt || currentEnrollment.enrolledAt));
 
     if (filterFemalesIn15And49(enrollmentDate)(curr)) {
       acc.push({

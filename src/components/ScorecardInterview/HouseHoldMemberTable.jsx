@@ -265,7 +265,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     data["Wdg76PCqsBn"] = interviewData["Wdg76PCqsBn"];
 
     handleAgeFields(metadata, ages);
-    demographicDetailRules(metadata, data, ages);
+    demographicDetailRules(metadata, data, ages, eventDate);
     childHeathRules(metadata, data, ages);
     childNutritionRules(metadata, data, ages);
     handleAgeAttrsOfTEI(data, ages);
