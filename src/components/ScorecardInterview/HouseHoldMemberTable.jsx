@@ -246,8 +246,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     const events = [demographicEventPayload, scorecardSurveyEventPayload];
     console.log("update member events:", { events, scorecardSurveyDataValues });
-    clearForm();
-    onClose();
+    // clearForm();
   };
 
   const editRowCallback = (metadataOrigin, previousData, data, code, value) => {
@@ -316,6 +315,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const weeks = differenceInWeeks(eventDate, dateOBbirth);
     const days = differenceInDays(eventDate, dateOBbirth);
     const ages = { years, months, weeks, days };
+    const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
+    metadata("ZkoIX2TigZA").hidden = !lmpDate || (lmpDate && differenceInWeeks(eventDate, lmpDate) < 12);
     hideSectionRules(metadata, data, programMetadataMember, ages);
 
     // vaccine before date of birth
@@ -345,7 +346,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     data["Wdg76PCqsBn"] = interviewData["Wdg76PCqsBn"];
 
     handleAgeFields(metadata, ages);
-    demographicDetailRules(metadata, data, ages, eventDate);
+    demographicDetailRules(metadata, data, ages);
     childHeathRules(metadata, data, ages);
     childNutritionRules(metadata, data, ages);
     handleAgeAttrsOfTEI(data, ages);
@@ -414,13 +415,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     setData(sorted);
     if (selectedRowIndex !== null) {
       console.log("select interview interview cascadeData", {
+        cascadeData,
         interviewCascadeData,
-        selectedData: interviewCascadeData[selectedRowIndex],
+        selectedData: cascadeData[selectedRowIndex],
       });
 
-      setSelectedData(interviewCascadeData[selectedRowIndex]);
+      setSelectedData(cascadeData[selectedRowIndex]);
     }
-  }, [currentInterviewCascade]);
+  }, [currentInterviewCascade, selectedRowIndex]);
 
   const rowClasses = (row, rowIndex) => {
     if (row.isSaved && row.status === "COMPLETED") {

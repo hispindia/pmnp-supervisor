@@ -128,7 +128,7 @@ export default class MetadataApiClass extends BaseApiClass {
 
   getProgramsMetadata = async () => {
     const programs = await pull(this.baseUrl, this.username, this.password, `/api/programs`, { paging: false }, [
-      "fields=programSections[id,name,trackedEntityAttributes,displayName],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[*,mandatory,displayInList,trackedEntityAttribute[*,id,displayName,displayFormName,displayShortName,valueType,optionSet[id,code,name,translations,attributeValues,sortOrder,options[id,code,name,translations,attributeValues,sortOrder]]]],programStages[programStageSections[id,dataElements,displayName,description],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
+      "fields=programSections[id,name,trackedEntityAttributes,displayName],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[*,mandatory,displayInList,trackedEntityAttribute[*,attributeValues,id,displayName,displayFormName,displayShortName,valueType,optionSet[id,code,name,translations,attributeValues,sortOrder,options[id,code,name,translations,attributeValues,sortOrder]]]],programStages[programStageSections[id,dataElements,displayName,description],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
     ]);
 
     if (programs.programs) {
@@ -142,7 +142,7 @@ export default class MetadataApiClass extends BaseApiClass {
 
   getOptionSets = async () => {
     return await pull(this.baseUrl, this.username, this.password, `/api/optionSets`, { paging: false }, [
-      "fields=id,displayName,options[id,displayName,code,sortOrder]",
+      "fields=id,displayName,options[id,displayName,code,sortOrder,style]",
     ]);
   };
 

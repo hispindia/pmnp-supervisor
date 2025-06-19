@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #f68e22;
+  --primary-light: rgba(246, 142, 34, 0.9);
+
+  --danger-red: #ec3a29;
+  --orange: #f68e22;
+  --green: #158d46;
+  --orange-light: rgba(246, 142, 34, 0.5);
+  --red-light: rgba(236, 58, 41, 0.5);
+  --white: #fff;
+  --gray-light: #9b9b9b;
+  --gray-bg: #898989;
+  --badge-orange: rgb(250, 198, 144);
+  --logo-bg: #fbf9f3;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",

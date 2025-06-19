@@ -36,9 +36,9 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
       key: "1",
       children: (
         <Card classNames={{ body: "p-0 px-1" }}>
-          <HouseHoldMemberTable interviewData={interviewData} onClose={onClose} disabled={disabled} />
+          <HouseHoldMemberTable interviewData={interviewData} disabled={disabled} />
           <div className="px-2 pb-2 text-sm text-gray-500">
-            Total Members: {interviewCascadeData.length} | Pending:{" "}
+            Total Members: {interviewCascadeData.filter((i) => i.memberData.ableToStart).length} | Pending:{" "}
             {interviewCascadeData.filter((i) => i.memberData.ableToStart && i.memberData.status !== "COMPLETED")
               .length || 0}{" "}
             | Submitted: {interviewCascadeData.filter((i) => i.memberData.status === "COMPLETED").length || 0}
@@ -51,7 +51,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
       key: "2",
       children: (
         <Card>
-          <HouseHoldSurveyForm interviewData={interviewData} onClose={onClose} disabled={disabled} />
+          <HouseHoldSurveyForm interviewData={interviewData} disabled={disabled} />
         </Card>
       ),
     },
@@ -60,7 +60,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
       key: "3",
       children: (
         <Card>
-          <InterviewResultForm interviewData={interviewData} onClose={onClose} disabled={disabled} />
+          <InterviewResultForm interviewData={interviewData} disabled={disabled} />
         </Card>
       ),
     },

@@ -75,7 +75,9 @@ export const useInterviewCascadeData = (interviewData) => {
       filterFemalesIn15And49(new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]))(member.memberData)
     ) || [];
 
-  const isAllMemberEventsCompleted = interviewCascadeData?.every((member) => member.memberData.status === "COMPLETED");
+  const isAllMemberEventsCompleted = interviewCascadeData?.every((member) =>
+    member.memberData.ableToStart ? member.memberData.status === "COMPLETED" : true
+  );
 
   return { interviewCascadeData, femalesIn15And49, isAllMemberEventsCompleted };
 };

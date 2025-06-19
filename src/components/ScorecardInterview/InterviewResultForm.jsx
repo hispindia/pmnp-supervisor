@@ -81,7 +81,6 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     dispatch(submitAttributes({ ...attributes, CNqaoQva9S2: hhStatus }));
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
-    onClose();
   };
 
   const handleEdit = (e, newData, rowIndex) => {
@@ -110,7 +109,6 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     dispatch(submitAttributes({ ...attributes, CNqaoQva9S2: hhStatus }));
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
-    onClose();
   };
 
   const InterviewResult_DEs = {

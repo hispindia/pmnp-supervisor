@@ -329,7 +329,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
           setFormStatus(FORM_ACTION_TYPES.NONE);
         }}
       />
-
       <Modal
         backdrop="static"
         size="xl"

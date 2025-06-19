@@ -77,7 +77,6 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
-    onClose();
   };
 
   const handleEdit = (e, newData, rowIndex) => {
@@ -104,7 +103,6 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
-    onClose();
   };
 
   const editRowCallback = (metadata, previousData, newData, code, value) => {

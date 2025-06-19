@@ -1,6 +1,7 @@
-import { FileImageOutlined } from "@ant-design/icons";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
+import PhotoSwipe from "photoswipe";
 import "photoswipe/style.css";
+import { FileImageOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 
 const preloadImg = (src) =>
@@ -36,7 +37,7 @@ const HyperLink = ({ hyperlink, base64 }) => {
       lightbox = new PhotoSwipeLightbox({
         gallery: wrapperRef.current,
         children: "a",
-        pswpModule: () => import("photoswipe"),
+        pswpModule: PhotoSwipe,
         imageClickAction: "zoom",
         doubleTapAction: "zoom",
         wheelToZoom: true,

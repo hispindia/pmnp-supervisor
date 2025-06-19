@@ -32,13 +32,13 @@ const withSkeletonLoading =
           {loading && (
             <Container
               style={{
-                position: "absolute",
-                zIndex: 110,
+                position: "fixed",
                 top: 0,
                 left: 0,
                 width: "100%",
                 height: "100%",
-                background: "rgba(255,255,255,0.8)",
+                background: "rgba(0,0,0,0.3)",
+                zIndex: 10000000000000,
               }}
             >
               <Spin spinning />
