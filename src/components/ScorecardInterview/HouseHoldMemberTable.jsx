@@ -347,13 +347,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // INT_Visit number
     data["Wdg76PCqsBn"] = interviewData["Wdg76PCqsBn"];
 
-    handleAgeFields(metadata, ages);
     demographicDetailRules(metadata, data, ages);
     childHeathRules(metadata, data, ages);
     childNutritionRules(metadata, data, ages);
     handleAgeAttrsOfTEI(data, ages);
 
     clearHiddenFieldData(metadataOrigin, data);
+
+    handleAgeFields(metadata, ages);
     // Pregnancy status (DE UID: ycBIHr9bYyw) == 2
     // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)
   };

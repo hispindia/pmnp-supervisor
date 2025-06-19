@@ -47,19 +47,6 @@ function* handleInitNewData() {
     isNew: true,
     trackedEntity: generatedTeiId,
   };
-  // const currentEvents = programStages.map((ps) => {
-  //     return {
-  //         event: generateUid(),
-  //         orgUnitId,
-  //         programStage: ps.id,
-  //         program,
-  //         isDirty: false,
-  //         isNew: true,
-  //         trackedEntity: generatedTeiId,
-  //         enrollment: generatedEnrollmentId,
-  //         dataValues: {},
-  //     };
-  // });
 
   const currentEvents = [];
   yield put(
@@ -72,7 +59,3 @@ function* handleInitNewData() {
 }
 
 export default handleInitNewData;
-
-// export default function* mutateTei() {
-//   yield takeLatest(INIT_NEW_DATA, handleInitNewData);
-// }
