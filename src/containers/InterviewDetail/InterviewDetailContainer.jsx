@@ -83,7 +83,7 @@ const InterviewDetailContainer = () => {
       disabled: disabledInterviews[e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID]] || false,
     }));
 
-    setData(transformed);
+    setData(_.orderBy(transformed, (event) => Number(event["Wdg76PCqsBn"]), ["desc"]));
   }, [currentEvents]);
 
   return (
