@@ -79,7 +79,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
     setFormDirty(false);
   };
 
-  const handleEdit = (e, newData, rowIndex) => {
+  const handleEdit = (e, newData, rowIndex, type) => {
     // Update data
     setData(newData);
 
@@ -90,13 +90,14 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
     // save event
     const currentEvent = currentEvents.find((e) => e.event === newData.id);
-    const { id, ...dataValues } = newData;
+    const { id, status, isSaved, updatedAt, ...dataValues } = newData;
 
     const occurredAt = interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
     const eventPayload = transformEvent({
       ...currentEvent,
       _isDirty: true,
       occurredAt,
+      status: type == "submit" ? "COMPLETED" : "ACTIVE",
       dueDate: occurredAt,
       dataValues,
     });
@@ -148,8 +149,16 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
         e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
     );
 
+    console.log(found);
+
     if (found) {
-      const formData = { id: found.event, ...found.dataValues };
+      const formData = {
+        id: found.event,
+        ...found.dataValues,
+        isSaved: true,
+        status: found.status,
+        updatedAt: found.updatedAt,
+      };
       setData(formData);
       setDefaultData(_.cloneDeep(formData));
       setFormStatus(FORM_ACTION_TYPES.EDIT);
@@ -168,6 +177,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
   return (
     data && (
       <CaptureForm
+        key={data?.updatedAt}
         saveDisabled={!formDirty}
         onCancel={onClose}
         rowIndex={0}

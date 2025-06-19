@@ -315,9 +315,11 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const weeks = differenceInWeeks(eventDate, dateOBbirth);
     const days = differenceInDays(eventDate, dateOBbirth);
     const ages = { years, months, weeks, days };
-    const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
-    metadata("ZkoIX2TigZA").hidden = !lmpDate || (lmpDate && differenceInWeeks(eventDate, lmpDate) < 12);
     hideSectionRules(metadata, data, programMetadataMember, ages);
+    const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
+    if (lmpDate) {
+      metadata("ZkoIX2TigZA").hidden = lmpDate && differenceInWeeks(eventDate, lmpDate) < 12;
+    }
 
     // vaccine before date of birth
     VACCINE_DATE_DE_IDS.forEach((id) => (metadata(id).minDate = data["fJPZFs2yYJQ"]));
@@ -437,8 +439,9 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       <Modal
         footer={null}
         open={formStatus === FORM_ACTION_TYPES.EDIT}
+        onCancel={clearForm}
+        forceRender={false}
         centered
-        closable={false}
         className="!w-full sm:!w-[90dvw] lg:!w-[80dvw] xxl:!w-[70dvw]"
         maskProps={{ className: "bg-transparent" }}
         title={
@@ -453,6 +456,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         <div className="h-[85dvh] overflow-y-auto overflow-x-hidden pb-6">
           {selectedData ? (
             <CaptureForm
+              key={selectedData.updatedAt}
               locale={locale}
               metadata={metadata}
               rowIndex={selectedRowIndex}

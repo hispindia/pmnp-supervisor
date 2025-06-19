@@ -36,7 +36,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
       key: "1",
       children: (
         <Card classNames={{ body: "p-0 px-1" }}>
-          <HouseHoldMemberTable interviewData={interviewData} disabled={disabled} />
+          <HouseHoldMemberTable interviewData={interviewData} onClose={onClose} disabled={disabled} />
           <div className="px-2 pb-2 text-sm text-gray-500">
             Total Members: {interviewCascadeData.filter((i) => i.memberData.ableToStart).length} | Pending:{" "}
             {interviewCascadeData.filter((i) => i.memberData.ableToStart && i.memberData.status !== "COMPLETED")
@@ -51,7 +51,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
       key: "2",
       children: (
         <Card>
-          <HouseHoldSurveyForm interviewData={interviewData} disabled={disabled} />
+          <HouseHoldSurveyForm interviewData={interviewData} onClose={onClose} disabled={disabled} />
         </Card>
       ),
     },
@@ -60,81 +60,84 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
       key: "3",
       children: (
         <Card>
-          <InterviewResultForm interviewData={interviewData} disabled={disabled} />
+          <InterviewResultForm interviewData={interviewData} onClose={onClose} disabled={disabled} />
         </Card>
       ),
     },
   ];
 
   return (
-    <Modal
-      footer={null}
-      open={open}
-      centered
-      onCancel={onClose}
-      className="!w-full sm:!w-[90dvw] lg:!w-[80dvw] xxl:!w-[70dvw]"
-      title={
-        <Chip
-          className="rounded"
-          style={{ backgroundColor: currentStatus?.color, color: currentStatus?.color && "#fff", borderRadius: 4 }}
-          label={attributeValues[HH_STATUS_ATTR_ID]}
-        />
-      }
-    >
-      {/* {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)} */}
-      <div className="space-y-6 h-[85dvh] pb-6 overflow-y-auto overflow-x-hidden">
-        <Card title="Interview Details" classNames={{ header: "!border-b-0 !text-lg", body: "pt-2" }}>
-          <div className="grid grid-cols-2 gap-4">
-            {(() => {
-              const foundMetadata = metadata.find((i) => i.id === HOUSEHOLD_INTERVIEW_DATE_DE_ID);
-              return (
-                <section>
-                  <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
-                  <p className="font-bold text-lg text-black">{interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]}</p>
-                </section>
-              );
-            })()}
-            {(() => {
-              const foundMetadata = metadata.find((i) => i.id === HOUSEHOLD_INTERVIEW_ID_DE_ID);
-              return (
-                <section>
-                  <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
-                  <p className="font-bold text-lg text-black">{interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]}</p>
-                </section>
-              );
-            })()}
-            {(() => {
-              const foundMetadata = trackedEntityAttributes.find((i) => i.id === HOUSEHOLD_ID_ATTR_ID);
+    open && (
+      <Modal
+        footer={null}
+        open={true}
+        centered
+        onCancel={onClose}
+        forceRender={false}
+        className="!w-full sm:!w-[90dvw] lg:!w-[80dvw] xxl:!w-[70dvw]"
+        title={
+          <Chip
+            className="rounded"
+            style={{ backgroundColor: currentStatus?.color, color: currentStatus?.color && "#fff", borderRadius: 4 }}
+            label={attributeValues[HH_STATUS_ATTR_ID]}
+          />
+        }
+      >
+        {/* {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)} */}
+        <div className="space-y-6 h-[85dvh] pb-6 overflow-y-auto overflow-x-hidden">
+          <Card title="Interview Details" classNames={{ header: "!border-b-0 !text-lg", body: "pt-2" }}>
+            <div className="grid grid-cols-2 gap-4">
+              {(() => {
+                const foundMetadata = metadata.find((i) => i.id === HOUSEHOLD_INTERVIEW_DATE_DE_ID);
+                return (
+                  <section>
+                    <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
+                    <p className="font-bold text-lg text-black">{interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]}</p>
+                  </section>
+                );
+              })()}
+              {(() => {
+                const foundMetadata = metadata.find((i) => i.id === HOUSEHOLD_INTERVIEW_ID_DE_ID);
+                return (
+                  <section>
+                    <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
+                    <p className="font-bold text-lg text-black">{interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]}</p>
+                  </section>
+                );
+              })()}
+              {(() => {
+                const foundMetadata = trackedEntityAttributes.find((i) => i.id === HOUSEHOLD_ID_ATTR_ID);
 
-              return (
-                <section>
-                  <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
-                  <p className="font-bold text-lg text-black">{attributeValues[HOUSEHOLD_ID_ATTR_ID]}</p>
-                </section>
-              );
-            })()}
-            {(() => {
-              return (
-                <section>
-                  <p className="text-xs uppercase text-gray-500 mb-1">{t("RESPONDENT NAME")}</p>
-                  <p className="font-bold text-lg text-black">
-                    {headAttribute["PIGLwIaw0wy"]} {headAttribute["WC0cShCpae8"]} {headAttribute["IENWcinF8lM"]}
-                  </p>
-                </section>
-              );
-            })()}
-          </div>
-        </Card>
-        <Tabs
-          className="[&_.ant-tabs-tab-btn]:text-base [&_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-nav-list]:!w-full [&_.ant-tabs-tab]:flex-1 [&_.ant-tabs-tab]:justify-center [&_.ant-tabs-nav]:mb-6"
-          destroyInactiveTabPane
-          activeKey={currentTab}
-          onChange={setCurrentTab}
-          defaultActiveKey="1"
-          items={items}
-        />
-      </div>
-    </Modal>
+                return (
+                  <section>
+                    <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
+                    <p className="font-bold text-lg text-black">{attributeValues[HOUSEHOLD_ID_ATTR_ID]}</p>
+                  </section>
+                );
+              })()}
+              {(() => {
+                return (
+                  <section>
+                    <p className="text-xs uppercase text-gray-500 mb-1">{t("RESPONDENT NAME")}</p>
+                    <p className="font-bold text-lg text-black">
+                      {headAttribute["PIGLwIaw0wy"]} {headAttribute["WC0cShCpae8"]} {headAttribute["IENWcinF8lM"]}
+                    </p>
+                  </section>
+                );
+              })()}
+            </div>
+          </Card>
+          <Tabs
+            className="[&_.ant-tabs-tab-btn]:text-base [&_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-nav-list]:!w-full [&_.ant-tabs-tab]:flex-1 [&_.ant-tabs-tab]:justify-center [&_.ant-tabs-nav]:mb-6"
+            destroyInactiveTabPane
+            activeKey={currentTab}
+            onChange={setCurrentTab}
+            defaultActiveKey="1"
+            items={items}
+          />
+        </div>
+      </Modal>
+    )
   );
 };
 

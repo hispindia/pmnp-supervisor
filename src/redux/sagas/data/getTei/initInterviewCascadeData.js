@@ -34,7 +34,7 @@ function* initInterviewCascadeDataFromTEIsEvents(payload) {
         });
 
         const theTEI = {
-          memberData: { id: tei.trackedEntity, enrId: enr.enrollment },
+          memberData: { id: tei.trackedEntity, enrId: enr.enrollment, updatedAt: tei.updatedAt },
           events,
         };
 
