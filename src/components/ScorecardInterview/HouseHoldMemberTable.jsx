@@ -1,7 +1,6 @@
-import { generateUid } from "@/utils";
-import { useEffect, useMemo, useState } from "react";
-import { Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
+import { generateUid, TableColumn } from "@/utils";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOLD_UID, VACCINE_DATE_DE_IDS } from "../constants";
@@ -38,6 +37,9 @@ import {
 } from "./houseHoldMemberRules";
 import "./interview-detail-table.css";
 import { clearHiddenFieldData, generateTEIDhis2Payload, updateMetadata } from "./utils";
+import { Button, Modal, Table } from "antd";
+import { Chip } from "@material-ui/core";
+import { cn } from "@/libs/utils";
 
 const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
   const { t, i18n } = useTranslation();
@@ -45,12 +47,11 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const dispatch = useDispatch();
   const locale = i18n.language || "en";
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
-  const { interviewCascadeData, femalesIn15And49, isAllMemberEventsCompleted } = useInterviewCascadeData(interviewData);
+  const { interviewCascadeData } = useInterviewCascadeData(interviewData);
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
   const { programMetadataMember, selectedOrgUnit } = useSelector((state) => state.metadata);
-  const cascadeFemalesIn15And49 = femalesIn15And49.map((member) => member.memberData);
 
-  const [originMetadata, stageDataElements] = convertOriginMetadata(programMetadataMember, cascadeFemalesIn15And49);
+  const [originMetadata, stageDataElements] = convertOriginMetadata(programMetadataMember, interviewCascadeData);
 
   const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
@@ -59,7 +60,85 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [formStatus, setFormStatus] = useState(FORM_ACTION_TYPES.NONE);
 
-  const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
+  const createColumns = () => {
+    const noColumn = {
+      title: t("Sr. No."),
+      dataIndex: "key",
+      key: "no",
+      render: (key) => key + 1,
+    };
+
+    const statusColumn = {
+      title: t("Status"),
+      dataIndex: "status",
+      key: "status",
+      render: (status, row) => {
+        if (!row.ableToStart) return <Chip className="rounded font-medium !text-gray-500" size="small" label="NA" />;
+        const completed = status === "COMPLETED";
+        return (
+          <Chip
+            className={cn(
+              "rounded font-medium",
+              completed ? "!bg-green-100 !text-green-700" : "!bg-yellow-100 !text-yellow-700"
+            )}
+            size="small"
+            label={completed ? t("Submitted") : t("Pending")}
+          />
+        );
+      },
+    };
+
+    const actionColumn = {
+      title: t("Action"),
+      dataIndex: "status",
+      key: "action",
+      render: (status, row) => {
+        if (!row.ableToStart) {
+          return (
+            <Button size="small" disabled className="font-medium">
+              NA
+            </Button>
+          );
+        }
+
+        const completed = status === "COMPLETED";
+
+        return (
+          <Button size="small" type={completed ? "default" : "primary"}>
+            {completed ? t("View") : t("Start")}
+          </Button>
+        );
+      },
+    };
+
+    const displayList = [
+      "Cn37lbyhz6f",
+      "PIGLwIaw0wy",
+      "WC0cShCpae8",
+      "IENWcinF8lM",
+      "Qt4YSwPxw0X",
+      "QAYXozgCOHu",
+      "Hc9Vgt4LXjb",
+      "RoSxLAB5cfo",
+      "Gds5wTiXoSK",
+    ];
+
+    let columns = metadata
+      .filter((tea) => displayList.includes(tea.id))
+      .map((tea) => {
+        const teaObject = {
+          title: tea.displayFormName,
+          dataIndex: tea.id,
+          key: tea.id,
+          valueSet: tea.valueSet,
+          render: (value) => <TableColumn metadata={tea} value={value} />,
+        };
+
+        return teaObject;
+      });
+
+    return [noColumn, ...columns, statusColumn, actionColumn];
+  };
 
   const showData = useMemo(() => {
     return transformData(metadata, data, dataValuesTranslate, locale);
@@ -167,6 +246,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     const events = [demographicEventPayload, scorecardSurveyEventPayload];
     console.log("update member events:", { events, scorecardSurveyDataValues });
+    clearForm();
     onClose();
   };
 
@@ -296,29 +376,16 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     setFormStatus(FORM_ACTION_TYPES.NONE);
   };
 
-  const rowEvents = {
-    onClick: (e, row, rowIndex) => {
-      if (e.currentTarget && e.currentTarget.contains(e.target)) {
-        const rowData = data[rowIndex];
-        console.log("selected", rowData);
-        setSelectedData(rowData);
-        setSelectedRowIndex(rowIndex);
-        setFormStatus(FORM_ACTION_TYPES.EDIT);
-      }
+  const rowEvents = (row, rowIndex) => ({
+    onClick: () => {
+      if (!row.ableToStart) return;
+      const rowData = data[rowIndex];
+      console.log("selected", rowData);
+      setSelectedData(rowData);
+      setSelectedRowIndex(rowIndex);
+      setFormStatus(FORM_ACTION_TYPES.EDIT);
     },
-  };
-
-  const columnsC = [
-    {
-      dataField: "no.",
-      text: "No.",
-      align: "center",
-      formatter: (cellContent, row, rowIndex, extraData) => {
-        return rowIndex + 1;
-      },
-    },
-    ...columns,
-  ];
+  });
 
   useEffect(() => {
     let tempDataValuesTranslate = metadata
@@ -334,7 +401,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         return obj;
       }, {});
 
-    setColumns(transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
@@ -365,49 +431,53 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   };
 
   return (
-    <div className="interview-table px-4">
-      <Modal backdrop={false} size="xl" scrollable keyboard={false} show={formStatus === FORM_ACTION_TYPES.EDIT}>
-        <Modal.Body>
-          <Card style={{ border: 0 }}>
-            <Card.Body>
-              <Card.Title>{t("familyMemberDetails")}</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)}
-              </Card.Subtitle>
-              {selectedData ? (
-                <CaptureForm
-                  locale={locale}
-                  metadata={metadata}
-                  rowIndex={selectedRowIndex}
-                  data={_.cloneDeep(selectedData)}
-                  formStatus={!disabled ? formStatus : FORM_ACTION_TYPES.VIEW}
-                  setFormStatus={setFormStatus}
-                  handleEditRow={handleEditRow}
-                  handleAddNewRow={() => {}}
-                  editRowCallback={editRowCallback}
-                  maxDate={new Date()}
-                  minDate={new Date(`1900-12-31`)}
-                  showSubmitButtons
-                  formName="HouseHoldMemberTable"
-                />
-              ) : null}
-            </Card.Body>
-          </Card>
-        </Modal.Body>
-      </Modal>
-
-      <div className="row">
-        <div className="col-md-12 order-md-12 mb-12 table-sm overflow-auto table-responsive pl-0">
-          <BootstrapTable
-            keyField="id"
-            data={showData}
-            columns={columnsC}
-            rowEvents={rowEvents}
-            hover
-            condensed
-            rowClasses={rowClasses}
-          />
+    <div className="interview-table">
+      <Modal
+        footer={null}
+        open={formStatus === FORM_ACTION_TYPES.EDIT}
+        centered
+        closable={false}
+        className="!w-full sm:!w-[90dvw] lg:!w-[80dvw] xxl:!w-[70dvw]"
+        maskProps={{ className: "bg-transparent" }}
+        title={
+          <div>
+            <p className="text-lg">{t("familyMemberDetails")}</p>
+            <p className="text-base text-gray-500">
+              {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)}
+            </p>
+          </div>
+        }
+      >
+        <div className="h-[85dvh] overflow-y-auto overflow-x-hidden pb-6">
+          {selectedData ? (
+            <CaptureForm
+              locale={locale}
+              metadata={metadata}
+              rowIndex={selectedRowIndex}
+              data={_.cloneDeep(selectedData)}
+              formStatus={!disabled ? formStatus : FORM_ACTION_TYPES.VIEW}
+              setFormStatus={setFormStatus}
+              handleEditRow={handleEditRow}
+              handleAddNewRow={() => {}}
+              editRowCallback={editRowCallback}
+              maxDate={new Date()}
+              minDate={new Date(`1900-12-31`)}
+              showSubmitButtons
+              formName="HouseHoldMemberTable"
+            />
+          ) : null}
         </div>
+      </Modal>
+      <div className="overflow-x-auto">
+        <Table
+          onRow={rowEvents}
+          showSorterTooltip={false}
+          rowHoverable={false}
+          columns={createColumns()}
+          dataSource={showData}
+          className="my-2 px-1"
+          pagination={false}
+        />
       </div>
     </div>
   );

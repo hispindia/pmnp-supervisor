@@ -319,6 +319,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     <div className="interview-table px-3 mt-2">
       <InterviewDetailModal
         interviewData={selectedData}
+        metadata={metadata}
         formStatus={formStatus}
         selectedRowIndex={selectedRowIndex}
         open={selectedRowIndex !== null && formStatus !== FORM_ACTION_TYPES.EDIT}

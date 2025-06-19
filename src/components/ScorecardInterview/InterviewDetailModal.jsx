@@ -1,68 +1,139 @@
-import { useState } from "react";
-import { Card, Modal } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import _ from "lodash";
-import { CloseOutlined } from "@ant-design/icons";
-import { Button, Tabs } from "antd";
 import InterviewResultForm from "./InterviewResultForm";
 import HouseHoldSurveyForm from "./HouseHoldSurveyForm";
-import { FORM_ACTION_TYPES } from "../constants";
 import HouseHoldMemberTable from "./HouseHoldMemberTable";
+import _ from "lodash";
 
-const InterviewDetailModal = ({ open, onClose, interviewData, selectedRowIndex, formStatus }) => {
+import { useState } from "react";
+import { Card, Divider, Modal, Tabs } from "antd";
+import { useTranslation } from "react-i18next";
+import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID } from "../constants";
+import { Chip } from "@material-ui/core";
+import { useSelector } from "react-redux";
+import {
+  HOUSEHOLD_ID_ATTR_ID,
+  HOUSEHOLD_INTERVIEW_DATE_DE_ID,
+  HOUSEHOLD_INTERVIEW_ID_DE_ID,
+} from "@/constants/app-config";
+import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
+
+const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStatus }) => {
   const [currentTab, setCurrentTab] = useState();
+  const { interviewCascadeData } = useInterviewCascadeData(interviewData);
+  const trackedEntityAttributes = useSelector((state) => state.metadata.programMetadata.trackedEntityAttributes);
+  const attributeValues = useSelector((state) => state.data.tei.data.currentTei.attributes);
+  const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
+
   const { t } = useTranslation();
 
   const disabled = formStatus === FORM_ACTION_TYPES.VIEW;
+  const statusAttr = trackedEntityAttributes.find((item) => item.id === HH_STATUS_ATTR_ID) || { valueSet: [] };
+  const currentStatus = statusAttr.valueSet.find((o) => o.value === attributeValues[HH_STATUS_ATTR_ID]);
+  const headAttribute = currentCascade.find((item) => item["QAYXozgCOHu"] === "1") || currentCascade[0] || {};
 
   const items = [
     {
       label: t("householdMembers"),
       key: "1",
-      children: <HouseHoldMemberTable interviewData={interviewData} onClose={onClose} disabled={disabled} />,
+      children: (
+        <Card classNames={{ body: "p-0 px-1" }}>
+          <HouseHoldMemberTable interviewData={interviewData} onClose={onClose} disabled={disabled} />
+          <div className="px-2 pb-2 text-sm text-gray-500">
+            Total Members: {interviewCascadeData.length} | Pending:{" "}
+            {interviewCascadeData.filter((i) => i.memberData.ableToStart && i.memberData.status !== "COMPLETED")
+              .length || 0}{" "}
+            | Submitted: {interviewCascadeData.filter((i) => i.memberData.status === "COMPLETED").length || 0}
+          </div>
+        </Card>
+      ),
     },
     {
       label: t("Household Survey"),
       key: "2",
-      children: <HouseHoldSurveyForm interviewData={interviewData} onClose={onClose} disabled={disabled} />,
+      children: (
+        <Card>
+          <HouseHoldSurveyForm interviewData={interviewData} onClose={onClose} disabled={disabled} />
+        </Card>
+      ),
     },
     {
       label: t("interviewResult"),
       key: "3",
-      children: <InterviewResultForm interviewData={interviewData} onClose={onClose} disabled={disabled} />,
+      children: (
+        <Card>
+          <InterviewResultForm interviewData={interviewData} onClose={onClose} disabled={disabled} />
+        </Card>
+      ),
     },
   ];
 
   return (
-    <Modal backdrop="static" size="xl" keyboard={false} show={open} scrollable>
-      <Modal.Body>
-        <Card style={{ border: 0 }}>
-          <Card.Body>
-            <Card.Subtitle className="mb-2 text-muted">
-              {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)}
-            </Card.Subtitle>
-            <Tabs
-              style={{ overflow: "visible" }}
-              destroyInactiveTabPane
-              activeKey={currentTab}
-              onChange={setCurrentTab}
-              defaultActiveKey="1"
-              tabBarExtraContent={{
-                right: (
-                  <div
-                    style={{
-                      marginBottom: 10,
-                    }}
-                  >
-                    <Button type="text" icon={<CloseOutlined />} onClick={onClose} />
-                  </div>
-                ),
-              }}
-              items={items}
-            />
-          </Card.Body>
+    <Modal
+      footer={null}
+      open={open}
+      centered
+      onCancel={onClose}
+      className="!w-full sm:!w-[90dvw] lg:!w-[80dvw] xxl:!w-[70dvw]"
+      title={
+        <Chip
+          className="rounded"
+          style={{ backgroundColor: currentStatus?.color, color: currentStatus?.color && "#fff", borderRadius: 4 }}
+          label={attributeValues[HH_STATUS_ATTR_ID]}
+        />
+      }
+    >
+      {/* {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)} */}
+      <div className="space-y-6 h-[85dvh] pb-6 overflow-y-auto overflow-x-hidden">
+        <Card title="Interview Details" classNames={{ header: "!border-b-0 !text-lg", body: "pt-2" }}>
+          <div className="grid grid-cols-2 gap-4">
+            {(() => {
+              const foundMetadata = metadata.find((i) => i.id === HOUSEHOLD_INTERVIEW_DATE_DE_ID);
+              return (
+                <section>
+                  <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
+                  <p className="font-bold text-lg text-black">{interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]}</p>
+                </section>
+              );
+            })()}
+            {(() => {
+              const foundMetadata = metadata.find((i) => i.id === HOUSEHOLD_INTERVIEW_ID_DE_ID);
+              return (
+                <section>
+                  <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
+                  <p className="font-bold text-lg text-black">{interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]}</p>
+                </section>
+              );
+            })()}
+            {(() => {
+              const foundMetadata = trackedEntityAttributes.find((i) => i.id === HOUSEHOLD_ID_ATTR_ID);
+
+              return (
+                <section>
+                  <p className="text-xs uppercase text-gray-500 mb-1">{foundMetadata?.displayFormName}</p>
+                  <p className="font-bold text-lg text-black">{attributeValues[HOUSEHOLD_ID_ATTR_ID]}</p>
+                </section>
+              );
+            })()}
+            {(() => {
+              return (
+                <section>
+                  <p className="text-xs uppercase text-gray-500 mb-1">{t("RESPONDENT NAME")}</p>
+                  <p className="font-bold text-lg text-black">
+                    {headAttribute["PIGLwIaw0wy"]} {headAttribute["WC0cShCpae8"]} {headAttribute["IENWcinF8lM"]}
+                  </p>
+                </section>
+              );
+            })()}
+          </div>
         </Card>
-      </Modal.Body>
+        <Tabs
+          className="[&_.ant-tabs-tab-btn]:text-base [&_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-nav-list]:!w-full [&_.ant-tabs-tab]:flex-1 [&_.ant-tabs-tab]:justify-center [&_.ant-tabs-nav]:mb-6"
+          destroyInactiveTabPane
+          activeKey={currentTab}
+          onChange={setCurrentTab}
+          defaultActiveKey="1"
+          items={items}
+        />
+      </div>
     </Modal>
   );
 };

@@ -75,7 +75,8 @@ const transformData = (metadata, datas, dataValuesTranslate, locale) => {
   let datas_clone = JSON.parse(JSON.stringify(datas));
 
   // missing uid
-  datas_clone.forEach((d) => {
+  datas_clone.forEach((d, index) => {
+    d.key = index;
     // change "true"/"false" to -> "yes"/"no"
     Object.entries(d).forEach(([index, value]) => {
       if (value === "true") {

@@ -49,26 +49,24 @@ export const useInterviewCascadeData = (interviewData) => {
     const addSavedData = currentInterviewCascade?.[interviewId].map((r) => {
       const isSaved = r.events.length > 0;
 
+      const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
+
+      const memberData = r.memberData;
+      const ableToStart =
+        !filterMalesMoreThan5(eventDate)(memberData) &&
+        (filterFemalesIn10And49(eventDate)(memberData) || filterChildrenUnder5(eventDate)(memberData));
+
       return {
         ...r,
         memberData: {
-          ...r.memberData,
+          ...memberData,
+          ableToStart,
           isSaved,
         },
       };
     });
 
-    const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
-
-    const filterOutMemberData = addSavedData.filter((member) => !filterMalesMoreThan5(eventDate)(member.memberData));
-
-    // Filter
-    const femalesIn10And49 = filterOutMemberData.filter((member) =>
-      filterFemalesIn10And49(eventDate)(member.memberData)
-    );
-    const childrenUnder5 = filterOutMemberData.filter((member) => filterChildrenUnder5(eventDate)(member.memberData));
-
-    return [...femalesIn10And49, ...childrenUnder5];
+    return addSavedData;
   };
 
   const interviewCascadeData = getInterviewCascadeData();
