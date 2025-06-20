@@ -11,6 +11,7 @@ import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import MultipleTrueOnlyDEs from "./inputs/MultipleTrueOnlyDEs";
 import HyperLink from "./HyperLink";
+import { Radio } from "@material-ui/core";
 
 const InputField = ({
   valueType,
@@ -184,6 +185,20 @@ const InputField = ({
             value={value}
             handleChange={onChange}
             handleBlur={onBlur}
+            disabled={disabled}
+            {...props}
+          />
+        );
+      case "TRUE_ONLY":
+        return (
+          <Radio
+            checked={value === "true"}
+            onChange={(e) => {
+              onChange(e.target.checked ? "true" : "false");
+              if (onBlur) {
+                onBlur(e.target.checked ? "true" : "false");
+              }
+            }}
             disabled={disabled}
             {...props}
           />
