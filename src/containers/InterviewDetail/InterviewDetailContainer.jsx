@@ -104,7 +104,6 @@ const convertOriginMetadata = (programMetadata, currentCascade) => {
   // });
 
   const householdMemberIDs = getHouseholdMemberIDs(currentCascade);
-
   const householdMembersValueSet = householdMemberIDs.map((id) => ({
     value: id,
     label: id,

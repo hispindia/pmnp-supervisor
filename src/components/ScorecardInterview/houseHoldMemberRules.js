@@ -162,6 +162,8 @@ export const demographicDetailRules = (metadata, data, { years }) => {
     metadata("ycBIHr9bYyw").hidden = false;
   }
 
+  if (data["WbgQ0SZFiAU"] !== "1") metadata("ycBIHr9bYyw").hidden = true;
+
   // Name of IP group (Ethnicity)	Only show when 'IP membership' = Yes /1
   if (data["OiOvGqVEyY9"] === "2" || data["OiOvGqVEyY9"] === "3") {
     metadata("g276qF2fXHi").hidden = true;

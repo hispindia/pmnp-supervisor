@@ -315,10 +315,15 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const weeks = differenceInWeeks(eventDate, dateOBbirth);
     const days = differenceInDays(eventDate, dateOBbirth);
     const ages = { years, months, weeks, days };
+
+    // reset ZkoIX2TigZA
+    metadata("ZkoIX2TigZA").hidden = false;
+    // if ZkoIX2TigZA in hidden section will = true
     hideSectionRules(metadata, data, programMetadataMember, ages);
     const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
-    if (lmpDate) {
-      metadata("ZkoIX2TigZA").hidden = lmpDate && differenceInWeeks(eventDate, lmpDate) < 12;
+    // if lmpDate && differenceInWeeks(eventDate, lmpDate) < 12 => ZkoIX2TigZA will = true
+    if (lmpDate && differenceInWeeks(eventDate, lmpDate) < 12) {
+      metadata("ZkoIX2TigZA").hidden = true;
     }
 
     // vaccine before date of birth
@@ -351,9 +356,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     childHeathRules(metadata, data, ages);
     childNutritionRules(metadata, data, ages);
     handleAgeAttrsOfTEI(data, ages);
-
     clearHiddenFieldData(metadataOrigin, data);
-
     handleAgeFields(metadata, ages);
     // Pregnancy status (DE UID: ycBIHr9bYyw) == 2
     // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)
@@ -382,6 +385,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
   const rowEvents = (row, rowIndex) => ({
     onClick: () => {
+      console.log(row, rowIndex);
       if (!row.ableToStart) return;
       const rowData = data[rowIndex];
       console.log("selected", rowData);
@@ -423,7 +427,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         selectedData: cascadeData[selectedRowIndex],
       });
 
-      setSelectedData(cascadeData[selectedRowIndex]);
+      setSelectedData(sorted[selectedRowIndex]);
     }
   }, [currentInterviewCascade, selectedRowIndex]);
 
@@ -466,6 +470,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
               setFormStatus={setFormStatus}
               handleEditRow={handleEditRow}
               handleAddNewRow={() => {}}
+              onCancel={clearForm}
               editRowCallback={editRowCallback}
               maxDate={new Date()}
               minDate={new Date(`1900-12-31`)}

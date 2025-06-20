@@ -23,10 +23,19 @@ export const getHouseholdMemberIDs = (cascadeData) => {
     return [];
   }
 
-  const allMemberIDs = cascadeData
-    .map((members) => ("Cn37lbyhz6f" in members ? members.Cn37lbyhz6f : null))
-    .flat()
-    .filter((id) => !isNaN(id));
+  const allMemberIDs = cascadeData.map((member) => {
+    let label = "";
+    if (member["PIGLwIaw0wy"]) {
+      label += `${member["PIGLwIaw0wy"]}`;
+    }
+    if (member["WC0cShCpae8"]) {
+      label += ` ${member["WC0cShCpae8"]}`;
+    }
+    if (member["IENWcinF8lM"]) {
+      label += ` ${member["IENWcinF8lM"]}`;
+    }
+    return label;
+  });
 
   // filter duplicates
   const uniqueMemberIDs = [...new Set(allMemberIDs)];

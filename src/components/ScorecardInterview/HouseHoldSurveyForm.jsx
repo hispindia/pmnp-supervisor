@@ -149,8 +149,6 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
         e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
     );
 
-    console.log(found);
-
     if (found) {
       const formData = {
         id: found.event,

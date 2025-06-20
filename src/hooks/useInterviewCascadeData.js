@@ -1,4 +1,8 @@
-import { HOUSEHOLD_INTERVIEW_DATE_DE_ID, HOUSEHOLD_INTERVIEW_ID_DE_ID } from "@/constants/app-config";
+import {
+  HOUSEHOLD_INTERVIEW_DATE_DE_ID,
+  HOUSEHOLD_INTERVIEW_ID_DE_ID,
+  HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
+} from "@/constants/app-config";
 import { differenceInYears } from "date-fns";
 import { is } from "date-fns/locale";
 import { useSelector } from "react-redux";
@@ -40,17 +44,14 @@ const filterChildrenUnder5 = (eventDate) => (member) => {
 
 export const useInterviewCascadeData = (interviewData) => {
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
-
-  const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
+  const { currentInterviewCascade, currentEvents } = useSelector((state) => state.data.tei.data);
 
   const getInterviewCascadeData = () => {
     if (!currentInterviewCascade?.[interviewId]) return [];
 
     const addSavedData = currentInterviewCascade?.[interviewId].map((r) => {
       const isSaved = r.events.length > 0;
-
       const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
-
       const memberData = r.memberData;
       const ableToStart =
         !filterMalesMoreThan5(eventDate)(memberData) &&
@@ -75,9 +76,17 @@ export const useInterviewCascadeData = (interviewData) => {
       filterFemalesIn15And49(new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]))(member.memberData)
     ) || [];
 
-  const isAllMemberEventsCompleted = interviewCascadeData?.every((member) =>
-    member.memberData.ableToStart ? member.memberData.status === "COMPLETED" : true
+  let isAllMemberEventsCompleted = true;
+  interviewCascadeData?.forEach((member) => {
+    if (member.memberData.ableToStart && member.memberData.status !== "COMPLETED") isAllMemberEventsCompleted = false;
+  });
+
+  const foundHHEvent = currentEvents.find(
+    (e) =>
+      e.programStage === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID && e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewId
   );
+
+  if (!foundHHEvent || (foundHHEvent && foundHHEvent.status !== "COMPLETED")) isAllMemberEventsCompleted = false;
 
   return { interviewCascadeData, femalesIn15And49, isAllMemberEventsCompleted };
 };
