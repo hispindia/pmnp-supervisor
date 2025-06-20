@@ -1,6 +1,6 @@
 import { MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
 import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.angular.services";
-import { differenceInWeeks } from "date-fns";
+import { differenceInDays, differenceInMonths } from "date-fns";
 
 export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) => {
   // HFA status	TON0hSWcaw7
@@ -193,81 +193,100 @@ export const demographicDetailRules = (metadata, data, { years }) => {
   metadata("Yp6gJAdu4yX").hidden = PhiCMembership !== "1" || !(years > 5);
 };
 
-export const childHeathRules = (metadata, data, { months, years }) => {
+export const childHeathRules = (metadata, data, { months, years }, code, CHILD_VACCINES) => {
   if (years > 5) {
     return;
   }
 
-  // CH - BCG vaccine date	If 'CH - BCG vaccine given' = Yes
-  metadata("K37pq3b5Qra").hidden = data["v98slN2SMpf"] !== "true";
-  // CH - Pentavalent 1 vaccine date	If 'CH - Pentavalent 1 vaccine given' = Yes
-  metadata("kzaCPuPzy6o").hidden = data["XhrgV4nfrRK"] !== "true";
-  // CH - Pentavalent 2 vaccine date	If 'CH - Pentavalent 2 vaccine given' = Yes
-  metadata("PQS3vSrsIBO").hidden = data["mSfZRdFRWdh"] !== "true";
-  // CH - Pentavalent 3 vaccine date	If 'CH - Pentavalent 3 vaccine given' = Yes
-  metadata("EhIlZ6OO8Fu").hidden = data["eXwMBOUSwuB"] !== "true";
-  // CH - Hepatitis B vaccine date	If 'CH - Hepatitis B vaccine given' = Yes
-  metadata("bsPGbR6F18a").hidden = data["AF4aauVCm9B"] !== "true";
-  // CH - IPV 1 vaccine date	If 'CH - IPV 1 vaccine given' = Yes
-  metadata("LE5EQiIK7Lz").hidden = data["YkaEO9PDBvy"] !== "true";
-  // CH - IPV 2 vaccine date	If 'CH - IPV 2 vaccine given' = Yes
-  metadata("WfeWZFMoy6E").hidden = data["tkOnbJSiKXy"] !== "true";
-  // CH - HEXA 1 vaccine date	If 'CH - HEXA 1 vaccine given' = Yes
-  metadata("DHXhabUfBHA").hidden = data["Lp9Y5Z5P78t"] !== "true";
-  // CH - HEXA 2 vaccine date	If 'CH - HEXA 2 vaccine given' = Yes
-  metadata("i4gomCWd0y9").hidden = data["zQK0SZQ7Dot"] !== "true";
-  // CH - HEXA 3 vaccine date	If 'CH - HEXA 3 vaccine given' = Yes
-  metadata("ew3lMYvyfeV").hidden = data["IjbZlh5uehM"] !== "true";
-  // CH - OPV 1 vaccine date	If 'CH - OPV 1 vaccine given' = Yes
-  metadata("EH1L3NCv2tC").hidden = data["uxGX9k4mJ51"] !== "true";
-  // CH - OPV 2 vaccine date	If 'CH - OPV 2 vaccine given' = Yes
-  metadata("AVpmlIXDUmW").hidden = data["l48paDcsu9Y"] !== "true";
-  // CH - OPV 3 vaccine date	If 'CH - OPV 3 vaccine given' = Yes
-  metadata("qD6ZrhRMGjk").hidden = data["v6emyxZlDds"] !== "true";
-  // CH - PCV 1 vaccine date	If 'CH - PCV 1 vaccine given' = Yes
-  metadata("By0qcLTxEPN").hidden = data["g7do0N1hjSt"] !== "true";
-  // CH - PCV 2 vaccine date	If 'CH - PCV 2 vaccine given' = Yes
-  metadata("d5WhzyidsX8").hidden = data["gY3CmzKjYL7"] !== "true";
-  // CH - PCV 3 vaccine date	If 'CH - PCV 3 vaccine given' = Yes
-  metadata("jnumk6j4OJ3").hidden = data["e42qQtK3tRM"] !== "true";
-  // CH - MMR 1 or MCV 1 or any measles-containing vaccine date	If 'CH - MMR 1 or MCV 1 or any measles-containing vaccine given' = Yes
-  metadata("NL22zOZXlvb").hidden = data["r3zAoTxKpTt"] !== "true";
-  // CH - MMR 2 or MCV 2 vaccine date	If 'CH - MMR 2 or MCV 2 vaccine given' = Yes
-  metadata("vxIQzyyUq1M").hidden = data["tQbe491SjPw"] !== "true";
+  //Data Saving validation
+  metadata('EMHed4Yi7L6').disabled = true;
+  CHILD_VACCINES.list.forEach(item => {
+    if(item.vaccineMonth.start > months || item.vaccineMonth.end < months) {
+      metadata(item.ids.vaccineDone).hidden = true;
+      metadata(item.ids.vaccineDate).hidden = true;
+      metadata(item.ids.discrepancy).hidden = true;
+    }
+    if(data[item.ids.vaccineDone] == "false") {
+      metadata(item.ids.vaccineDate).disabled = true;
+    }
+    //bypass
+      metadata(item.ids.discrepancy).disabled = true;
+  })
 
-  // show / hide vaccines
-  // Pentavalent 1 vaccine given	Hide when age in months < 1 month
-  metadata("XhrgV4nfrRK").hidden = months < 1;
-  // Pentavalent 2 vaccine given	Hide when age in months < 2 month
-  metadata("mSfZRdFRWdh").hidden = months < 2;
-  // Pentavalent 3 vaccine given	Hide when age in months < 3 month
-  metadata("eXwMBOUSwuB").hidden = months < 3;
-  // IPV 1 vaccine given	Hide when age in months < 3 month
-  metadata("YkaEO9PDBvy").hidden = months < 3;
-  // IPV 2 vaccine given	Hide when age in months < 9 month
-  metadata("tkOnbJSiKXy").hidden = months < 9;
-  // HEXA 1 vaccine given	Hide when age in months < 2 month
-  metadata("Lp9Y5Z5P78t").hidden = months < 2;
-  // HEXA 2 vaccine given	Hide when age in months < 3 month
-  metadata("zQK0SZQ7Dot").hidden = months < 3;
-  // HEXA 3 vaccine given	Hide when age in years < 1 year
-  metadata("IjbZlh5uehM").hidden = years < 1;
-  // OPV 1 vaccine given	Hide when age in months < 1 month
-  metadata("uxGX9k4mJ51").hidden = months < 1;
-  // OPV 2 vaccine given	Hide when age in months < 2 month
-  metadata("l48paDcsu9Y").hidden = months < 2;
-  // OPV 3 vaccine given	Hide when age in months < 3 month
-  metadata("v6emyxZlDds").hidden = months < 3;
-  // PCV 1 vaccine given	Hide when age in months < 1 month
-  metadata("g7do0N1hjSt").hidden = months < 1;
-  // PCV 2 vaccine given	Hide when age in months < 2 month
-  metadata("gY3CmzKjYL7").hidden = months < 2;
-  // PCV 3 vaccine given	Hide when age in months < 3 month
-  metadata("e42qQtK3tRM").hidden = months < 3;
-  // MMR 1 or MCV 1 or any measles-containing vaccine given	Hide when age in months < 9 month
-  metadata("r3zAoTxKpTt").hidden = months < 9;
-  // MMR 2 or MCV 2 vaccine given	Hide when age in years < 1 year
-  metadata("tQbe491SjPw").hidden = years < 1;
+  //For checking discrepancy
+  const vaccineDateDetails = CHILD_VACCINES.list.find(vaccine => vaccine.ids.vaccineDate == code);
+
+  if (vaccineDateDetails) {
+    const dateOfBirth = new Date(data["fJPZFs2yYJQ"]);
+    const vaccineDate = new Date(data[code]);
+
+    if (vaccineDateDetails.age.type == 'days') {
+      const days = differenceInDays(vaccineDate, dateOfBirth);
+      if(data[code] && (days > vaccineDateDetails.age.value)) {
+        data[vaccineDateDetails.ids.discrepancy] = true;
+      } else {
+        data[vaccineDateDetails.ids.discrepancy] = '';
+      }
+    }
+    else if (vaccineDateDetails.age.type == 'month') {
+      const months = differenceInMonths(vaccineDate, dateOfBirth);
+      if(data[code] && (months > vaccineDateDetails.age.value)) {
+        data[vaccineDateDetails.ids.discrepancy] = true;
+      } else {
+        data[vaccineDateDetails.ids.discrepancy] = '';
+      }
+    }
+  }
+  
+  //For disabling vaccine Date
+  const vaccineDoneDetails = CHILD_VACCINES.list.find(vaccine => vaccine.ids.vaccineDone == code);
+
+  if(vaccineDoneDetails) {
+    if (data[vaccineDoneDetails.ids.vaccineDone] == 'true') {
+      if(!data[vaccineDoneDetails.ids.vaccineDate]) {
+        data[vaccineDoneDetails.ids.discrepancy] = '';
+      }
+      metadata(vaccineDoneDetails.ids.vaccineDate).disabled = false;
+    }
+    else if(data[vaccineDoneDetails.ids.vaccineDone] == 'false'){
+      debugger;
+      data[vaccineDoneDetails.ids.vaccineDate] = '';
+      data[vaccineDoneDetails.ids.discrepancy] = true;
+      metadata(vaccineDoneDetails.ids.vaccineDate).disabled = true;
+    }
+  }
+
+  const VaccineDoneList = CHILD_VACCINES.list.filter(vaccine => (data[vaccine.ids.vaccineDone]=='true'));
+  const vaccineDiscrepency = CHILD_VACCINES.list.filter(vaccine => (data[vaccine.ids.discrepancy]));
+  //Rule Prority 2
+  if(VaccineDoneList.length) data['EMHed4Yi7L6'] = 'true';
+  //Rule Prority 1
+  if(vaccineDiscrepency.length) data['EMHed4Yi7L6'] = 'false';
+
+  if (data['XhrgV4nfrRK'] || data['kzaCPuPzy6o']) {
+    metadata('Lp9Y5Z5P78t').disabled = true;
+    metadata('DHXhabUfBHA').disabled = true;
+  }
+  if (data['mSfZRdFRWdh'] || data['PQS3vSrsIBO']) {
+    metadata('zQK0SZQ7Dot').disabled = true;
+    metadata('i4gomCWd0y9').disabled = true;
+  }
+  if (data['eXwMBOUSwuB'] || data['EhIlZ6OO8Fu']) {
+    metadata('IjbZlh5uehM').disabled = true;
+    metadata('ew3lMYvyfeV').disabled = true;
+  }
+  if (data['Lp9Y5Z5P78t'] || data['DHXhabUfBHA']) {
+    metadata('XhrgV4nfrRK').disabled = true;
+    metadata('zqDWAyTTTDd').disabled = true;
+  }
+  if (data['zQK0SZQ7Dot'] || data['i4gomCWd0y9']) {
+    metadata('mSfZRdFRWdh').disabled = true;
+    metadata('PQS3vSrsIBO').disabled = true;
+  }
+  if (data['IjbZlh5uehM'] || data['ew3lMYvyfeV']) {
+    metadata('eXwMBOUSwuB').disabled = true;
+    metadata('EhIlZ6OO8Fu').disabled = true;
+  }
 };
 
 const DEs = {
