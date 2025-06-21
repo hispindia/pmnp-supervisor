@@ -11,6 +11,7 @@ import { Alert, Button, Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import InputField from "../InputFieldCore/InputField.component.jsx";
 import { useState } from "react";
+import ChildHealthCustomForm from "./ChildHealthCustomForm.component";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -253,10 +254,26 @@ function CaptureForm(props) {
               </h5>
               {pSection.description && <Alert type="info" message={pSection.description} showIcon />}
               <p class="card-text">
-                <div className="row" style={{ alignItems: "flex-end" }}>
-                  {" "}
-                  {generateFields(programFormMetadata)}
-                </div>
+                {/* Child Health Section */}
+                {pSection.id == "tlNWZDOWfP2" ? (
+                  <ChildHealthCustomForm
+                    formMetadata={formMetadata}
+                    changeValue={changeValue}
+                    disableForm={disableForm}
+                    editCall={editCall}
+                    formData={formData}
+                    formStatus={formStatus}
+                    prevData={prevData}
+                    locale={locale}
+                    props={props}
+                    validation={validation}
+                    validationWarning={validationWarning}
+                  />
+                ) : (
+                  <div className="row" style={{ alignItems: "flex-end" }}>
+                    {generateFields(programFormMetadata)}
+                  </div>
+                )}
               </p>
             </div>
           </div>

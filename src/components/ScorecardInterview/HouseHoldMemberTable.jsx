@@ -3,7 +3,7 @@ import { generateUid, TableColumn } from "@/utils";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOLD_UID, VACCINE_DATE_DE_IDS } from "../constants";
+import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOLD_UID, CHILD_VACCINES } from "../constants";
 
 // Icon
 
@@ -327,7 +327,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     }
 
     // vaccine before date of birth
-    VACCINE_DATE_DE_IDS.forEach((id) => (metadata(id).minDate = data["fJPZFs2yYJQ"]));
+    CHILD_VACCINES.list.forEach((vaccine) => (metadata(vaccine.ids.vaccineDate).minDate = data["fJPZFs2yYJQ"]));
 
     data["Hc9Vgt4LXjb"] = years;
     data["RoSxLAB5cfo"] = months;
@@ -353,7 +353,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     data["Wdg76PCqsBn"] = interviewData["Wdg76PCqsBn"];
 
     demographicDetailRules(metadata, data, ages);
-    childHeathRules(metadata, data, ages);
+    childHeathRules(metadata, data, ages, code, CHILD_VACCINES);
     childNutritionRules(metadata, data, ages);
     handleAgeAttrsOfTEI(data, ages);
     clearHiddenFieldData(metadataOrigin, data);

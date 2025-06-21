@@ -1,7 +1,7 @@
 import _ from "lodash";
 import "./InputField.styles.css";
 import propTypes from "./InputField.types.js";
-import { DateField, SelectField, TextField } from "./inputs/index";
+import { DateField, SelectField, TextField, RadioField } from "./inputs/index";
 import { onKeyDown } from "@/utils";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "antd";
@@ -14,6 +14,7 @@ import HyperLink from "./HyperLink";
 import { Radio } from "@material-ui/core";
 
 const InputField = ({
+  displayOption,
   valueType,
   valueSet,
   label,
@@ -113,6 +114,18 @@ const InputField = ({
         { value: "true", label: t("yes") },
         { value: "false", label: t("no") },
       ];
+      if(displayOption == "RADIO") {
+        return (
+          <RadioField 
+          value={value}
+          valueSet={vs}
+          handleChange={onChange}
+          handleBlur={onBlur}
+          disabled={disabled}
+          {...props}
+          />
+        )
+      }
       return (
         <SelectField
           value={generateSelectFieldValue(vs, value)}
