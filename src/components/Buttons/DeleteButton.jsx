@@ -9,10 +9,6 @@ const DeleteConfirmationButton = withDeleteConfirmation(Button);
 const DeleteButton = ({ event, onHandleDelete }) => {
   return (
     <DeleteConfirmationButton
-      // className={`${yearDeleteItem}`}
-      // disableFocusRipple={true}
-      // disableRipple={true}
-      // disabled={event.status != "ACTIVE"}
       danger
       messageText={"This process cannot be undone!"}
       cancelText={"Cancel"}

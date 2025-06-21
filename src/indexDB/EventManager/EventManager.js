@@ -331,7 +331,7 @@ const beforePersistAnalyticsData = async (result, program) => {
       program: program.id,
       programStage: ev[findHeaderIndex(result.headers, "ps")],
       orgUnit: ev[findHeaderIndex(result.headers, "ou")],
-      eventStatus: `ACTIVE`, //ev.status,
+      eventStatus: ev.status,
       enrollment: ev[findHeaderIndex(result.headers, "pi")],
       enrollmentStatus: `ACTIVE`, //ev.enrollmentStatus,
       trackedEntity: ev[findHeaderIndex(result.headers, "tei")],

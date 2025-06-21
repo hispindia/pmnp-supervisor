@@ -28,17 +28,16 @@ export const toDhis2Events = (events) => {
     return {
       event,
       eventStatus,
+      status: eventStatus,
       isOnline,
       program,
       programStage,
       enrollment,
       orgUnit,
       trackedEntity,
-      // relationships: relationships,
       occurredAt: moment(occurredAt).format("YYYY-MM-DD"),
       dueDate: moment(dueDate).format("YYYY-MM-DD"),
       dataValues: dataValues,
-      // notes: notes,
       deleted: isDeleted,
     };
   });
