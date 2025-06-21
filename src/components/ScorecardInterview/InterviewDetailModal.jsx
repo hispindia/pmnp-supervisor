@@ -28,7 +28,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
   const disabled = formStatus === FORM_ACTION_TYPES.VIEW;
   const statusAttr = trackedEntityAttributes.find((item) => item.id === HH_STATUS_ATTR_ID) || { valueSet: [] };
   const currentStatus = statusAttr.valueSet.find((o) => o.value === attributeValues[HH_STATUS_ATTR_ID]);
-  const headAttribute = currentCascade.find((item) => item["QAYXozgCOHu"] === "1") || currentCascade[0] || {};
+  const headAttribute = currentCascade?.find((item) => item["QAYXozgCOHu"] === "1") || currentCascade[0] || {};
 
   const items = [
     {

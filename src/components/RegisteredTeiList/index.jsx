@@ -5,7 +5,7 @@ import { TableColumn, TableFilter } from "../../utils";
 import "./index.css";
 import { isImmutableYear } from "@/utils/event";
 import { useSelector } from "react-redux";
-import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
+import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
 import { HH_STATUS_ATTR_ID } from "../constants";
 import { Chip } from "@material-ui/core";
 
@@ -25,7 +25,7 @@ const RegisteredTeiList = ({
   const { immutableYear } = useSelector((state) => state.metadata);
   const reportId = useSelector((state) => state.common.reportId);
 
-  const deleteColumn = {
+  const additionalColumns = {
     width: 56,
     key: "deleteKey",
     render: (text, record, index) => (
@@ -177,7 +177,7 @@ const RegisteredTeiList = ({
         };
       }}
       rowHoverable={false}
-      columns={[deleteColumn, reportObject].concat(createColumns())}
+      columns={[additionalColumns, reportObject].concat(createColumns())}
       dataSource={createDataSource()}
       scroll={{ /*y: "calc(100vh - 268px)",*/ x: 900 }}
       className="my-2 px-1"

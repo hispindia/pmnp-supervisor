@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import withDhis2FormItem from "../../hocs/withDhis2Field";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
-import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
+import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
 import { useUser } from "@/hooks/useUser";
 import { HH_STATUS_ATTR_ID } from "../constants";
 
@@ -89,7 +89,7 @@ const ProfileForm = ({
   };
 
   const items = trackedEntityAttributes
-    .filter(({ displayInList }) => displayInList)
+    .filter((tea) => tea.displayInList || SHOULD_NOT_CLEAR_LIST.includes(tea.id))
     .map((attr) => ({ ...attr, disabled: disabledFields.includes(attr.id) || !isEdit }));
 
   return (
