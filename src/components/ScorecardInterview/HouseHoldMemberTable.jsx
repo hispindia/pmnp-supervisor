@@ -339,7 +339,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // Weight	iFiOPAxrJIF
     // Age in months	RoSxLAB5cfo
     // Gender	Qt4YSwPxw0X
-    if (data["uYWxyRYP7GN"]) {
+    if (data["uYWxyRYP7GN"] && data["CY4OTulUceX"] && data["iFiOPAxrJIF"] && data["Qt4YSwPxw0X"]) {
       const monthsByLastMonitoring = differenceInMonths(new Date(data["uYWxyRYP7GN"]), dateOBbirth);
       handleZScore(data, {
         ageInMonths: monthsByLastMonitoring,
