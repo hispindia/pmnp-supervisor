@@ -309,6 +309,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     data[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
+
     const dateOBbirth = new Date(data["fJPZFs2yYJQ"]);
     const years = differenceInYears(eventDate, dateOBbirth);
     const months = differenceInMonths(eventDate, dateOBbirth);

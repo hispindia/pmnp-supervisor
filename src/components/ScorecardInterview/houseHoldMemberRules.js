@@ -75,27 +75,27 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
   metadata(de_week).disabled = true;
   metadata(de_day).disabled = true;
 
-  if (weeks < 0) {
-    metadata(de_year).hidden = true;
-    metadata(de_month).hidden = true;
-    metadata(de_week).hidden = true;
-    metadata(de_day).hidden = false;
-  } else if (weeks > 0 && years < 1) {
-    metadata(de_year).hidden = true;
-    metadata(de_month).hidden = true;
-    metadata(de_week).hidden = false;
-    metadata(de_day).hidden = true;
-  } else if (years >= 1 || years < 2) {
-    metadata(de_year).hidden = true;
-    metadata(de_month).hidden = false;
-    metadata(de_week).hidden = true;
-    metadata(de_day).hidden = true;
-  } else if (years >= 2) {
-    metadata(de_year).hidden = false;
-    metadata(de_month).hidden = true;
-    metadata(de_week).hidden = true;
-    metadata(de_day).hidden = true;
-  }
+  // if (weeks < 0) {
+  //   metadata(de_year).hidden = true;
+  //   metadata(de_month).hidden = true;
+  //   metadata(de_week).hidden = true;
+  //   metadata(de_day).hidden = false;
+  // } else if (weeks > 0 && years < 1) {
+  //   metadata(de_year).hidden = true;
+  //   metadata(de_month).hidden = true;
+  //   metadata(de_week).hidden = false;
+  //   metadata(de_day).hidden = true;
+  // } else if (years >= 1 || years < 2) {
+  //   metadata(de_year).hidden = true;
+  //   metadata(de_month).hidden = false;
+  //   metadata(de_week).hidden = true;
+  //   metadata(de_day).hidden = true;
+  // } else if (years >= 2) {
+  //   metadata(de_year).hidden = false;
+  //   metadata(de_month).hidden = true;
+  //   metadata(de_week).hidden = true;
+  //   metadata(de_day).hidden = true;
+  // }
 };
 
 export const handleAgeAttrsOfTEI = (data, { days, weeks, months, years }) => {

@@ -170,7 +170,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     }
 
     // Visit number length
-    if (!data["Wdg76PCqsBn"]) data["Wdg76PCqsBn"] = Object.keys(currentInterviewCascade).length + 1;
+    if (!data["Wdg76PCqsBn"]) data["Wdg76PCqsBn"] = Object.keys(currentInterviewCascade || {}).length + 1;
     metadata["Wdg76PCqsBn"].disabled = true;
 
     // Respondent ID - SrFa2O3m6ff
