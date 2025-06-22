@@ -94,6 +94,7 @@ function CaptureForm(props) {
 
   const disableSaveButton = saveDisabled;
   const enableEditButton = data?.isSaved && data?.status === "COMPLETED";
+  console.log({ enableEditButton, isSaved: data?.isSaved, status: data?.status });
   const [disableForm, setDisableForm] = useState(enableEditButton);
 
   useEffect(() => {

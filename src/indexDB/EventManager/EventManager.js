@@ -427,8 +427,6 @@ const setEvent = async (ev) => {
       await db[TABLE_NAME].where("event").anyOf(partition).delete();
     }
 
-    console.log("setEvent", objects);
-
     await persist(objects);
 
     return;

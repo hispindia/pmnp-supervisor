@@ -67,6 +67,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
       occurredAt,
       dueDate: occurredAt,
       status: "ACTIVE",
+      eventStatus: "ACTIVE",
       programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
       trackedEntity,
       orgUnit: selectedOrgUnit.id,
@@ -98,9 +99,12 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
       _isDirty: true,
       occurredAt,
       status: type == "submit" ? "COMPLETED" : "ACTIVE",
+      eventStatus: type == "submit" ? "COMPLETED" : "ACTIVE",
       dueDate: occurredAt,
       dataValues,
     });
+
+    console.log({ eventPayload });
 
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
@@ -164,6 +168,8 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
       setData(formData);
       setDefaultData(_.cloneDeep(formData));
       setFormStatus(FORM_ACTION_TYPES.ADD_NEW);
+      // trick to show SUBMIT button
+      // setFormStatus(FORM_ACTION_TYPES.EDIT);
     }
 
     return () => {
