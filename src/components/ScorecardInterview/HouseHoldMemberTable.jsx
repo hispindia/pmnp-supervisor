@@ -198,6 +198,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         event: generateUid(),
         dataValues: demographicDataValues,
         status,
+        eventStatus: status,
         programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
       });
     } else {
@@ -205,6 +206,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         ...foundDemographicEvent,
         _isDirty: true,
         status,
+        eventStatus: status,
         dataValues: demographicDataValues,
       });
     }
@@ -221,6 +223,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         event: generateUid(),
         dataValues: scorecardSurveyDataValues,
         status,
+        eventStatus: status,
         programStage: MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID,
       });
     } else {
@@ -228,6 +231,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         ...foundScorecardSurveyEvent,
         _isDirty: true,
         status,
+        eventStatus: status,
         dataValues: scorecardSurveyDataValues,
       });
     }

@@ -94,7 +94,7 @@ function CaptureForm(props) {
 
   const disableSaveButton = saveDisabled;
   const enableEditButton = data?.isSaved && data?.status === "COMPLETED";
-  console.log({ enableEditButton, isSaved: data?.isSaved, status: data?.status });
+
   const [disableForm, setDisableForm] = useState(enableEditButton);
 
   useEffect(() => {
@@ -302,6 +302,7 @@ function CaptureForm(props) {
           break;
         case "submit":
           handleEditRow(e, formData, false, "submit");
+          setDisableForm(true);
           break;
       }
     }
@@ -356,12 +357,12 @@ function CaptureForm(props) {
                         color="green"
                         variant="solid"
                         disabled={!isFormFulfilled}
-                        onClick={() =>
+                        onClick={() => {
                           showConfirmationModal(
                             "May I confirm if you’ve reviewed your answers and validated that all of it are accurate?",
                             (e) => handleOnSubmit(e, "submit")
-                          )
-                        }
+                          );
+                        }}
                       >
                         {t("submit")}
                       </Button>
