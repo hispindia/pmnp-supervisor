@@ -182,6 +182,8 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     if (!data["j3xi4RiKG5X"]) data["j3xi4RiKG5X"] = format(new Date(), "HH:mm");
 
     clearHiddenFieldData(metadata, data);
+
+    metadata["X28FSoTIkGv"].displayOption = "RADIO";
   };
 
   const handleDeleteRow = (e, row) => {

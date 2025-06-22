@@ -172,6 +172,7 @@ function CaptureForm(props) {
               description={f.description}
               isMultipleTrueOnlyDes={f.isMultipleTrueOnlyDes}
               isSelectSearchable={f.isSelectSearchable}
+              displayOption={f.displayOption}
             />
           </div>
         );

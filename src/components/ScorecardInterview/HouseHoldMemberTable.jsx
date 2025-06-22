@@ -253,11 +253,12 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // WARNING: if it's hidden, the data will be removed
 
     let metadata = (metaId) => {
-      if (!metadataOrigin[metaId]) return {};
+      if (!metadataOrigin[metaId]) return;
+
       return metadataOrigin[metaId];
     };
 
-    console.log("HouseHoldMemberTable", { metadata, previousData, data, code, value, interviewData });
+    console.log("HouseHoldMemberTable", { previousData, data, code, value, interviewData });
 
     // stage
     metadata(HOUSEHOLD_INTERVIEW_ID_DE_ID).disabled = true;
@@ -290,7 +291,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       return;
     } else {
       Object.keys(metadata).forEach((de) => {
-        metadata(de).hidden = false;
+        // metadata(de).hidden = false;
       });
     }
 
@@ -340,8 +341,14 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // Weight	iFiOPAxrJIF
     // Age in months	RoSxLAB5cfo
     // Gender	Qt4YSwPxw0X
+    metadata("TON0hSWcaw7").disabled = true; // HFA status
+    metadata("Wj1Re9XKW5P").disabled = true; // WFA status
+    metadata("RXWSlNxAwq1").disabled = true; // WFH status
+    metadata("s3q2EVu3qe0").disabled = true; // MUAC status
+
     if (data["uYWxyRYP7GN"] && data["CY4OTulUceX"] && data["iFiOPAxrJIF"] && data["Qt4YSwPxw0X"]) {
       const monthsByLastMonitoring = differenceInMonths(new Date(data["uYWxyRYP7GN"]), dateOBbirth);
+
       handleZScore(data, {
         ageInMonths: monthsByLastMonitoring,
         heightInCm: data["CY4OTulUceX"],
@@ -386,7 +393,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
   const rowEvents = (row, rowIndex) => ({
     onClick: () => {
-      console.log(row, rowIndex);
       if (!row.ableToStart) return;
       const rowData = data[rowIndex];
       console.log("selected", rowData);

@@ -2,9 +2,10 @@ import { MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config
 import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.angular.services";
 import { differenceInDays, differenceInMonths } from "date-fns";
 
-export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) => {
+export const handleZScore = (data, metadata, { ageInMonths, heightInCm, weight, gender }) => {
   // HFA status	TON0hSWcaw7
   const HFA_DE = "TON0hSWcaw7";
+
   // Normal	:1:	- 2 >= HFA = < 0
   // 	stunted	:2:	- 3 < HFA < -2
   // 	severely stunted 	:3:	HFA < -3
@@ -25,6 +26,7 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
 
   // WFA status	Wj1Re9XKW5P
   const WFA_DE = "Wj1Re9XKW5P";
+
   // Normal	:1:	- 2 >= WFA = < 0
   // underweight	:2:	- 3 < WFA < -2
   // Severely underweight	:3:	WFA < -3
@@ -45,6 +47,7 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
 
   // WFH status	RXWSlNxAwq1
   const WFH_DE = "RXWSlNxAwq1";
+
   // Normal	:1:	- 2 >= WFH = < 0
   // moderately wasted	:2:	- 3 < WFH < -2
   // severely wasted	:3:	WFH < -3
