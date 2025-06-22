@@ -75,7 +75,7 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
   metadata(de_week).disabled = true;
   metadata(de_day).disabled = true;
 
-  if (weeks < 0 && days > 0) {
+  if (days > 0 && weeks) {
     metadata(de_year).hidden = true;
     metadata(de_month).hidden = true;
     metadata(de_week).hidden = true;
@@ -131,15 +131,10 @@ export const handleAgeDatavaluesOfEvents = (data, { days, weeks, months, years }
   data[monthsDE] = "";
   data[yearsDE] = "";
 
-  if (weeks === 0) {
-    data[daysDE] = days;
-  } else if (months === 0) {
-    data[weeksDE] = weeks;
-  } else if (years === 0 || years < 5) {
-    data[monthsDE] = months;
-  } else if (years >= 5) {
-    data[yearsDE] = years;
-  }
+  data[daysDE] = days;
+  data[weeksDE] = weeks;
+  data[monthsDE] = months;
+  data[yearsDE] = years;
 };
 
 export const demographicDetailRules = (metadata, data, { years }) => {

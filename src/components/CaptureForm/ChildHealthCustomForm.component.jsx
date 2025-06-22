@@ -54,7 +54,7 @@ const ChildHealthCustomForm = ({
         );
       });
   };
-  
+
   //Table
   const dataSource = CHILD_VACCINES.list
     .filter((item) => {
@@ -86,15 +86,13 @@ const ChildHealthCustomForm = ({
       title: "Vaccine Given",
       dataIndex: "vaccineGiven",
       key: "vaccineGiven",
-      render: (f) => 
-        generateFields(formMetadata, f.code, true, 'RADIO')
+      render: (f) => generateFields(formMetadata, f.code, true, "RADIO"),
     },
     {
       title: "Vaccine Date",
       dataIndex: "VaccineDate",
       key: "VaccineDate",
-      render: (f) =>
-        generateFields(formMetadata, f.code, true),
+      render: (f) => generateFields(formMetadata, f.code, true),
     },
     {
       title: "Discrepancy",
@@ -108,7 +106,7 @@ const ChildHealthCustomForm = ({
       {generateFields(formMetadata, "p6NUCwXg99o")}
 
       <Table dataSource={dataSource} columns={columns} pagination={false} />
-      
+
       {generateFields(formMetadata, "EMHed4Yi7L6")}
     </>
   );
