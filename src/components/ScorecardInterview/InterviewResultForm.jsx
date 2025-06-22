@@ -139,8 +139,8 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
     newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
-    if (code === HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID) {
-      data["JzxYzLgo0P9"] = "";
+    if (code == HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID) {
+      newData["JzxYzLgo0P9"] = "";
     }
 
     // InterviewResult_DEs
