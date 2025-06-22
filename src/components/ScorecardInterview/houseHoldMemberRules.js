@@ -250,7 +250,6 @@ export const childHeathRules = (metadata, data, { months, years }, code, CHILD_V
       }
       metadata(vaccineDoneDetails.ids.vaccineDate).disabled = false;
     } else if (data[vaccineDoneDetails.ids.vaccineDone] == "false") {
-      debugger;
       data[vaccineDoneDetails.ids.vaccineDate] = "";
       data[vaccineDoneDetails.ids.discrepancy] = true;
       metadata(vaccineDoneDetails.ids.vaccineDate).disabled = true;

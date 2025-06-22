@@ -157,6 +157,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     // save event
     const interviewEvents = interviewCascadeData[selectedRowIndex]?.events || [];
+    console.log({ interviewCascadeData, interviewEvents, rowIndex, selectedRowIndex, row });
 
     const demographicDataValues = {};
     stageDataElements[MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID].forEach((de) => {
@@ -290,8 +291,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       clearHiddenFieldData(metadata, data);
       return;
     } else {
-      Object.keys(metadata).forEach((de) => {
-        // metadata(de).hidden = false;
+      Object.keys(metadataOrigin).forEach((de) => {
+        metadata(de).hidden = false;
       });
     }
 
@@ -368,20 +369,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     handleAgeFields(metadata, ages);
     // Pregnancy status (DE UID: ycBIHr9bYyw) == 2
     // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)
-  };
 
-  const handleDeleteRow = (e, row) => {
-    e.stopPropagation();
-
-    dispatch(deleteEvent(row.id));
-
-    let rows = data.filter((d) => d.id != row.id);
-
-    callbackFunction(metadata, rows, null, "delete_member");
-    setData([...rows]);
-
-    let updatedMetadata = updateMetadata(metadata, rows);
-    setMetadata([...updatedMetadata]);
+    if (!data["B3jiLplNUeS"]) {
+      data["B3jiLplNUeS"] = "na";
+    }
   };
 
   const clearForm = () => {
@@ -425,10 +416,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
   useEffect(() => {
     const cascadeData = interviewCascadeData.map((i) => i.memberData);
-    const sorted = _.sortBy(cascadeData, (item) => Number(item["QAYXozgCOHu"] || 0));
-    setData(sorted);
+    // const sorted = _.sortBy(cascadeData, (item) => Number(item["QAYXozgCOHu"] || 0));
+    setData(cascadeData);
     if (selectedRowIndex !== null) {
-      setSelectedData(sorted[selectedRowIndex]);
+      setSelectedData(cascadeData[selectedRowIndex]);
     }
   }, [currentInterviewCascade, selectedRowIndex]);
 

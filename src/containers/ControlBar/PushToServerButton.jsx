@@ -9,7 +9,7 @@ import { Button, notification } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import BulkImportButton from "./BulkImportButton";
+
 import ExcelImportButton from "./ExcelImportButton";
 import PushModal, { pushMapping } from "./PushModal";
 import { useExcel } from "./useExcel";
@@ -95,9 +95,6 @@ const PushToServerButton = () => {
       </Button> */}
 
       {/* <ExcelImportButton /> */}
-
-      {/* TEST BUTTONS */}
-      <BulkImportButton />
     </>
   );
 };
