@@ -75,7 +75,7 @@ export const handleAgeFields = (metadata, { weeks, months, years }) => {
   metadata(de_week).disabled = true;
   metadata(de_day).disabled = true;
 
-  if (days > 0 && weeks) {
+  if (weeks < 0) {
     metadata(de_year).hidden = true;
     metadata(de_month).hidden = true;
     metadata(de_week).hidden = true;

@@ -421,12 +421,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const sorted = _.sortBy(cascadeData, (item) => Number(item["QAYXozgCOHu"] || 0));
     setData(sorted);
     if (selectedRowIndex !== null) {
-      console.log("select interview interview cascadeData", {
-        cascadeData,
-        interviewCascadeData,
-        selectedData: cascadeData[selectedRowIndex],
-      });
-
       setSelectedData(sorted[selectedRowIndex]);
     }
   }, [currentInterviewCascade, selectedRowIndex]);

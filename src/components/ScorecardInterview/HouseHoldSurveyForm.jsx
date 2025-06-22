@@ -125,7 +125,6 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
     // Score_Number of 4Ps Members
     const memberData = interviewCascadeData.map((d) => d.memberData);
 
-    console.log(currentCascade, memberData);
     houseHoldSurveyRules(metadata, newData);
     hideSectionRules(metadata, memberData, programMetadata);
     calculateHouseHoldFields(newData, memberData, interviewData);
