@@ -67,7 +67,9 @@ function* handleOfflineStatusChange({ offlineStatus }) {
   localStorage.setItem("offlineStatus", offlineStatus);
 
   if (!offlineStatus) {
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000); // wait for 3 second before reloading
   }
 }
 
