@@ -2,7 +2,7 @@ import { MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config
 import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.angular.services";
 import { differenceInDays, differenceInMonths } from "date-fns";
 
-export const handleZScore = (data, metadata, { ageInMonths, heightInCm, weight, gender }) => {
+export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) => {
   // HFA status	TON0hSWcaw7
   const HFA_DE = "TON0hSWcaw7";
 

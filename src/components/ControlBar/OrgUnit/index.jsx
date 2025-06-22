@@ -14,16 +14,6 @@ const OrgUnit = ({
 }) => {
   return (
     <Row justify="left" align="middle">
-      {/* <Col className="d-none d-sm-block">
-        <Typography
-          color="primary"
-          style={{
-            paddingRight: 8,
-          }}
-        >
-          {orgUnitLabel}:{" "}
-        </Typography>
-      </Col> */}
       <Popover
         placement="bottomLeft"
         overlayInnerStyle={{

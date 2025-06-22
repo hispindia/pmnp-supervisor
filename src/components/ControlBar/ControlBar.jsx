@@ -50,7 +50,7 @@ const ControlBar = () => {
         .map((id) => id && orgUnits.find((ou) => ou.id === id)?.displayName)
         .slice(2)
     : [];
-
+  console.log({ selectedOrgUnit });
   return (
     <>
       <div className={controlBarContainer}>
