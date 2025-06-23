@@ -23,19 +23,24 @@ export const getHouseholdMemberIDs = (cascadeData) => {
     return [];
   }
 
-  const allMemberIDs = cascadeData.map((member) => {
-    let label = "";
-    if (member["PIGLwIaw0wy"]) {
-      label += `${member["PIGLwIaw0wy"]}`;
-    }
-    if (member["WC0cShCpae8"]) {
-      label += ` ${member["WC0cShCpae8"]}`;
-    }
-    if (member["IENWcinF8lM"]) {
-      label += ` ${member["IENWcinF8lM"]}`;
-    }
-    return label;
-  });
+  const allMemberIDs = cascadeData
+    .map((member) => {
+      const age = Number(member["H42aYY9JMIR"] || 0);
+      if (age < 18) return;
+
+      let label = "";
+      if (member["PIGLwIaw0wy"]) {
+        label += `${member["PIGLwIaw0wy"]}`;
+      }
+      if (member["WC0cShCpae8"]) {
+        label += ` ${member["WC0cShCpae8"]}`;
+      }
+      if (member["IENWcinF8lM"]) {
+        label += ` ${member["IENWcinF8lM"]}`;
+      }
+      return label;
+    })
+    .filter(Boolean);
 
   // filter duplicates
   const uniqueMemberIDs = [...new Set(allMemberIDs)];
