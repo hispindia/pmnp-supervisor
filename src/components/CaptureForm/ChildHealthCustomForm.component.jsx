@@ -59,7 +59,7 @@ const ChildHealthCustomForm = ({
   const dataSource = CHILD_VACCINES.list
     .filter((item) => {
       //Age in month
-      if (formData["RoSxLAB5cfo"] >= item.vaccineMonth.start && formData["RoSxLAB5cfo"] <= item.vaccineMonth.end) {
+      if (formData["RoSxLAB5cfo"] >= item.vaccineMonth.start) {
         return item;
       }
     })

@@ -204,7 +204,7 @@ export const childHeathRules = (metadata, data, { months, years }, code, CHILD_V
   //Data Saving validation
   metadata("EMHed4Yi7L6").disabled = true;
   CHILD_VACCINES.list.forEach((item) => {
-    if (item.vaccineMonth.start > months || item.vaccineMonth.end < months) {
+    if (item.vaccineMonth.start > months) {
       metadata(item.ids.vaccineDone).hidden = true;
       metadata(item.ids.vaccineDate).hidden = true;
       metadata(item.ids.discrepancy).hidden = true;
