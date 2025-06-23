@@ -6,12 +6,12 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   // HFA status	TON0hSWcaw7
   const HFA_DE = "TON0hSWcaw7";
 
-  // Normal	:1:	- 2 >= HFA = < 0
+  // Normal	:1:	- 2 >= HFA = < 2
   // 	stunted	:2:	- 3 < HFA < -2
   // 	severely stunted 	:3:	HFA < -3
-  // 	tall	:4:	HFA > 0
+  // 	tall	:4:	HFA > 2
   const zScoreHFA = getZScoreHFA(ageInMonths, heightInCm, gender);
-  if (zScoreHFA >= -2 && zScoreHFA < 0) {
+  if (zScoreHFA >= -2 && zScoreHFA < 2) {
     data[HFA_DE] = "1";
   }
   if (zScoreHFA < -2 && zScoreHFA > -3) {
@@ -20,19 +20,19 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   if (zScoreHFA < -3) {
     data[HFA_DE] = "3";
   }
-  if (zScoreHFA > 0) {
+  if (zScoreHFA > 2) {
     data[HFA_DE] = "4";
   }
 
   // WFA status	Wj1Re9XKW5P
   const WFA_DE = "Wj1Re9XKW5P";
 
-  // Normal	:1:	- 2 >= WFA = < 0
+  // Normal	:1:	- 2 >= WFA = < 2
   // underweight	:2:	- 3 < WFA < -2
   // Severely underweight	:3:	WFA < -3
-  // overweight / obese	:4:	WFA > 0
+  // overweight / obese	:4:	WFA > 2
   const zScoreWFA = getZScoreWFA(ageInMonths, weight, gender);
-  if (zScoreWFA >= -2 && zScoreWFA < 0) {
+  if (zScoreWFA >= -2 && zScoreWFA < 2) {
     data[WFA_DE] = "1";
   }
   if (zScoreWFA < -2 && zScoreWFA > -3) {
@@ -41,19 +41,19 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   if (zScoreWFA < -3) {
     data[WFA_DE] = "3";
   }
-  if (zScoreWFA > 0) {
+  if (zScoreWFA > 2) {
     data[WFA_DE] = "4";
   }
 
   // WFH status	RXWSlNxAwq1
   const WFH_DE = "RXWSlNxAwq1";
 
-  // Normal	:1:	- 2 >= WFH = < 0
+  // Normal	:1:	- 2 >= WFH = < 2
   // moderately wasted	:2:	- 3 < WFH < -2
   // severely wasted	:3:	WFH < -3
-  // overweight / obese	:4:	WFH > 0
+  // overweight / obese	:4:	WFH > 2
   const zScoreWFH = getZScoreWFH(heightInCm, weight, gender);
-  if (zScoreWFH >= -2 && zScoreWFH < 0) {
+  if (zScoreWFH >= -2 && zScoreWFH < 2) {
     data[WFH_DE] = "1";
   }
   if (zScoreWFH < -2 && zScoreWFH > -3) {
@@ -62,7 +62,7 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   if (zScoreWFH < -3) {
     data[WFH_DE] = "3";
   }
-  if (zScoreWFH > 0) {
+  if (zScoreWFH > 2) {
     data[WFH_DE] = "4";
   }
 };
