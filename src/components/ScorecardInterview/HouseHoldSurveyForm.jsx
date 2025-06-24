@@ -44,68 +44,44 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
   console.log("HouseHoldSurveyForm", { formDirty, interviewData, interviewCascadeData });
 
-  const handleAddNew = (e, newData, continueAdd) => {
-    console.trace("row:>>>", newData);
-
-    // Add new data
-
-    setData(newData);
-    let updatedMetadata = updateMetadata(metadata, data);
-    setMetadata([...updatedMetadata]);
-
-    console.log("handleAddNew", { updatedMetadata, data });
-
-    // submit new event
-    const { id: event, ...dataValues } = newData;
-
-    // init new event
-    const occurredAt = interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
-
-    const eventPayload = transformEvent({
-      event,
-      enrollment,
-      occurredAt,
-      dueDate: occurredAt,
-      status: "ACTIVE",
-      eventStatus: "ACTIVE",
-      programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
-      trackedEntity,
-      orgUnit: selectedOrgUnit.id,
-      program: programMetadata.id,
-      dataValues,
-      _isDirty: true,
-    });
-
-    dispatch(submitEvent(eventPayload));
-    setFormDirty(false);
-  };
-
   const handleEdit = (e, newData, rowIndex, type) => {
     // Update data
     setData(newData);
 
     let updatedMetadata = updateMetadata(metadata, newData);
     console.log("handleEdit", { updatedMetadata, newData });
-
     setMetadata([...updatedMetadata]);
 
     // save event
     const currentEvent = currentEvents.find((e) => e.event === newData.id);
-    const { id, status, isSaved, updatedAt, ...dataValues } = newData;
+    const { id, status, isSaved, updatedAt, isNew, ...dataValues } = newData;
 
+    let eventPayload;
     const occurredAt = interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
-    const eventPayload = transformEvent({
-      ...currentEvent,
-      _isDirty: true,
+    if (isNew) {
+      eventPayload = {
+        event: id,
+        enrollment,
+        programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
+        trackedEntity,
+        orgUnit: selectedOrgUnit.id,
+        program: programMetadata.id,
+      };
+    } else {
+      eventPayload = { ...currentEvent };
+    }
+
+    eventPayload = transformEvent({
+      ...eventPayload,
       occurredAt,
-      status: type == "submit" ? "COMPLETED" : "ACTIVE",
-      eventStatus: type == "submit" ? "COMPLETED" : "ACTIVE",
       dueDate: occurredAt,
       dataValues,
+      _isDirty: true,
+      status: type == "submit" ? "COMPLETED" : "ACTIVE",
+      eventStatus: type == "submit" ? "COMPLETED" : "ACTIVE",
     });
 
     console.log({ eventPayload });
-
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
   };
@@ -152,25 +128,13 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
         e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
     );
 
-    if (found) {
-      const formData = {
-        id: found.event,
-        ...found.dataValues,
-        isSaved: true,
-        status: found.status,
-        updatedAt: found.updatedAt,
-      };
-      setData(formData);
-      setDefaultData(_.cloneDeep(formData));
-      setFormStatus(FORM_ACTION_TYPES.EDIT);
-    } else {
-      const formData = { id: generateUid() };
-      setData(formData);
-      setDefaultData(_.cloneDeep(formData));
-      setFormStatus(FORM_ACTION_TYPES.ADD_NEW);
-      // trick to show SUBMIT button
-      // setFormStatus(FORM_ACTION_TYPES.EDIT);
-    }
+    const formData = found
+      ? { id: found.event, ...found.dataValues, isSaved: true, status: found.status, updatedAt: found.updatedAt }
+      : { id: generateUid(), isNew: true };
+
+    setData(formData);
+    setDefaultData(_.cloneDeep(formData));
+    setFormStatus(FORM_ACTION_TYPES.EDIT);
 
     return () => {
       clearForm();
@@ -191,7 +155,7 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
         formStatus={!disabled ? formStatus : FORM_ACTION_TYPES.VIEW}
         setFormStatus={setFormStatus}
         handleEditRow={handleEdit}
-        handleAddNewRow={handleAddNew}
+        handleAddNewRow={() => {}}
         editRowCallback={editRowCallback}
         showSubmitButtons
         maxDate={new Date()}
