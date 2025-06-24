@@ -19,7 +19,7 @@ function handleDispatchCurrentOfflineLoading({ id, percent }) {
 }
 
 function* handleOfflineLoadingStatusChange({ offlineLoading }) {
-  const { offlineSelectedOrgUnits } = yield select((state) => state.common);
+  const offlineSelectedOrgUnits = yield select((state) => state.common.offlineSelectedOrgUnits);
 
   try {
     if (offlineLoading) {
@@ -39,6 +39,7 @@ function* handleOfflineLoadingStatusChange({ offlineLoading }) {
       /**
        * pull data from server and save to indexedDB
        * */
+      console.log({ offlineSelectedOrgUnits, offlineLoading });
       yield call(trackedEntityManager.pull, {
         handleDispatchCurrentOfflineLoading,
         offlineSelectedOrgUnits,
@@ -57,6 +58,7 @@ function* handleOfflineLoadingStatusChange({ offlineLoading }) {
     }
   } catch (error) {
     yield put(setOfflineStatus(false));
+    yield put(setOfflineLoadingStatus(false));
     console.log("handleOfflineLoadingStatusChange - error", error);
   } finally {
     console.log("offlineLoading changed", offlineLoading);

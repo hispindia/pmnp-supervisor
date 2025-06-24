@@ -7,12 +7,11 @@ import moment from "moment";
 import { toDhis2Enrollments } from "../data/enrollment";
 import { chunk } from "lodash";
 
-export const pull = async ({
-  handleDispatchCurrentOfflineLoading,
-  offlineSelectedOrgUnits,
-}) => {
+export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
   try {
-    await db[TABLE_NAME].clear();
+    if (offlineSelectedOrgUnits && offlineSelectedOrgUnits.length > 0) {
+      await db[TABLE_NAME].clear();
+    }
     // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
 
@@ -54,19 +53,15 @@ export const pull = async ({
                   "incidentDate",
                   "followup",
                 ].join(",")}`,
-              ],
+              ]
             );
 
-            if (
-              !result.instances ||
-              result.instances.length === 0 ||
-              page > result.pageCount
-            ) {
+            if (!result.instances || result.instances.length === 0 || page > result.pageCount) {
               break;
             }
 
             console.log(
-              `ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`,
+              `ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`
             );
 
             const resultEnrollments = {
@@ -127,9 +122,7 @@ const findOffline = async () => {
 };
 
 const markOnline = async (enrollmentIds) => {
-  return await db[TABLE_NAME].where("enrollment")
-    .anyOf(enrollmentIds)
-    .modify({ isOnline: 1 });
+  return await db[TABLE_NAME].where("enrollment").anyOf(enrollmentIds).modify({ isOnline: 1 });
 };
 
 const pushAndMarkOnline = async (enrollments) => {

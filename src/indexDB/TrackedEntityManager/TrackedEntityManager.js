@@ -14,7 +14,10 @@ import { toDhis2TrackedEntities, toDhis2TrackedEntity } from "../data/trackedEnt
 
 export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
   try {
-    await db[TABLE_NAME].clear();
+    if (offlineSelectedOrgUnits && offlineSelectedOrgUnits.length > 0) {
+      await db[TABLE_NAME].clear();
+    }
+
     const programs = await programManager.getPrograms();
 
     for (let j = 0; j < offlineSelectedOrgUnits.length; j++) {

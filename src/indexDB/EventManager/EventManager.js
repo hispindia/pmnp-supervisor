@@ -69,7 +69,9 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
 export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
   try {
     // Delete the table
-    await db[TABLE_NAME].clear();
+    if (offlineSelectedOrgUnits && offlineSelectedOrgUnits.length > 0) {
+      await db[TABLE_NAME].clear();
+    }
     // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
     const programs = await programManager.getPrograms();
 
