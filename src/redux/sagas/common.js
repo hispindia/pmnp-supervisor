@@ -79,8 +79,11 @@ function* handlePushResult(result, message) {
       const errors = [];
 
       for (let i = 0; i < result.length; i++) {
-        const error = yield result[i].json();
-        errors.push(error);
+        try {
+          const error = yield result[i].json();
+
+          errors.push(error);
+        } catch (err) {}
       }
 
       const errorMessages = errors.map((error) =>
@@ -133,7 +136,7 @@ function* handlePushToServer() {
       duration: 0,
     });
 
-    console.log("handlePushToServer - error", error);
+    console.table(error);
   } finally {
     console.log("handlePushToServer - finally");
   }

@@ -241,8 +241,6 @@ const beforePersist = async (result, isOnline = 1) => {
 };
 
 const filterQueryBuilder = (query, filters) => {
-  console.log(filters);
-
   if (filters && filters.length > 0) {
     let queryBuilder = query;
 
