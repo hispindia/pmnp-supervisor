@@ -85,7 +85,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     console.log("handleAddNewRow", { updatedMetadata, data });
 
     // submit new event
-    const { id: event, disabled, ...dataValues } = row;
+    const { id: event, disabled, key, ...dataValues } = row;
     const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
 
     const eventPayload = transformEvent({
@@ -126,7 +126,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
 
     // save event
     const currentEvent = currentEvents.find((e) => e.event === row.id);
-    const { id, disabled, ...dataValues } = row;
+    const { id, disabled, key, ...dataValues } = row;
 
     const occurredAt = dataValues[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
 
