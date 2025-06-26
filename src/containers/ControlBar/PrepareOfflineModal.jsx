@@ -1,14 +1,18 @@
 import { Modal, Typography, Progress, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  setOfflineLoadingStatus,
-  resetCurrentOfflineLoading,
-  setOfflineSelectedOrgUnits,
-} from "@/redux/actions/common";
+import { setOfflineStatus } from "@/redux/actions/common";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import OrgUnitContainer from "./OrgUnit";
+
+import * as meManager from "@/indexDB/MeManager/MeManager";
+import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
+import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
+import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
+import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 const downloadMapping = [
   { id: "metadata", label: "Download metadata" },
@@ -17,10 +21,9 @@ const downloadMapping = [
   { id: "event", label: "Download events" },
 ];
 
-const PrepareOfflineModal = ({ open, onCancel }) => {
+const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { currentOfflineLoading, offlineLoading, offlineStatus } = useSelector((state) => state.common);
   const { programMetadata, orgUnits } = useSelector((state) => state.metadata);
 
   const userOrgUnits = useMemo(
@@ -29,19 +32,42 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
   );
 
   const [selectedOrgUnits, setSelectedOrgUnit] = useState({ selected: [] });
+  const [loading, setLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState({});
+  const [ready, setReady] = useState(false);
 
   const handleSelectOrgUnit = (orgUnit) => {
     const found = userOrgUnits.find(({ id }) => id === orgUnit.id);
     if (found) setSelectedOrgUnit(orgUnit);
   };
 
-  const handleDownload = () => {
-    const listId = selectedOrgUnits.selected.map((path) => ({
+  const handleDispatchCurrentOfflineLoading = ({ id, percent }) => {
+    setLoadingProgress({ id, percent });
+  };
+
+  const handleDownload = async () => {
+    setLoading(true);
+    const offlineSelectedOrgUnits = selectedOrgUnits.selected.map((path) => ({
       id: path.split("/").pop(),
     }));
-    dispatch(resetCurrentOfflineLoading());
-    dispatch(setOfflineSelectedOrgUnits(listId));
-    dispatch(setOfflineLoadingStatus(true));
+
+    // pull metadata from server and save to indexedDB
+    setLoadingProgress({ id: "metadata", percent: 0 });
+    await meManager.pull();
+    setLoadingProgress({ id: "metadata", percent: 15 });
+    await organisationUnitLevelsManager.pull();
+    setLoadingProgress({ id: "metadata", percent: 30 });
+    await organisationUnitManager.pull();
+    setLoadingProgress({ id: "metadata", percent: 70 });
+    await programManager.pull();
+    setLoadingProgress({ id: "metadata", percent: 100 });
+    // pull data from server and save to indexedDB
+    const args = { handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits };
+    await trackedEntityManager.pull(args);
+    await enrollmentManager.pull(args);
+    await eventManager.pull(args);
+    setLoading(false);
+    setReady(true);
   };
 
   return (
@@ -53,8 +79,11 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
       maskClosable={false}
       okText={t("OK")}
       onCancel={onCancel}
-      onOk={() => window.location.reload()}
-      okButtonProps={{ disabled: !offlineStatus }}
+      onOk={() => {
+        dispatch(setOfflineStatus(true));
+        window.location.reload();
+      }}
+      okButtonProps={{ disabled: !ready }}
     >
       <div
         style={{
@@ -67,7 +96,7 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
         <OrgUnitContainer limit={3} singleSelection={false} onChange={handleSelectOrgUnit} value={selectedOrgUnits} />
         <Button
           type="primary"
-          disabled={!selectedOrgUnits.selected.length || offlineLoading || offlineStatus}
+          disabled={!selectedOrgUnits.selected.length || loading || ready}
           onClick={handleDownload}
         >
           {t("download")}
@@ -77,14 +106,14 @@ const PrepareOfflineModal = ({ open, onCancel }) => {
         {t("downloadOfflineHelper")}
       </Typography>
       <div style={{ marginTop: 8, marginBottom: 24 }}>
-        {(offlineLoading || offlineStatus) &&
+        {(loading || ready) &&
           downloadMapping.map(({ label }, step) => {
-            const currentStep = downloadMapping.findIndex(({ id }) => id === currentOfflineLoading.id);
+            const currentStep = downloadMapping.findIndex(({ id }) => id === loadingProgress.id);
 
             let percent = 0;
             if (currentStep > -1) {
               if (currentStep > step) percent = 100;
-              if (currentStep === step) percent = currentOfflineLoading.percent;
+              if (currentStep === step) percent = loadingProgress.percent;
             }
 
             return (
