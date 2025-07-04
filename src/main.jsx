@@ -15,9 +15,10 @@ import configureStore, { history, mainStore } from "./redux/store";
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import { ConnectedRouter } from "connected-react-router";
+import { LOCALE_CODES } from "./constants/app-config";
 import Layout from "./components/Layout";
 
-const locales = ["en", "lo"];
+const locales = [LOCALE_CODES.english, LOCALE_CODES.tagalog, LOCALE_CODES.cebuano];
 let resources = {};
 
 locales.forEach((l) => {

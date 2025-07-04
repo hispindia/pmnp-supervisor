@@ -51,7 +51,6 @@ const locale = {
     en: "Exit",
     lo: "ອອກ",
   },
-
   registeredYear: {
     en: "Registered Year",
     lo: "ປີລົງທະບຽນ",

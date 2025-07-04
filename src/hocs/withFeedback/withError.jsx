@@ -1,17 +1,15 @@
 import React, { useEffect } from "react";
 import { Alert, notification, Row } from "antd";
+import { useTranslation } from "react-i18next";
 
 const withError = (options) => (Component) => {
-  return ({
-    errorMessage,
-    errorDisplaying = null,
-    afterError = () => {},
-    ...props
-  }) => {
+  const { t } = useTranslation();
+
+  return ({ errorMessage, errorDisplaying = null, afterError = () => {}, ...props }) => {
     useEffect(() => {
       if (errorMessage) {
         const args = {
-          message: "Error!!!",
+          message: t("Error") + "!!!",
           description: errorMessage,
           placement: "bottomRight",
           duration: 0,
