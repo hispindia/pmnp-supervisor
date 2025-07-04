@@ -100,7 +100,7 @@ const AppContainer = () => {
         dispatch(setProgramMetadataMember(results[4]));
         dispatch(setOrgUnitLevels(results[3].organisationUnitLevels));
         const savedSelectedOrgUnit = sessionStorage.getItem("selectedOrgUnit");
-        i18n.changeLanguage(results[2].settings.keyUiLocale);
+        i18n.changeLanguage(results[2].settings.keyDbLocale);
         if (savedSelectedOrgUnit) {
           let orgUnitJsonData = null;
           try {

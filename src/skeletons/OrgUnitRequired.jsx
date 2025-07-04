@@ -3,8 +3,8 @@ import withError from "../hocs/withFeedback/withError";
 import { useTranslation } from "react-i18next";
 
 const OrgUnitRequired = () => {
-  const { t } = useTranslation();
   const Component = useMemo(() => withError()(() => null), []);
+  const { t } = useTranslation();
   return <Component errorMessage={t("orgUnitRequired")} errorDisplaying={t("orgUnitRequired")} />;
 };
 

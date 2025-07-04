@@ -3,9 +3,9 @@ import { Alert, notification, Row } from "antd";
 import { useTranslation } from "react-i18next";
 
 const withError = (options) => (Component) => {
-  const { t } = useTranslation();
-
   return ({ errorMessage, errorDisplaying = null, afterError = () => {}, ...props }) => {
+    const { t } = useTranslation();
+
     useEffect(() => {
       if (errorMessage) {
         const args = {
