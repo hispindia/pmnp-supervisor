@@ -142,7 +142,7 @@ export default class MetadataApiClass extends BaseApiClass {
 
   getOptionSets = async () => {
     return await pull(this.baseUrl, this.username, this.password, `/api/optionSets`, { paging: false }, [
-      "fields=id,displayName,options[id,displayName,code,sortOrder,style]",
+      "fields=id,displayName,options[id,displayName,displayFormName,code,sortOrder,style]",
     ]);
   };
 
@@ -166,7 +166,7 @@ export default class MetadataApiClass extends BaseApiClass {
       optionSets = cacheOptions.value;
     } else {
       optionSets = await pull(this.baseUrl, this.username, this.password, `/api/optionSets`, { paging: false }, [
-        "fields=id,displayName,options[id,displayName,code,sortOrder,style]",
+        "fields=id,displayName,options[id,displayName,displayFormName,code,sortOrder,style]",
       ]);
 
       const newCacheOptions = {
@@ -216,7 +216,7 @@ export default class MetadataApiClass extends BaseApiClass {
         tea.valueSet = optionSets.optionSets
           .find((os) => os.id === ptea.trackedEntityAttribute.optionSet.id)
           .options.map((o) => {
-            return { value: o.code, label: o.displayName, color: o.style?.color || null };
+            return { value: o.code, label: o.displayFormName, color: o.style?.color || null };
           });
       }
       return tea;
