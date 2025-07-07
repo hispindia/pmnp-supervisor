@@ -9,7 +9,7 @@ const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
   metadata
     .filter((e) => !e?.hiddenCol && (e.hasOwnProperty("displayInList") ? e.displayInList : true))
     .forEach((ele) => {
-      let textFields = !_.isEmpty(ele?.translations) ? ele.translations[locale] : ele.displayName;
+      let textFields = !_.isEmpty(ele?.translations) ? ele.translations[locale] : ele.displayFormName;
       const colC = {
         dataField: ele.code,
         text: textFields,
