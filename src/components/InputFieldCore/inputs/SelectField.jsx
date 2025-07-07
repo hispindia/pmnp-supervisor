@@ -29,8 +29,10 @@ const SelectField = ({
   const { t } = useTranslation();
 
   const options = valueSet.map((e) => {
-    e.label = locale ? (locale != "en" ? e.translations[locale] : e.label) : e.label;
-    return e;
+    if (!locale || locale === "en" || !e.translations) return e;
+    const found = e.translations.find((t) => t.locale === locale && t.property === "FORM_NAME");
+    if (!found) return e;
+    return { ...e, label: found.value };
   });
 
   return (

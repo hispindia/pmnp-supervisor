@@ -29,8 +29,7 @@ const fetchWrapper = (...input) => {
         console.log(err);
         if (err.message === "Unauthorized") {
           alert("Session expired. Please login again.");
-          window.location.href =
-            "../../../dhis-web-commons-security/logout.action";
+          window.location.href = "../../../dhis-web-commons-security/logout.action";
         }
         rj(err);
       });
@@ -38,15 +37,7 @@ const fetchWrapper = (...input) => {
 };
 
 const pull = (baseUrl, username, password, endPoint, pagingObject, params) => {
-  const {
-    paging,
-    pageSize,
-    totalPages,
-    page,
-    filter,
-    order,
-    skipPaging = false,
-  } = pagingObject ? pagingObject : {};
+  const { paging, pageSize, totalPages, page, filter, order, skipPaging = false } = pagingObject ? pagingObject : {};
 
   endPoint += "?";
   if (filter) {
@@ -75,9 +66,7 @@ const pull = (baseUrl, username, password, endPoint, pagingObject, params) => {
   return fetchWrapper(baseUrl + endPoint, {
     credentials: "include",
     headers: {
-      Authorization: !username
-        ? ""
-        : "Basic " + btoa(`${username}:${password}`),
+      Authorization: !username ? "" : "Basic " + btoa(`${username}:${password}`),
     },
   })
     .then((result) => result.json())
@@ -92,9 +81,7 @@ const push = (baseUrl, username, password, endPoint, payload, method) => {
     body: JSON.stringify(payload),
     headers: {
       "Content-Type": "application/json",
-      Authorization: !username
-        ? ""
-        : "Basic " + btoa(`${username}:${password}`),
+      Authorization: !username ? "" : "Basic " + btoa(`${username}:${password}`),
     },
   }).then((result) => {
     if (result.headers.get("content-type").includes("application/json")) {
@@ -112,4 +99,26 @@ const push = (baseUrl, username, password, endPoint, payload, method) => {
   // });
 };
 
-export { pull, push };
+const purePush = (baseUrl, username, password, endPoint, payload, method, headers) => {
+  return fetchWrapper(baseUrl + endPoint, {
+    method: method || "POST",
+    credentials: "include",
+    body: payload,
+    headers: { Authorization: !username ? "" : "Basic " + btoa(`${username}:${password}`), ...headers },
+  }).then((result) => {
+    if (result.headers.get("content-type").includes("application/json")) {
+      return result.json().then((res) => {
+        return res;
+      });
+    } else {
+      alert("Session expired. Please login again.");
+      window.location.href = "../../../dhis-web-commons-security/logout.action";
+      throw new Error("Invalid content type, expected application/json");
+    }
+  });
+  // .catch((err) => {
+  //   return err;
+  // });
+};
+
+export { pull, push, purePush };
