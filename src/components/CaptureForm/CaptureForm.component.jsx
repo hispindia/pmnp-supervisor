@@ -204,7 +204,7 @@ function CaptureForm(props) {
         <div className="row">
           <div class="card-body">
             <h5 class="card-title" section-id={pSection.id}>
-              {pSection.displayName}
+              {pSection.displayFormName}
             </h5>
             <p class="card-text">
               <div className="row" style={{ alignItems: "flex-end" }}>
@@ -250,7 +250,7 @@ function CaptureForm(props) {
           <div className="row">
             <div class="card-body">
               <h5 class="card-title" section-id={pSection.id}>
-                {pSection.displayName}
+                {pSection.displayFormName}
               </h5>
               {pSection.description && <Alert type="info" message={pSection.description} showIcon />}
               <p class="card-text">
