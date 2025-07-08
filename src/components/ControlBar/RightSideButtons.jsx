@@ -30,6 +30,7 @@ const RightSideButtons = ({ onClickHelp, onClickExit, helpLabel, exitLabel }) =>
           onChange={async (value) => {
             setLoading(true);
             await baseApi.purePush("/api/userSettings/keyDbLocale", value);
+            localStorage.removeItem("optionSets");
             window.location.reload();
           }}
         >
