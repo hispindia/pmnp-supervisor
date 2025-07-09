@@ -315,7 +315,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
         return obj;
       }, {});
 
-    console.log(locale, transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setColumns(transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setDataValuesTranslate(tempDataValuesTranslate);
 
