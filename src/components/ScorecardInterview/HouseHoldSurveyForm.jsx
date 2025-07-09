@@ -19,7 +19,7 @@ import { calculateHouseHoldFields, calculateHouseHoldFieldsFromAttribute } from 
 import { hideSectionRules, houseHoldSurveyRules } from "./houseHoldSurveyRules";
 import { clearHiddenFieldData, updateMetadata } from "./utils";
 
-const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
+const HouseHoldSurveyForm = ({ interviewMetadata, interviewData = {}, onClose = () => {}, disabled }) => {
   const i18n = useTranslation();
   const locale = i18n.language || "en";
 
@@ -107,9 +107,9 @@ const HouseHoldSurveyForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
     houseHoldSurveyRules(metadata, newData);
     hideSectionRules(metadata, memberData, programMetadata);
-    calculateHouseHoldFields(newData, memberData, interviewData);
+    calculateHouseHoldFields(newData, memberData, interviewData, metadata);
     // calculate from profile, not member event forms
-    calculateHouseHoldFieldsFromAttribute(newData, currentCascade, interviewData);
+    calculateHouseHoldFieldsFromAttribute(newData, currentCascade, interviewData, interviewMetadata);
 
     clearHiddenFieldData(metadata, data);
     if (previousData) setFormDirty(true);

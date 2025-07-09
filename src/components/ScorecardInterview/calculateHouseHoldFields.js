@@ -36,32 +36,37 @@ export const countRangeValue = (data, de_ids, min, max) => {
   return count.length;
 };
 
-export const calculateHouseHoldFieldsFromAttribute = (newData, interviewCascadeData, interviewData) => {
+export const calculateHouseHoldFieldsFromAttribute = (newData, currentCascade, interviewData, interviewMetadata) => {
   //Score_Number of 4Ps Members
-  newData["MQxRIx9bGdi"] = countValue(interviewCascadeData, "wxN2PuLymoY", "1");
+  newData["MQxRIx9bGdi"] = countValue(currentCascade, "wxN2PuLymoY", "1");
   //Score_Number of IPs
-  newData["qN11CGOlmok"] = countValue(interviewCascadeData, "OiOvGqVEyY9", "1");
+  newData["qN11CGOlmok"] = countValue(currentCascade, "OiOvGqVEyY9", "1");
   //Score_Number of PWDs
-  newData["iWvv6vXisHf"] = countValue(interviewCascadeData, "xwMJHEDdpGc", "1");
+  newData["iWvv6vXisHf"] = countValue(currentCascade, "xwMJHEDdpGc", "1");
   //Score_Number of Philhealth Members
-  newData["dR8u9RQeFFy"] = countValue(interviewCascadeData, "JjFcU1L7Ll1", "1");
+  newData["dR8u9RQeFFy"] = countValue(currentCascade, "JjFcU1L7Ll1", "1");
 
-  // const respondent = interviewCascadeData.find((item) => item?.["Cn37lbyhz6f"] === interviewData["SrFa2O3m6ff"]);
-  // console.log(respondent);
+  const foundMetadata = interviewMetadata.find((m) => m.id === "SrFa2O3m6ff");
+  if (foundMetadata) {
+    const transformed = foundMetadata.valueSet.reduce((acc, curr) => ({ ...acc, [curr.memberId]: curr }), {});
 
-  // if (respondent) {
-  //   newData["lVOceUugk7C"] = respondent["OiOvGqVEyY9"];
-  //   newData["TKSp7xKJEan"] = respondent["wxN2PuLymoY"];
-  //   newData["nJ9peoKuLoX"] = respondent["JjFcU1L7Ll1"];
-  //   newData["Wn1oHtk2CUm"] = respondent["xwMJHEDdpGc"];
-  // }
+    const respondent = currentCascade.find(
+      (item) => transformed[item?.["Cn37lbyhz6f"]]?.value === interviewData["SrFa2O3m6ff"]
+    );
 
-  // newData["lVOceUugk7C"] = respondent["OiOvGqVEyY9"];
-  // newData["TKSp7xKJEan"] = respondent["wxN2PuLymoY"];
-  // newData["nJ9peoKuLoX"] = respondent["JjFcU1L7Ll1"];
+    if (respondent) {
+      newData["lVOceUugk7C"] = respondent["OiOvGqVEyY9"];
+      newData["TKSp7xKJEan"] = respondent["wxN2PuLymoY"];
+      newData["nJ9peoKuLoX"] = respondent["JjFcU1L7Ll1"];
+      newData["Wn1oHtk2CUm"] = respondent["xwMJHEDdpGc"];
+    }
+  }
 };
 
 export const calculateHouseHoldFields = (newData, interviewCascadeData, interviewData) => {
+  //Score_Visit Number (WGqRCnEYzux) Show the DE value for the visit number selected in interview details stage
+  newData["WGqRCnEYzux"] = interviewData["Wdg76PCqsBn"];
+
   //Score_Number of eligible children
   newData["MJEA2zUcLU5"] = countRangeValue(interviewCascadeData, "Hc9Vgt4LXjb", 0, 4);
   //Score_Eligible Children 0-59 mos old

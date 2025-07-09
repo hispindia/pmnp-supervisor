@@ -18,7 +18,7 @@ export const getMaxHHMemberID = (cascadeData) => {
   return paddedMemberIDs;
 };
 
-export const getHouseholdMemberIDs = (cascadeData) => {
+export const getHouseholdMemberValueSet = (cascadeData) => {
   if (!cascadeData) {
     return [];
   }
@@ -38,7 +38,7 @@ export const getHouseholdMemberIDs = (cascadeData) => {
       if (member["IENWcinF8lM"]) {
         label += ` ${member["IENWcinF8lM"]}`;
       }
-      return label;
+      return { label, value: label, memberId: member["Cn37lbyhz6f"] };
     })
     .filter(Boolean);
 

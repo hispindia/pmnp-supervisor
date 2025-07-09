@@ -23,6 +23,11 @@ const locale = {
     [cebuano]: "Rehistro sa Panimalay",
     [tagalog]: "Pagpaparehistro ng Sambahayan",
   },
+  householdMembersWithNumber: {
+    [english]: "1. Household Members",
+    [cebuano]: "1. Mga Miyembro sa Panimalay",
+    [tagalog]: "1. Mga Miyembro ng Sambahayan",
+  },
   householdMembers: {
     [english]: "Household Members",
     [cebuano]: "Mga Miyembro sa Panimalay",
@@ -34,14 +39,14 @@ const locale = {
     [tagalog]: "Panayam sa Scorecard",
   },
   interviewResult: {
-    [english]: "Interview Result",
-    [cebuano]: "Resulta sa Interbyu",
-    [tagalog]: "Resulta ng Panayam",
+    [english]: "3. Interview Result",
+    [cebuano]: "3. Resulta sa Interbyu",
+    [tagalog]: "3. Resulta ng Panayam",
   },
   "Household Survey": {
-    [english]: "Household Survey",
-    [cebuano]: "Panimalay nga Survey",
-    [tagalog]: "Pagsusuri ng Sambahayan",
+    [english]: "2. General Survey",
+    [cebuano]: "2. Panimalay nga Survey",
+    [tagalog]: "2. Pagsusuri ng Sambahayan",
   },
   close: {
     [english]: "Close",
@@ -83,6 +88,16 @@ const locale = {
     [cebuano]: "Sunod",
     [tagalog]: "Susunod",
   },
+  Start: {
+    [english]: "Start",
+    [cebuano]: "Sugdi",
+    [tagalog]: "Magsimula",
+  },
+  View: {
+    [english]: "View",
+    [cebuano]: "View",
+    [tagalog]: "View",
+  },
   yes: {
     [english]: "Yes",
     [cebuano]: "Oo",
@@ -95,8 +110,8 @@ const locale = {
   },
   select: {
     [english]: "Select",
-    [cebuano]: "Select",
-    [tagalog]: "Select",
+    [cebuano]: "Pagpili",
+    [tagalog]: "Piliin",
   },
   thisFieldIsRequired: {
     [english]: "This field is required",
@@ -110,8 +125,8 @@ const locale = {
   },
   addNewInterview: {
     [english]: "Add New Interview",
-    [cebuano]: "Add New Interview",
-    [tagalog]: "Add New Interview",
+    [cebuano]: "Idugang Ang Bag-Ong Interbyu",
+    [tagalog]: "Magdagdag Ng Bagong Pakikipanayam",
   },
   save: {
     [english]: "Save",
@@ -256,7 +271,7 @@ const locale = {
   },
   report: {
     [english]: "Report",
-    [cebuano]: "Report",
+    [cebuano]: "Ireport",
     [tagalog]: "Ulat",
   },
   downloadOfflineHelper: {

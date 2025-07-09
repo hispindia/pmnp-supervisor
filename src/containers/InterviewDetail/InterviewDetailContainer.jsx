@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { HAS_INITIAN_NOVALUE } from "@/components/constants";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -10,8 +11,7 @@ import {
   HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
 } from "@/constants/app-config";
-import { getHouseholdMemberIDs } from "@/utils/member";
-import _ from "lodash";
+import { getHouseholdMemberValueSet } from "@/utils/member";
 
 const InterviewDetailContainer = () => {
   const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
@@ -103,12 +103,7 @@ const convertOriginMetadata = (programMetadata, currentCascade) => {
   //   attr.code = attr.id;
   // });
 
-  const householdMemberIDs = getHouseholdMemberIDs(currentCascade);
-  const householdMembersValueSet = householdMemberIDs.map((id) => ({
-    value: id,
-    label: id,
-  }));
-
+  const householdMembersValueSet = getHouseholdMemberValueSet(currentCascade);
   const interviewDetailsProgramStage = programMetadata.programStages.find(
     (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
   );

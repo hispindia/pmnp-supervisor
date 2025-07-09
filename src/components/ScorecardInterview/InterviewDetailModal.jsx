@@ -32,7 +32,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
 
   const items = [
     {
-      label: t("householdMembers"),
+      label: t("householdMembersWithNumber"),
       key: "1",
       children: (
         <Card classNames={{ body: "p-0 px-1" }}>
@@ -51,7 +51,12 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
       key: "2",
       children: (
         <Card>
-          <HouseHoldSurveyForm interviewData={interviewData} onClose={onClose} disabled={disabled} />
+          <HouseHoldSurveyForm
+            interviewMetadata={metadata}
+            interviewData={interviewData}
+            onClose={onClose}
+            disabled={disabled}
+          />
         </Card>
       ),
     },
