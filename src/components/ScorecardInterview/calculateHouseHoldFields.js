@@ -42,34 +42,23 @@ export const calculateHouseHoldFieldsFromAttribute = (newData, interviewCascadeD
   //Score_Number of IPs
   newData["qN11CGOlmok"] = countValue(interviewCascadeData, "OiOvGqVEyY9", "1");
   //Score_Number of PWDs
+  newData["iWvv6vXisHf"] = countValue(interviewCascadeData, "xwMJHEDdpGc", "1");
   //Score_Number of Philhealth Members
   newData["dR8u9RQeFFy"] = countValue(interviewCascadeData, "JjFcU1L7Ll1", "1");
-  //Score_Number of Pregnant Women
-  newData["TQ3aHbROh6S"] = countValue(interviewCascadeData, "ycBIHr9bYyw", "1");
-  //Score_Number of women of reproductive age
-  newData["fSfUdKcDszD"] = countValue(interviewCascadeData, "WbgQ0SZFiAU", "1");
 
-  // Pregnant women identified in the HH	LNTl0FjkMaD	HHM_Pregnancy status	ycBIHr9bYyw	"Yes, If any member has HHM_Pregnancy status = Yes
-  const [count_pregnancy_status, count_pregnancy_status_2] = countValues(interviewCascadeData, "ycBIHr9bYyw", [
-    "1",
-    "2",
-  ]);
-  newData["LNTl0FjkMaD"] = count_pregnancy_status > 0 ? "true" : undefined;
+  // const respondent = interviewCascadeData.find((item) => item?.["Cn37lbyhz6f"] === interviewData["SrFa2O3m6ff"]);
+  // console.log(respondent);
 
-  // Non-pregnant woman who recently gave birth within the last 28 days identified in the HH	yZXpvusfhSC	HHM_Pregnancy status	ycBIHr9bYyw	Yes, If any member has HHM_Pregnancy status = No, but recently gave birth within the last 28 days
-  newData["yZXpvusfhSC"] = count_pregnancy_status_2 > 0 ? "true" : undefined;
+  // if (respondent) {
+  //   newData["lVOceUugk7C"] = respondent["OiOvGqVEyY9"];
+  //   newData["TKSp7xKJEan"] = respondent["wxN2PuLymoY"];
+  //   newData["nJ9peoKuLoX"] = respondent["JjFcU1L7Ll1"];
+  //   newData["Wn1oHtk2CUm"] = respondent["xwMJHEDdpGc"];
+  // }
 
-  // Pregnant women identified in the HH	LNTl0FjkMaD	HHM_Pregnancy status	ycBIHr9bYyw	"Yes, If any member has HHM_Pregnancy status = Yes
-  const count_menstrual_history = countValue(interviewCascadeData, "WbgQ0SZFiAU", "1");
-  newData["usT2QWekRjm"] = count_menstrual_history > 0 ? "true" : undefined;
-
-  const respondent = interviewCascadeData.find((item) => item?.["Cn37lbyhz6f"] === interviewData["SrFa2O3m6ff"]);
-
-  if (respondent) {
-    newData["lVOceUugk7C"] = respondent["OiOvGqVEyY9"];
-    newData["TKSp7xKJEan"] = respondent["wxN2PuLymoY"];
-    newData["nJ9peoKuLoX"] = respondent["JjFcU1L7Ll1"];
-  }
+  // newData["lVOceUugk7C"] = respondent["OiOvGqVEyY9"];
+  // newData["TKSp7xKJEan"] = respondent["wxN2PuLymoY"];
+  // newData["nJ9peoKuLoX"] = respondent["JjFcU1L7Ll1"];
 };
 
 export const calculateHouseHoldFields = (newData, interviewCascadeData, interviewData) => {
@@ -83,6 +72,20 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
   newData["dCux2E2IbaS"] = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 6, 23);
   //Score_Eligible Children 24-59 mos old
   newData["kT9vaHCgFDZ"] = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 24, 59);
+  //Score_Number of Pregnant Women
+  newData["TQ3aHbROh6S"] = countValue(interviewCascadeData, "ycBIHr9bYyw", "1");
+  //Score_Number of women of reproductive age
+  newData["fSfUdKcDszD"] = countValue(interviewCascadeData, "WbgQ0SZFiAU", "1");
+  //Yes, If any member has HHM_Pregnancy status = 1
+  newData["LNTl0FjkMaD"] = newData["TQ3aHbROh6S"] > 0 ? "true" : undefined;
+  //Yes, If any member has HHM_Postpartum = true
+  newData["yZXpvusfhSC"] = countValue(interviewCascadeData, "se8TXlLUzh8", "true") > 0 ? "true" : undefined;
+  //Yes, If any member has HHM_Postpartum = false
+  newData["usT2QWekRjm"] = countValue(interviewCascadeData, "se8TXlLUzh8", "false") > 0 ? "true" : undefined;
+
+  // Pregnant women identified in the HH	LNTl0FjkMaD	HHM_Pregnancy status	ycBIHr9bYyw	"Yes, If any member has HHM_Pregnancy status = Yes
+  const count_menstrual_history = countValue(interviewCascadeData, "WbgQ0SZFiAU", "1");
+  newData["usT2QWekRjm"] = count_menstrual_history > 0 ? "true" : undefined;
 
   //"Yes, if yes for any member of the HH
   // No, if no for any member and none of them reported yes
@@ -156,11 +159,4 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
   // Child less than 5 yrs identified in the HH	Ud7pdtnOz0p	Age in years	Hc9Vgt4LXjb	Yes, if any member has Age in years < 5
   const count_age_lt_5 = countRangeValue(interviewCascadeData, "RoSxLAB5cfo", 0, 60);
   newData["Ud7pdtnOz0p"] = count_age_lt_5 > 0 ? "true" : undefined;
-
-  const respondent = interviewCascadeData.find((item) => item?.["Cn37lbyhz6f"] === interviewData["SrFa2O3m6ff"]);
-
-  if (respondent) {
-    newData["MKR5nlRe5EJ"] = respondent["NOKzq4dAKF7"];
-    newData["WGqRCnEYzux"] = respondent["Wdg76PCqsBn"];
-  }
 };

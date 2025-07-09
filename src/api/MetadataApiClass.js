@@ -120,7 +120,7 @@ export default class MetadataApiClass extends BaseApiClass {
 
   getProgramMetadata = async (program) => {
     const p = await pull(this.baseUrl, this.username, this.password, `/api/programs/${program}`, { paging: false }, [
-      "fields=programSections[id,name,trackedEntityAttributes,displayName,displayFormName],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[attributeValues,id,displayName,displayFormName,displayShortName,valueType,optionSet[id]]],programStages[programStageSections[id,dataElements,displayName,displayFormName,description],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
+      "fields=programSections[id,name,trackedEntityAttributes,displayName,displayFormName,translations],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[attributeValues,id,displayName,displayFormName,translations,displayShortName,valueType,optionSet[id]]],programStages[programStageSections[id,dataElements,displayName,displayFormName,translations,description],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
     ]);
 
     return await this.convertProgramMetadata(p);
@@ -128,7 +128,7 @@ export default class MetadataApiClass extends BaseApiClass {
 
   getProgramsMetadata = async () => {
     const programs = await pull(this.baseUrl, this.username, this.password, `/api/programs`, { paging: false }, [
-      "fields=programSections[id,name,trackedEntityAttributes,displayName,displayFormName],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[*,mandatory,displayInList,trackedEntityAttribute[*,attributeValues,id,displayName,displayFormName,displayShortName,valueType,optionSet[id,code,name,translations,attributeValues,sortOrder,options[id,code,name,translations,attributeValues,sortOrder]]]],programStages[programStageSections[id,dataElements,displayName,displayFormName,description],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
+      "fields=programSections[id,name,trackedEntityAttributes,displayName,displayFormName,translations],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[*,mandatory,displayInList,trackedEntityAttribute[*,attributeValues,id,displayName,displayFormName,translations,displayShortName,valueType,optionSet[id,code,name,translations,attributeValues,sortOrder,options[id,code,name,translations,attributeValues,sortOrder]]]],programStages[programStageSections[id,dataElements,displayName,displayFormName,translations,description],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
     ]);
 
     if (programs.programs) {
@@ -142,7 +142,7 @@ export default class MetadataApiClass extends BaseApiClass {
 
   getOptionSets = async () => {
     return await pull(this.baseUrl, this.username, this.password, `/api/optionSets`, { paging: false }, [
-      "fields=id,displayName,options[id,displayName,displayFormName,code,sortOrder,style]",
+      "fields=id,displayName,options[id,displayName,displayFormName,translations,code,sortOrder,style]",
     ]);
   };
 
@@ -166,7 +166,7 @@ export default class MetadataApiClass extends BaseApiClass {
       optionSets = cacheOptions.value;
     } else {
       optionSets = await pull(this.baseUrl, this.username, this.password, `/api/optionSets`, { paging: false }, [
-        "fields=id,displayName,options[id,displayName,displayFormName,code,sortOrder,style]",
+        "fields=id,displayName,options[id,displayName,displayFormName,translations,code,sortOrder,style]",
       ]);
 
       const newCacheOptions = {
@@ -195,6 +195,7 @@ export default class MetadataApiClass extends BaseApiClass {
         valueSet: null,
         displayInList: ptea.displayInList,
         disabled: defaultProgramTrackedEntityAttributeDisable.includes(ptea.trackedEntityAttribute.id),
+        translations: ptea.trackedEntityAttribute.translations,
       };
 
       const foundAttr = ptea.trackedEntityAttribute.attributeValues.find(
@@ -216,7 +217,12 @@ export default class MetadataApiClass extends BaseApiClass {
         tea.valueSet = optionSets.optionSets
           .find((os) => os.id === ptea.trackedEntityAttribute.optionSet.id)
           .options.map((o) => {
-            return { value: o.code, label: o.displayFormName, color: o.style?.color || null };
+            return {
+              value: o.code,
+              label: o.displayFormName,
+              color: o.style?.color || null,
+              translations: o.translations,
+            };
           });
       }
       return tea;
@@ -238,6 +244,7 @@ export default class MetadataApiClass extends BaseApiClass {
             valueSet: null,
             url: psde.dataElement.url,
             valueType: psde.dataElement.valueType,
+            translations: psde.dataElement.translations,
           };
 
           const foundAttr = psde.dataElement.attributeValues.find(
@@ -259,7 +266,12 @@ export default class MetadataApiClass extends BaseApiClass {
             dataElement.valueSet = optionSets.optionSets
               .find((os) => os.id === psde.dataElement.optionSet.id)
               .options.map((o) => {
-                return { value: o.code, label: o.displayName, color: o.style?.color || null };
+                return {
+                  value: o.code,
+                  label: o.displayName,
+                  color: o.style?.color || null,
+                  translations: o.translations,
+                };
               });
           }
           return dataElement;

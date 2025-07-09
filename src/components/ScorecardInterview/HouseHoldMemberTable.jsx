@@ -1,5 +1,5 @@
 import BootstrapTable from "react-bootstrap-table-next";
-import { generateUid, TableColumn } from "@/utils";
+import { generateUid, pickTranslation, TableColumn } from "@/utils";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -127,7 +127,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       .filter((tea) => displayList.includes(tea.id))
       .map((tea) => {
         const teaObject = {
-          title: tea.displayFormName,
+          title: pickTranslation(tea, i18n.language),
           dataIndex: tea.id,
           key: tea.id,
           valueSet: tea.valueSet,

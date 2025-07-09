@@ -1,7 +1,8 @@
 import React from "react";
-import { generateUid } from "@/utils";
-import _ from "lodash";
+import { generateUid, pickTranslation } from "@/utils";
 import { FAMILY_UID_ATTRIBUTE_ID } from "@/constants/app-config";
+import i18n from "i18next";
+import _ from "lodash";
 
 const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
   const cols = [];
@@ -9,11 +10,13 @@ const transformMetadataToColumns = (metadata, locale, dataValuesTranslate) => {
   metadata
     .filter((e) => !e?.hiddenCol && (e.hasOwnProperty("displayInList") ? e.displayInList : true))
     .forEach((ele) => {
-      let textFields = !_.isEmpty(ele?.translations) ? ele.translations[locale] : ele.displayFormName;
+      let textFields = pickTranslation(ele, locale);
+
       const colC = {
         dataField: ele.code,
         text: textFields,
       };
+
       // additionCol
       if (ele.additionCol)
         colC.classes = (cell, row, rowIndex, colIndex) => {
@@ -79,29 +82,21 @@ const transformData = (metadata, datas, dataValuesTranslate, locale) => {
     d.key = index;
     // change "true"/"false" to -> "yes"/"no"
     Object.entries(d).forEach(([index, value]) => {
-      if (value === "true") {
-        d[index] = "Yes";
-      }
-
-      if (value === "false") {
-        d[index] = "No";
-      }
+      if (value === "true") d[index] = i18n.t("yes");
+      if (value === "false") d[index] = i18n.t("no");
     });
 
-    if (d.id == null) {
-      d.id = generateUid();
-    }
+    if (d.id == null) d.id = generateUid();
 
     metadata
       .filter((e) => e.valueSet && e.valueSet.length > 0)
       .forEach((md) => {
         let displayValue = d[md.code];
-
-        if (dataValuesTranslate) {
-          const translateDisplayValue = dataValuesTranslate[md.code][d[md.code]];
-
-          displayValue = translateDisplayValue ? translateDisplayValue : d[md.code];
+        const foundOption = md.valueSet.find((v) => v.value === displayValue);
+        if (foundOption) {
+          displayValue = pickTranslation(foundOption, locale);
         }
+
         d[md.code] = displayValue;
       });
   });

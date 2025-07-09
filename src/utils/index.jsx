@@ -7,6 +7,20 @@ import { useTranslation } from "react-i18next";
 const { Option } = Select;
 const { Search } = Input;
 
+const fieldMapping = { formName: "FORM_NAME", description: "DESCRIPTION", name: "NAME" };
+export const pickTranslation = (object, language, field = "formName") => {
+  if (!object) return "";
+  const defaultValue =
+    object["displayName"] || object["displayFormName"] || object["name"] || object["label"] || object[field];
+
+  if (!object.translations?.length > 0) return defaultValue;
+
+  const foundTranslation = object.translations.find((t) => t.property === fieldMapping[field] && t.locale === language);
+  if (!foundTranslation) return defaultValue;
+
+  return foundTranslation.value;
+};
+
 const sample = (d, fn = Math.random) => {
   if (d.length === 0) {
     return;

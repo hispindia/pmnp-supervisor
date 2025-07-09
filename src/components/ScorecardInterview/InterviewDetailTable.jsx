@@ -1,4 +1,4 @@
-import { generateUid } from "@/utils";
+import { generateUid, pickTranslation } from "@/utils";
 import { useEffect, useMemo, useState } from "react";
 import { Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -302,20 +302,27 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
         obj[e.code] = e.valueSet.reduce((ob, op) => {
           ob[op.value] = op.label;
           if (op.translations) {
-            ob[op.value] = { ...op.translations, en: op.label };
+            ob[op.value] = {
+              ...op.translations.reduce(
+                (acc, { locale }) => ({ ...acc, [locale]: pickTranslation({ ...op, name: op.label }, locale) }),
+                {}
+              ),
+              en: op.label,
+            };
           }
           return ob;
         }, {});
         return obj;
       }, {});
 
+    console.log(locale, transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setColumns(transformMetadataToColumns(metadata, locale, tempDataValuesTranslate));
     setDataValuesTranslate(tempDataValuesTranslate);
 
     return () => {
       clearForm();
     };
-  }, []);
+  }, [locale]);
 
   return (
     <div className="interview-table px-3 mt-2">

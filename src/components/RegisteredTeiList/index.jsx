@@ -1,7 +1,7 @@
 import { DeleteTwoTone, LinkOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Table } from "antd";
 import { useTranslation } from "react-i18next";
-import { TableColumn, TableFilter } from "../../utils";
+import { pickTranslation, TableColumn, TableFilter } from "../../utils";
 import "./index.css";
 import { isImmutableYear } from "@/utils/event";
 import { useSelector } from "react-redux";
@@ -21,7 +21,7 @@ const RegisteredTeiList = ({
   onSort,
   onRowClick,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { immutableYear } = useSelector((state) => state.metadata);
   const reportId = useSelector((state) => state.common.reportId);
 
@@ -84,12 +84,14 @@ const RegisteredTeiList = ({
       .filter((tea) => tea.displayInList)
       .map((tea) => {
         const teaObject = {
-          title: tea.displayFormName,
+          title: pickTranslation(tea, i18n.language),
           dataIndex: tea.id,
           key: tea.id,
           sorter: true,
           valueSet: tea.valueSet,
-          filterDropdown: <TableFilter placeholder={tea.displayFormName} metadata={tea} onFilter={onFilter} />,
+          filterDropdown: (
+            <TableFilter placeholder={pickTranslation(tea, i18n.language)} metadata={tea} onFilter={onFilter} />
+          ),
           render: (value) => <TableColumn metadata={tea} value={value} />,
         };
 

@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import InputField from "../InputFieldCore/InputField.component.jsx";
 import { useState } from "react";
 import ChildHealthCustomForm from "./ChildHealthCustomForm.component";
+import { pickTranslation } from "@/utils";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -151,7 +152,7 @@ function CaptureForm(props) {
               valueSet={f.valueSet}
               pattern={f.pattern}
               valueType={f.valueType}
-              label={!_.isEmpty(f.translations) ? f.translations[locale] : f.displayFormName}
+              label={f.displayFormName}
               attribute={f.attribute}
               value={formData[f.code] || ""}
               onBlur={(value) => editCall(formMetadata, prevData.current, formData, f.code, value)}
@@ -204,11 +205,10 @@ function CaptureForm(props) {
         <div className="row">
           <div class="card-body">
             <h5 class="card-title" section-id={pSection.id}>
-              {pSection.displayFormName}
+              {pickTranslation(pSection, locale)}
             </h5>
             <p class="card-text">
               <div className="row" style={{ alignItems: "flex-end" }}>
-                {" "}
                 {generateFields(TEIFormMetadata)}
               </div>
             </p>
@@ -250,9 +250,9 @@ function CaptureForm(props) {
           <div className="row">
             <div class="card-body">
               <h5 class="card-title" section-id={pSection.id}>
-                {pSection.displayFormName}
+                {pickTranslation(pSection, locale)}
               </h5>
-              {pSection.description && <Alert type="info" message={pSection.description} showIcon />}
+              {pSection.description && <Alert type="info" message={pickTranslation(pSection, locale)} showIcon />}
               <p class="card-text">
                 {/* Child Health Section */}
                 {pSection.id == "tlNWZDOWfP2" ? (

@@ -29,7 +29,7 @@ const ChildHealthCustomForm = ({
               pattern={f.pattern}
               valueType={f.valueType}
               displayOption={displayOption}
-              label={!hideLabel ? (!_.isEmpty(f.translations) ? f.translations[locale] : f.displayFormName) : ""}
+              label={!hideLabel ? f.displayFormName : ""}
               attribute={f.attribute}
               value={formData[f.code] || ""}
               onBlur={(value) => editCall(formMetadata, prevData.current, formData, f.code, value)}
