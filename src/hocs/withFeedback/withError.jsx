@@ -3,11 +3,11 @@ import { Alert, notification, Row } from "antd";
 import { useTranslation } from "react-i18next";
 
 const withError = (options) => (Component) => {
-  return ({ errorMessage, errorDisplaying = null, afterError = () => {}, ...props }) => {
+  return ({ errorMessage, disableAlert, errorDisplaying = null, afterError = () => {}, ...props }) => {
     const { t } = useTranslation();
 
     useEffect(() => {
-      if (errorMessage) {
+      if (errorMessage && !disableAlert) {
         const args = {
           message: t("Error") + "!!!",
           description: errorMessage,
@@ -17,7 +17,8 @@ const withError = (options) => (Component) => {
         };
         notification.error(args);
       }
-    }, [errorMessage]);
+    }, [errorMessage, disableAlert]);
+
     if (errorMessage && errorDisplaying) {
       return (
         <Row

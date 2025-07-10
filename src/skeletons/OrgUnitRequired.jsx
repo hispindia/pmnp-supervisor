@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 const OrgUnitRequired = () => {
   const Component = useMemo(() => withError()(() => null), []);
   const { t } = useTranslation();
-  return <Component errorMessage={t("orgUnitRequired")} errorDisplaying={t("orgUnitRequired")} />;
+  return <Component disableAlert errorMessage={t("orgUnitRequired")} errorDisplaying={t("orgUnitRequired")} />;
 };
 
 export default OrgUnitRequired;

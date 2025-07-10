@@ -21,18 +21,13 @@ import {
   tableSort,
 } from "../../redux/actions/teis";
 
-const LoadingRegisteredTeiList = compose(
-  withFeedback(),
-  withSkeletonLoading(TeiListSkeleton)
-)(RegisteredTeiList);
+const LoadingRegisteredTeiList = compose(withFeedback(), withSkeletonLoading(TeiListSkeleton))(RegisteredTeiList);
 
 const RegisteredTeiListContainer = () => {
   const dispatch = useDispatch();
   const onDeleteTei = (record) => dispatch(deleteTei(record.teiId));
   const { selectedOrgUnit } = useSelector((state) => state.metadata);
-  const trackedEntityAttributes = useSelector(
-    (state) => state.metadata.programMetadata.trackedEntityAttributes
-  );
+  const trackedEntityAttributes = useSelector((state) => state.metadata.programMetadata.trackedEntityAttributes);
   const {
     teis,
     loading,
