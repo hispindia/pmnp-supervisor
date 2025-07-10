@@ -1,10 +1,10 @@
 import { MEMBER_TRACKED_ENTITY_TYPE_ID } from "@/constants/app-config";
 import { convertValueBack } from "@/utils";
 
-export const clearHiddenFieldData = (metadata, data) => {
+export const clearHiddenFieldData = (metadata, data, extCondition = (itemMetadata) => true) => {
   // clear data for hidden items
   for (let meta in metadata) {
-    if (metadata[meta].hidden) {
+    if (metadata[meta].hidden && extCondition(metadata[meta])) {
       delete data[meta];
     }
   }
@@ -101,3 +101,6 @@ export const updateMetadataValueSet = (selectedMetadata, optionValue, prop, prop
     selectedMetadata.valueSet[indexOfOption][prop] = propValue;
   }
 };
+
+export const getFullName = (data) =>
+  `${data["PIGLwIaw0wy"] || ""} ${data["WC0cShCpae8"] || ""} ${data["IENWcinF8lM"] || ""}`;

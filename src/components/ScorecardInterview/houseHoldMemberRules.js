@@ -352,7 +352,8 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
   // CN - MUAC (cm)	Child < 5 y
   metadata("sCOCt8eF0Fr").hidden = years > 5 || months < 6;
   // Mother's member ID number
-  metadata("q0WEgMBwi0p").hidden = years > 5;
+  // q0WEgMBwi0p move to attribute
+  // metadata("q0WEgMBwi0p").hidden = years > 5;
 
   // If CN_MUAC (cm) < 11.5 cm ; CN_MUAC findings = Severe Acute Malnutrition (SAM)
   // If CN_MUAC (cm) >= 11.5 AND < 12.5 cm ; CN_MUAC findings = Moderate Acute Malnutrition (MAM)

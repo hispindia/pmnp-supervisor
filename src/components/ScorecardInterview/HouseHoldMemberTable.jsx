@@ -36,7 +36,7 @@ import {
   hideSectionRules,
 } from "./houseHoldMemberRules";
 import "./interview-detail-table.css";
-import { clearHiddenFieldData, generateTEIDhis2Payload, updateMetadata } from "./utils";
+import { clearHiddenFieldData, generateTEIDhis2Payload, getFullName, updateMetadata } from "./utils";
 import { Button, Modal, Table } from "antd";
 import { Chip } from "@material-ui/core";
 import { cn } from "@/libs/utils";
@@ -257,9 +257,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const editRowCallback = (metadataOrigin, previousData, data, code, value) => {
     // WARNING: if it's hidden, the data will be removed
 
+    console.log(metadataOrigin["q0WEgMBwi0p"]);
+
     let metadata = (metaId) => {
       if (!metadataOrigin[metaId]) return;
-
       return metadataOrigin[metaId];
     };
 
@@ -292,11 +293,11 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         metadata(de).hidden = true;
       });
 
-      clearHiddenFieldData(metadata, data);
+      clearHiddenFieldData(metadataOrigin, data, (item) => (item.isAttribute ? false : true));
       return;
     } else {
       Object.keys(metadataOrigin).forEach((de) => {
-        metadata(de).hidden = false;
+        if (!metadata(de).isAttribute) metadata(de).hidden = false;
       });
     }
 
@@ -369,14 +370,15 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     childHeathRules(metadata, data, ages, code, CHILD_VACCINES);
     childNutritionRules(metadata, data, ages);
     handleAgeAttrsOfTEI(data, ages);
-    clearHiddenFieldData(metadataOrigin, data);
+    clearHiddenFieldData(metadataOrigin, data, (item) => (item.isAttribute ? false : true));
     handleAgeFields(metadata, ages);
-    // Pregnancy status (DE UID: ycBIHr9bYyw) == 2
-    // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)
 
-    if (!data["B3jiLplNUeS"]) {
-      data["B3jiLplNUeS"] = "na";
-    }
+    // hide all attribute
+    Object.keys(metadataOrigin).forEach((key) => {
+      if (metadataOrigin[key].isAttribute) metadataOrigin[key].hidden = true;
+    });
+
+    if (!data["B3jiLplNUeS"]) data["B3jiLplNUeS"] = "na";
   };
 
   const clearForm = () => {
@@ -435,6 +437,9 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     }
   };
 
+  // remove programSections
+  const { programSections, ...formProgramMetadata } = programMetadataMember;
+
   return (
     <div className="interview-table">
       <Modal
@@ -449,7 +454,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
           <div>
             <p className="text-lg">{t("familyMemberDetails")}</p>
             <p className="text-base text-gray-500">
-              {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)}
+              {formStatus !== FORM_ACTION_TYPES.ADD_NEW && getFullName(selectedData)}
             </p>
           </div>
         }
@@ -457,6 +462,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         <div className="h-[85dvh] overflow-y-auto overflow-x-hidden pb-6">
           {selectedData ? (
             <CaptureForm
+              formProgramMetadata={formProgramMetadata}
               key={selectedData.updatedAt}
               locale={locale}
               metadata={metadata}
@@ -498,7 +504,7 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers) => {
   const trackedEntityAttributes = programMetadataMember.trackedEntityAttributes.map((attr) => ({
     ...attr,
     code: attr.id,
-    disabled: true,
+    hidden: true,
     isAttribute: true,
   }));
 
