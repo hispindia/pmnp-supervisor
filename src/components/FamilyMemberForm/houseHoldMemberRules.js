@@ -9,15 +9,20 @@ export const handleAgeAttrsOfTEI = (data, { days, weeks, months, years }) => {
   data[monthsAttr] = "";
   data[yearsAttr] = "";
 
-  if (weeks === 0) {
-    data[daysAttr] = days;
-  } else if (months === 0) {
-    data[weeksAttr] = weeks;
-  } else if (years === 0 || years < 5) {
-    data[monthsAttr] = months;
-  } else if (years >= 5) {
-    data[yearsAttr] = years;
-  }
+  // if (weeks === 0) {
+  //   data[daysAttr] = days;
+  // } else if (months === 0) {
+  //   data[weeksAttr] = weeks;
+  // } else if (years === 0 || years < 5) {
+  //   data[monthsAttr] = months;
+  // } else if (years >= 5) {
+  //   data[yearsAttr] = years;
+  // }
+
+  data[daysAttr] = days;
+  data[weeksAttr] = weeks;
+  data[monthsAttr] = months;
+  data[yearsAttr] = years;
 };
 
 export const hhMemberRules = (metadata, data, { years }) => {
