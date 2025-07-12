@@ -1,17 +1,17 @@
-import _ from "lodash";
-import "./InputField.styles.css";
-import propTypes from "./InputField.types.js";
-import { DateField, SelectField, TextField, RadioField } from "./inputs/index";
 import { onKeyDown } from "@/utils";
-import { useTranslation } from "react-i18next";
+import MomentUtils from "@date-io/moment";
+import { Radio } from "@material-ui/core";
+import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
+import _ from "lodash";
 import moment from "moment";
-import MultipleTrueOnlyDEs from "./inputs/MultipleTrueOnlyDEs";
+import { useTranslation } from "react-i18next";
 import HyperLink from "./HyperLink";
-import { Radio } from "@material-ui/core";
+import "./InputField.styles.css";
+import propTypes from "./InputField.types.js";
+import { DateField, RadioField, SelectField, TextField } from "./inputs/index";
+import MultipleTrueOnlyDEs from "./inputs/MultipleTrueOnlyDEs";
 
 const InputField = ({
   displayOption,
@@ -114,17 +114,17 @@ const InputField = ({
         { value: "true", label: t("yes") },
         { value: "false", label: t("no") },
       ];
-      if(displayOption == "RADIO") {
+      if (displayOption == "RADIO") {
         return (
-          <RadioField 
-          value={value}
-          valueSet={vs}
-          handleChange={onChange}
-          handleBlur={onBlur}
-          disabled={disabled}
-          {...props}
+          <RadioField
+            value={value}
+            valueSet={vs}
+            handleChange={onChange}
+            handleBlur={onBlur}
+            disabled={disabled}
+            {...props}
           />
-        )
+        );
       }
       return (
         <SelectField
@@ -187,9 +187,22 @@ const InputField = ({
         );
       case "TEXT":
       case "PERCENTAGE":
-      case "PHONE_NUMBER":
       case "EMAIL":
         return <TextField value={value} handleChange={onChange} handleBlur={onBlur} disabled={disabled} {...props} />;
+
+      case "PHONE_NUMBER":
+        return (
+          <TextField
+            onKeyDown={(e) => {
+              onKeyDown(e, /^[0-9]+$/);
+            }}
+            value={value}
+            handleChange={onChange}
+            handleBlur={onBlur}
+            disabled={disabled}
+            {...props}
+          />
+        );
       case "LONG_TEXT":
         return (
           <TextField
