@@ -6,14 +6,15 @@ import ListButtonContainer from "@/containers/ControlBar/ListButton";
 import OfflineModeButton from "@/containers/ControlBar/OfflineModeButton";
 import PushToServerButton from "@/containers/ControlBar/PushToServerButton";
 import { MenuOutlined, RightOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Dropdown } from "antd";
+import { Typography } from "@material-ui/core";
+import { Button, Dropdown } from "antd";
+import { useTranslation } from "react-i18next";
 import { connect, useSelector } from "react-redux";
 import OrgUnitContainer from "../../containers/ControlBar/OrgUnit";
 import ReportButtonContainer from "../../containers/ControlBar/ReportButton";
-import { setSelectedOrgUnit } from "../../redux/actions/metadata";
 import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButtonsContainer";
-import { Typography } from "@material-ui/core";
-import { useTranslation } from "react-i18next";
+import { setSelectedOrgUnit } from "../../redux/actions/metadata";
+import { useUser } from "@/hooks/useUser";
 
 const { controlBarContainer, antBreadcrumbSeparator } = styles;
 
@@ -42,6 +43,7 @@ const items = [
 
 const ControlBar = () => {
   const { t } = useTranslation();
+  const { user } = useUser();
   const { selectedOrgUnit, orgUnits } = useSelector((state) => state.metadata);
 
   const orgUnitLabel = selectedOrgUnit?.path
@@ -90,14 +92,28 @@ const ControlBar = () => {
             </div>
           </div>
 
-          <Typography color="primary" style={{ paddingRight: 8, paddingTop: 2 }}>
-            {orgUnitLabel.map((name, index) => (
-              <>
-                {" "}
-                {name} {index < orgUnitLabel.length - 1 && <RightOutlined style={{ fontSize: 12 }} />}
-              </>
-            ))}
-          </Typography>
+          <div className="d-flex align-items-center">
+            <Typography style={{ paddingRight: 8, paddingTop: 2, color: "#1890ff" }}>
+              <>User: {user?.displayName || user?.name || "Unknown User"}</>
+            </Typography>
+
+            <div
+              style={{
+                width: "2px",
+                height: "20px",
+                background: "#1890ff",
+                margin: "0 12px",
+              }}
+            />
+
+            <Typography color="primary" style={{ paddingRight: 8, paddingTop: 2 }}>
+              {orgUnitLabel.map((name, index) => (
+                <>
+                  {name} {index < orgUnitLabel.length - 1 && <RightOutlined style={{ fontSize: 12 }} />}
+                </>
+              ))}
+            </Typography>
+          </div>
         </div>
 
         <RightSideButtonsContainer />
