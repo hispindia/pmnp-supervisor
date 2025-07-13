@@ -30,11 +30,7 @@ const OfflineModeButton = () => {
 
   return (
     <>
-      <PrepareOfflineModal
-        open={prepareModalOpen}
-        onCancel={handleCancelOffline}
-        onClose={handleOfflineClose}
-      />
+      <PrepareOfflineModal open={prepareModalOpen} onCancel={handleCancelOffline} onClose={handleOfflineClose} />
       <Switch
         checkedChildren={t("offline")}
         unCheckedChildren={t("online")}
@@ -44,6 +40,17 @@ const OfflineModeButton = () => {
             notification.warning({
               message: t("warning"),
               description: t("pleaseInstallApp"),
+              placement: "bottomRight",
+              duration: 10,
+            });
+            return;
+          }
+
+          // check if no internet connection
+          if (!navigator.onLine && checked) {
+            notification.warning({
+              message: t("warning"),
+              description: t("noInternetConnection"),
               placement: "bottomRight",
               duration: 10,
             });

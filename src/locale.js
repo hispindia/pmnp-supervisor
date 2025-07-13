@@ -229,6 +229,11 @@ const locale = {
     [cebuano]: "Palihug i-install ang app aron magamit kini nga function.",
     [tagalog]: "Paki-install ang app para magamit ang function na ito.",
   },
+  noInternetConnection: {
+    [english]: "No internet connection, please check your connection.",
+    [cebuano]: "Walay internet connection, palihug susiha ang imong koneksyon.",
+    [tagalog]: "Walang internet connection, pakisuri ang inyong koneksyon.",
+  },
   preparingForOfflineMode: {
     [english]: "Preparing for offline mode",
     [cebuano]: "Pag-andam alang sa offline mode",

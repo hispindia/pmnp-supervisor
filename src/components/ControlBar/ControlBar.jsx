@@ -93,26 +93,39 @@ const ControlBar = () => {
           </div>
 
           <div className="d-flex align-items-center">
-            <Typography style={{ paddingRight: 8, paddingTop: 2, color: "#1890ff" }}>
-              <>User: {user?.displayName || user?.name || "Unknown User"}</>
+            <Typography color="primary" style={{ paddingTop: 2 }}>
+              <>
+                User: &nbsp;
+                <span
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user?.displayName || user?.name || "Unknown User"}
+                </span>
+              </>
             </Typography>
 
-            <div
-              style={{
-                width: "2px",
-                height: "20px",
-                background: "#1890ff",
-                margin: "0 12px",
-              }}
-            />
+            {orgUnitLabel.length > 0 && (
+              <>
+                <div
+                  style={{
+                    width: "2px",
+                    height: "20px",
+                    background: "#f68e22",
+                    margin: "0 12px",
+                  }}
+                />
 
-            <Typography color="primary" style={{ paddingRight: 8, paddingTop: 2 }}>
-              {orgUnitLabel.map((name, index) => (
-                <>
-                  {name} {index < orgUnitLabel.length - 1 && <RightOutlined style={{ fontSize: 12 }} />}
-                </>
-              ))}
-            </Typography>
+                <Typography color="primary" style={{ paddingRight: 8, paddingTop: 2 }}>
+                  {orgUnitLabel.map((name, index) => (
+                    <>
+                      {name} {index < orgUnitLabel.length - 1 && <RightOutlined style={{ fontSize: 12 }} />}
+                    </>
+                  ))}
+                </Typography>
+              </>
+            )}
           </div>
         </div>
 
