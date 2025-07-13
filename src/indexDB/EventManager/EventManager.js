@@ -1,11 +1,10 @@
-import db from "../db";
-import { TABLE_NAME } from ".";
 import { dataApi } from "@/api";
 import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
-import * as meManager from "@/indexDB/MeManager/MeManager";
-import moment from "moment";
 import { chunk } from "lodash";
+import moment from "moment";
+import { TABLE_NAME } from ".";
 import { toDhis2Events } from "../data/event";
+import db from "../db";
 
 export const getEventsRawData = async (pager, org, program) => {
   return await dataApi.get(
@@ -130,7 +129,6 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
 
 export const push = async () => {
   console.time("Event::push");
-  var start = performance.now();
 
   const events = await findOffline();
 
@@ -145,8 +143,7 @@ export const push = async () => {
   }
 
   console.timeEnd("Event::push");
-  var end = performance.now();
-  // return "Event::push - " + (end - start);
+
   return {
     status: "OK",
   };

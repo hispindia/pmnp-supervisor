@@ -40,8 +40,8 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
     }
 
     const isFulfilled = filableFieldCodes.every((code) => currentValuesKeys.includes(code));
-    const remainList = filableFieldCodes.filter((code) => !currentValuesKeys.includes(code));
-    console.log({ remainList, isFulfilled });
+    // const remainList = filableFieldCodes.filter((code) => !currentValuesKeys.includes(code));
+    // console.log({ remainList, isFulfilled });
     setIsFormFulfilled(isFulfilled);
   };
 
@@ -144,12 +144,23 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
         if (mdf.warning) {
           warningText[mdf.code || mdf.id] = { text: mdf.warning };
         }
+
+        // fieldMask validation
+        if (mdf.fieldMask && formData[mdf.code || mdf.id]) {
+          const fieldValue = formData[mdf.code || mdf.id];
+          const regex = new RegExp(mdf.fieldMask, "i"); // case insensitive
+          if (!regex.test(fieldValue)) {
+            valText[mdf.code || mdf.id] = {
+              text: `Invalid format. ${mdf.description}`,
+            };
+          }
+        }
       });
     }
 
     customValidationCheck("min_max", MIN_MAX_TEXT, valText);
     customValidationCheck("contact", FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER, valText);
-
+    console.log({ valText, warningText });
     // custom fileds validations
     setValidationText(valText);
     setWarningText(warningText);

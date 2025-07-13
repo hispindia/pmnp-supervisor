@@ -27,6 +27,7 @@ const InputField = ({
   changeValue,
   disabled,
   pattern,
+  fieldMask,
   locale,
   attribute = null,
   onInput,

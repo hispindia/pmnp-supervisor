@@ -120,7 +120,7 @@ export default class MetadataApiClass extends BaseApiClass {
 
   getProgramMetadata = async (program) => {
     const p = await pull(this.baseUrl, this.username, this.password, `/api/programs/${program}`, { paging: false }, [
-      "fields=programSections[id,name,trackedEntityAttributes,displayName,displayFormName,translations],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[attributeValues,id,displayName,displayFormName,translations,displayShortName,valueType,optionSet[id]]],programStages[programStageSections[id,dataElements,displayName,displayFormName,translations,description],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
+      "fields=programSections[id,name,trackedEntityAttributes,displayName,displayFormName,translations],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[description,fieldMask,attributeValues,id,displayName,displayFormName,translations,displayShortName,valueType,optionSet[id]]],programStages[programStageSections[id,dataElements,displayName,displayFormName,translations,],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
     ]);
 
     return await this.convertProgramMetadata(p);
@@ -196,6 +196,8 @@ export default class MetadataApiClass extends BaseApiClass {
         displayInList: ptea.displayInList,
         disabled: defaultProgramTrackedEntityAttributeDisable.includes(ptea.trackedEntityAttribute.id),
         translations: ptea.trackedEntityAttribute.translations,
+        fieldMask: ptea.trackedEntityAttribute.fieldMask,
+        description: ptea.trackedEntityAttribute.description,
       };
 
       const foundAttr = ptea.trackedEntityAttribute.attributeValues.find(
@@ -245,6 +247,7 @@ export default class MetadataApiClass extends BaseApiClass {
             url: psde.dataElement.url,
             valueType: psde.dataElement.valueType,
             translations: psde.dataElement.translations,
+            fieldMask: psde.dataElement.fieldMask,
           };
 
           const foundAttr = psde.dataElement.attributeValues.find(

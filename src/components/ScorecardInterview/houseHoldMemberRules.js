@@ -190,9 +190,6 @@ export const demographicDetailRules = (metadata, data, { years }) => {
   // PHIC ID	Only show when 'PHIC membership' = Yes / 1
   const PhiCMembership = data["JjFcU1L7Ll1"];
 
-  // 12-123456789-1
-  // metadata("Yp6gJAdu4yX").valueType = "MASK";
-  // metadata("Yp6gJAdu4yX").pattern = /^\D{2}+$/;
   metadata("Yp6gJAdu4yX").hidden = PhiCMembership !== "1" || !(years > 5);
 };
 

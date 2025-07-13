@@ -151,6 +151,7 @@ function CaptureForm(props) {
               })}
               valueSet={f.valueSet}
               pattern={f.pattern}
+              fieldMask={f.fieldMask}
               valueType={f.valueType}
               label={f.displayFormName}
               attribute={f.attribute}

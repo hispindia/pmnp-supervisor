@@ -25,8 +25,6 @@ import "../../index.css";
 import { HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
 import styles from "./FamilyMemberForm.module.css";
 import { handleAgeAttrsOfTEI, hhMemberRules } from "./houseHoldMemberRules";
-import { updateMetadataValueSet } from "../ScorecardInterview/utils";
-// import { filterFemalesIn15And49 } from "@/hooks/useInterviewCascadeData";
 
 const { familyMemberFormContainer } = styles;
 const LoadingCascadeTable = withSkeletonLoading()(CascadeTable);
@@ -117,7 +115,7 @@ const FamilyMemberForm = ({
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
     // keep selected member details
-    console.log("FamilyMemberForm registerform", {
+    console.log("Family Member Details", {
       metadata,
       previousData,
       data,
