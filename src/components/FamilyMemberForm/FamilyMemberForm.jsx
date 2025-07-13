@@ -199,6 +199,12 @@ const FamilyMemberForm = ({
     // Show if 'Relationship with HH Head' has option code 1,2,3,4,5,6,7,8
     metadata["BbdQMKOObps"].hidden = data["QAYXozgCOHu"] == "1" || !data["QAYXozgCOHu"];
 
+    // Auto-select first value if only one family exists
+    const familyCount = attributes["ZGPJg7g997n"];
+    if (familyCount == 1 && !data["BbdQMKOObps"]) {
+      data["BbdQMKOObps"] = "1";
+    }
+
     hhMemberRules(metadata, data, ages);
 
     // clear data for hidden items
