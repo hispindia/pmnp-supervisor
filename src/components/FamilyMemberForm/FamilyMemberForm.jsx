@@ -158,9 +158,10 @@ const FamilyMemberForm = ({
     data[PMNP_ID] = `${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
 
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
-    const enrollmentDate = data.isNew
-      ? new Date()
-      : lastDayOfYear(new Date(currentEvent.occurredAt || currentEnrollment.enrolledAt));
+    const enrollmentDate = new Date();
+    // const enrollmentDate = data.isNew
+    // ? new Date()
+    // : lastDayOfYear(new Date(currentEvent.occurredAt || currentEnrollment.enrolledAt));
 
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const months = differenceInMonths(enrollmentDate, dateOfbirth);
