@@ -200,58 +200,7 @@ export const childHeathRules = (metadata, data, { months, years }, code, CHILD_V
 
   //Data Saving validation
   metadata("EMHed4Yi7L6").disabled = true;
-  CHILD_VACCINES.list.forEach((item) => {
-    if (item.vaccineMonth.start > months) {
-      metadata(item.ids.vaccineDone).hidden = true;
-      metadata(item.ids.vaccineDate).hidden = true;
-      metadata(item.ids.discrepancy).hidden = true;
-    }
-    if (data[item.ids.vaccineDone] == "false") {
-      metadata(item.ids.vaccineDate).disabled = true;
-    }
-    //bypass
-    metadata(item.ids.discrepancy).disabled = true;
-  });
-
-  //For checking discrepancy
-  const vaccineDateDetails = CHILD_VACCINES.list.find((vaccine) => vaccine.ids.vaccineDate == code);
-
-  if (vaccineDateDetails) {
-    const dateOfBirth = new Date(data["fJPZFs2yYJQ"]);
-    const vaccineDate = new Date(data[code]);
-
-    if (vaccineDateDetails.age.type == "days") {
-      const days = differenceInDays(vaccineDate, dateOfBirth);
-      if (data[code] && days > vaccineDateDetails.age.value) {
-        data[vaccineDateDetails.ids.discrepancy] = true;
-      } else {
-        data[vaccineDateDetails.ids.discrepancy] = "";
-      }
-    } else if (vaccineDateDetails.age.type == "month") {
-      const months = differenceInMonths(vaccineDate, dateOfBirth);
-      if (data[code] && months > vaccineDateDetails.age.value) {
-        data[vaccineDateDetails.ids.discrepancy] = true;
-      } else {
-        data[vaccineDateDetails.ids.discrepancy] = "";
-      }
-    }
-  }
-
-  //For disabling vaccine Date
-  const vaccineDoneDetails = CHILD_VACCINES.list.find((vaccine) => vaccine.ids.vaccineDone == code);
-
-  if (vaccineDoneDetails) {
-    if (data[vaccineDoneDetails.ids.vaccineDone] == "true") {
-      if (!data[vaccineDoneDetails.ids.vaccineDate]) {
-        data[vaccineDoneDetails.ids.discrepancy] = "";
-      }
-      metadata(vaccineDoneDetails.ids.vaccineDate).disabled = false;
-    } else if (data[vaccineDoneDetails.ids.vaccineDone] == "false") {
-      data[vaccineDoneDetails.ids.vaccineDate] = "";
-      data[vaccineDoneDetails.ids.discrepancy] = true;
-      metadata(vaccineDoneDetails.ids.vaccineDate).disabled = true;
-    }
-  }
+  data["EMHed4Yi7L6"] = "false";
 
   const VaccineDoneList = CHILD_VACCINES.list.filter((vaccine) => data[vaccine.ids.vaccineDone] == "true");
   const vaccineDiscrepency = CHILD_VACCINES.list.filter((vaccine) => data[vaccine.ids.discrepancy]);
@@ -260,30 +209,6 @@ export const childHeathRules = (metadata, data, { months, years }, code, CHILD_V
   //Rule Prority 1
   if (vaccineDiscrepency.length) data["EMHed4Yi7L6"] = "false";
 
-  if (data["XhrgV4nfrRK"] || data["kzaCPuPzy6o"]) {
-    metadata("Lp9Y5Z5P78t").disabled = true;
-    metadata("DHXhabUfBHA").disabled = true;
-  }
-  if (data["mSfZRdFRWdh"] || data["PQS3vSrsIBO"]) {
-    metadata("zQK0SZQ7Dot").disabled = true;
-    metadata("i4gomCWd0y9").disabled = true;
-  }
-  if (data["eXwMBOUSwuB"] || data["EhIlZ6OO8Fu"]) {
-    metadata("IjbZlh5uehM").disabled = true;
-    metadata("ew3lMYvyfeV").disabled = true;
-  }
-  if (data["Lp9Y5Z5P78t"] || data["DHXhabUfBHA"]) {
-    metadata("XhrgV4nfrRK").disabled = true;
-    metadata("zqDWAyTTTDd").disabled = true;
-  }
-  if (data["zQK0SZQ7Dot"] || data["i4gomCWd0y9"]) {
-    metadata("mSfZRdFRWdh").disabled = true;
-    metadata("PQS3vSrsIBO").disabled = true;
-  }
-  if (data["IjbZlh5uehM"] || data["ew3lMYvyfeV"]) {
-    metadata("eXwMBOUSwuB").disabled = true;
-    metadata("EhIlZ6OO8Fu").disabled = true;
-  }
 };
 
 const DEs = {

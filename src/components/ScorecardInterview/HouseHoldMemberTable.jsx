@@ -334,9 +334,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       metadata("ZkoIX2TigZA").hidden = true;
     }
 
-    // vaccine before date of birth
-    CHILD_VACCINES.list.forEach((vaccine) => (metadata(vaccine.ids.vaccineDate).minDate = data["fJPZFs2yYJQ"]));
-
     data["Hc9Vgt4LXjb"] = years;
     data["RoSxLAB5cfo"] = months;
     data["Gds5wTiXoSK"] = weeks;

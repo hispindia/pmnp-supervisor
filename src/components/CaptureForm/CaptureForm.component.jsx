@@ -201,6 +201,27 @@ function CaptureForm(props) {
           (a, b) =>
             trackedEntityAttributes.indexOf(a.id) - trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
         );
+        debugger;
+        // if all field hidden => hide the section
+        const filtered = TEIFormMetadata.filter((f) => !f.hidden);
+        if (filtered.length === 0) return null;
+
+        if(pSection.id == "f9KZ0YnBsm6") {
+          return  <ChildHealthCustomForm
+                    section={pSection}
+                    formMetadata={formMetadata}
+                    changeValue={changeValue}
+                    disableForm={disableForm}
+                    editCall={editCall}
+                    formData={formData}
+                    formStatus={formStatus}
+                    prevData={prevData}
+                    locale={locale}
+                    props={props}
+                    validation={validation}
+                    validationWarning={validationWarning}
+                  />
+      }
 
       return (
         <div className="row">
@@ -255,26 +276,9 @@ function CaptureForm(props) {
               </h5>
               {pSection.description && <Alert type="info" message={pickTranslation(pSection, locale)} showIcon />}
               <p class="card-text">
-                {/* Child Health Section */}
-                {pSection.id == "tlNWZDOWfP2" ? (
-                  <ChildHealthCustomForm
-                    formMetadata={formMetadata}
-                    changeValue={changeValue}
-                    disableForm={disableForm}
-                    editCall={editCall}
-                    formData={formData}
-                    formStatus={formStatus}
-                    prevData={prevData}
-                    locale={locale}
-                    props={props}
-                    validation={validation}
-                    validationWarning={validationWarning}
-                  />
-                ) : (
-                  <div className="row" style={{ alignItems: "flex-end" }}>
-                    {generateFields(programFormMetadata)}
-                  </div>
-                )}
+                <div className="row" style={{ alignItems: "flex-end" }}>
+                  {generateFields(programFormMetadata)}
+                </div>
               </p>
             </div>
           </div>

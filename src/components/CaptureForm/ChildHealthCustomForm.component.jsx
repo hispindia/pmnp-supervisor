@@ -5,8 +5,11 @@ import { CHILD_VACCINES, FORM_ACTION_TYPES } from "../constants";
 import _ from "lodash";
 
 import InputField from "../InputFieldCore/InputField.component.jsx";
+import { pickTranslation } from "@/utils";
 
 const ChildHealthCustomForm = ({
+  locale,
+  section,
   formMetadata,
   changeValue,
   disableForm,
@@ -24,12 +27,13 @@ const ChildHealthCustomForm = ({
         return (
           <div className="col-lg-6 mb-3" key={`${f.code}-${index}`}>
             <InputField
+              locale={locale}
               disabled={f.disabled || formStatus === FORM_ACTION_TYPES.VIEW || disableForm}
               valueSet={f.valueSet}
               pattern={f.pattern}
               valueType={f.valueType}
               displayOption={displayOption}
-              label={!hideLabel ? f.displayFormName : ""}
+              label={!hideLabel ? (!_.isEmpty(f.translations) ? f.translations[locale] : f.displayFormName) : ""}
               attribute={f.attribute}
               value={formData[f.code] || ""}
               onBlur={(value) => editCall(formMetadata, prevData.current, formData, f.code, value)}
@@ -59,7 +63,7 @@ const ChildHealthCustomForm = ({
   const dataSource = CHILD_VACCINES.list
     .filter((item) => {
       //Age in month
-      if (formData["RoSxLAB5cfo"] >= item.vaccineMonth.start) {
+      if (formData["X2Oln1OyP5o"] >= item.vaccineMonth.start) {
         return item;
       }
     })
@@ -102,14 +106,21 @@ const ChildHealthCustomForm = ({
     },
   ];
   return (
-    <>
-      {generateFields(formMetadata, "p6NUCwXg99o")}
-
-      <Table dataSource={dataSource} columns={columns} pagination={false} />
-
-      {generateFields(formMetadata, "EMHed4Yi7L6")}
-    </>
-  );
+          <div className="row">
+            <div class="card-body">
+              <h5 class="card-title" section-id={section.id}>
+                {pickTranslation(section, locale)}
+              </h5>
+              <p class="card-text">
+                <Table 
+                  columns={columns} 
+                  dataSource={dataSource} 
+                  pagination={false} 
+                />
+              </p>
+            </div>
+          </div>
+  )
 };
 
 export default ChildHealthCustomForm;
