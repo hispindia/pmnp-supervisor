@@ -118,7 +118,21 @@ const ProfileForm = ({
       <div className="row col-lg-12">
         {items.map((item) => (
           <div className="col-lg-3">
-            <Dhis2FormItem id={item.id}>
+            <Dhis2FormItem
+              id={item.id}
+              rules={[
+                {
+                  validator: (_, value) => {
+                    if (item.id === "D9fGfe9AmkZ") {
+                      if (value && value.length !== 11) {
+                        return Promise.reject(new Error("The phone number is 11 digit"));
+                      }
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
               <InputField size="large" disabled={item.disabled} />
             </Dhis2FormItem>
           </div>
