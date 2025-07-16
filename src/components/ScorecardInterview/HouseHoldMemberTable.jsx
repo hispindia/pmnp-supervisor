@@ -40,6 +40,7 @@ import { clearHiddenFieldData, generateTEIDhis2Payload, getFullName, updateMetad
 import { Button, Modal, Table } from "antd";
 import { Chip } from "@material-ui/core";
 import { cn } from "@/libs/utils";
+import { fas } from "@fortawesome/free-solid-svg-icons";
 
 const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
   const { t, i18n } = useTranslation();
@@ -255,8 +256,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   const editRowCallback = (metadataOrigin, previousData, data, code, value) => {
     // WARNING: if it's hidden, the data will be removed
 
-    console.log(metadataOrigin["q0WEgMBwi0p"]);
-
     let metadata = (metaId) => {
       if (!metadataOrigin[metaId]) return;
       return metadataOrigin[metaId];
@@ -269,6 +268,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     // Hide rest of the form if Membership status = "Deceased" or Migrated to "Non-PMNP Area" or "Not part of the HH"
     const hhMemberStatus = data["Rb0k4fOdysI"];
+
     if (hhMemberStatus === "001" || hhMemberStatus === "004" || hhMemberStatus === "002") {
       Object.keys(metadataOrigin).forEach((de) => {
         if (
@@ -292,11 +292,21 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       });
 
       clearHiddenFieldData(metadataOrigin, data, (item) => (item.isAttribute ? false : true));
+
+      // workaround for hidden section
+      if (hhMemberStatus === "004") metadata("NrSC3yBU0AE").hidden = false;
+
       return;
     } else {
       Object.keys(metadataOrigin).forEach((de) => {
         if (!metadata(de).isAttribute) metadata(de).hidden = false;
       });
+    }
+
+    if (["004", "005", "006", "007"].includes(hhMemberStatus)) {
+      metadata("NrSC3yBU0AE").hidden = false;
+    } else {
+      metadata("NrSC3yBU0AE").hidden = true;
     }
 
     // ages de
