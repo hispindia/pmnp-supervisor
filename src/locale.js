@@ -23,6 +23,11 @@ const locale = {
     [cebuano]: "Rehistro sa Panimalay",
     [tagalog]: "Pagpaparehistro ng Sambahayan",
   },
+  "The phone number is 11 digit": {
+    [english]: "The phone number is 11 digit",
+    [cebuano]: "Ang numero sa telepono kay 11 digit",
+    [tagalog]: "Ang numero ng telepono ay 11 digit",
+  },
   householdMembersWithNumber: {
     [english]: "1. Household Members",
     [cebuano]: "1. Mga Miyembro sa Panimalay",

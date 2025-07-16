@@ -31,7 +31,6 @@ const ProfileForm = ({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const { minDate, maxDate } = useSelector((state) => state.metadata);
-  const { user } = useUser();
 
   const {
     selectedOrgUnit,
@@ -125,7 +124,7 @@ const ProfileForm = ({
                   validator: (_, value) => {
                     if (item.id === "D9fGfe9AmkZ") {
                       if (value && value.length !== 11) {
-                        return Promise.reject(new Error("The phone number is 11 digit"));
+                        return Promise.reject(new Error(t("The phone number is 11 digit")));
                       }
                     }
                     return Promise.resolve();
