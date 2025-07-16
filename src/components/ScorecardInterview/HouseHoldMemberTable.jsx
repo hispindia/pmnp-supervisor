@@ -114,8 +114,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const displayList = [
       "Cn37lbyhz6f",
       "PIGLwIaw0wy",
-      "WC0cShCpae8",
-      "IENWcinF8lM",
       "Qt4YSwPxw0X",
       "QAYXozgCOHu",
       "Hc9Vgt4LXjb",

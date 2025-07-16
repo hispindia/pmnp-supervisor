@@ -201,26 +201,27 @@ function CaptureForm(props) {
           (a, b) =>
             trackedEntityAttributes.indexOf(a.id) - trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
         );
-        debugger;
-        // if all field hidden => hide the section
-        const filtered = TEIFormMetadata.filter((f) => !f.hidden);
-        if (filtered.length === 0) return null;
+      // if all field hidden => hide the section
+      const filtered = TEIFormMetadata.filter((f) => !f.hidden);
+      if (filtered.length === 0) return null;
 
-        if(pSection.id == "f9KZ0YnBsm6") {
-          return  <ChildHealthCustomForm
-                    section={pSection}
-                    formMetadata={formMetadata}
-                    changeValue={changeValue}
-                    disableForm={disableForm}
-                    editCall={editCall}
-                    formData={formData}
-                    formStatus={formStatus}
-                    prevData={prevData}
-                    locale={locale}
-                    props={props}
-                    validation={validation}
-                    validationWarning={validationWarning}
-                  />
+      if (pSection.id == "f9KZ0YnBsm6") {
+        return (
+          <ChildHealthCustomForm
+            section={pSection}
+            formMetadata={formMetadata}
+            changeValue={changeValue}
+            disableForm={disableForm}
+            editCall={editCall}
+            formData={formData}
+            formStatus={formStatus}
+            prevData={prevData}
+            locale={locale}
+            props={props}
+            validation={validation}
+            validationWarning={validationWarning}
+          />
+        );
       }
 
       return (
@@ -314,7 +315,7 @@ function CaptureForm(props) {
   };
 
   return (
-    <>
+    <div className="capture-form-container">
       <div className="row">
         <div className="col-md-12">
           {generateSectionFields()}
@@ -386,7 +387,7 @@ function CaptureForm(props) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
