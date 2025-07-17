@@ -8,7 +8,7 @@ export const hideSectionRules = (metadata, memberData, programMetadata, newData)
 
   if (newData["dxag8YT8w46"] === "true") {
     hiddenSections = hiddenSections.filter((h) => h !== "zJu4YwQGxN6");
-    shownSections.push("BhQveYSfLtE");
+    shownSections.push("zJu4YwQGxN6");
   }
 
   const pregnancyStatus = countValue(memberData, "ycBIHr9bYyw", "1");
