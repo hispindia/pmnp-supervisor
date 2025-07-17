@@ -147,6 +147,12 @@ export const demographicDetailRules = (metadata, data, { years }) => {
     metadata("WdnS7uGEKJT").hidden = true;
   }
 
+  metadata("rr82ATB4OX7").hidden = data["cMg8stHS4aH"] !== "true";
+  metadata("UKp17uBTPtk").hidden = data["cMg8stHS4aH"] !== "true";
+  metadata("tvznaVjS7Vy").hidden = data["cMg8stHS4aH"] !== "true";
+  metadata("M7MVtLWBrZL").hidden = data["cMg8stHS4aH"] !== "true";
+  metadata("ONKiDbkKCS7").hidden = data["cMg8stHS4aH"] !== "true";
+
   //"Pregnancy status (DE UID: ycBIHr9bYyw) == 2
   // Show Recently gave birth within 28 days (DE UID: se8TXlLUzh8)"
   metadata("se8TXlLUzh8").hidden = data["ycBIHr9bYyw"] !== "2";

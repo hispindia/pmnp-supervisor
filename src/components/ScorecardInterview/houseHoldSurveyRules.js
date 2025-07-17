@@ -2,9 +2,14 @@ import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
 import { GOV_PROGRAMS_DE_ID, SOCIAL_AND_BEHAVIOR_DE_ID } from "../constants";
 import { countRangeValue, countValue } from "./calculateHouseHoldFields";
 
-export const hideSectionRules = (metadata, memberData, programMetadata) => {
+export const hideSectionRules = (metadata, memberData, programMetadata, newData) => {
   let shownSections = [];
-  let hiddenSections = ["BhQveYSfLtE", "PYu2IlBP7vu", "wJ20JrVcQmh", "FHg89pCuFgU"];
+  let hiddenSections = ["BhQveYSfLtE", "PYu2IlBP7vu", "wJ20JrVcQmh", "FHg89pCuFgU", "zJu4YwQGxN6"];
+
+  if (newData["dxag8YT8w46"] === "true") {
+    hiddenSections = hiddenSections.filter((h) => h !== "zJu4YwQGxN6");
+    shownSections.push("BhQveYSfLtE");
+  }
 
   const pregnancyStatus = countValue(memberData, "ycBIHr9bYyw", "1");
   if (pregnancyStatus) {

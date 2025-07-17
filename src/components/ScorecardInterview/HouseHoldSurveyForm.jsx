@@ -106,7 +106,7 @@ const HouseHoldSurveyForm = ({ interviewMetadata, interviewData = {}, onClose = 
     const memberData = interviewCascadeData.map((d) => d.memberData);
 
     houseHoldSurveyRules(metadata, newData);
-    hideSectionRules(metadata, memberData, programMetadata);
+    hideSectionRules(metadata, memberData, programMetadata, newData);
     calculateHouseHoldFields(newData, memberData, interviewData, metadata);
     // calculate from profile, not member event forms
     calculateHouseHoldFieldsFromAttribute(newData, currentCascade, interviewData, interviewMetadata);
