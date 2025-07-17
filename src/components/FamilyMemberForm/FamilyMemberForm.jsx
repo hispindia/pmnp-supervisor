@@ -145,6 +145,16 @@ const FamilyMemberForm = ({
       });
     }
 
+    metadata["X5YLeBE3BzL"].displayOption = "RADIO";
+    if (data["X5YLeBE3BzL"] === "true") {
+      metadata["WC0cShCpae8"].hidden = false;
+      metadata["WC0cShCpae8"].compulsory = true;
+    } else {
+      metadata["WC0cShCpae8"].hidden = true;
+      metadata["WC0cShCpae8"].compulsory = false;
+      data["WC0cShCpae8"] = "";
+    }
+
     // WARNING: if it's hidden, the data will be removed
     metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
 
