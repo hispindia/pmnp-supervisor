@@ -1,20 +1,19 @@
-import InterviewResultForm from "./InterviewResultForm";
-import HouseHoldSurveyForm from "./HouseHoldSurveyForm";
 import HouseHoldMemberTable from "./HouseHoldMemberTable";
-import _ from "lodash";
+import HouseHoldSurveyForm from "./HouseHoldSurveyForm";
+import InterviewResultForm from "./InterviewResultForm";
 
-import { useState } from "react";
-import { Card, Divider, Modal, Tabs } from "antd";
-import { useTranslation } from "react-i18next";
-import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID } from "../constants";
-import { Chip } from "@material-ui/core";
-import { useSelector } from "react-redux";
 import {
   HOUSEHOLD_ID_ATTR_ID,
   HOUSEHOLD_INTERVIEW_DATE_DE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
 } from "@/constants/app-config";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
+import { Chip } from "@material-ui/core";
+import { Card, Modal, Tabs } from "antd";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID } from "../constants";
 
 const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStatus }) => {
   const [currentTab, setCurrentTab] = useState();

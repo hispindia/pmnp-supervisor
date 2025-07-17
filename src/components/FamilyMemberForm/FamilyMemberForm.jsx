@@ -165,7 +165,7 @@ const FamilyMemberForm = ({
     data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
     metadata[PMNP_ID].disabled = true;
-    data[PMNP_ID] = `${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
+    data[PMNP_ID] = `PMNP-${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
 
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
     const enrollmentDate = new Date();

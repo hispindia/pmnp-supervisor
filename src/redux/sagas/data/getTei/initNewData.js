@@ -1,17 +1,17 @@
-import { put, select, call } from "redux-saga/effects";
+import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
+import { getOrganisationUnitById } from "@/utils/organisation";
+import moment from "moment";
+import { put, select } from "redux-saga/effects";
 import { generateUid } from "../../../../utils";
 import { getTeiSuccess } from "../../../actions/data/tei";
-import moment from "moment";
 import { getParentOuPatern } from "./setParentPattern";
-import { getOrganisationUnitById } from "@/utils/organisation";
-import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID } from "@/constants/app-config";
 
 function* handleInitNewData() {
   yield getParentOuPatern();
 
   const {
     selectedOrgUnit: { id: orgUnitId },
-    programMetadata: { id: program, trackedEntityType, programStages },
+    programMetadata: { id: program, trackedEntityType },
     orgUnits,
   } = yield select((state) => state.metadata);
 

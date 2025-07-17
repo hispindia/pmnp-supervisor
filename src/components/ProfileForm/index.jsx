@@ -1,4 +1,4 @@
-import HierachySelector from "@/components/HierachySelector/HierachySelector.component";
+import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
 import { CloseOutlined, EditOutlined, RightOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Form, Space } from "antd";
 import { isEqual } from "lodash";
@@ -7,11 +7,9 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import withDhis2FormItem from "../../hocs/withDhis2Field";
+import { HH_STATUS_ATTR_ID } from "../constants";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
-import { HOUSEHOLD_DATA_COLLECTOR_ATTR_ID, HOUSEHOLD_ID_ATTR_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
-import { useUser } from "@/hooks/useUser";
-import { HH_STATUS_ATTR_ID } from "../constants";
 
 const disabledFields = [
   HOUSEHOLD_ID_ATTR_ID,
