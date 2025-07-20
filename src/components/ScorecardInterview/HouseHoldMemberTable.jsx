@@ -1,9 +1,8 @@
-import BootstrapTable from "react-bootstrap-table-next";
 import { generateUid, pickTranslation, TableColumn } from "@/utils";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOLD_UID, CHILD_VACCINES } from "../constants";
+import { CHILD_VACCINES, FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOLD_UID } from "../constants";
 
 // Icon
 
@@ -17,14 +16,16 @@ import {
 } from "@/constants/app-config";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 import { usePushData } from "@/hooks/usePushData";
+import { cn } from "@/libs/utils";
 import { submitEvent } from "@/redux/actions/data";
-import { deleteEvent } from "@/redux/actions/data/tei";
 import { getQuarterlyFromDate } from "@/utils/date";
 import { transformEvent } from "@/utils/event";
-import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears } from "date-fns";
+import { Chip } from "@material-ui/core";
+import { Button, Modal, Table } from "antd";
+import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears, toDate } from "date-fns";
 import _ from "lodash";
 import CaptureForm from "../CaptureForm";
-import { transformData, transformMetadataToColumns } from "../CascadeTable/utils";
+import { transformData } from "../CascadeTable/utils";
 import "../CustomStyles/css/bootstrap.min.css";
 import {
   childHeathRules,
@@ -37,10 +38,15 @@ import {
 } from "./houseHoldMemberRules";
 import "./interview-detail-table.css";
 import { clearHiddenFieldData, generateTEIDhis2Payload, getFullName, updateMetadata } from "./utils";
-import { Button, Modal, Table } from "antd";
-import { Chip } from "@material-ui/core";
-import { cn } from "@/libs/utils";
-import { fas } from "@fortawesome/free-solid-svg-icons";
+
+const calculateAge = (dateOBbirth, currentDate) => {
+  const years = differenceInYears(currentDate, dateOBbirth);
+  const months = differenceInMonths(currentDate, dateOBbirth);
+  const weeks = differenceInWeeks(currentDate, dateOBbirth);
+  const days = differenceInDays(currentDate, dateOBbirth);
+
+  return { years, months, weeks, days };
+};
 
 const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
   const { t, i18n } = useTranslation();
@@ -112,15 +118,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       },
     };
 
-    const displayList = [
-      "Cn37lbyhz6f",
-      "PIGLwIaw0wy",
-      "Qt4YSwPxw0X",
-      "QAYXozgCOHu",
-      "Hc9Vgt4LXjb",
-      "RoSxLAB5cfo",
-      "Gds5wTiXoSK",
-    ];
+    const displayList = ["Cn37lbyhz6f", "PIGLwIaw0wy", "Qt4YSwPxw0X", "QAYXozgCOHu"];
 
     let columns = metadata
       .filter((tea) => displayList.includes(tea.id))
@@ -136,7 +134,34 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         return teaObject;
       });
 
-    return [noColumn, ...columns, statusColumn, actionColumn];
+    const ageColumnsMapping = {
+      Hc9Vgt4LXjb: "years",
+      RoSxLAB5cfo: "months",
+      Gds5wTiXoSK: "weeks",
+    };
+
+    const ageColumns = metadata
+      .filter((tea) => Object.keys(ageColumnsMapping).includes(tea.id))
+      .map((tea) => {
+        const teaObject = {
+          title: pickTranslation(tea, i18n.language),
+          dataIndex: tea.id,
+          key: tea.id,
+          valueSet: tea.valueSet,
+          render: (value, row, index) => {
+            const dateOfBirth = new Date(row["fJPZFs2yYJQ"]);
+            const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
+            const ages = calculateAge(dateOfBirth, eventDate);
+            const ageValue = ages[ageColumnsMapping[tea.id]];
+
+            return <TableColumn metadata={tea} value={ageValue} />;
+          },
+        };
+
+        return teaObject;
+      });
+
+    return [noColumn, ...columns, ...ageColumns, statusColumn, actionColumn];
   };
 
   const showData = useMemo(() => {
@@ -326,11 +351,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     const dateOBbirth = new Date(data["fJPZFs2yYJQ"]);
-    const years = differenceInYears(eventDate, dateOBbirth);
-    const months = differenceInMonths(eventDate, dateOBbirth);
-    const weeks = differenceInWeeks(eventDate, dateOBbirth);
-    const days = differenceInDays(eventDate, dateOBbirth);
-    const ages = { years, months, weeks, days };
+    const ages = calculateAge(dateOBbirth, eventDate);
+    const { years, months, weeks, days } = ages;
 
     // reset ZkoIX2TigZA
     metadata("ZkoIX2TigZA").hidden = false;

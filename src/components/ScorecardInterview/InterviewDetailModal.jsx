@@ -87,7 +87,6 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
           />
         }
       >
-        {/* {formStatus !== FORM_ACTION_TYPES.ADD_NEW && "No." + (selectedRowIndex + 1)} */}
         <div className="space-y-6 h-[85dvh] pb-6 overflow-y-auto overflow-x-hidden">
           <Card title={t("Interview Details")} classNames={{ header: "!border-b-0 !text-lg", body: "pt-2" }}>
             <div className="grid grid-cols-2 gap-4">

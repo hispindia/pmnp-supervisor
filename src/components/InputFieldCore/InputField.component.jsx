@@ -116,7 +116,6 @@ const InputField = ({
         { value: "false", label: t("no") },
       ];
       if (displayOption == "RADIO") {
-        console.log("here");
         return (
           <RadioField
             value={value}
