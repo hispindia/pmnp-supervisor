@@ -159,7 +159,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         };
 
         return teaObject;
-      });
+      })
+      .reverse();
 
     return [noColumn, ...columns, ...ageColumns, statusColumn, actionColumn];
   };
@@ -362,30 +363,39 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // if ZkoIX2TigZA in hidden section will = true
     hideSectionRules(metadata, data, programMetadataMember, ages);
     // if lmpDate && aogInWeeks < 12 => ZkoIX2TigZA will = true
-    if (lmpDate && aogInWeeks < 12) {
-      metadata("ZkoIX2TigZA").hidden = true;
-    }
-    const aog1 = ["M5nofSFKw1e", "l23OPIamSVU"];
-    const aog23 = ["AZXJKuGOM6n", "MR4IiYlxfsx", "WdfB53AeOSD", "vPHSleGlsCM"];
-    const aog45678 = [
-      "ZMjGmieu8Iz",
-      "Bdd2wmXbizw",
-      "Plkdcpkb04F",
-      "AG21Y0hmrAu",
-      "RAWt5NBWtvB",
+    if (lmpDate && aogInWeeks < 12) metadata("ZkoIX2TigZA").hidden = true;
+
+    const aog1 = ["M5nofSFKw1e"];
+    const aog23 = ["AZXJKuGOM6n", "MR4IiYlxfsx"];
+    const aog45678 = ["ZMjGmieu8Iz", "Bdd2wmXbizw", "Plkdcpkb04F", "AG21Y0hmrAu", "RAWt5NBWtvB"];
+    aog1.forEach(
+      (de) =>
+        (metadata(de).hidden =
+          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks < 8 || aogInWeeks > 40 || metadata(de).hidden)
+    );
+    aog23.forEach(
+      (de) =>
+        (metadata(de).hidden =
+          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks <= 13 || aogInWeeks > 40 || metadata(de).hidden)
+    );
+    aog45678.forEach(
+      (de) =>
+        (metadata(de).hidden =
+          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks <= 23 || aogInWeeks > 40 || metadata(de).hidden)
+    );
+
+    const aogPPW = [
+      "l23OPIamSVU",
+      "WdfB53AeOSD",
+      "vPHSleGlsCM",
       "ciExesjoFlQ",
       "LrSJ5Je5N9B",
       "tTOMrF0wYr3",
       "Y2F9wTOlNMM",
       "Y3mZGw9YGqr",
     ];
-    aog1.forEach((de) => (metadata(de).hidden = !lmpDate || aogInWeeks < 8 || aogInWeeks > 40 || metadata(de).hidden));
-    aog23.forEach(
-      (de) => (metadata(de).hidden = !lmpDate || aogInWeeks <= 13 || aogInWeeks > 40 || metadata(de).hidden)
-    );
-    aog45678.forEach(
-      (de) => (metadata(de).hidden = !lmpDate || aogInWeeks <= 23 || aogInWeeks > 40 || metadata(de).hidden)
-    );
+
+    aogPPW.forEach((de) => (metadata(de).hidden = data["mT44qeiiVpv"] !== "true" || metadata(de).hidden));
 
     data["Hc9Vgt4LXjb"] = years;
     data["RoSxLAB5cfo"] = months;
