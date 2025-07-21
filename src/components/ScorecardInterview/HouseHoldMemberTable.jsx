@@ -354,15 +354,38 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const ages = calculateAge(dateOBbirth, eventDate);
     const { years, months, weeks, days } = ages;
 
+    const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
+    const aogInWeeks = differenceInWeeks(eventDate, lmpDate);
+
     // reset ZkoIX2TigZA
     metadata("ZkoIX2TigZA").hidden = false;
     // if ZkoIX2TigZA in hidden section will = true
     hideSectionRules(metadata, data, programMetadataMember, ages);
-    const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
-    // if lmpDate && differenceInWeeks(eventDate, lmpDate) < 12 => ZkoIX2TigZA will = true
-    if (lmpDate && differenceInWeeks(eventDate, lmpDate) < 12) {
+    // if lmpDate && aogInWeeks < 12 => ZkoIX2TigZA will = true
+    if (lmpDate && aogInWeeks < 12) {
       metadata("ZkoIX2TigZA").hidden = true;
     }
+    const aog1 = ["M5nofSFKw1e", "l23OPIamSVU"];
+    const aog23 = ["AZXJKuGOM6n", "MR4IiYlxfsx", "WdfB53AeOSD", "vPHSleGlsCM"];
+    const aog45678 = [
+      "ZMjGmieu8Iz",
+      "Bdd2wmXbizw",
+      "Plkdcpkb04F",
+      "AG21Y0hmrAu",
+      "RAWt5NBWtvB",
+      "ciExesjoFlQ",
+      "LrSJ5Je5N9B",
+      "tTOMrF0wYr3",
+      "Y2F9wTOlNMM",
+      "Y3mZGw9YGqr",
+    ];
+    aog1.forEach((de) => (metadata(de).hidden = !lmpDate || aogInWeeks < 8 || aogInWeeks > 40 || metadata(de).hidden));
+    aog23.forEach(
+      (de) => (metadata(de).hidden = !lmpDate || aogInWeeks <= 13 || aogInWeeks > 40 || metadata(de).hidden)
+    );
+    aog45678.forEach(
+      (de) => (metadata(de).hidden = !lmpDate || aogInWeeks <= 23 || aogInWeeks > 40 || metadata(de).hidden)
+    );
 
     data["Hc9Vgt4LXjb"] = years;
     data["RoSxLAB5cfo"] = months;
