@@ -358,6 +358,20 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
     const aogInWeeks = differenceInWeeks(eventDate, lmpDate);
 
+    // Populate Trimester based on AOG logic
+    if (lmpDate && aogInWeeks >= 8 && aogInWeeks <= 40) {
+      if (aogInWeeks >= 8 && aogInWeeks <= 13) {
+        data["SCpNPXpe2Ls"] = "1"; // Trimester 1
+      } else if (aogInWeeks > 13 && aogInWeeks <= 23) {
+        data["SCpNPXpe2Ls"] = "2"; // Trimester 2
+      } else if (aogInWeeks > 23 && aogInWeeks <= 40) {
+        data["SCpNPXpe2Ls"] = "3"; // Trimester 3
+      }
+    } else {
+      // Clear trimester if LMP is not valid or AOG is out of range
+      data["SCpNPXpe2Ls"] = null;
+    }
+
     // reset ZkoIX2TigZA
     metadata("ZkoIX2TigZA").hidden = false;
     // if ZkoIX2TigZA in hidden section will = true
