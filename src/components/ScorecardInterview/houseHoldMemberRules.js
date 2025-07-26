@@ -147,9 +147,9 @@ export const demographicDetailRules = (metadata, data, { years }) => {
     metadata("WdnS7uGEKJT").hidden = true;
   }
 
-  metadata("rr82ATB4OX7").hidden = data["cMg8stHS4aH"] !== "true";
-  metadata("UKp17uBTPtk").hidden = data["cMg8stHS4aH"] !== "true";
-  metadata("tvznaVjS7Vy").hidden = data["cMg8stHS4aH"] !== "true";
+  // metadata("rr82ATB4OX7").hidden = data["cMg8stHS4aH"] !== "true";
+  // metadata("UKp17uBTPtk").hidden = data["cMg8stHS4aH"] !== "true";
+  // metadata("tvznaVjS7Vy").hidden = data["cMg8stHS4aH"] !== "true";
   metadata("M7MVtLWBrZL").hidden = data["cMg8stHS4aH"] !== "true";
   metadata("ONKiDbkKCS7").hidden = data["cMg8stHS4aH"] !== "true";
 
@@ -350,6 +350,38 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
       data["RLms3EMK6Lx"] = "false";
     }
   }
+};
+
+export const handleTetanusVaccineLogics = ({ metadata, data, eventDate }) => {
+  // Tetanus vaccine logic
+  const tetanusVaccineRequired = data["cMg8stHS4aH"] === "true";
+
+  // Show tetanus vaccine 1 date when Q 106 = yes
+  metadata("rr82ATB4OX7").hidden = !tetanusVaccineRequired;
+
+  // Show tetanus vaccine 2 date when Q 106 = yes AND after vaccine 1 date + 4 weeks
+  let showVaccine2 = false;
+  if (tetanusVaccineRequired && data["rr82ATB4OX7"]) {
+    const vaccine1Date = new Date(data["rr82ATB4OX7"]);
+    const vaccine1Plus4Weeks = new Date(vaccine1Date);
+    vaccine1Plus4Weeks.setDate(vaccine1Plus4Weeks.getDate() + 28); // 4 weeks = 28 days
+
+    // Show if current date is after vaccine 1 + 4 weeks
+    showVaccine2 = eventDate >= vaccine1Plus4Weeks;
+  }
+  metadata("UKp17uBTPtk").hidden = !showVaccine2;
+
+  // Show tetanus vaccine 3 date when Q 106 = yes AND after vaccine 2 date + 6 months
+  let showVaccine3 = false;
+  if (tetanusVaccineRequired && data["UKp17uBTPtk"]) {
+    const vaccine2Date = new Date(data["UKp17uBTPtk"]);
+    const vaccine2Plus6Months = new Date(vaccine2Date);
+    vaccine2Plus6Months.setMonth(vaccine2Plus6Months.getMonth() + 6);
+
+    // Show if current date is after vaccine 2 + 6 months
+    showVaccine3 = eventDate >= vaccine2Plus6Months;
+  }
+  metadata("tvznaVjS7Vy").hidden = !showVaccine3;
 };
 
 export const hideSectionRules = (metadata, data, programMetadataMember, { years, months }) => {

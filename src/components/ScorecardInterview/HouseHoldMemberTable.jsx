@@ -33,6 +33,7 @@ import {
   demographicDetailRules,
   handleAgeAttrsOfTEI,
   handleAgeFields,
+  handleTetanusVaccineLogics,
   handleZScore,
   hideSectionRules,
 } from "./houseHoldMemberRules";
@@ -446,6 +447,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     handleAgeAttrsOfTEI(data, ages);
     clearHiddenFieldData(metadataOrigin, data, (item) => (item.isAttribute ? false : true));
     handleAgeFields(metadata, ages);
+    handleTetanusVaccineLogics({ metadata, data, eventDate });
 
     // hide all attribute
     Object.keys(metadataOrigin).forEach((key) => {
