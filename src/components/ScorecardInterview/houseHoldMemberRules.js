@@ -297,7 +297,7 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
 
   // Values are beyond 2.41 - 18.0 kg range
   if (data["iFiOPAxrJIF"] < 2.41 || data["iFiOPAxrJIF"] > 18.0) {
-    metadata("iFiOPAxrJIF").error = "Please enter a value between 2.41 and 18.0";
+    metadata("iFiOPAxrJIF").error = "Values are beyond 2.41 - 18.0 kg range";
   } else {
     metadata("iFiOPAxrJIF").error = "";
   }
