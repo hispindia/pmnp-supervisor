@@ -353,7 +353,7 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
 };
 
 export const handleTetanusVaccineLogics = ({ metadata, data, eventDate }) => {
-  // Tetanus vaccine logic
+  // Tetanus vaccine logic - PW
   const tetanusVaccineRequired = data["cMg8stHS4aH"] === "true";
 
   // Show tetanus vaccine 1 date when Q 106 = yes
@@ -382,6 +382,38 @@ export const handleTetanusVaccineLogics = ({ metadata, data, eventDate }) => {
     showVaccine3 = eventDate >= vaccine2Plus6Months;
   }
   metadata("tvznaVjS7Vy").hidden = !showVaccine3;
+
+  // Additional tetanus vaccine logic - WRA (Women of Reproductive Age)
+  const tetanusVaccineRequiredWRA = data["tQ9bxb0faAR"] === "true";
+
+  // Show tetanus vaccine 1, 2, 3 dates when tQ9bxb0faAR = yes
+  metadata("uJXh3QVeTYD").hidden = !tetanusVaccineRequiredWRA;
+  metadata("leVuPYPKyvz").hidden = !tetanusVaccineRequiredWRA;
+  metadata("LABgqTNy3nm").hidden = !tetanusVaccineRequiredWRA;
+
+  // Show tetanus vaccine 4 date when tQ9bxb0faAR = yes AND after vaccine 3 date + 1 year
+  let showVaccine4 = false;
+  if (tetanusVaccineRequiredWRA && data["LABgqTNy3nm"]) {
+    const vaccine3Date = new Date(data["LABgqTNy3nm"]);
+    const vaccine3Plus1Year = new Date(vaccine3Date);
+    vaccine3Plus1Year.setFullYear(vaccine3Plus1Year.getFullYear() + 1);
+
+    // Show if current date is after vaccine 3 + 1 year
+    showVaccine4 = eventDate >= vaccine3Plus1Year;
+  }
+  metadata("Yvy6r60dGyM").hidden = !showVaccine4;
+
+  // Show tetanus vaccine 5 date when tQ9bxb0faAR = yes AND after vaccine 4 date + 1 year
+  let showVaccine5 = false;
+  if (tetanusVaccineRequiredWRA && data["Yvy6r60dGyM"]) {
+    const vaccine4Date = new Date(data["Yvy6r60dGyM"]);
+    const vaccine4Plus1Year = new Date(vaccine4Date);
+    vaccine4Plus1Year.setFullYear(vaccine4Plus1Year.getFullYear() + 1);
+
+    // Show if current date is after vaccine 4 + 1 year
+    showVaccine5 = eventDate >= vaccine4Plus1Year;
+  }
+  metadata("PW62XOydSrB").hidden = !showVaccine5;
 };
 
 export const hideSectionRules = (metadata, data, programMetadataMember, { years, months }) => {
