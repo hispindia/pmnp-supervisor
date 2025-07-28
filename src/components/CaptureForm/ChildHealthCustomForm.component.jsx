@@ -6,6 +6,7 @@ import _ from "lodash";
 
 import InputField from "../InputFieldCore/InputField.component.jsx";
 import { pickTranslation } from "@/utils";
+import HyperLink from "../InputFieldCore/HyperLink";
 
 const ChildHealthCustomForm = ({
   locale,
@@ -25,7 +26,7 @@ const ChildHealthCustomForm = ({
       .map((f, index) => {
         const base64Object = BASE64_IMAGES[f.code];
         return (
-          <div className="col-lg-6 mb-3" key={`${f.code}-${index}`}>
+          <div className="mb-3" key={`${f.code}-${index}`}>
             <InputField
               locale={locale}
               disabled={f.disabled || formStatus === FORM_ACTION_TYPES.VIEW || disableForm}
@@ -110,6 +111,7 @@ const ChildHealthCustomForm = ({
             <div class="card-body">
               <h5 class="card-title" section-id={section.id}>
                 {pickTranslation(section, locale)}
+                <HyperLink  base64={BASE64_IMAGES['EMHed4Yi7L6']} />
               </h5>
               <p class="card-text">
                 <Table 

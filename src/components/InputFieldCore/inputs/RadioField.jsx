@@ -7,16 +7,25 @@ const RadioField = ({
     handleBlur,
     handleChange, 
 }) => {
+  const handleClick = (clickedValue) => {
+    if (clickedValue === value) {
+      handleChange("");   
+      handleBlur("");
+    }
+  };
+
   return (
     <Radio.Group
       disabled={disabled}
       value={value}
       onChange={(e) => {
-        handleChange(e.target.value)
-        handleBlur(e.target.value)
+        if(e.target.value !== value) {
+          handleChange(e.target.value)
+          handleBlur(e.target.value)
+        }
       }}
     >
-    {valueSet.map(vs => <Radio value={vs.value}>{vs.label}</Radio>)}
+    { valueSet.map(vs => <Radio value={vs.value} onClick={() => handleClick(vs.value)}>{vs.label}</Radio>) }
     </Radio.Group>
   );
 };
