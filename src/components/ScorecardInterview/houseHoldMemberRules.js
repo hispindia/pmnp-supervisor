@@ -297,14 +297,14 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
 
   // Values are beyond 2.41 - 18.0 kg range
   if (data["iFiOPAxrJIF"] < 2.41 || data["iFiOPAxrJIF"] > 18.0) {
-    metadata("iFiOPAxrJIF").error = "Values are beyond 2.41 - 18.0 kg range";
+    metadata("iFiOPAxrJIF").error = "Values are beyond 2.4 - 18.0 kg range";
   } else {
     metadata("iFiOPAxrJIF").error = "";
   }
 
-  // Values are beyond 65 - 120 cm range
-  if (data["CY4OTulUceX"] < 65 || data["CY4OTulUceX"] > 120) {
-    metadata("CY4OTulUceX").error = "Please enter a value between 65 and 120";
+  // Values are beyond 30 - 120 cm range
+  if (data["CY4OTulUceX"] < 30 || data["CY4OTulUceX"] > 120) {
+    metadata("CY4OTulUceX").error = "Values are beyond 30 - 120 cm range";
   } else {
     metadata("CY4OTulUceX").error = "";
   }
