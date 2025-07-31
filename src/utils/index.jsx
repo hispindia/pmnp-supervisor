@@ -69,6 +69,10 @@ export const convertValue = (valueType, value) => {
   }
 };
 
+const isValidDate = (date) => {
+  return date && moment(date).isValid();
+};
+
 export const convertValueBack = (valueType, value) => {
   switch (valueType) {
     case "TEXT":
@@ -84,17 +88,15 @@ export const convertValueBack = (valueType, value) => {
     case "USERNAME":
       return value;
     case "DATE":
-      return moment(value).format("YYYY-MM-DD");
+    case "AGE":
+      return isValidDate(value) ? moment(value, "YYYY-MM-DD") : "";
     case "DATETIME":
-      return moment(value);
     case "TIME":
-      return moment(value);
+      return isValidDate(value) ? moment(value) : "";
     case "BOOLEAN":
-      return value + "";
+      return value ? value + "" : "";
     case "TRUE_ONLY":
       return value ? value + "" : "";
-    case "AGE":
-      return moment(value).format("YYYY-MM-DD");
     default:
       return <span>UNSUPPORTED VALUE TYPE</span>;
   }

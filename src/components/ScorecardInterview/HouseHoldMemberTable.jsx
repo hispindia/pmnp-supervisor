@@ -289,6 +289,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     };
 
     console.log("HouseHoldMemberTable", { previousData, data, code, value, interviewData });
+    metadata("X5YLeBE3BzL").compulsory = false;
 
     // stage
     metadata(HOUSEHOLD_INTERVIEW_ID_DE_ID).disabled = true;

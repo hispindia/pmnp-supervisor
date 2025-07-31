@@ -146,6 +146,7 @@ const FamilyMemberForm = ({
     }
 
     metadata["X5YLeBE3BzL"].displayOption = "RADIO";
+
     if (data["X5YLeBE3BzL"] === "true") {
       metadata["WC0cShCpae8"].hidden = false;
       metadata["WC0cShCpae8"].compulsory = true;

@@ -111,22 +111,18 @@ const ChildHealthCustomForm = ({
     },
   ];
   return (
-          <div className="row">
-            <div class="card-body">
-              <h5 class="card-title" section-id={section.id}>
-                {pickTranslation(section, locale)}
-                <HyperLink  base64={BASE64_IMAGES['EMHed4Yi7L6']} />
-              </h5>
-              <p class="card-text">
-                <Table 
-                  columns={columns} 
-                  dataSource={dataSource} 
-                  pagination={false} 
-                />
-              </p>
-            </div>
-          </div>
-  )
+    <div className="row">
+      <div class="card-body">
+        <h5 class="card-title" section-id={section.id}>
+          {pickTranslation(section, locale)}
+          <HyperLink base64={BASE64_IMAGES["EMHed4Yi7L6"]} />
+        </h5>
+        <p class="card-text">
+          <Table columns={columns} dataSource={dataSource} pagination={false} />
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default ChildHealthCustomForm;
