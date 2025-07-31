@@ -1,4 +1,4 @@
-import { FAMILY_MEMBER_METADATA_CUSTOMUPDATE, MIN_MAX_TEXT, MOBILE_NUM_REGEX } from "@/components/constants";
+import { CHILD_VACCINES, FAMILY_MEMBER_METADATA_CUSTOMUPDATE, MIN_MAX_TEXT, MOBILE_NUM_REGEX } from "@/components/constants";
 import _ from "lodash";
 import { useRef, useState } from "react";
 
@@ -77,6 +77,16 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
             valText[elements] = { text: MOBILE_NUM_REGEX.msg };
           } else delete valText[elements];
         }
+      break;
+
+      case "child_vaccine":
+        elements.list.forEach(el => {
+          if(formData[el.ids.vaccineDone]) {
+            if(!formData[el.ids.vaccineDate]  && formData[el.ids.vaccineDone]=="true") valText[el.ids.vaccineDate] = {text: "This field is required"}
+            else delete valText[elements];
+          }
+        })
+      break;
 
       default:
         break;
@@ -160,6 +170,7 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
 
     customValidationCheck("min_max", MIN_MAX_TEXT, valText);
     customValidationCheck("contact", FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER, valText);
+    customValidationCheck("child_vaccine", CHILD_VACCINES, valText);
     console.log({ valText, warningText });
     // custom fileds validations
     setValidationText(valText);

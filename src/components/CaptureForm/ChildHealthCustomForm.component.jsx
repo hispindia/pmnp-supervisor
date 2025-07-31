@@ -18,6 +18,8 @@ const ChildHealthCustomForm = ({
   formData,
   formStatus,
   prevData,
+  validation,
+  validationWarning,
   props,
 }) => {
   const generateFields = (formMetaData, dataElementId, hideLabel, displayOption) => {
@@ -46,6 +48,8 @@ const ChildHealthCustomForm = ({
               InputProps={{
                 startAdornment: <InputAdornment position="start">{f.prefix}</InputAdornment>,
               }}
+              error={validation(f.code)}
+              warning={validationWarning(f.code)}
               maxDate={f.maxDate || props.maxDate}
               minDate={f.minDate || props.minDate || "1900-12-31"}
               data-element-id={f.code}
