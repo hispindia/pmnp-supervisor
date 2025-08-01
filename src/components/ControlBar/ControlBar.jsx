@@ -10,11 +10,13 @@ import { Typography } from "@material-ui/core";
 import { Button, Dropdown } from "antd";
 import { useTranslation } from "react-i18next";
 import { connect, useSelector } from "react-redux";
+import { useState } from "react";
 import OrgUnitContainer from "../../containers/ControlBar/OrgUnit";
 import ReportButtonContainer from "../../containers/ControlBar/ReportButton";
 import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButtonsContainer";
 import { setSelectedOrgUnit } from "../../redux/actions/metadata";
 import { useUser } from "@/hooks/useUser";
+import LanguageSelectionButton from "./LanguageSelectionButton";
 
 const { controlBarContainer, antBreadcrumbSeparator } = styles;
 
@@ -28,16 +30,24 @@ const items = [
     label: <ReportButtonContainer />,
   },
   {
-    key: "5",
+    key: "3",
     label: <ListButtonContainer />,
   },
   {
-    key: "3",
+    key: "4",
     label: <OfflineModeButton />,
   },
   {
-    key: "4",
+    key: "5",
     label: <PushToServerButton />,
+  },
+  {
+    key: "6",
+    label: (
+      <div onClick={(e) => e.stopPropagation()}>
+        <LanguageSelectionButton />
+      </div>
+    ),
   },
 ];
 
@@ -45,6 +55,7 @@ const ControlBar = () => {
   const { t } = useTranslation();
   const { user } = useUser();
   const { selectedOrgUnit, orgUnits } = useSelector((state) => state.metadata);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const orgUnitLabel = selectedOrgUnit?.path
     ? selectedOrgUnit.path
@@ -68,10 +79,10 @@ const ControlBar = () => {
                   items,
                 }}
                 trigger={["click"]}
-                //   dropdownRender={(menu) => <div>{cloneElement(menu)}</div>}
+                open={dropdownOpen}
+                onOpenChange={setDropdownOpen}
               >
                 <a onClick={(e) => e.preventDefault()}>
-                  {/* hamburger icon */}
                   <Button>
                     <MenuOutlined />
                   </Button>
