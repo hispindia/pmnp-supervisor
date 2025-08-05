@@ -51,7 +51,7 @@ export const hhMemberRules = (metadata, data, { years }) => {
 };
 
 export const childHeathRules = (metadata, data, { months, years }, code, CHILD_VACCINES) => {
-  if (years > 5 || !data["fJPZFs2yYJQ"]) {
+  if (months > 59 || !data["fJPZFs2yYJQ"]) {
     CHILD_VACCINES.list.forEach((item) => {
       metadata[item.ids.vaccineDone].hidden = true;
       metadata[item.ids.vaccineDate].hidden = true;
