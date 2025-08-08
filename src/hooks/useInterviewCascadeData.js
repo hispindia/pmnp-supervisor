@@ -4,7 +4,6 @@ import {
   HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
 } from "@/constants/app-config";
 import { differenceInYears } from "date-fns";
-import { is } from "date-fns/locale";
 import { useSelector } from "react-redux";
 
 const filterMalesMoreThan5 = (eventDate) => (member) => {
@@ -49,23 +48,29 @@ export const useInterviewCascadeData = (interviewData) => {
   const getInterviewCascadeData = () => {
     if (!currentInterviewCascade?.[interviewId]) return [];
 
-    const addSavedData = currentInterviewCascade?.[interviewId].map((r) => {
-      const isSaved = r.events.length > 0;
-      const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
-      const memberData = r.memberData;
-      const ableToStart =
-        !filterMalesMoreThan5(eventDate)(memberData) &&
-        (filterFemalesIn10And49(eventDate)(memberData) || filterChildrenUnder5(eventDate)(memberData));
+    const addSavedData = currentInterviewCascade?.[interviewId]
+      .filter((r) => {
+        const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
+        const memberData = r.memberData;
+        // Filter out members under 5 years old
+        return !filterChildrenUnder5(eventDate)(memberData);
+      })
+      .map((r) => {
+        const isSaved = r.events.length > 0;
+        const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
+        const memberData = r.memberData;
+        const ableToStart =
+          !filterMalesMoreThan5(eventDate)(memberData) && filterFemalesIn10And49(eventDate)(memberData);
 
-      return {
-        ...r,
-        memberData: {
-          ...memberData,
-          ableToStart,
-          isSaved,
-        },
-      };
-    });
+        return {
+          ...r,
+          memberData: {
+            ...memberData,
+            ableToStart,
+            isSaved,
+          },
+        };
+      });
 
     return addSavedData;
   };
