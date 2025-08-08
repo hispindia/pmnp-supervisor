@@ -39,7 +39,7 @@ const filterChildrenUnder5 = (eventDate) => (member) => {
   const dateOfbirth = new Date(member["fJPZFs2yYJQ"]);
   const ageInYears = differenceInYears(eventDate, dateOfbirth);
 
-  return ageInYears <= 5;
+  return ageInYears < 5;
 };
 
 export const useInterviewCascadeData = (interviewData) => {
