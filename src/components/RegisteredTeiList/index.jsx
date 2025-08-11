@@ -179,7 +179,7 @@ const RegisteredTeiList = ({
         };
       }}
       rowHoverable={false}
-      columns={[additionalColumns, reportObject].concat(createColumns())}
+      columns={[reportObject].concat(createColumns())}
       dataSource={createDataSource()}
       scroll={{ /*y: "calc(100vh - 268px)",*/ x: 900 }}
       className="my-2 px-1"
