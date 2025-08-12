@@ -441,7 +441,11 @@ export const getTrackedEntityInstancesByIDs = async ({ program, trackedEntities 
   for (const tei of teis) {
     const teiEnr = enrs.find((enr) => enr.trackedEntity === tei.trackedEntity);
 
-    tei.enrollments = toDhis2Enrollments([teiEnr], teiEnr.events || []);
+    if (teiEnr) {
+      tei.enrollments = toDhis2Enrollments([teiEnr], teiEnr.events || []);
+    } else {
+      tei.enrollments = [];
+    }
   }
 
   return {
