@@ -319,14 +319,48 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, filters, pr
     }
 
     if (filters && filters.length > 0 && Boolean(filters[0])) {
-      let teisFilterQueryBuilder = await db[TABLE_NAME];
+      const teisMatchFilter = [];
 
-      teisFilterQueryBuilder = filterQueryBuilder(teisFilterQueryBuilder, filters);
+      // loop filters
+      for (let i = 0; i < filters.length; i++) {
+        const filter = filters[i];
 
-      const teisMatchFilter = await teisFilterQueryBuilder.toArray();
-      const teisMatchFilterIds = teisMatchFilter.map((tei) => tei.trackedEntity);
+        let singleQueryBuilder = await db[TABLE_NAME];
+        singleQueryBuilder = filterQueryBuilder(singleQueryBuilder, [filter]);
 
-      queryBuilder = queryBuilder.and((enr) => teisMatchFilterIds.includes(enr.trackedEntity));
+        const recordsMatchFilter = await singleQueryBuilder.toArray();
+
+        if (recordsMatchFilter && recordsMatchFilter.length > 0) {
+          teisMatchFilter.push(recordsMatchFilter);
+        }
+      }
+
+      let teisMatchFilterIds = [];
+
+      if (teisMatchFilter.length > 1) {
+        // When multiple filters, only keep trackedEntities that appear in ALL filter results (AND logic)
+
+        // Get trackedEntity IDs from first filter result
+        const firstFilterTeiIds = teisMatchFilter[0].map((tei) => tei.trackedEntity);
+
+        // Find trackedEntities that appear in ALL filter results
+        teisMatchFilterIds = firstFilterTeiIds.filter((trackedEntityId) => {
+          // Check if this trackedEntity exists in all other filter results
+          return teisMatchFilter.every((filterResult) =>
+            filterResult.some((tei) => tei.trackedEntity === trackedEntityId)
+          );
+        });
+      } else if (teisMatchFilter.length === 1) {
+        // Single filter - use all results
+        teisMatchFilterIds = teisMatchFilter[0].map((tei) => tei.trackedEntity);
+      }
+
+      if (teisMatchFilterIds.length > 0) {
+        queryBuilder = queryBuilder.and((enr) => teisMatchFilterIds.includes(enr.trackedEntity));
+      } else {
+        // No matching results - return empty
+        return result;
+      }
     }
 
     let pager = {};
