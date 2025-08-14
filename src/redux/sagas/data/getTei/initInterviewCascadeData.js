@@ -27,6 +27,9 @@ function* initInterviewCascadeDataFromTEIsEvents(payload) {
     if (interviewId) {
       currentInterviewCascade[interviewId] = memberTEIsWithEvents.reduce((cas, tei) => {
         const enr = tei.enrollments[0];
+
+        if (!enr) return cas;
+
         const events = enr.events.filter((e) => {
           const eventInterview = e.dataValues.find((dv) => dv.dataElement === HOUSEHOLD_INTERVIEW_ID_DE_ID)?.value;
 

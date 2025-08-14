@@ -1,6 +1,7 @@
 import { toDhis2Enrollments } from "@/indexDB/data/enrollment";
 import { toDhis2Events } from "@/indexDB/data/event";
 import { toDhis2TrackedEntities } from "@/indexDB/data/trackedEntity";
+import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import { findChangedData } from "@/utils/offline";
@@ -19,25 +20,28 @@ export const useExcel = () => {
       const teiSheetName = workbook.SheetNames[2];
       const teiSheet = workbook.Sheets[teiSheetName];
 
-      // ENROLLMENTS
-      const enrSheetName = workbook.SheetNames[1];
-      const enrSheet = workbook.Sheets[enrSheetName];
-
-      if (sheetNames.includes(teiSheetName) && teiSheet && sheetNames.includes(enrSheetName) && enrSheet) {
+      if (sheetNames.includes(teiSheetName) && teiSheet) {
         const teisData = toDhis2TrackedEntities(XLSX.utils.sheet_to_json(teiSheet));
-        const enrsData = toDhis2Enrollments(XLSX.utils.sheet_to_json(enrSheet));
-
-        teisData.forEach((tei) => {
-          const enr = enrsData.find((enr) => enr.trackedEntity === tei.trackedEntity);
-
-          if (enr) {
-            tei.enrollments = [enr];
-          }
-        });
 
         await trackedEntityManager.setTrackedEntityInstances({
           trackedEntities: teisData,
         });
+      }
+
+      // ENROLLMENTS
+      const enrSheetName = workbook.SheetNames[1];
+      const enrSheet = workbook.Sheets[enrSheetName];
+
+      if (sheetNames.includes(enrSheetName) && enrSheet) {
+        const enrsData = toDhis2Enrollments(XLSX.utils.sheet_to_json(enrSheet));
+
+        // Import enrollments using setEnrollment from EnrollmentManager
+        for (const enrollment of enrsData) {
+          await enrollmentManager.setEnrollment({
+            enrollment,
+            program: enrollment.program,
+          });
+        }
       }
 
       // EVENTS

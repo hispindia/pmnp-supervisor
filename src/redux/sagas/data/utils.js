@@ -144,8 +144,6 @@ export function* generateTEIDhis2Payload(payload, programMetadata) {
   //   modifiedEventPayload.push(eventPayload);
   // });
 
-  // enrollmentPayload.events = modifiedEventPayload;
-
   // ENR
   if (memberEnrollment) {
     let enrollmentPayload = {
