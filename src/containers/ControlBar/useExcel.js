@@ -7,10 +7,15 @@ import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEnt
 import { findChangedData } from "@/utils/offline";
 import { notification } from "antd";
 import * as XLSX from "xlsx";
+import { useUser } from "@/hooks/useUser";
+import { useSelector } from "react-redux";
 
 const sheetNames = ["Events", "Enrollments", "Tracked Entities"];
 
 export const useExcel = () => {
+  const { user } = useUser();
+  const { selectedOrgUnit } = useSelector((state) => state.metadata);
+
   const importExcel = async (fileList) => {
     for (let i = 0; i < fileList.length; i++) {
       const data = await fileList[i].arrayBuffer();
@@ -100,7 +105,14 @@ export const useExcel = () => {
     // Create download link and trigger download
     const link = document.createElement("a");
     link.href = URL.createObjectURL(data);
-    link.download = `OfflineData-${currentDateTime}.xlsx`;
+
+    // Create filename with organization unit and username
+    const orgUnitName = selectedOrgUnit?.displayName || "Unknown-OrgUnit";
+    const username = user?.displayName || user?.name || "Unknown-User";
+    const sanitizedOrgUnit = orgUnitName.replace(/[^a-zA-Z0-9]/g, "-");
+    const sanitizedUsername = username.replace(/[^a-zA-Z0-9]/g, "-");
+
+    link.download = `OfflineData-${sanitizedOrgUnit}-${sanitizedUsername}-${currentDateTime}.xlsx`;
     link.click();
 
     notification.success({

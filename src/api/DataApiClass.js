@@ -302,7 +302,11 @@ export default class DataApiClass extends BaseApiClass {
   };
 
   postTrackedEntityInstances = async (teis) => {
-    return await push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, teis, "POST");
+    if (this.useSession && this.isUsingSession()) {
+      return await this.post(`/api/tracker?async=false`, teis);
+    } else {
+      return await push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, teis, "POST");
+    }
   };
 
   putTrackedEntityInstance = async (tei, program) => {
@@ -316,16 +320,25 @@ export default class DataApiClass extends BaseApiClass {
     );
   };
 
-  pushEnrollment = (enrollment, program) =>
-    push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      [`/api/tracker?async=false`, program ? `&program=${program}` : null].filter((e) => Boolean(e)).join(""),
-      enrollment
-    );
+  pushEnrollment = async (enrollment, program) => {
+    const endpoint = [`/api/tracker?async=false`, program ? `&program=${program}` : null]
+      .filter((e) => Boolean(e))
+      .join("");
 
-  pushEvents = (events) => push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, events);
+    if (this.useSession && this.isUsingSession()) {
+      return await this.post(endpoint, enrollment);
+    } else {
+      return push(this.baseUrl, this.username, this.password, endpoint, enrollment);
+    }
+  };
+
+  pushEvents = async (events) => {
+    if (this.useSession && this.isUsingSession()) {
+      return await this.post(`/api/tracker?async=false`, events);
+    } else {
+      return push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, events);
+    }
+  };
 
   deleteEvent = async (event) => {
     const result = await push(

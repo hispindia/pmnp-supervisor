@@ -1,13 +1,19 @@
 {
   "name": "vite-pwa-fi",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.5",
   "scripts": {
     "start": "vite",
+    "prebuild": "node scripts/bump-version.js",
     "build": "cross-env VITE_MODE=production VITE_BASE_URL=../../.. VITE_USERNAME= VITE_PASSWORD= vite build",
+    "build:no-bump": "cross-env VITE_MODE=production VITE_BASE_URL=../../.. VITE_USERNAME= VITE_PASSWORD= vite build",
     "preview": "vite preview",
     "postbuild": "node postbuild.js && cd dist && bestzip pwa_dhis2.zip *",
-    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg"
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
+    "version:bump": "node scripts/bump-version.js",
+    "version:patch": "node scripts/bump-version.js",
+    "version:minor": "node scripts/bump-version.js minor",
+    "version:major": "node scripts/bump-version.js major"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
@@ -97,6 +103,7 @@
     "d2-manifest": "^1.0.0",
     "dotenv": "^16.0.0",
     "jsonfile": "^6.1.0",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.5.6",
     "redux-devtools-extension": "^2.13.9",
     "rollup-plugin-output-manifest": "^2.0.0",

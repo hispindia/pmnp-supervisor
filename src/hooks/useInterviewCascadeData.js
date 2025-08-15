@@ -88,5 +88,7 @@ export const useInterviewCascadeData = (interviewData) => {
 
   if (!foundHHEvent || (foundHHEvent && foundHHEvent.status !== "COMPLETED")) isAllMemberEventsCompleted = false;
 
+  console.log({ interviewCascadeData });
+
   return { interviewCascadeData, femalesIn15And49, isAllMemberEventsCompleted };
 };

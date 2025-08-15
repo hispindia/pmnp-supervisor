@@ -13,6 +13,7 @@ import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 import { mainStore } from "@/redux/store";
 import { setCurrentOfflineLoading, setOfflineLoadingStatus, setOfflineStatus } from "@/redux/actions/common";
+import { dataApi } from "@/api";
 
 function handleDispatchCurrentOfflineLoading({ id, percent }) {
   mainStore.dispatch(setCurrentOfflineLoading({ id, percent }));
@@ -23,6 +24,17 @@ function* handleOfflineLoadingStatusChange({ offlineLoading }) {
 
   try {
     if (offlineLoading) {
+      // Initialize session-based authentication for pull operations
+      console.log("Initializing session for data pull...");
+      const sessionInitialized = yield call([dataApi, "enableSessionMode"]);
+
+      if (!sessionInitialized) {
+        console.log("Session initialization failed, falling back to basic auth for pull operations");
+        // Continue with basic auth if session fails
+      } else {
+        console.log("Session-based authentication enabled for pull operations");
+      }
+
       /**
        * pull metadata from server and save to indexedDB
        * */
@@ -61,6 +73,11 @@ function* handleOfflineLoadingStatusChange({ offlineLoading }) {
     yield put(setOfflineLoadingStatus(false));
     console.log("handleOfflineLoadingStatusChange - error", error);
   } finally {
+    // Clean up session if it was used
+    if (dataApi.isUsingSession && dataApi.isUsingSession()) {
+      console.log("Cleaning up session after pull operations");
+      dataApi.disableSessionMode();
+    }
     console.log("offlineLoading changed", offlineLoading);
   }
 }
@@ -102,13 +119,28 @@ function* handlePushResult(result, message) {
 function* handlePushToServer() {
   try {
     /**
-     * push data to server by order
+     * Initialize session before pushing data
      */
 
     // Check internet connection
     if (!navigator.onLine) {
       throw new Error("No internet connection!");
     }
+
+    // Initialize session-based authentication
+    console.log("Initializing session for data push...");
+    const sessionInitialized = yield call([dataApi, "enableSessionMode"]);
+
+    if (!sessionInitialized) {
+      console.log("Session initialization failed, falling back to basic auth");
+      // Continue with basic auth if session fails
+    } else {
+      console.log("Session-based authentication enabled for push operations");
+    }
+
+    /**
+     * push data to server by order
+     */
 
     // push tracked entities
     const teiPushResults = yield call(trackedEntityManager.push);
@@ -140,6 +172,11 @@ function* handlePushToServer() {
 
     console.table(error);
   } finally {
+    // Clean up session if it was used
+    if (dataApi.isUsingSession && dataApi.isUsingSession()) {
+      console.log("Cleaning up session after push operations");
+      dataApi.disableSessionMode();
+    }
     console.log("handlePushToServer - finally");
   }
 }
