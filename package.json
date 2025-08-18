@@ -1,7 +1,7 @@
 {
   "name": "vite-pwa-fi",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.8",
   "scripts": {
     "start": "vite",
     "prebuild": "node scripts/bump-version.js",

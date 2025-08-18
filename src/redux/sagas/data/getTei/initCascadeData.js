@@ -40,8 +40,7 @@ function* initCascadeDataFromTEIsEvents(payload, eventIncluded = true) {
     return cas;
   }, []);
 
-  process.env.NODE_ENV &&
-    console.log("currentCascade", currentCascade, memberTEIsWithEvents);
+  process.env.NODE_ENV && console.log("currentCascade", currentCascade, memberTEIsWithEvents);
 
   yield put(
     getCascadeSuccess({
@@ -57,9 +56,7 @@ function* initCascadeData(payload) {
   // );
   let currentCascade = {};
 
-  const currentEvents = yield select(
-    (state) => state.data.tei.data.currentEvents
-  );
+  const currentEvents = yield select((state) => state.data.tei.data.currentEvents);
 
   currentCascade =
     payload &&
