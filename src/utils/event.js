@@ -1,14 +1,12 @@
 export function transformEvent(event) {
   const transformed = { ...event };
-  transformed.dataValues = Object.keys(transformed.dataValues).map(
-    (dataElement) => {
-      const dv = {
-        dataElement,
-        value: transformed.dataValues[dataElement],
-      };
-      return dv;
-    }
-  );
+  transformed.dataValues = Object.keys(transformed.dataValues).map((dataElement) => {
+    const dv = {
+      dataElement,
+      value: transformed.dataValues[dataElement],
+    };
+    return dv;
+  });
   return transformed;
 }
 
@@ -60,10 +58,7 @@ export const calculateAge = (dob = new Date()) => {
 
   // Adjust for the case where the birthday has not yet occurred this year
   const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < birthDate.getDate())
-  ) {
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
 

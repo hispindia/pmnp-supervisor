@@ -20,7 +20,7 @@ const useEvent = (currentEvent) => {
           return accumulator;
         }, {})
       : {};
-    console.log("initEv.dataValues", initEv.dataValues);
+
     initEv._isDirty = initEv._isDirty || false;
     setEvent({ ...initEv });
   };
@@ -54,15 +54,13 @@ const useEvent = (currentEvent) => {
 
   const transformEvent = () => {
     const transformed = { ...event };
-    transformed.dataValues = Object.keys(transformed.dataValues).map(
-      (dataElement) => {
-        const dv = {
-          dataElement,
-          value: transformed.dataValues[dataElement],
-        };
-        return dv;
-      }
-    );
+    transformed.dataValues = Object.keys(transformed.dataValues).map((dataElement) => {
+      const dv = {
+        dataElement,
+        value: transformed.dataValues[dataElement],
+      };
+      return dv;
+    });
     return transformed;
   };
 

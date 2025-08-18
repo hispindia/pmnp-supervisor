@@ -10,6 +10,7 @@ import { chunk } from "lodash";
 export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
   try {
     if (offlineSelectedOrgUnits && offlineSelectedOrgUnits.length > 0) {
+      console.log("clearing Enrollment...");
       await db[TABLE_NAME].clear();
     }
     // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
@@ -32,7 +33,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
               {
                 paging: true,
                 totalPages: true,
-                pageSize: 200,
+                pageSize: 1000,
                 page,
               },
               [

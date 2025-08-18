@@ -69,6 +69,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
   try {
     // Delete the table
     if (offlineSelectedOrgUnits && offlineSelectedOrgUnits.length > 0) {
+      console.log("clearing Events...");
       await db[TABLE_NAME].clear();
     }
     // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');

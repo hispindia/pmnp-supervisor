@@ -15,6 +15,7 @@ import { toDhis2TrackedEntities, toDhis2TrackedEntity } from "../data/trackedEnt
 export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
   try {
     if (offlineSelectedOrgUnits && offlineSelectedOrgUnits.length > 0) {
+      console.log("clearing TrackedEntity...");
       await db[TABLE_NAME].clear();
     }
 
@@ -38,7 +39,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
               {
                 paging: true,
                 totalPages: true,
-                pageSize: 200,
+                pageSize: 1000,
                 page,
               },
               [
@@ -475,11 +476,7 @@ export const getTrackedEntityInstancesByIDs = async ({ program, trackedEntities 
   for (const tei of teis) {
     const teiEnr = enrs.find((enr) => enr.trackedEntity === tei.trackedEntity);
 
-    if (teiEnr) {
-      tei.enrollments = toDhis2Enrollments([teiEnr], teiEnr.events || []);
-    } else {
-      tei.enrollments = [];
-    }
+    tei.enrollments = toDhis2Enrollments([teiEnr], teiEnr.events || []);
   }
 
   return {
