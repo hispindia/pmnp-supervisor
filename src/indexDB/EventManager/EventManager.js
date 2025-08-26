@@ -191,7 +191,8 @@ const pushAndMarkOnline = async (events) => {
   return results;
 };
 
-const persist = async (events) => {
+export const persist = async (events) => {
+  console.log("persist events", { events });
   await db[TABLE_NAME].bulkPut(events);
 };
 

@@ -113,8 +113,8 @@ export const push = async () => {
   };
 };
 
-const persist = async (enrollments) => {
-  console.log("persist", { enrollments });
+export const persist = async (enrollments) => {
+  console.log("persist enrollments", { enrollments });
   await db[TABLE_NAME].bulkPut(enrollments);
 };
 
@@ -159,7 +159,7 @@ const pushAndMarkOnline = async (enrollments) => {
   return results;
 };
 
-const beforePersist = async (result, program, isOnline = 1) => {
+export const beforePersist = async (result, program, isOnline = 1) => {
   const objects = [];
   const ids = [];
 

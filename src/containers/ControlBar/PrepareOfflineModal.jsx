@@ -16,9 +16,8 @@ import * as eventManager from "@/indexDB/EventManager/EventManager";
 
 const downloadMapping = [
   { id: "metadata", label: "Download metadata" },
-  { id: "tei", label: "Download tracked entities" },
-  { id: "enr", label: "Download enrollments" },
-  { id: "event", label: "Download events" },
+  { id: "hh_program", label: "Download Household data" },
+  { id: "member_program", label: "Download Member data" },
 ];
 
 const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
@@ -62,10 +61,12 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
     await programManager.pull();
     setLoadingProgress({ id: "metadata", percent: 100 });
     // pull data from server and save to indexedDB
-    const args = { handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits };
-    await trackedEntityManager.pull(args);
-    await enrollmentManager.pull(args);
-    await eventManager.pull(args);
+    await trackedEntityManager.pullNested({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits });
+
+    // const args = { handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits };
+    // await trackedEntityManager.pull(args);
+    // await enrollmentManager.pull(args);
+    // await eventManager.pull(args);
     setLoading(false);
     setReady(true);
   };

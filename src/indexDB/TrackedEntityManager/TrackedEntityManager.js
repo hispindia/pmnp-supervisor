@@ -6,11 +6,20 @@ import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManage
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as orgUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
 import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
 
 import { chunk } from "lodash";
 import { toDhis2Enrollments } from "../data/enrollment";
 import { toDhis2Events } from "../data/event";
 import { toDhis2TrackedEntities, toDhis2TrackedEntity } from "../data/trackedEntity";
+import {
+  DATA_COLLECT_ATTRIBUTE_ID,
+  FAMILY_UID_ATTRIBUTE_ID,
+  HOUSEHOLD_DATA_COLLECTOR_ATTR_ID,
+  HOUSEHOLD_PROGRAM_ID,
+  MEMBER_PROGRAM_ID,
+} from "@/constants/app-config";
+import { extractTeis } from "@/utils/common";
 
 export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
   try {
@@ -81,6 +90,91 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
         });
       }
     }
+  } catch (error) {
+    console.log("TrackedEntity:pull", error);
+  }
+};
+
+export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
+  try {
+    if (offlineSelectedOrgUnits && offlineSelectedOrgUnits.length > 0) {
+      console.log("clearing TrackedEntity...");
+      await db[TABLE_NAME].clear();
+    }
+
+    let page = 1;
+    const pageSize = 20;
+
+    let pageCount = 0;
+    let resultTeis = [];
+    const getTeis = async (program, filter) => {
+      const result = await dataApi.get(
+        "/api/tracker/trackedEntities",
+        { paging: true, totalPages: true, pageSize, page },
+        [
+          `orgUnit=${offlineSelectedOrgUnits.map((o) => o.id).join(";")}`,
+          `program=${program}`,
+          `ouMode=DESCENDANTS`,
+          `includeDeleted=true`,
+          `fields=program,trackedEntity,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType],enrollments[enrollment,updatedAt,trackedEntityType,trackedEntity,program,status,orgUnit,enrolledAt,incidentDate,followup,events[event,updatedAt,dueDate,occurredAt,orgUnit,trackedEntity,program,programStage,status,enrollment,enrollmentStatus,attributeCategoryOptions,attributeOptionCombo,deleted,followup,dataValues[dataElement,providedElsewhere,value]]]`,
+          filter,
+        ]
+      );
+
+      pageCount = result.pageCount;
+      resultTeis.push(...result.instances);
+    };
+
+    console.log("pulling nested hh tei by collector...");
+    handleDispatchCurrentOfflineLoading({ id: "hh_program", percent: 0 });
+    let hhFilter = "";
+
+    const me = await meManager.getMe();
+    console.log(me);
+    const isSuperuser = me?.userRoles.some((role) => role.code === "Superuser");
+    if (!isSuperuser) hhFilter = `filter=${HOUSEHOLD_DATA_COLLECTOR_ATTR_ID}:EQ:${me.username}`;
+
+    await getTeis(HOUSEHOLD_PROGRAM_ID, hhFilter);
+    handleDispatchCurrentOfflineLoading({ id: "hh_program", percent: Math.round((page / pageCount) * 100) });
+    while (page < pageCount) {
+      page++;
+      await getTeis(HOUSEHOLD_PROGRAM_ID, hhFilter);
+      handleDispatchCurrentOfflineLoading({ id: "hh_program", percent: Math.round((page / pageCount) * 100) });
+    }
+
+    const extractedHHResult = extractTeis(resultTeis);
+    console.log("writing nested hh teis...", { extractedHHResult });
+    await persist(await beforePersist({ trackedEntities: extractedHHResult.teis }));
+    await enrollmentManager.persist(
+      await enrollmentManager.beforePersist([{ enrollments: extractedHHResult.enrs }], HOUSEHOLD_PROGRAM_ID)
+    );
+    await eventManager.persist(await eventManager.beforePersist({ events: extractedHHResult.events }));
+
+    console.log("pulling nested member tei by family ids...");
+    // reset
+    pageCount = 0;
+    resultTeis = [];
+    handleDispatchCurrentOfflineLoading({ id: "member_program", percent: 0 });
+    const memberFilter = `filter=${FAMILY_UID_ATTRIBUTE_ID}:IN:${extractedHHResult.teis
+      .map((t) => t.trackedEntity)
+      .join(";")}`;
+
+    await getTeis(MEMBER_PROGRAM_ID, memberFilter);
+    handleDispatchCurrentOfflineLoading({ id: "member_program", percent: Math.round((page / pageCount) * 100) });
+    while (page < pageCount) {
+      page++;
+      await getTeis(MEMBER_PROGRAM_ID, memberFilter);
+    }
+
+    const extractedMemberResult = extractTeis(resultTeis);
+    console.log("writing nested member teis...", { extractedMemberResult });
+    await persist(await beforePersist({ trackedEntities: extractedMemberResult.teis }));
+    await enrollmentManager.persist(
+      await enrollmentManager.beforePersist([{ enrollments: extractedMemberResult.enrs }], MEMBER_PROGRAM_ID)
+    );
+    await eventManager.persist(await eventManager.beforePersist({ events: extractedMemberResult.events }));
+
+    handleDispatchCurrentOfflineLoading({ id: "member_program", percent: Math.round((page / pageCount) * 100) });
   } catch (error) {
     console.log("TrackedEntity:pull", error);
   }
@@ -192,6 +286,7 @@ export const setTrackedEntityInstances = async ({ trackedEntities }) => {
 };
 
 const persist = async (trackedEntities) => {
+  console.log("persist trackedEntities", { trackedEntities });
   await db[TABLE_NAME].bulkPut(trackedEntities);
 };
 
@@ -395,6 +490,7 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, filters, pr
     if (paging && pager) {
       result.page = pager.page;
       result.pageSize = pager.pageSize;
+      result.pageCount = pager.pageCount;
       result.total = pager.total;
     }
 
