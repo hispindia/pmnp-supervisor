@@ -103,7 +103,7 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
     }
 
     let page = 1;
-    const pageSize = 20;
+    let pageSize = 20;
 
     let pageCount = 0;
     let resultTeis = [];
@@ -150,9 +150,16 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
     );
     await eventManager.persist(await eventManager.beforePersist({ events: extractedHHResult.events }));
 
+    // have no family, no need download member data
+    if (resultTeis.length === 0) {
+      handleDispatchCurrentOfflineLoading({ id: "member_program", percent: 100 });
+      return;
+    }
+
     console.log("pulling nested member tei by family ids...");
     // reset
     pageCount = 0;
+    pageSize = 50;
     resultTeis = [];
     handleDispatchCurrentOfflineLoading({ id: "member_program", percent: 0 });
     const memberFilter = `filter=${FAMILY_UID_ATTRIBUTE_ID}:IN:${extractedHHResult.teis
