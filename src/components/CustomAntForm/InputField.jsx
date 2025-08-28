@@ -50,18 +50,26 @@ const InputField = ({
     case "PHONE_NUMBER":
       return (
         <Input
+          inputMode="numeric"
+          pattern="[0-9]*"
           onKeyDown={(e) => {
             onKeyDown(e, /^[0-9]+$/);
           }}
-          // addonBefore={addonBefore}
-          // addonAfter={addonAfter}
-          // value={value || ""}
-          // onClick={onClick}
-          // onChange={(event) => {
-          //   onChange(event.target.value, event);
-          // }}
-          // disabled={disabled}
-          // ref={inputRef}
+          onInput={(e) => {
+            // For mobile/tablet: filter non-numeric characters on input
+            e.target.value = e.target.value.replace(/[^0-9]/g, "");
+          }}
+          onPaste={(e) => {
+            // Handle paste events for better tablet experience
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData("text");
+            const numericValue = paste.replace(/[^0-9]/g, "");
+            e.target.value = numericValue;
+            // Trigger onChange if it exists in props
+            if (props.onChange) {
+              props.onChange({ target: { value: numericValue } });
+            }
+          }}
           {...props}
         />
       );

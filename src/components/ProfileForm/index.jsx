@@ -41,50 +41,6 @@ const ProfileForm = ({
     return Math.floor(1000 + Math.random() * 9000);
   }, []);
 
-  const handleGenerateTemporaryBookNumber = ([
-    residenceStatus,
-    unitOfVillage,
-    houseNumber,
-    temporaryFamilyBookNumber,
-  ]) => {
-    const values = [
-      "TEMP",
-      residenceStatus ? residenceStatus.substr(0, 1) : "< >",
-      organisationUnits?.find((ou) => ou.id === selectedOrgUnit?.id).code,
-      unitOfVillage ? unitOfVillage : "< >",
-      houseNumber ? houseNumber : "< >",
-      temporaryFamilyBookNumber ? temporaryFamilyBookNumber.split("_")[5] : randomNumber,
-    ];
-    return values.join("_");
-  };
-
-  const returnValueForVillageSelector = (type) => {
-    let value = "";
-    let province = "";
-    let district = "";
-    let village = "";
-    let find = organisationUnits?.find((e) => e.id === profile.orgUnit);
-    if (find) {
-      let findVillageHierarchy = villageHierarchy.find((e) => e.value === find.code);
-      if (findVillageHierarchy) {
-        let array = findVillageHierarchy.path.split("/");
-        province = array[0] ? array[0] : "";
-        district = array[1] ? array[1] : "";
-        village = array[2] ? array[2] : "";
-      }
-    }
-    if (type === "province") {
-      value = province;
-    }
-    if (type === "district") {
-      value = district;
-    }
-    if (type === "village") {
-      value = village;
-    }
-    return value;
-  };
-
   const items = trackedEntityAttributes
     .filter((tea) => tea.displayInList || SHOULD_NOT_CLEAR_LIST.includes(tea.id))
     .map((attr) => ({ ...attr, disabled: disabledFields.includes(attr.id) || !isEdit }));
@@ -341,7 +297,7 @@ const ProfileForm = ({
                     // cleanFormData(profile.attributes),
                     // cleanFormData(form.getFieldsValue()),
                     profile.attributes,
-                    form.getFieldsValue()
+                    form.getFieldsValue(),
                   ),
                 };
               }}
