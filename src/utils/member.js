@@ -1,21 +1,28 @@
 export const getMaxHHMemberID = (cascadeData) => {
-  if (!cascadeData) {
+  if (!cascadeData || !Array.isArray(cascadeData)) {
     return "001";
   }
 
+  // Extract all member IDs and remove duplicates
   const allMemberIDs = cascadeData
+    .filter((members) => members && typeof members === "object") // Filter out null/undefined elements
     .map((members) => ("Cn37lbyhz6f" in members ? members.Cn37lbyhz6f : null))
-    .flat()
-    .filter((id) => !isNaN(id));
+    .filter((id) => id !== null && id !== undefined && id !== "") // Filter out null/undefined/empty values
+    .map((id) => parseInt(id, 10)) // Convert to numbers for proper comparison
+    .filter((id) => !isNaN(id) && id > 0); // Filter out invalid numbers and ensure positive
 
-  if (allMemberIDs.length === 0) {
+  // Remove duplicates using Set
+  const uniqueMemberIDs = [...new Set(allMemberIDs)];
+
+  if (uniqueMemberIDs.length === 0) {
     return "001";
   }
 
-  const maxMemberID = Math.max(...allMemberIDs);
-  const paddedMemberIDs = (maxMemberID + 1).toString().padStart(3, "0");
+  // Find the maximum ID and increment by 1
+  const maxMemberID = Math.max(...uniqueMemberIDs);
+  const nextMemberID = (maxMemberID + 1).toString().padStart(3, "0");
 
-  return paddedMemberIDs;
+  return nextMemberID;
 };
 
 export const getHouseholdMemberValueSet = (cascadeData) => {

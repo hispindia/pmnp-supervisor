@@ -28,6 +28,18 @@ export default defineConfig({
   resolve: {
     alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }],
   },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./src/setupTests.js"],
+    include: ["src/**/*.{test,spec}.{js,jsx,ts,tsx}"],
+    exclude: ["node_modules", "dist"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      exclude: ["node_modules/", "src/setupTests.js", "**/*.d.ts", "**/*.config.js", "**/*.config.ts"],
+    },
+  },
 
   // build: {
   //   sourcemap: true,
