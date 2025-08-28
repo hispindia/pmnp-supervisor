@@ -81,11 +81,11 @@ function* handleOfflineLoadingStatusChange({ offlineLoading }) {
 function* handleOfflineStatusChange({ offlineStatus }) {
   localStorage.setItem("offlineStatus", offlineStatus);
 
-  if (!offlineStatus) {
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000); // wait for 3 second before reloading
-  }
+  // if (!offlineStatus) {
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, 3000); // wait for 3 second before reloading
+  // }
 }
 
 function* handlePushResult(result, message) {
