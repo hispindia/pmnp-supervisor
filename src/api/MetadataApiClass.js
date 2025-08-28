@@ -57,17 +57,6 @@ export default class MetadataApiClass extends BaseApiClass {
   };
 
   getOrgUnitSelectorData = async ({ orgUnits, filter }) => {
-    // const orgUnits = await pull(
-    //   this.baseUrl,
-    //   this.username,
-    //   this.password,
-    //   "/api/organisationUnits",
-    //   { paging: false },
-    //   [
-    //     "withinUserHierarchy=true",
-    //     "fields=id,code,displayName,path,children[id,code,displayName,path]",
-    //   ]
-    // );
     const me = await pull(this.baseUrl, this.username, this.password, "/api/me", { paging: false }, []);
 
     let data = {};

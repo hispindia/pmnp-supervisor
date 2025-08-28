@@ -20,7 +20,7 @@ export const getMetadataSet = (isOfflineMode) => {
     return [
       metadataApi.getProgramMetadata(HOUSEHOLD_PROGRAM_ID),
       metadataApi.get(`/api/organisationUnits`, {}, [
-        "paging=false&fields=id,code,path,displayName,level,parent,translations",
+        "paging=false&fields=id,code,path,displayName,level,parent,translations&withinUserHierarchy=true",
       ]),
       metadataApi.getMe(),
       metadataApi.getOrgUnitLevels(),

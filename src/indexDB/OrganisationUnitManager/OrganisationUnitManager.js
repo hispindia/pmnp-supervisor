@@ -8,7 +8,7 @@ export const pull = async () => {
   try {
     await db[TABLE_NAME].clear();
     const orgs = await metadataApi.get(`/api/organisationUnits`, {}, [
-      "filter=level:in:[1,2,3,4]&paging=false&fields=id,code,path,displayName,level,parent,translations",
+      "withinUserHierarchy=true&paging=false&fields=id,code,path,displayName,level,parent,translations",
     ]);
 
     if (orgs.organisationUnits && orgs.organisationUnits.length > 0) {

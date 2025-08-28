@@ -12,9 +12,8 @@ export default class BaseApiClass {
   // Initialize session-based authentication
   async initializeSession() {
     const success = await sessionManager.initialize(this.baseUrl, this.username, this.password);
-    if (success) {
-      this.useSession = true;
-    }
+    // skip this
+    this.useSession = false;
     return success;
   }
 
@@ -29,6 +28,7 @@ export default class BaseApiClass {
 
   // Pure push method - can use either session or basic auth
   purePush = async (endPoint, payload, method) => {
+    console.log("sessionManager", sessionManager.isSessionValid());
     if (this.useSession && sessionManager.isSessionValid()) {
       return await sessionManager.purePush(endPoint, payload, method);
     } else {
@@ -38,6 +38,7 @@ export default class BaseApiClass {
 
   // POST method using session
   post = async (endPoint, payload, method = "POST") => {
+    console.log("sessionManager", sessionManager.isSessionValid());
     if (this.useSession && sessionManager.isSessionValid()) {
       return await sessionManager.post(endPoint, payload, method);
     } else {
