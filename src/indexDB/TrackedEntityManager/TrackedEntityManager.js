@@ -157,7 +157,8 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
     }
 
     console.log("pulling nested member tei by family ids...");
-    // reset
+    //
+    page = 1;
     pageCount = 0;
     pageSize = 50;
     resultTeis = [];
