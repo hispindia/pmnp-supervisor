@@ -33,7 +33,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
               {
                 paging: true,
                 totalPages: true,
-                pageSize: 1000,
+                pageSize: 2000,
                 page,
               },
               [

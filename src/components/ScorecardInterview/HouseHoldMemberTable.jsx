@@ -276,7 +276,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     pustTei({ currentTei: updatedMemberTei });
 
     const events = [demographicEventPayload, scorecardSurveyEventPayload];
-    console.log("update member events:", { events, scorecardSurveyDataValues });
+    console.log("update member events:", { events, updatedMemberTei, scorecardSurveyDataValues });
     // clearForm();
   };
 

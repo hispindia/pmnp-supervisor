@@ -89,10 +89,10 @@ export const convertValueBack = (valueType, value) => {
       return value;
     case "DATE":
     case "AGE":
-      return isValidDate(value) ? moment(value, "YYYY-MM-DD") : "";
+      return isValidDate(value) ? moment(value, "YYYY-MM-DD").format("YYYY-MM-DD") : "";
     case "DATETIME":
     case "TIME":
-      return isValidDate(value) ? moment(value) : "";
+      return isValidDate(value) ? moment(value).format("YYYY-MM-DD") : "";
     case "BOOLEAN":
       return value ? value + "" : "";
     case "TRUE_ONLY":

@@ -3,13 +3,10 @@ import PushToServerButton from "@/containers/ControlBar/PushToServerButton";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpIcon from "@material-ui/icons/Help";
+import { Button } from "antd";
 import styles from "./ControlBar.module.css";
-import { Button, Select } from "antd";
-import { useTranslation } from "react-i18next";
-import { LOCALE_CODES, LOCALE_LABELS } from "@/constants/app-config";
-import { baseApi } from "@/api";
-import { useState } from "react";
 import LanguageSelectionButton from "./LanguageSelectionButton";
+import manifest from "../../../manifest.webapp.json";
 
 const { exitBtn, helpBtn, barContainer } = styles;
 
@@ -22,6 +19,9 @@ const RightSideButtons = ({ onClickHelp, onClickExit, helpLabel, exitLabel }) =>
         <OfflineModeButton />
         <PushToServerButton />
         <LanguageSelectionButton />
+        <div className="d-flex align-items-center">
+          <span className="text-muted font-medium">v{manifest.version}</span>
+        </div>
       </div>
       {shouldShowExit ? (
         <>
