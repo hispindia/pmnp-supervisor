@@ -102,7 +102,7 @@ function* handlePushResult(result, message) {
       }
 
       const errorMessages = errors.map((error) =>
-        error.validationReport.errorReports.map((errorReport) => errorReport.message).join("\n")
+        error.validationReport.errorReports.map((errorReport) => errorReport.message).join("\n"),
       );
 
       console.log({ errorMessages });
@@ -125,14 +125,6 @@ function* handlePushToServer() {
 
     // Initialize session-based authentication
     console.log("Initializing session for data push...");
-    const sessionInitialized = yield call([dataApi, "enableSessionMode"]);
-
-    if (!sessionInitialized) {
-      console.log("Session initialization failed, falling back to basic auth");
-      // Continue with basic auth if session fails
-    } else {
-      console.log("Session-based authentication enabled for push operations");
-    }
 
     /**
      * push data to server by order
@@ -168,11 +160,6 @@ function* handlePushToServer() {
 
     console.table(error);
   } finally {
-    // Clean up session if it was used
-    if (dataApi.isUsingSession && dataApi.isUsingSession()) {
-      console.log("Cleaning up session after push operations");
-      dataApi.disableSessionMode();
-    }
     console.log("handlePushToServer - finally");
   }
 }
