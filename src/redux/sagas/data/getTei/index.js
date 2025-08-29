@@ -43,7 +43,7 @@ function* handleGetTei() {
       yield put(getTeiSuccessMessage(`Open add new family form`));
     }
   } catch (e) {
-    console.error("handleGetTei", e.message);
+    console.error("handleGetTei", e);
     yield put(getTeiError(e.message));
   } finally {
     yield put(loadTei(false));

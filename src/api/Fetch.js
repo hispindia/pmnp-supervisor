@@ -1,17 +1,3 @@
-// const fetchWrapper = (...input) => {
-//   return new Promise((rs, rj) => {
-//     fetch(...input)
-//       .then((response) => {
-//         if (!response.ok) throw response;
-//         rs(response);
-//       })
-//       .catch((err) => {
-//         console.log({ err });
-//         rj(err);
-//       });
-//   });
-// };
-
 const fetchWrapper = (...input) => {
   return new Promise((rs, rj) => {
     fetch(...input)
@@ -66,7 +52,7 @@ const pull = (baseUrl, username, password, endPoint, pagingObject, params) => {
   return fetchWrapper(baseUrl + endPoint, {
     credentials: "include",
     headers: {
-      Authorization: !username ? "" : "Basic " + btoa(`${username}:${password}`),
+      ...(username && { Authorization: "Basic " + btoa(`${username}:${password}`) }),
     },
   })
     .then((result) => result.json())
@@ -81,7 +67,7 @@ const push = (baseUrl, username, password, endPoint, payload, method) => {
     body: JSON.stringify(payload),
     headers: {
       "Content-Type": "application/json",
-      Authorization: !username ? "" : "Basic " + btoa(`${username}:${password}`),
+      ...(username && { Authorization: "Basic " + btoa(`${username}:${password}`) }),
     },
   }).then((result) => {
     if (result.headers.get("content-type").includes("application/json")) {
@@ -104,7 +90,10 @@ const purePush = (baseUrl, username, password, endPoint, payload, method, header
     method: method || "POST",
     credentials: "include",
     body: payload,
-    headers: { Authorization: !username ? "" : "Basic " + btoa(`${username}:${password}`), ...headers },
+    headers: {
+      ...(username && { Authorization: "Basic " + btoa(`${username}:${password}`) }),
+      ...headers,
+    },
   }).then((result) => {
     if (result.headers.get("content-type").includes("application/json")) {
       return result.json().then((res) => {
