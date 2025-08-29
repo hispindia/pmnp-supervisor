@@ -22,7 +22,6 @@ import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 
 // Asset hashes to see if content has changed.
 const assetHashes = self.__WB_MANIFEST;
-console.log("assetHashes", assetHashes);
 
 // Sets a default Network Only handler, but consider writing your own handlers, too!
 // setDefaultHandler(new NetworkFirst());

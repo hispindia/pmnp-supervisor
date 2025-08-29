@@ -49,7 +49,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   const { programMetadata, selectedOrgUnit } = useSelector((state) => state.metadata);
   const { me } = useSelector((state) => state);
   const foundProgramStage = programMetadata.programStages.find(
-    (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
+    (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   );
   const [columns, setColumns] = useState(transformMetadataToColumns(metadata, locale));
   const currentTei = useSelector((state) => state.data.tei.data.currentTei);
@@ -194,7 +194,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       const interviewId = row[HOUSEHOLD_INTERVIEW_ID_DE_ID];
       const householdEvents = currentEvents.reduce(
         (acc, e) => (e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewId ? [...acc, e.event] : acc),
-        []
+        [],
       );
       const householdMemberEvents = currentInterviewCascade[interviewId].reduce((acc, row) => {
         row.events.forEach((e) => {
@@ -305,7 +305,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
             ob[op.value] = {
               ...op.translations.reduce(
                 (acc, { locale }) => ({ ...acc, [locale]: pickTranslation({ ...op, name: op.label }, locale) }),
-                {}
+                {},
               ),
               en: op.label,
             };
