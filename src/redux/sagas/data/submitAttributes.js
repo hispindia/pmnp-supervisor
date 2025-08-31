@@ -58,7 +58,7 @@ function* makePayload(attributes) {
   const newCurrentTei = { ...data.currentTei, attributes };
   const { currentTei, currentEnrollment } = generateDhis2Payload(
     { ...data, currentTei: newCurrentTei },
-    programMetadata
+    programMetadata,
   );
   return {
     currentTei,
@@ -111,14 +111,14 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
       {
         trackedEntities: [currentTei],
       },
-      programMetadataId
+      programMetadataId,
     );
     yield call(
       dataApi.pushEnrollment,
       {
         enrollments: [newEnrollment],
       },
-      programMetadataId
+      programMetadataId,
     );
   }
 

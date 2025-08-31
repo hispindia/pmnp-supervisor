@@ -21,7 +21,7 @@ export default class DataApiClass extends BaseApiClass {
         page: page,
         filter: filter,
       },
-      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `order=created:desc`, `program=${program}`]
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `order=created:desc`, `program=${program}`],
     );
 
   getTrackedEntityInstanceListByQuery = (orgUnit, program, pageSize, page, filter, order) =>
@@ -38,7 +38,7 @@ export default class DataApiClass extends BaseApiClass {
         filter: filter,
         order: order,
       },
-      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`, "fields=:all"]
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`, "fields=:all"],
     );
 
   getAllTrackedEntityInstancesByIDs = ({ program, teiList }) =>
@@ -51,8 +51,8 @@ export default class DataApiClass extends BaseApiClass {
         paging: false,
       },
       [`fields=*`, `trackedEntity=${teiList.join(";")}`, program ? `program=${program}` : null].filter((e) =>
-        Boolean(e)
-      )
+        Boolean(e),
+      ),
     );
 
   getAllTrackedEntityInstanceList = (orgUnit, program) =>
@@ -64,7 +64,7 @@ export default class DataApiClass extends BaseApiClass {
       {
         paging: false,
       },
-      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`],
     );
 
   getEventsByTEI = (program, trackedEntityInstance, startDate, endDate) => {
@@ -81,7 +81,7 @@ export default class DataApiClass extends BaseApiClass {
         `program=${program}`,
         `trackedEntityInstance=${trackedEntityInstance}`,
         `startDate=${startDate}&endDate=${endDate}`,
-      ]
+      ],
     );
   };
 
@@ -100,7 +100,7 @@ export default class DataApiClass extends BaseApiClass {
         `orgUnit=${orgUnit}`,
         `programStage=${programStage}`,
         `startDate=${startDate}&endDate=${endDate}`,
-      ]
+      ],
     );
   };
 
@@ -113,7 +113,7 @@ export default class DataApiClass extends BaseApiClass {
       {
         paging: false,
       },
-      [`fields=:all`, `program=${program}`]
+      [`fields=:all`, `program=${program}`],
     );
 
   findTei = (orgUnit, program, attributes) => {
@@ -130,7 +130,7 @@ export default class DataApiClass extends BaseApiClass {
         paging: false,
         filter: filters,
       },
-      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`]
+      [`orgUnit=${orgUnit}`, `ouMode=SELECTED`, `program=${program}`],
     );
   };
 
@@ -212,7 +212,7 @@ export default class DataApiClass extends BaseApiClass {
       this.password,
       `/api/tracker/trackedEntities/${id}.json`,
       { paging: false },
-      [`fields=*`, `program=${program}`]
+      [`fields=*`, `program=${program}`],
     );
   };
 
@@ -244,7 +244,7 @@ export default class DataApiClass extends BaseApiClass {
         trackedEntityType ? `trackedEntityType=${trackedEntityType}` : null,
         filters.join("&"),
         attributes.map((e) => "attribute=" + e).join("&"),
-      ].filter((e) => Boolean(e))
+      ].filter((e) => Boolean(e)),
     );
   };
 
@@ -265,8 +265,8 @@ export default class DataApiClass extends BaseApiClass {
             program,
             null, //attribute
             tempPager,
-            true // paging
-          )
+            true, // paging
+          ),
         );
       });
 
@@ -295,18 +295,23 @@ export default class DataApiClass extends BaseApiClass {
     });
 
   pushTrackedEntityInstance = (tei, program) =>
-    push(this.baseUrl, this.username, this.password, `/api/tracker?async=false&program=${program}`, tei);
-
-  postTrackedEntityInstance = async (tei) => {
-    const result = await push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, tei, "POST");
-  };
+    push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker?async=false&skipSideEffects=true&skipRuleEngine=true&program=${program}`,
+      tei,
+    );
 
   postTrackedEntityInstances = async (teis) => {
-    if (this.useSession && this.isUsingSession()) {
-      return await this.post(`/api/tracker?async=false`, teis);
-    } else {
-      return await push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, teis, "POST");
-    }
+    return await push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker?async=false&skipSideEffects=true&skipRuleEngine=true`,
+      teis,
+      "POST",
+    );
   };
 
   putTrackedEntityInstance = async (tei, program) => {
@@ -316,28 +321,29 @@ export default class DataApiClass extends BaseApiClass {
       this.password,
       `/api/tracker/${tei.trackedEntity}?program=${program}`,
       tei,
-      "PUT"
+      "PUT",
     );
   };
 
   pushEnrollment = async (enrollment, program) => {
-    const endpoint = [`/api/tracker?async=false`, program ? `&program=${program}` : null]
+    const endpoint = [
+      `/api/tracker?async=false&skipSideEffects=true&skipRuleEngine=true`,
+      program ? `&program=${program}` : null,
+    ]
       .filter((e) => Boolean(e))
       .join("");
 
-    if (this.useSession && this.isUsingSession()) {
-      return await this.post(endpoint, enrollment);
-    } else {
-      return push(this.baseUrl, this.username, this.password, endpoint, enrollment);
-    }
+    return push(this.baseUrl, this.username, this.password, endpoint, enrollment);
   };
 
   pushEvents = async (events) => {
-    if (this.useSession && this.isUsingSession()) {
-      return await this.post(`/api/tracker?async=false`, events);
-    } else {
-      return push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, events);
-    }
+    return push(
+      this.baseUrl,
+      this.username,
+      this.password,
+      `/api/tracker?async=false&skipSideEffects=true&skipRuleEngine=true`,
+      events,
+    );
   };
 
   deleteEvent = async (event) => {
@@ -345,8 +351,8 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/tracker?importStrategy=DELETE&async=false`,
-      event
+      `/api/tracker?importStrategy=DELETE&async=false&skipSideEffects=true&skipRuleEngine=true`,
+      event,
     );
     return result.status == "OK";
   };

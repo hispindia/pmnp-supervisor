@@ -69,13 +69,6 @@ function* handleOfflineLoadingStatusChange({ offlineLoading }) {
   //   yield put(setOfflineLoadingStatus(false));
   //   console.log("handleOfflineLoadingStatusChange - error", error);
   // } finally {
-  //   // Clean up session if it was used
-  //   if (dataApi.isUsingSession && dataApi.isUsingSession()) {
-  //     console.log("Cleaning up session after pull operations");
-  //     dataApi.disableSessionMode();
-  //   }
-  //   console.log("offlineLoading changed", offlineLoading);
-  // }
 }
 
 function* handleOfflineStatusChange({ offlineStatus }) {
