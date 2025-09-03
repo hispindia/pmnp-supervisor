@@ -58,7 +58,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
                 `includeDeleted=true`,
                 // `lastUpdatedStartDate=${updatedAt}`, // Need to get all data
                 `fields=trackedEntity,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType]`,
-              ]
+              ],
             );
 
             if (!result.instances || result.instances.length === 0 || page > result.pageCount) {
@@ -118,7 +118,7 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
           `includeDeleted=true`,
           `fields=program,trackedEntity,trackedEntityType,orgUnit,updatedAt,deleted,attributes[attribute,value,displayName,valueType],enrollments[enrollment,updatedAt,trackedEntityType,trackedEntity,program,status,orgUnit,enrolledAt,incidentDate,followup,events[event,updatedAt,dueDate,occurredAt,orgUnit,trackedEntity,program,programStage,status,enrollment,enrollmentStatus,attributeCategoryOptions,attributeOptionCombo,deleted,followup,dataValues[dataElement,providedElsewhere,value]]]`,
           filter,
-        ]
+        ],
       );
 
       pageCount = result.pageCount;
@@ -130,7 +130,7 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
     let hhFilter = "";
 
     const me = await meManager.getMe();
-    console.log(me);
+
     const isSuperuser = me?.userRoles.some((role) => role.code === "Superuser");
     if (!isSuperuser) hhFilter = `filter=${HOUSEHOLD_DATA_COLLECTOR_ATTR_ID}:EQ:${me.username}`;
 
@@ -146,7 +146,7 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
     console.log("writing nested hh teis...", { extractedHHResult });
     await persist(await beforePersist({ trackedEntities: extractedHHResult.teis }));
     await enrollmentManager.persist(
-      await enrollmentManager.beforePersist([{ enrollments: extractedHHResult.enrs }], HOUSEHOLD_PROGRAM_ID)
+      await enrollmentManager.beforePersist([{ enrollments: extractedHHResult.enrs }], HOUSEHOLD_PROGRAM_ID),
     );
     await eventManager.persist(await eventManager.beforePersist({ events: extractedHHResult.events }));
 
@@ -178,7 +178,7 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
     console.log("writing nested member teis...", { extractedMemberResult });
     await persist(await beforePersist({ trackedEntities: extractedMemberResult.teis }));
     await enrollmentManager.persist(
-      await enrollmentManager.beforePersist([{ enrollments: extractedMemberResult.enrs }], MEMBER_PROGRAM_ID)
+      await enrollmentManager.beforePersist([{ enrollments: extractedMemberResult.enrs }], MEMBER_PROGRAM_ID),
     );
     await eventManager.persist(await eventManager.beforePersist({ events: extractedMemberResult.events }));
 
@@ -191,7 +191,6 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
 export const push = async () => {
   console.time("TrackedEntity::push");
 
-  var start = performance.now();
   const trackedEntities = await findOffline();
 
   if (trackedEntities?.length > 0) {
@@ -205,11 +204,9 @@ export const push = async () => {
   }
 
   console.timeEnd("TrackedEntity::push");
-  var end = performance.now();
   return {
     status: "OK",
   };
-  // return "TrackedEntity::push - " + (end - start);
 };
 
 export const findOffline = async () => {
@@ -451,7 +448,7 @@ export const find = async ({ paging = true, pageSize, page, orgUnit, filters, pr
         teisMatchFilterIds = firstFilterTeiIds.filter((trackedEntityId) => {
           // Check if this trackedEntity exists in all other filter results
           return teisMatchFilter.every((filterResult) =>
-            filterResult.some((tei) => tei.trackedEntity === trackedEntityId)
+            filterResult.some((tei) => tei.trackedEntity === trackedEntityId),
           );
         });
       } else if (teisMatchFilter.length === 1) {

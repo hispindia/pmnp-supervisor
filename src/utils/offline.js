@@ -18,13 +18,13 @@ export const getMetadataSet = (isOfflineMode) => {
     ];
   } else {
     return [
-      metadataApi.getProgramMetadata(HOUSEHOLD_PROGRAM_ID),
+      metadataApi.getProgramMetadataFromCacher(`program_${HOUSEHOLD_PROGRAM_ID}`),
       metadataApi.get(`/api/organisationUnits`, {}, [
         "paging=false&fields=id,code,path,displayName,level,parent,translations&withinUserHierarchy=true",
       ]),
       metadataApi.getMe(),
       metadataApi.getOrgUnitLevels(),
-      metadataApi.getProgramMetadata(MEMBER_PROGRAM_ID),
+      metadataApi.getProgramMetadataFromCacher(`program_${MEMBER_PROGRAM_ID}`),
       metadataApi.getUserOrgUnits(),
       metadataApi.getReportId(),
     ];

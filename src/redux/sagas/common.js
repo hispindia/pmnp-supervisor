@@ -107,22 +107,14 @@ function* handlePushResult(result, message) {
 
 function* handlePushToServer() {
   try {
-    /**
-     * Initialize session before pushing data
-     */
-
     // Check internet connection
     if (!navigator.onLine) {
       throw new Error("No internet connection!");
     }
 
-    // Initialize session-based authentication
-    console.log("Initializing session for data push...");
-
     /**
      * push data to server by order
      */
-
     // push tracked entities
     const teiPushResults = yield call(trackedEntityManager.push);
     yield handlePushResult(teiPushResults, "Sync tracked entities failed: ");

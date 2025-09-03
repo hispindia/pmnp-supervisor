@@ -10,6 +10,10 @@ export const pushMapping = [
   { id: "event", label: "Sync events" },
 ];
 
+// Constants
+const SYNC_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes in milliseconds
+const STORAGE_KEY = "syncTime";
+
 const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -19,10 +23,6 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
   const [countdown, setCountdown] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const intervalRef = useRef(null);
-
-  // Constants
-  const SYNC_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes in milliseconds
-  const STORAGE_KEY = "syncTime";
 
   // Check if sync is on cooldown
   const checkSyncCooldown = () => {

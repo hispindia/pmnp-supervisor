@@ -22,12 +22,12 @@ const downloadMapping = [
 
 const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { programMetadata, orgUnits } = useSelector((state) => state.metadata);
 
   const userOrgUnits = useMemo(
     () => programMetadata?.organisationUnits?.filter(({ path }) => orgUnits.find(({ id }) => path.includes(id))),
-    [programMetadata]
+    [programMetadata],
   );
 
   const [selectedOrgUnits, setSelectedOrgUnit] = useState({ selected: [] });
@@ -58,7 +58,7 @@ const PrepareOfflineModal = ({ open, onCancel, onClose }) => {
     setLoadingProgress({ id: "metadata", percent: 30 });
     await organisationUnitManager.pull();
     setLoadingProgress({ id: "metadata", percent: 70 });
-    await programManager.pull();
+    await programManager.pull(i18n.language);
     setLoadingProgress({ id: "metadata", percent: 100 });
     // pull data from server and save to indexedDB
     await trackedEntityManager.pullNested({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits });

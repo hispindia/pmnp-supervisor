@@ -2,14 +2,14 @@ import db from "../db";
 import { metadataApi } from "../../api";
 import { TABLE_NAME } from ".";
 
-export const pull = async () => {
+export const pull = async (locale = "en") => {
   try {
     await db[TABLE_NAME].clear();
-    const result = await metadataApi.getProgramsMetadata();
+    const result = await metadataApi.getProgramsMetadata(locale);
 
     await db[TABLE_NAME].bulkPut(result.programs);
   } catch (error) {
-    console.error(`Failed to add org`, error);
+    console.error(`Failed to add programs`, error);
   }
 };
 

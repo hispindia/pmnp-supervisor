@@ -14,7 +14,7 @@ export default class MetadataApiClass extends BaseApiClass {
       this.password,
       "/api/constants/" + REPORT_ID_CONSTANT,
       { paging: false },
-      ["fields=id,name,attributeValues"]
+      ["fields=id,name,attributeValues"],
     );
 
     const found = res.attributeValues.find((attribute) => attribute.attribute.id === REPORT_ID_CONSTANT_ATTRIBUTE_ID);
@@ -40,7 +40,7 @@ export default class MetadataApiClass extends BaseApiClass {
         this.password,
         "/dhis-web-commons/menu/getModules.action",
         { paging: false },
-        []
+        [],
       ),
     ]);
     headerBarData.me = results[0];
@@ -112,21 +112,33 @@ export default class MetadataApiClass extends BaseApiClass {
       "fields=programSections[id,name,trackedEntityAttributes,displayName,displayFormName,translations],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[mandatory,displayInList,trackedEntityAttribute[description,fieldMask,attributeValues,id,displayName,displayFormName,translations,displayShortName,valueType,optionSet[id]]],programStages[programStageSections[id,dataElements,displayName,displayFormName,translations,],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
     ]);
 
-    return await this.convertProgramMetadata(p);
+    return p;
+  };
+
+  getProgramMetadataFromCacher = async (cacherType) => {
+    const program = await pull(this.baseUrl, this.username, this.password, `/api/routes/cacher/run`, {}, [
+      `type=${cacherType}`,
+    ]);
+
+    return await this.convertProgramMetadata(program);
   };
 
   getProgramsMetadata = async () => {
     const programs = await pull(this.baseUrl, this.username, this.password, `/api/programs`, { paging: false }, [
-      "fields=programSections[id,name,trackedEntityAttributes,displayName,displayFormName,translations],id,displayName,trackedEntityType,organisationUnits[id,displayName,code,path],programRuleVariables[name,programRuleVariableSourceType,dataElement,trackedEntityAttribute],programTrackedEntityAttributes[*,mandatory,displayInList,trackedEntityAttribute[*,attributeValues,id,displayName,displayFormName,translations,displayShortName,valueType,optionSet[id,code,name,translations,attributeValues,sortOrder,options[id,code,name,translations,attributeValues,sortOrder]]]],programStages[programStageSections[id,dataElements,displayName,displayFormName,translations,description],id,displayName,programStageDataElements[compulsory,dataElement[url,translations,attributeValues,id,displayName,displayFormName,displayShortName,description,valueType,optionSet[code,name,translations,options[code,name,translations,id,displayName,attributeValues],valueType,version,displayName,id,attributeValues]]",
+      "fields=id",
     ]);
+
+    const convertedData = {
+      programs: [],
+    };
 
     if (programs.programs) {
       for (let i = 0; i < programs.programs.length; i++) {
-        programs.programs[i] = await this.convertProgramMetadata(programs.programs[i]);
+        convertedData.programs[i] = await this.getProgramMetadataFromCacher(`program_${programs.programs[i].id}`);
       }
     }
 
-    return programs;
+    return convertedData;
   };
 
   getOptionSets = async () => {
@@ -136,35 +148,8 @@ export default class MetadataApiClass extends BaseApiClass {
   };
 
   convertProgramMetadata = async (p) => {
-    const programRules = await pull(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/programRules`,
-      { paging: false },
-      [`filter=program.id:eq:${p.id}`, `fields=*,programRuleActions[*]`]
-    );
-
-    const expirationDate = new Date();
-    expirationDate.setHours(expirationDate.getHours() + 1); // Set the expiration time to 1 hour from now
-
-    const cacheOptions = JSON.parse(localStorage.getItem("optionSets"));
-
-    let optionSets = null;
-    if (cacheOptions && cacheOptions.expiration && new Date().getTime() < cacheOptions.expiration) {
-      optionSets = cacheOptions.value;
-    } else {
-      optionSets = await pull(this.baseUrl, this.username, this.password, `/api/optionSets`, { paging: false }, [
-        "fields=id,displayName,options[id,displayName,displayFormName,translations,code,sortOrder,style]",
-      ]);
-
-      const newCacheOptions = {
-        value: optionSets,
-        expiration: expirationDate.getTime(),
-      };
-
-      localStorage.setItem("optionSets", JSON.stringify(newCacheOptions));
-    }
+    let optionSets = await this.getOptionSets();
+    console.log({ optionSets });
 
     const programMetadata = {};
     programMetadata.id = p.id;
@@ -190,10 +175,10 @@ export default class MetadataApiClass extends BaseApiClass {
       };
 
       const foundAttr = ptea.trackedEntityAttribute.attributeValues.find(
-        (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID
+        (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID,
       );
       const foundSearchableAttr = ptea.trackedEntityAttribute.attributeValues.find(
-        (attr) => attr.attribute.id === SELECT_SEARCHABLE_ATTRIBUTE_ID
+        (attr) => attr.attribute.id === SELECT_SEARCHABLE_ATTRIBUTE_ID,
       );
 
       if (foundAttr && foundAttr.value === "true") {
@@ -240,10 +225,10 @@ export default class MetadataApiClass extends BaseApiClass {
           };
 
           const foundAttr = psde.dataElement.attributeValues.find(
-            (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID
+            (attr) => attr.attribute.id === MULTIPLE_SELECTION_ATTRIBUTE_ID,
           );
           const foundSearchableAttr = psde.dataElement.attributeValues.find(
-            (attr) => attr.attribute.id === SELECT_SEARCHABLE_ATTRIBUTE_ID
+            (attr) => attr.attribute.id === SELECT_SEARCHABLE_ATTRIBUTE_ID,
           );
 
           if (foundAttr && foundAttr.value === "true") {
@@ -273,7 +258,7 @@ export default class MetadataApiClass extends BaseApiClass {
       return programStage;
     });
 
-    programMetadata.programRules = programRules.programRules;
+    // programMetadata.programRules = programRules.programRules;
     programMetadata.programRuleVariables = p.programRuleVariables;
 
     return programMetadata;

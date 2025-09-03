@@ -113,13 +113,13 @@ export const handleAgeAttrsOfTEI = (data, { days, weeks, months, years }) => {
   data[yearsAttr] = "";
 
   if (weeks === 0) {
-    data[daysAttr] = days;
+    data[daysAttr] = days ? days : "";
   } else if (months === 0) {
-    data[weeksAttr] = weeks;
+    data[weeksAttr] = weeks ? weeks : "";
   } else if (years === 0 || years < 5) {
-    data[monthsAttr] = months;
+    data[monthsAttr] = months ? weeks : "";
   } else if (years >= 5) {
-    data[yearsAttr] = years;
+    data[yearsAttr] = years ? years : "";
   }
 };
 
@@ -134,10 +134,10 @@ export const handleAgeDatavaluesOfEvents = (data, { days, weeks, months, years }
   data[monthsDE] = "";
   data[yearsDE] = "";
 
-  data[daysDE] = days;
-  data[weeksDE] = weeks;
-  data[monthsDE] = months;
-  data[yearsDE] = years;
+  data[daysDE] = days ? days : "";
+  data[weeksDE] = weeks ? weeks : "";
+  data[monthsDE] = months ? months : "";
+  data[yearsDE] = years ? years : "";
 };
 
 export const demographicDetailRules = (metadata, data, { years }) => {

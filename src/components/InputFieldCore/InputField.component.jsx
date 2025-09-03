@@ -40,7 +40,18 @@ const InputField = ({
 
   const generateSelectFieldValue = (valueSet, value) => {
     const v = valueSet.find((currentValue) => currentValue.value === value);
-    return v ? v : null;
+
+    if (!v) return null;
+
+    // Apply translation logic similar to SelectField
+    if (!locale || locale === "en" || !v.translations) {
+      return v;
+    }
+
+    const found = v.translations.find((t) => t.locale === locale);
+    if (!found) return v;
+
+    return { ...v, label: found.value };
   };
 
   const generateInput = () => {

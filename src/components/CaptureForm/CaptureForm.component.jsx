@@ -13,6 +13,7 @@ import InputField from "../InputFieldCore/InputField.component.jsx";
 import { useState } from "react";
 import ChildHealthCustomForm from "./ChildHealthCustomForm.component";
 import { pickTranslation } from "@/utils";
+import { getTranslationDisplayName } from "@/utils/translation";
 
 CaptureForm.defaultProps = {
   maxDate: new Date(),
@@ -90,7 +91,7 @@ function CaptureForm(props) {
     {
       compulsory: t("thisFieldIsRequired"),
     },
-    displayDEs
+    displayDEs,
   );
 
   const disableSaveButton = saveDisabled;
@@ -153,7 +154,7 @@ function CaptureForm(props) {
               pattern={f.pattern}
               fieldMask={f.fieldMask}
               valueType={f.valueType}
-              label={f.displayFormName}
+              label={getTranslationDisplayName(f, locale)}
               attribute={f.attribute}
               value={formData[f.code] || ""}
               onBlur={(value) => editCall(formMetadata, prevData.current, formData, f.code, value)}
@@ -199,7 +200,7 @@ function CaptureForm(props) {
         .filter((f) => trackedEntityAttributes.includes(f.id))
         .sort(
           (a, b) =>
-            trackedEntityAttributes.indexOf(a.id) - trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id)
+            trackedEntityAttributes.indexOf(a.id) - trackedEntityAttributes.indexOf(b.id) || a.id.localeCompare(b.id),
         );
       // if all field hidden => hide the section
       const filtered = TEIFormMetadata.filter((f) => !f.hidden);
@@ -366,7 +367,7 @@ function CaptureForm(props) {
                         onClick={() => {
                           showConfirmationModal(
                             "May I confirm if you’ve reviewed your answers and validated that all of it are accurate?",
-                            (e) => handleOnSubmit(e, "submit")
+                            (e) => handleOnSubmit(e, "submit"),
                           );
                         }}
                       >

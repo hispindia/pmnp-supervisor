@@ -46,7 +46,12 @@ const calculateAge = (dateOBbirth, currentDate) => {
   const weeks = differenceInWeeks(currentDate, dateOBbirth);
   const days = differenceInDays(currentDate, dateOBbirth);
 
-  return { years, months, weeks, days };
+  return {
+    years: years <= 0 ? "" : years,
+    months: months <= 0 ? "" : months,
+    weeks: weeks <= 0 ? "" : weeks,
+    days: days <= 0 ? "" : days,
+  };
 };
 
 const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
@@ -87,7 +92,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
           <Chip
             className={cn(
               "rounded font-medium",
-              completed ? "!bg-green-100 !text-green-700" : "!bg-yellow-100 !text-yellow-700"
+              completed ? "!bg-green-100 !text-green-700" : "!bg-yellow-100 !text-yellow-700",
             )}
             size="small"
             label={completed ? t("Submitted") : t("Pending")}
@@ -241,7 +246,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     let scorecardSurveyEventPayload;
     const foundScorecardSurveyEvent = interviewEvents.find(
-      (e) => e.programStage === MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID
+      (e) => e.programStage === MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID,
     );
     if (!foundScorecardSurveyEvent) {
       scorecardSurveyEventPayload = transformEvent({
@@ -387,17 +392,17 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     aog1.forEach(
       (de) =>
         (metadata(de).hidden =
-          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks < 8 || aogInWeeks > 40 || metadata(de).hidden)
+          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks < 8 || aogInWeeks > 40 || metadata(de).hidden),
     );
     aog23.forEach(
       (de) =>
         (metadata(de).hidden =
-          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks <= 13 || aogInWeeks > 40 || metadata(de).hidden)
+          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks <= 13 || aogInWeeks > 40 || metadata(de).hidden),
     );
     aog45678.forEach(
       (de) =>
         (metadata(de).hidden =
-          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks <= 23 || aogInWeeks > 40 || metadata(de).hidden)
+          !lmpDate || data["wqR0L5WGV6S"] !== "true" || aogInWeeks <= 23 || aogInWeeks > 40 || metadata(de).hidden),
     );
 
     const aogPPW = [
@@ -413,10 +418,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     aogPPW.forEach((de) => (metadata(de).hidden = data["mT44qeiiVpv"] !== "true" || metadata(de).hidden));
 
-    data["Hc9Vgt4LXjb"] = years;
-    data["RoSxLAB5cfo"] = months;
-    data["Gds5wTiXoSK"] = weeks;
-    data["ICbJBQoOsVt"] = days;
+    data["Hc9Vgt4LXjb"] = years ? years : "";
+    data["RoSxLAB5cfo"] = months ? months : "";
+    data["Gds5wTiXoSK"] = weeks ? weeks : "";
+    data["ICbJBQoOsVt"] = days ? days : "";
 
     // z-score
     // Height	CY4OTulUceX

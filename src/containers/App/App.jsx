@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import App from "../../components/App/App";
+import { metadataApi } from "@/api";
 // import { setUpDatabase } from '../../libs/idb-handler';
 import AppSkeleton from "../../skeletons/App";
 
 /* REDUX */
 import withSkeletonLoading from "@/hocs/withSkeletonLoading";
-import { useDispatch, useSelector } from "react-redux";
 import {
   setOrgUnitLevels,
   setOrgUnits,
@@ -14,17 +14,11 @@ import {
   setProgramMetadataMember,
   setSelectedOrgUnit,
 } from "@/redux/actions/metadata";
+import { useDispatch, useSelector } from "react-redux";
 
-import * as meManager from "@/indexDB/MeManager/MeManager";
-import * as organisationUnitLevelsManager from "@/indexDB/OrganisationUnitLevelManager/OrganisationUnitLevelManager";
-import * as organisationUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
-import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
-import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
-import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
-import * as eventManager from "@/indexDB/EventManager/EventManager";
-import { getMetadataSet } from "@/utils/offline";
-import { setMe } from "@/redux/actions/me";
 import { setReportId } from "@/redux/actions/common";
+import { setMe } from "@/redux/actions/me";
+import { getMetadataSet } from "@/utils/offline";
 
 const AppSkeletonLoading = withSkeletonLoading(AppSkeleton)(App);
 
@@ -90,17 +84,16 @@ const AppContainer = () => {
     (async () => {
       setLoading(true);
 
-      Promise.all(getMetadataSet(isOfflineMode)).then(async (results) => {
-        const programMetadata = {
-          villageHierarchy: [],
-          ...results[0],
-        };
+      const me = await metadataApi.getMe();
+      const currentLocale = me.settings.keyDbLocale;
+      i18n.changeLanguage(currentLocale);
 
-        dispatch(setProgramMetadata(programMetadata));
+      Promise.all(getMetadataSet(isOfflineMode)).then(async (results) => {
+        dispatch(setProgramMetadata(results[0]));
         dispatch(setProgramMetadataMember(results[4]));
         dispatch(setOrgUnitLevels(results[3].organisationUnitLevels));
         const savedSelectedOrgUnit = sessionStorage.getItem("selectedOrgUnit");
-        i18n.changeLanguage(results[2].settings.keyDbLocale);
+
         if (savedSelectedOrgUnit) {
           let orgUnitJsonData = null;
           try {
@@ -114,7 +107,7 @@ const AppContainer = () => {
         }
 
         dispatch(setOrgUnits(results[5].organisationUnits));
-        dispatch(setReportId(results[6]));
+        dispatch(setReportId(results[7]));
         dispatch(setMe(results[2]));
         setLoading(false);
         setLoaded(true);
