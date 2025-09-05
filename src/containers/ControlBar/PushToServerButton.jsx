@@ -17,8 +17,9 @@ import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEnt
 import ExcelImportButton from "./ExcelImportButton";
 import PushModal, { pushMapping } from "./PushModal";
 import { useExcel } from "./useExcel";
+import { useSelector } from "react-redux";
 
-const handlePushResult = async (result, message) => {
+const handlePushResult = async (result, message, metadataMapping) => {
   if (result?.length > 0 && result.status != "OK") {
     if (result.some((result) => result.status != "OK")) {
       const errors = [];
@@ -30,11 +31,25 @@ const handlePushResult = async (result, message) => {
         } catch (err) {}
       }
 
-      const errorMessages = errors.map((error) =>
-        error.validationReport.errorReports.map((errorReport) => errorReport.message).join("\n"),
-      );
+      const errorMessages = errors.map((error) => {
+        return error.validationReport.errorReports
+          .map((errorReport) => {
+            let message = errorReport.message;
 
-      console.log({ errorMessages });
+            // Find UUIDs (11 character alphanumeric strings) and replace with display names
+            if (metadataMapping) {
+              // Regex to match 11-character alphanumeric strings (DHIS2 UIDs)
+              const uuidRegex = /\b[A-Za-z0-9]{11}\b/g;
+              message = message.replace(uuidRegex, (match) => {
+                // If we have a mapping for this UUID, replace it with the display name
+                return `<b>${metadataMapping[match]}</b> (${match})` || match;
+              });
+            }
+
+            return message;
+          })
+          .join("\n");
+      });
 
       throw new Error(message + "\n" + errorMessages.join("\n"));
     }
@@ -45,7 +60,7 @@ const showingCurrentOfflineLoading = ({ dispatch, id, percent }) => {
   dispatch(setCurrentOfflineLoading({ id, percent }));
 };
 
-const handlePushToServer = async (dispatch) => {
+const handlePushToServer = async (dispatch, metadataMapping, setError) => {
   try {
     // Check internet connection
     if (!navigator.onLine) {
@@ -59,56 +74,90 @@ const handlePushToServer = async (dispatch) => {
     const teiPushResults = await trackedEntityManager.push((progress) =>
       showingCurrentOfflineLoading({ dispatch, ...progress }),
     );
-    await handlePushResult(teiPushResults, "Sync tracked entities failed: ");
+    await handlePushResult(teiPushResults, "Sync tracked entities failed: ", metadataMapping);
 
     // push enrollments
     const enrPushResults = await enrollmentManager.push((progress) =>
       showingCurrentOfflineLoading({ dispatch, ...progress }),
     );
-    await handlePushResult(enrPushResults, "Sync enrollments failed: ");
+    await handlePushResult(enrPushResults, "Sync enrollments failed: ", metadataMapping);
 
     // push events
     const eventPushRetuls = await eventManager.push((progress) =>
       showingCurrentOfflineLoading({ dispatch, ...progress }),
     );
-    await handlePushResult(eventPushRetuls, "Sync events failed: ");
+    await handlePushResult(eventPushRetuls, "Sync events failed: ", metadataMapping);
 
     // wait for 3 second to show 100% progress bar
     await new Promise((resolve) => setTimeout(resolve, 3000));
     dispatch(setOfflineStatus(false));
   } catch (error) {
-    notification.warning({
-      message: "Warning",
-      description: error ? error.message : "Sync data to server failed!",
-      placement: "bottomRight",
-      duration: 0,
-    });
-
+    setError(error ? error.message : "Sync data to server failed!");
     console.table(error);
   } finally {
     console.log("handlePushToServer - finally");
   }
 };
 
+const getProgramMetadataNameMapping = ({ programMetadata, programMetadataMember }) => {
+  const mapping = {};
+
+  // Helper function to process a single program metadata
+  const processProgram = (program) => {
+    if (!program) return;
+
+    // Process trackedEntityAttributes
+    if (program.trackedEntityAttributes) {
+      program.trackedEntityAttributes.forEach((attr) => {
+        mapping[attr.id] = attr.displayName;
+      });
+    }
+
+    // Process programStages and their dataElements
+    if (program.programStages) {
+      program.programStages.forEach((stage) => {
+        if (stage.dataElements) {
+          stage.dataElements.forEach((dataElement) => {
+            mapping[dataElement.id] = dataElement.displayName;
+          });
+        }
+      });
+    }
+  };
+
+  // Process both program metadata objects
+  processProgram(programMetadata);
+  processProgram(programMetadataMember);
+
+  return mapping;
+};
+
 const PushToServerButton = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { exportExcel } = useExcel();
+  const { programMetadata, programMetadataMember } = useSelector((state) => state.metadata);
+
+  const programMetadataNameMapping = getProgramMetadataNameMapping({ programMetadata, programMetadataMember });
 
   const [pushModalOpen, setPushModalOpen] = useState(false);
   const [pushData, setPushData] = useState(pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {}));
+  const [syncError, setSyncError] = useState(null);
 
   const handleCancelPush = () => {
     setPushModalOpen(false);
+    setSyncError(null);
   };
 
   const handlePushClose = () => {
     setPushModalOpen(false);
+    setSyncError(null);
   };
 
   const handlePush = async () => {
     if (Object.values(pushData).find(Boolean)) {
-      await handlePushToServer(dispatch);
+      setSyncError(null); // Clear any previous errors
+      await handlePushToServer(dispatch, programMetadataNameMapping, setSyncError);
     }
   };
 
@@ -120,6 +169,7 @@ const PushToServerButton = () => {
         onCancel={handleCancelPush}
         onClose={handlePushClose}
         onOk={handlePush}
+        syncError={syncError}
       />
       <Button
         onClick={async () => {

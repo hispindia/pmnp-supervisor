@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useUser } from "@/hooks/useUser";
 
 export const pushMapping = [
   { id: "tei", label: "Sync tracked entities" },
@@ -14,8 +15,8 @@ export const pushMapping = [
 const SYNC_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes in milliseconds
 const STORAGE_KEY = "syncTime";
 
-const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
-  const dispatch = useDispatch();
+const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
+  const { isSuperuser } = useUser();
   const { t } = useTranslation();
   const { currentOfflineLoading } = useSelector((state) => state.common);
 
@@ -150,7 +151,7 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
       onCancel={onCancel}
       onOk={handleSyncClick}
       okText={getButtonText()}
-      okButtonProps={{ disabled: isDisabled }}
+      okButtonProps={{ disabled: isDisabled && !isSuperuser }}
     >
       {pushMapping.map(({ label, id }, step) => {
         const currentStep = pushMapping.findIndex(({ id }) => id === currentOfflineLoading.id);
@@ -172,6 +173,31 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData }) => {
           )
         );
       })}
+
+      {syncError && (
+        <div style={{ marginTop: 16, marginBottom: 16 }}>
+          <Typography.Title level={5} type="danger" style={{ marginBottom: 8 }}>
+            {t("syncError", "Sync Error")}:
+          </Typography.Title>
+          <div
+            style={{
+              maxHeight: "50vh",
+              overflowY: "auto",
+              padding: 12,
+              backgroundColor: "#fff2f0",
+              border: "1px solid #ffccc7",
+              borderRadius: 6,
+              whiteSpace: "pre-wrap",
+              fontSize: 12,
+              fontFamily: "monospace",
+            }}
+            dangerouslySetInnerHTML={{
+              __html: syncError,
+            }}
+          />
+        </div>
+      )}
+
       <div style={{ marginBottom: 24 }}></div>
     </Modal>
   );

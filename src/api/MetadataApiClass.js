@@ -149,7 +149,6 @@ export default class MetadataApiClass extends BaseApiClass {
 
   convertProgramMetadata = async (p) => {
     let optionSets = await this.getOptionSets();
-    console.log({ optionSets });
 
     const programMetadata = {};
     programMetadata.id = p.id;
