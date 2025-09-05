@@ -99,8 +99,30 @@ const handlePushToServer = async (dispatch, metadataMapping, setError) => {
   }
 };
 
-const getProgramMetadataNameMapping = ({ programMetadata, programMetadataMember }) => {
+const getProgramMetadataNameMapping = ({ programMetadata, programMetadataMember, locale }) => {
   const mapping = {};
+
+  // Helper function to get translated display name
+  const getTranslatedDisplayName = (item, locale) => {
+    if (!item.translations || !Array.isArray(item.translations) || !locale) {
+      return item.displayName;
+    }
+
+    // First try to find FORM_NAME translation for the locale
+    const formNameTranslation = item.translations.find((t) => t.locale === locale && t.property === "FORM_NAME");
+    if (formNameTranslation && formNameTranslation.value) {
+      return formNameTranslation.value;
+    }
+
+    // If no FORM_NAME, try NAME translation for the locale
+    const nameTranslation = item.translations.find((t) => t.locale === locale && t.property === "NAME");
+    if (nameTranslation && nameTranslation.value) {
+      return nameTranslation.value;
+    }
+
+    // Fallback to original displayName
+    return item.displayName;
+  };
 
   // Helper function to process a single program metadata
   const processProgram = (program) => {
@@ -109,7 +131,7 @@ const getProgramMetadataNameMapping = ({ programMetadata, programMetadataMember 
     // Process trackedEntityAttributes
     if (program.trackedEntityAttributes) {
       program.trackedEntityAttributes.forEach((attr) => {
-        mapping[attr.id] = attr.displayName;
+        mapping[attr.id] = getTranslatedDisplayName(attr, locale);
       });
     }
 
@@ -118,7 +140,7 @@ const getProgramMetadataNameMapping = ({ programMetadata, programMetadataMember 
       program.programStages.forEach((stage) => {
         if (stage.dataElements) {
           stage.dataElements.forEach((dataElement) => {
-            mapping[dataElement.id] = dataElement.displayName;
+            mapping[dataElement.id] = getTranslatedDisplayName(dataElement, locale);
           });
         }
       });
@@ -133,12 +155,16 @@ const getProgramMetadataNameMapping = ({ programMetadata, programMetadataMember 
 };
 
 const PushToServerButton = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { exportExcel } = useExcel();
   const { programMetadata, programMetadataMember } = useSelector((state) => state.metadata);
 
-  const programMetadataNameMapping = getProgramMetadataNameMapping({ programMetadata, programMetadataMember });
+  const programMetadataNameMapping = getProgramMetadataNameMapping({
+    programMetadata,
+    programMetadataMember,
+    locale: i18n.language,
+  });
 
   const [pushModalOpen, setPushModalOpen] = useState(false);
   const [pushData, setPushData] = useState(pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {}));
