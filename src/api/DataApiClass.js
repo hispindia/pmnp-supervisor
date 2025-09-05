@@ -321,7 +321,7 @@ export default class DataApiClass extends BaseApiClass {
   };
 
   pushEvents = async (events) => {
-    return push(this.baseUrl, this.username, this.password, `/api/tracker?async=false&importMode=COMMIT`, events);
+    return push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, events);
   };
 
   deleteEvent = async (event) => {

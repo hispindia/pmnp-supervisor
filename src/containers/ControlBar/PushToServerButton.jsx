@@ -55,7 +55,7 @@ const handlePushResult = async (result, message, metadataMapping) => {
                 const uuidRegex = /\b[A-Za-z0-9]{11}\b/g;
                 message = message.replace(uuidRegex, (match) => {
                   // If we have a mapping for this UUID, replace it with the display name
-                  return `<b>${metadataMapping[match]}</b> (${match})` || match;
+                  return metadataMapping[match] ? `<b>${metadataMapping[match]}</b> (${match})` : `<b>${match}</b>`;
                 });
               }
 

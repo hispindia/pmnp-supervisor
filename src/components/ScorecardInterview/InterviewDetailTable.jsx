@@ -149,6 +149,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
     console.log("InterviewDetailForm", {
+      enrollment,
       metadata,
       previousData,
       data,
