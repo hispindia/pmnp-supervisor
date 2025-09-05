@@ -220,32 +220,74 @@ export const pushAndMarkOnline = async (trackedEntities, progressCallback) => {
     return results;
   }
 
-  const partitions = chunk(trackedEntities, 20);
+  let entitiesToProcess = [...trackedEntities];
+  const chunkSizes = [20, 10, 5, 1]; // Progressive chunk sizes for retries
+  const totalOriginalEntities = trackedEntities.length;
+  let processedEntitiesCount = 0;
 
-  for (let i = 0; i < partitions.length; i++) {
-    const partition = partitions[i];
+  for (let attempt = 0; attempt < chunkSizes.length; attempt++) {
+    if (entitiesToProcess.length === 0) {
+      break; // No more entities to process
+    }
 
-    try {
-      const result = await dataApi.postTrackedEntityInstances({
-        trackedEntities: partition,
-      });
+    const chunkSize = chunkSizes[attempt];
 
-      results.push(result);
+    // Skip if chunk size is larger than remaining entities
+    if (entitiesToProcess.length < chunkSize) {
+      continue;
+    }
 
-      if (result.status === "OK") {
-        await markOnline(partition.map((te) => te.trackedEntity));
+    const partitions = chunk(entitiesToProcess, chunkSize);
+    const failedEntities = [];
 
-        // Call progress callback if provided
-        if (progressCallback) {
-          const percent = Math.round(((i + 1) / partitions.length) * 100);
-          progressCallback({ id: "tei", percent });
+    console.log(
+      `TrackedEntity push attempt ${attempt + 1} with chunk size ${chunkSize}, processing ${entitiesToProcess.length} entities`,
+    );
+
+    for (let i = 0; i < partitions.length; i++) {
+      const partition = partitions[i];
+
+      try {
+        const result = await dataApi.postTrackedEntityInstances({
+          trackedEntities: partition,
+        });
+
+        results.push(result);
+
+        if (result.status === "OK") {
+          await markOnline(partition.map((te) => te.trackedEntity));
+          processedEntitiesCount += partition.length;
+
+          // Call progress callback if provided only on success
+          if (progressCallback) {
+            // Never report 100% unless all entities are actually processed successfully
+            const percent =
+              processedEntitiesCount === totalOriginalEntities
+                ? 100
+                : Math.min(Math.round((processedEntitiesCount / totalOriginalEntities) * 100), 99);
+            progressCallback({ id: "tei", percent });
+          }
+        } else {
+          console.error(`Failed to push trackedEntity chunk - status: ${result.status}`, result);
+          // Add failed entities back to the list for retry
+          failedEntities.push(...partition);
         }
-      } else {
-        console.error(`Failed to push trackedEntity chunk - status: ${result.status}`, result);
+      } catch (error) {
+        results.push(error);
+        console.error(`Failed to push trackedEntity chunk`, error);
+        // Add failed entities back to the list for retry
+        failedEntities.push(...partition);
       }
-    } catch (error) {
-      results.push(error);
-      console.error(`Failed to push trackedEntity chunk`, error);
+    }
+
+    // Update entities to process for next attempt
+    entitiesToProcess = failedEntities;
+
+    if (entitiesToProcess.length === 0) {
+      console.log(`All tracked entities processed successfully after ${attempt + 1} attempts`);
+      break;
+    } else if (attempt === chunkSizes.length - 1) {
+      console.error(`Failed to process ${entitiesToProcess.length} tracked entities after all retry attempts`);
     }
   }
 

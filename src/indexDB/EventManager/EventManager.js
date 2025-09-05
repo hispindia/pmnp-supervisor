@@ -165,32 +165,74 @@ const pushAndMarkOnline = async (events, progressCallback) => {
     return results;
   }
 
-  const partitions = chunk(events, 20);
+  let eventsToProcess = [...events];
+  const chunkSizes = [100, 50, 20, 10, 5, 1]; // Progressive chunk sizes for retries
+  const totalOriginalEvents = events.length;
+  let processedEventsCount = 0;
 
-  for (let i = 0; i < partitions.length; i++) {
-    const partition = partitions[i];
+  for (let attempt = 0; attempt < chunkSizes.length; attempt++) {
+    if (eventsToProcess.length === 0) {
+      break; // No more events to process
+    }
 
-    try {
-      const result = await dataApi.pushEvents({
-        events: partition,
-      });
+    const chunkSize = chunkSizes[attempt];
 
-      results.push(result);
+    // Skip if chunk size is larger than remaining events
+    if (eventsToProcess.length < chunkSize) {
+      continue;
+    }
 
-      if (result.status === "OK") {
-        await markOnline(partition.map((en) => en.event));
+    const partitions = chunk(eventsToProcess, chunkSize);
+    const failedEvents = [];
 
-        // Call progress callback if provided only on success
-        if (progressCallback) {
-          const percent = Math.round(((i + 1) / partitions.length) * 100);
-          progressCallback({ id: "event", percent });
+    console.log(
+      `Event push attempt ${attempt + 1} with chunk size ${chunkSize}, processing ${eventsToProcess.length} events`,
+    );
+
+    for (let i = 0; i < partitions.length; i++) {
+      const partition = partitions[i];
+
+      try {
+        const result = await dataApi.pushEvents({
+          events: partition,
+        });
+
+        results.push(result);
+
+        if (result.status === "OK") {
+          await markOnline(partition.map((en) => en.event));
+          processedEventsCount += partition.length;
+
+          // Call progress callback if provided only on success
+          if (progressCallback) {
+            // Never report 100% unless all events are actually processed successfully
+            const percent =
+              processedEventsCount === totalOriginalEvents
+                ? 100
+                : Math.min(Math.round((processedEventsCount / totalOriginalEvents) * 100), 99);
+            progressCallback({ id: "event", percent });
+          }
+        } else {
+          console.error(`Failed to push event chunk - status: ${result.status}`, result);
+          // Add failed events back to the list for retry
+          failedEvents.push(...partition);
         }
-      } else {
-        console.error(`Failed to push event chunk - status: ${result.status}`, result);
+      } catch (error) {
+        console.error(`Failed to push event chunk`, error);
+        results.push(error);
+        // Add failed events back to the list for retry
+        failedEvents.push(...partition);
       }
-    } catch (error) {
-      console.error(`Failed to push event chunk`, error);
-      results.push(error);
+    }
+
+    // Update events to process for next attempt
+    eventsToProcess = failedEvents;
+
+    if (eventsToProcess.length === 0) {
+      console.log(`All events processed successfully after ${attempt + 1} attempts`);
+      break;
+    } else if (attempt === chunkSizes.length - 1) {
+      console.error(`Failed to process ${eventsToProcess.length} events after all retry attempts`);
     }
   }
 

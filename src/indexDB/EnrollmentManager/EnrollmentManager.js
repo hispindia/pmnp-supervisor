@@ -128,33 +128,75 @@ const pushAndMarkOnline = async (enrollments, progressCallback) => {
     return results;
   }
 
-  const partitions = chunk(enrollments, 20);
+  let enrollmentsToProcess = [...enrollments];
+  const chunkSizes = [50, 20, 10, 5, 1]; // Progressive chunk sizes for retries
+  const totalOriginalEnrollments = enrollments.length;
+  let processedEnrollmentsCount = 0;
 
-  for (let i = 0; i < partitions.length; i++) {
-    const partition = partitions[i];
-    console.log("pushEnrollment", { partition });
+  for (let attempt = 0; attempt < chunkSizes.length; attempt++) {
+    if (enrollmentsToProcess.length === 0) {
+      break; // No more enrollments to process
+    }
 
-    try {
-      const result = await dataApi.pushEnrollment({
-        enrollments: partition,
-      });
+    const chunkSize = chunkSizes[attempt];
 
-      results.push(result);
+    // Skip if chunk size is larger than remaining enrollments
+    if (enrollmentsToProcess.length < chunkSize) {
+      continue;
+    }
 
-      if (result.status === "OK") {
-        await markOnline(partition.map((en) => en.enrollment));
+    const partitions = chunk(enrollmentsToProcess, chunkSize);
+    const failedEnrollments = [];
 
-        // Call progress callback if provided
-        if (progressCallback) {
-          const percent = Math.round(((i + 1) / partitions.length) * 100);
-          progressCallback({ id: "enr", percent });
+    console.log(
+      `Enrollment push attempt ${attempt + 1} with chunk size ${chunkSize}, processing ${enrollmentsToProcess.length} enrollments`,
+    );
+
+    for (let i = 0; i < partitions.length; i++) {
+      const partition = partitions[i];
+      console.log("pushEnrollment", { partition });
+
+      try {
+        const result = await dataApi.pushEnrollment({
+          enrollments: partition,
+        });
+
+        results.push(result);
+
+        if (result.status === "OK") {
+          await markOnline(partition.map((en) => en.enrollment));
+          processedEnrollmentsCount += partition.length;
+
+          // Call progress callback if provided only on success
+          if (progressCallback) {
+            // Never report 100% unless all enrollments are actually processed successfully
+            const percent =
+              processedEnrollmentsCount === totalOriginalEnrollments
+                ? 100
+                : Math.min(Math.round((processedEnrollmentsCount / totalOriginalEnrollments) * 100), 99);
+            progressCallback({ id: "enr", percent });
+          }
+        } else {
+          console.error(`Failed to push enrollment chunk - status: ${result.status}`, result);
+          // Add failed enrollments back to the list for retry
+          failedEnrollments.push(...partition);
         }
-      } else {
-        console.error(`Failed to push enrollment chunk - status: ${result.status}`, result);
+      } catch (error) {
+        console.error(`Failed to push enrollment chunk`, error);
+        results.push(error);
+        // Add failed enrollments back to the list for retry
+        failedEnrollments.push(...partition);
       }
-    } catch (error) {
-      console.error(`Failed to push enrollment chunk`, error);
-      results.push(error);
+    }
+
+    // Update enrollments to process for next attempt
+    enrollmentsToProcess = failedEnrollments;
+
+    if (enrollmentsToProcess.length === 0) {
+      console.log(`All enrollments processed successfully after ${attempt + 1} attempts`);
+      break;
+    } else if (attempt === chunkSizes.length - 1) {
+      console.error(`Failed to process ${enrollmentsToProcess.length} enrollments after all retry attempts`);
     }
   }
 

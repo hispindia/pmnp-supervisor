@@ -31,25 +31,40 @@ const handlePushResult = async (result, message, metadataMapping) => {
         } catch (err) {}
       }
 
-      const errorMessages = errors.map((error) => {
-        return error.validationReport.errorReports
-          .map((errorReport) => {
-            let message = errorReport.message;
+      const checkDuplicateMapping = {};
 
-            // Find UUIDs (11 character alphanumeric strings) and replace with display names
-            if (metadataMapping) {
-              // Regex to match 11-character alphanumeric strings (DHIS2 UIDs)
-              const uuidRegex = /\b[A-Za-z0-9]{11}\b/g;
-              message = message.replace(uuidRegex, (match) => {
-                // If we have a mapping for this UUID, replace it with the display name
-                return `<b>${metadataMapping[match]}</b> (${match})` || match;
-              });
-            }
+      const errorMessages = errors
+        .map((error) => {
+          return error.validationReport.errorReports
+            .map((errorReport) => {
+              let message = errorReport.message;
+              const uid = errorReport.uid || message;
+              const mapKey = errorReport.message + " " + uid;
 
-            return message;
-          })
-          .join("\n");
-      });
+              // Check if this error message already exists
+              if (checkDuplicateMapping[mapKey]) {
+                return ""; // Return empty string for duplicates
+              }
+
+              // Mark this message as seen
+              checkDuplicateMapping[mapKey] = true;
+
+              // Find UUIDs (11 character alphanumeric strings) and replace with display names
+              if (metadataMapping) {
+                // Regex to match 11-character alphanumeric strings (DHIS2 UIDs)
+                const uuidRegex = /\b[A-Za-z0-9]{11}\b/g;
+                message = message.replace(uuidRegex, (match) => {
+                  // If we have a mapping for this UUID, replace it with the display name
+                  return `<b>${metadataMapping[match]}</b> (${match})` || match;
+                });
+              }
+
+              return message;
+            })
+            .filter((msg) => msg !== "") // Filter out empty strings
+            .join("\n");
+        })
+        .filter((msg) => msg !== ""); // Filter out empty error message groups
 
       throw new Error(message + "\n" + errorMessages.join("\n"));
     }

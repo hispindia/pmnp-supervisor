@@ -9,6 +9,8 @@ import { notification } from "antd";
 import * as XLSX from "xlsx";
 import { useUser } from "@/hooks/useUser";
 import { useSelector } from "react-redux";
+import packageJson from "../../../package.json";
+import manifestJson from "../../../manifest.webapp.json";
 
 const sheetNames = ["Events", "Enrollments", "Tracked Entities"];
 
@@ -92,6 +94,18 @@ export const useExcel = () => {
     // Add tracked entities sheet
     const teisSheet = XLSX.utils.json_to_sheet(teis);
     XLSX.utils.book_append_sheet(workbook, teisSheet, "Tracked Entities");
+
+    // Add UserInfo sheet first
+    const userInfo = [
+      { Property: "User Agent", Value: navigator.userAgent },
+      { Property: "App Version (Package)", Value: packageJson.version },
+      { Property: "App Version (Manifest)", Value: manifestJson.version },
+      { Property: "Export Date/Time", Value: currentDateTime },
+      { Property: "Username", Value: user?.displayName || user?.name || "Unknown-User" },
+      { Property: "Organization Unit", Value: selectedOrgUnit?.displayName || "Unknown-OrgUnit" },
+    ];
+    const userInfoSheet = XLSX.utils.json_to_sheet(userInfo);
+    XLSX.utils.book_append_sheet(workbook, userInfoSheet, "UserInfo");
 
     // Generate Excel file
     const excelBuffer = XLSX.write(workbook, {
