@@ -295,23 +295,10 @@ export default class DataApiClass extends BaseApiClass {
     });
 
   pushTrackedEntityInstance = (tei, program) =>
-    push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/tracker?async=false&skipSideEffects=true&skipRuleEngine=true&program=${program}`,
-      tei,
-    );
+    push(this.baseUrl, this.username, this.password, `/api/tracker?async=false&program=${program}`, tei);
 
   postTrackedEntityInstances = async (teis) => {
-    return await push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/tracker?async=false&skipSideEffects=true&skipRuleEngine=true`,
-      teis,
-      "POST",
-    );
+    return await push(this.baseUrl, this.username, this.password, `/api/tracker?async=false`, teis, "POST");
   };
 
   putTrackedEntityInstance = async (tei, program) => {
@@ -326,10 +313,7 @@ export default class DataApiClass extends BaseApiClass {
   };
 
   pushEnrollment = async (enrollment, program) => {
-    const endpoint = [
-      `/api/tracker?async=false&skipSideEffects=true&skipRuleEngine=true`,
-      program ? `&program=${program}` : null,
-    ]
+    const endpoint = [`/api/tracker?async=false`, program ? `&program=${program}` : null]
       .filter((e) => Boolean(e))
       .join("");
 
@@ -337,13 +321,7 @@ export default class DataApiClass extends BaseApiClass {
   };
 
   pushEvents = async (events) => {
-    return push(
-      this.baseUrl,
-      this.username,
-      this.password,
-      `/api/tracker?async=false&skipSideEffects=true&skipRuleEngine=true`,
-      events,
-    );
+    return push(this.baseUrl, this.username, this.password, `/api/tracker?async=false&importMode=COMMIT`, events);
   };
 
   deleteEvent = async (event) => {
@@ -351,7 +329,7 @@ export default class DataApiClass extends BaseApiClass {
       this.baseUrl,
       this.username,
       this.password,
-      `/api/tracker?importStrategy=DELETE&async=false&skipSideEffects=true&skipRuleEngine=true`,
+      `/api/tracker?importStrategy=DELETE&async=false`,
       event,
     );
     return result.status == "OK";

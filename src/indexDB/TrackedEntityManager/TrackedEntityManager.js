@@ -230,28 +230,22 @@ export const pushAndMarkOnline = async (trackedEntities, progressCallback) => {
         trackedEntities: partition,
       });
 
-      if (result.status === "OK") {
-        await markOnline(partition.map((te) => te.trackedEntity));
-      } else {
-        console.error(`Failed to push trackedEntity chunk - status: ${result.status}`, result);
-      }
-
       results.push(result);
 
-      // Call progress callback if provided
-      if (progressCallback) {
-        const percent = Math.round(((i + 1) / partitions.length) * 100);
-        progressCallback({ id: "tei", percent });
+      if (result.status === "OK") {
+        await markOnline(partition.map((te) => te.trackedEntity));
+
+        // Call progress callback if provided
+        if (progressCallback) {
+          const percent = Math.round(((i + 1) / partitions.length) * 100);
+          progressCallback({ id: "tei", percent });
+        }
+      } else {
+        console.error(`Failed to push trackedEntity chunk - status: ${result.status}`, result);
       }
     } catch (error) {
       results.push(error);
       console.error(`Failed to push trackedEntity chunk`, error);
-
-      // Call progress callback even on error to show progress
-      if (progressCallback) {
-        const percent = Math.round(((i + 1) / partitions.length) * 100);
-        progressCallback({ id: "tei", percent });
-      }
     }
   }
 

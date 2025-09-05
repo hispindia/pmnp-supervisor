@@ -137,7 +137,7 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
     ) {
       // Dont dispatch this action here because Pushing data might occur some errors
       // dispatch(setOfflineStatus(false));
-      onClose();
+      // onClose();
     }
   }, [open && currentOfflineLoading.id, currentOfflineLoading.percent]);
 

@@ -90,7 +90,7 @@ const handlePushToServer = async (dispatch, metadataMapping, setError) => {
 
     // wait for 3 second to show 100% progress bar
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    dispatch(setOfflineStatus(false));
+    // dispatch(setOfflineStatus(false));
   } catch (error) {
     setError(error ? error.message : "Sync data to server failed!");
     console.table(error);

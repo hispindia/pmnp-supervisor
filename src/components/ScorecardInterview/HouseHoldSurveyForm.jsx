@@ -28,7 +28,7 @@ const HouseHoldSurveyForm = ({ interviewMetadata, interviewData = {}, onClose = 
   const { interviewCascadeData } = useInterviewCascadeData(interviewData);
   const { selectedOrgUnit, programMetadata } = useSelector((state) => state.metadata);
   const foundProgramStage = programMetadata.programStages.find(
-    (stage) => stage.id === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID
+    (stage) => stage.id === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
   );
   const trackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
   const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
@@ -41,8 +41,6 @@ const HouseHoldSurveyForm = ({ interviewMetadata, interviewData = {}, onClose = 
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
   const [formStatus, setFormStatus] = useState(null);
   const [formDirty, setFormDirty] = useState(false);
-
-  console.log("HouseHoldSurveyForm", { formDirty, interviewData, interviewCascadeData });
 
   const handleEdit = (e, newData, rowIndex, type) => {
     // Update data
@@ -125,7 +123,7 @@ const HouseHoldSurveyForm = ({ interviewMetadata, interviewData = {}, onClose = 
     const found = currentEvents.find(
       (e) =>
         e.programStage === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID &&
-        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
+        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
     );
 
     const formData = found

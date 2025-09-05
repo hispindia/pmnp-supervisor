@@ -139,30 +139,22 @@ const pushAndMarkOnline = async (enrollments, progressCallback) => {
         enrollments: partition,
       });
 
-      console.log("pushEnrollment", { result });
-
       results.push(result);
 
       if (result.status === "OK") {
         await markOnline(partition.map((en) => en.enrollment));
+
+        // Call progress callback if provided
+        if (progressCallback) {
+          const percent = Math.round(((i + 1) / partitions.length) * 100);
+          progressCallback({ id: "enr", percent });
+        }
       } else {
         console.error(`Failed to push enrollment chunk - status: ${result.status}`, result);
-      }
-
-      // Call progress callback if provided
-      if (progressCallback) {
-        const percent = Math.round(((i + 1) / partitions.length) * 100);
-        progressCallback({ id: "enr", percent });
       }
     } catch (error) {
       console.error(`Failed to push enrollment chunk`, error);
       results.push(error);
-
-      // Call progress callback even on error to show progress
-      if (progressCallback) {
-        const percent = Math.round(((i + 1) / partitions.length) * 100);
-        progressCallback({ id: "enr", percent });
-      }
     }
   }
 

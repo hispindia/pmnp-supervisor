@@ -165,41 +165,32 @@ const pushAndMarkOnline = async (events, progressCallback) => {
     return results;
   }
 
-  const partitions = chunk(events, 50);
+  const partitions = chunk(events, 20);
 
   for (let i = 0; i < partitions.length; i++) {
     const partition = partitions[i];
-    console.log("pushEvents", { partition });
 
     try {
       const result = await dataApi.pushEvents({
         events: partition,
       });
 
-      console.log("pushEvents", { result });
-
       results.push(result);
 
       if (result.status === "OK") {
         await markOnline(partition.map((en) => en.event));
+
+        // Call progress callback if provided only on success
+        if (progressCallback) {
+          const percent = Math.round(((i + 1) / partitions.length) * 100);
+          progressCallback({ id: "event", percent });
+        }
       } else {
         console.error(`Failed to push event chunk - status: ${result.status}`, result);
-      }
-
-      // Call progress callback if provided
-      if (progressCallback) {
-        const percent = Math.round(((i + 1) / partitions.length) * 100);
-        progressCallback({ id: "event", percent });
       }
     } catch (error) {
       console.error(`Failed to push event chunk`, error);
       results.push(error);
-
-      // Call progress callback even on error to show progress
-      if (progressCallback) {
-        const percent = Math.round(((i + 1) / partitions.length) * 100);
-        progressCallback({ id: "event", percent });
-      }
     }
   }
 
