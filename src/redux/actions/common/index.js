@@ -1,10 +1,9 @@
 import {
-  SET_OFFLINE_STATUS,
-  SET_OFFLINE_LOADING_STATUS,
-  SET_CURRENT_OFFLINE_LOADING,
   RESET_CURRENT_OFFLINE_LOADING,
-  PUSH_TO_SERVER,
+  SET_CURRENT_OFFLINE_LOADING,
+  SET_OFFLINE_LOADING_STATUS,
   SET_OFFLINE_SELECTED_ORGUNITS,
+  SET_OFFLINE_STATUS,
   SET_REPORT_ID,
 } from "./type";
 
@@ -35,8 +34,4 @@ export const resetCurrentOfflineLoading = () => ({
 export const setReportId = (reportId) => ({
   type: SET_REPORT_ID,
   reportId,
-});
-
-export const pushToServer = () => ({
-  type: PUSH_TO_SERVER,
 });

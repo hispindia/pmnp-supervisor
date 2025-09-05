@@ -5,13 +5,15 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import ImportModal from "./ImportModal";
+import { useUser } from "@/hooks/useUser";
 
 const ExcelImportButton = () => {
   const { t } = useTranslation();
+  const { isSuperuser } = useUser();
   const { offlineStatus } = useSelector((state) => state.common);
   const [isOpen, setIsOpen] = useState(false);
 
-  if (!offlineStatus) {
+  if (!offlineStatus && !isSuperuser) {
     return null;
   }
 

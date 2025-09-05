@@ -188,13 +188,13 @@ export const pullNested = async ({ handleDispatchCurrentOfflineLoading, offlineS
   }
 };
 
-export const push = async () => {
+export const push = async (progressCallback) => {
   console.time("TrackedEntity::push");
 
   const trackedEntities = await findOffline();
 
   if (trackedEntities?.length > 0) {
-    const results = await pushAndMarkOnline(toDhis2TrackedEntities(trackedEntities));
+    const results = await pushAndMarkOnline(toDhis2TrackedEntities(trackedEntities), progressCallback);
 
     for (const result of results) {
       console.log(result.status);
@@ -213,7 +213,7 @@ export const findOffline = async () => {
   return await db[TABLE_NAME].where("isOnline").anyOf(0).toArray();
 };
 
-export const pushAndMarkOnline = async (trackedEntities) => {
+export const pushAndMarkOnline = async (trackedEntities, progressCallback) => {
   const results = [];
 
   if (trackedEntities.length === 0) {
@@ -222,7 +222,9 @@ export const pushAndMarkOnline = async (trackedEntities) => {
 
   const partitions = chunk(trackedEntities, 20);
 
-  for (const partition of partitions) {
+  for (let i = 0; i < partitions.length; i++) {
+    const partition = partitions[i];
+
     try {
       const result = await dataApi.postTrackedEntityInstances({
         trackedEntities: partition,
@@ -231,13 +233,25 @@ export const pushAndMarkOnline = async (trackedEntities) => {
       if (result.status === "OK") {
         await markOnline(partition.map((te) => te.trackedEntity));
       } else {
-        throw new Error("Failed to push trackedEntity");
+        console.error(`Failed to push trackedEntity chunk - status: ${result.status}`, result);
       }
 
       results.push(result);
+
+      // Call progress callback if provided
+      if (progressCallback) {
+        const percent = Math.round(((i + 1) / partitions.length) * 100);
+        progressCallback({ id: "tei", percent });
+      }
     } catch (error) {
       results.push(error);
-      console.error(`Failed to push trackedEntity`, error);
+      console.error(`Failed to push trackedEntity chunk`, error);
+
+      // Call progress callback even on error to show progress
+      if (progressCallback) {
+        const percent = Math.round(((i + 1) / partitions.length) * 100);
+        progressCallback({ id: "tei", percent });
+      }
     }
   }
 

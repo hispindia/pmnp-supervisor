@@ -54,7 +54,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
                   "incidentDate",
                   "followup",
                 ].join(",")}`,
-              ]
+              ],
             );
 
             if (!result.instances || result.instances.length === 0 || page > result.pageCount) {
@@ -62,7 +62,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
             }
 
             console.log(
-              `ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`
+              `ENROLLMENT = ${program.id} (page=${page}/${result.pageCount}, count=${result.instances.length})`,
             );
 
             const resultEnrollments = {
@@ -90,14 +90,11 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
   }
 };
 
-export const push = async () => {
-  console.time("Enrollment::push");
-  var start = performance.now();
-
+export const push = async (progressCallback) => {
   const enrollments = await findOffline();
 
   if (enrollments?.length > 0) {
-    const results = await pushAndMarkOnline(toDhis2Enrollments(enrollments));
+    const results = await pushAndMarkOnline(toDhis2Enrollments(enrollments), progressCallback);
 
     for (const result of results) {
       console.log(result.status);
@@ -106,8 +103,6 @@ export const push = async () => {
     return results;
   }
 
-  console.timeEnd("Enrollment::push");
-  var end = performance.now();
   return {
     status: "OK",
   };
@@ -126,7 +121,7 @@ const markOnline = async (enrollmentIds) => {
   return await db[TABLE_NAME].where("enrollment").anyOf(enrollmentIds).modify({ isOnline: 1 });
 };
 
-const pushAndMarkOnline = async (enrollments) => {
+const pushAndMarkOnline = async (enrollments, progressCallback) => {
   const results = [];
 
   if (enrollments.length === 0) {
@@ -135,7 +130,8 @@ const pushAndMarkOnline = async (enrollments) => {
 
   const partitions = chunk(enrollments, 20);
 
-  for (const partition of partitions) {
+  for (let i = 0; i < partitions.length; i++) {
+    const partition = partitions[i];
     console.log("pushEnrollment", { partition });
 
     try {
@@ -149,10 +145,24 @@ const pushAndMarkOnline = async (enrollments) => {
 
       if (result.status === "OK") {
         await markOnline(partition.map((en) => en.enrollment));
+      } else {
+        console.error(`Failed to push enrollment chunk - status: ${result.status}`, result);
+      }
+
+      // Call progress callback if provided
+      if (progressCallback) {
+        const percent = Math.round(((i + 1) / partitions.length) * 100);
+        progressCallback({ id: "enr", percent });
       }
     } catch (error) {
-      console.error(`Failed to push enrollment`, error);
+      console.error(`Failed to push enrollment chunk`, error);
       results.push(error);
+
+      // Call progress callback even on error to show progress
+      if (progressCallback) {
+        const percent = Math.round(((i + 1) / partitions.length) * 100);
+        progressCallback({ id: "enr", percent });
+      }
     }
   }
 

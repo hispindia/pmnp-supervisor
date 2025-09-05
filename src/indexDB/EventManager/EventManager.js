@@ -39,7 +39,7 @@ export const getEventsRawData = async (pager, org, program) => {
         "followup",
         "dataValues[dataElement,providedElsewhere,value]",
       ].join(",")}`,
-    ]
+    ],
   );
 };
 
@@ -61,7 +61,7 @@ export const getEventsAnalyticsTable = async (pager, org, program) => {
       `endDate=${moment().format("YYYY-MM-DD")}`,
       // `dimension=dx:${dataElementIds.map((de) => de).join(';')}`,
       dataElementIds.map((de) => `dimension=${de}`).join("&"),
-    ]
+    ],
   );
 };
 
@@ -96,7 +96,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
                 page,
               },
               org,
-              program
+              program,
             );
 
             if (!result.rows || result.rows.length === 0 || page > result.metaData.pager.pageCount) {
@@ -128,13 +128,13 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
   }
 };
 
-export const push = async () => {
+export const push = async (progressCallback) => {
   console.time("Event::push");
 
   const events = await findOffline();
 
   if (events?.length > 0) {
-    const results = await pushAndMarkOnline(toDhis2Events(events));
+    const results = await pushAndMarkOnline(toDhis2Events(events), progressCallback);
 
     for (const result of results) {
       console.log(result.status);
@@ -158,16 +158,17 @@ const markOnline = async (eventIds) => {
   return await db[TABLE_NAME].where("event").anyOf(eventIds).modify({ isOnline: 1 });
 };
 
-const pushAndMarkOnline = async (events) => {
+const pushAndMarkOnline = async (events, progressCallback) => {
   const results = [];
 
   if (events.length === 0) {
     return results;
   }
 
-  const partitions = chunk(events, 20);
+  const partitions = chunk(events, 50);
 
-  for (const partition of partitions) {
+  for (let i = 0; i < partitions.length; i++) {
+    const partition = partitions[i];
     console.log("pushEvents", { partition });
 
     try {
@@ -181,10 +182,24 @@ const pushAndMarkOnline = async (events) => {
 
       if (result.status === "OK") {
         await markOnline(partition.map((en) => en.event));
+      } else {
+        console.error(`Failed to push event chunk - status: ${result.status}`, result);
+      }
+
+      // Call progress callback if provided
+      if (progressCallback) {
+        const percent = Math.round(((i + 1) / partitions.length) * 100);
+        progressCallback({ id: "event", percent });
       }
     } catch (error) {
-      console.error(`Failed to push event`, error);
+      console.error(`Failed to push event chunk`, error);
       results.push(error);
+
+      // Call progress callback even on error to show progress
+      if (progressCallback) {
+        const percent = Math.round(((i + 1) / partitions.length) * 100);
+        progressCallback({ id: "event", percent });
+      }
     }
   }
 
