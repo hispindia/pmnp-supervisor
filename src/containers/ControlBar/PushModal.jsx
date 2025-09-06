@@ -20,10 +20,38 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
   const { t } = useTranslation();
   const { currentOfflineLoading } = useSelector((state) => state.common);
 
+  // Individual progress tracking for each operation
+  const [individualProgress, setIndividualProgress] = useState({
+    tei: 0,
+    enr: 0,
+    event: 0,
+  });
+
   // Countdown state and ref
   const [countdown, setCountdown] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const intervalRef = useRef(null);
+
+  // Update individual progress when currentOfflineLoading changes
+  useEffect(() => {
+    if (currentOfflineLoading.id && currentOfflineLoading.percent !== undefined) {
+      setIndividualProgress((prev) => ({
+        ...prev,
+        [currentOfflineLoading.id]: currentOfflineLoading.percent,
+      }));
+    }
+  }, [currentOfflineLoading]);
+
+  // Reset progress when modal opens
+  useEffect(() => {
+    if (open) {
+      setIndividualProgress({
+        tei: 0,
+        enr: 0,
+        event: 0,
+      });
+    }
+  }, [open]);
 
   // Check if sync is on cooldown
   const checkSyncCooldown = () => {
@@ -130,16 +158,22 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
   };
 
   useEffect(() => {
-    if (
-      open &&
-      currentOfflineLoading.id === pushMapping[pushMapping.length - 1].id &&
-      currentOfflineLoading.percent >= 100
-    ) {
-      // Dont dispatch this action here because Pushing data might occur some errors
-      // dispatch(setOfflineStatus(false));
-      // onClose();
+    if (open) {
+      // Check if all operations with data are complete
+      const allComplete = pushMapping.every(({ id }) => {
+        // If there's no data for this operation, consider it complete
+        if (!pushData[id]) return true;
+        // If there's data, check if progress is 100%
+        return individualProgress[id] === 100;
+      });
+
+      if (allComplete && Object.values(pushData).some(Boolean)) {
+        // All operations with data are complete
+        // Don't auto-close here because there might be errors to display
+        // onClose();
+      }
     }
-  }, [open && currentOfflineLoading.id, currentOfflineLoading.percent]);
+  }, [open, individualProgress, pushData]);
 
   return (
     <Modal
@@ -154,13 +188,8 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
       okButtonProps={{ disabled: isDisabled && !isSuperuser }}
     >
       {pushMapping.map(({ label, id }, step) => {
-        const currentStep = pushMapping.findIndex(({ id }) => id === currentOfflineLoading.id);
-
-        let percent = 0;
-        if (currentStep > -1) {
-          if (currentStep > step) percent = 100;
-          if (currentStep === step) percent = currentOfflineLoading.percent;
-        }
+        // Use individual progress for each operation
+        const percent = individualProgress[id] || 0;
 
         return (
           Boolean(pushData[id]) && (
@@ -174,7 +203,7 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
         );
       })}
 
-      {syncError && (
+      {syncError ? (
         <div style={{ marginTop: 16, marginBottom: 16 }}>
           <Typography.Title level={5} type="danger" style={{ marginBottom: 8 }}>
             {t("syncError", "Sync Error")}:
@@ -196,7 +225,7 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
             }}
           />
         </div>
-      )}
+      ) : null}
 
       <div style={{ marginBottom: 24 }}></div>
     </Modal>

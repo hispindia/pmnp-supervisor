@@ -66,9 +66,13 @@ const handlePushResult = async (result, message, metadataMapping) => {
         })
         .filter((msg) => msg !== ""); // Filter out empty error message groups
 
-      throw new Error(message + "\n" + errorMessages.join("\n"));
+      // Return error message instead of throwing
+      return message + "\n" + errorMessages.join("\n");
     }
   }
+
+  // Return null if no errors
+  return null;
 };
 
 const showingCurrentOfflineLoading = ({ dispatch, id, percent }) => {
@@ -76,6 +80,8 @@ const showingCurrentOfflineLoading = ({ dispatch, id, percent }) => {
 };
 
 const handlePushToServer = async (dispatch, metadataMapping, setError) => {
+  const allErrors = [];
+
   try {
     // Check internet connection
     if (!navigator.onLine) {
@@ -86,27 +92,52 @@ const handlePushToServer = async (dispatch, metadataMapping, setError) => {
      * push data to server by order
      */
     // push tracked entities
-    const teiPushResults = await trackedEntityManager.push((progress) =>
-      showingCurrentOfflineLoading({ dispatch, ...progress }),
-    );
-    await handlePushResult(teiPushResults, "Sync tracked entities failed: ", metadataMapping);
+    try {
+      const teiPushResults = await trackedEntityManager.push((progress) =>
+        showingCurrentOfflineLoading({ dispatch, ...progress }),
+      );
+      const teiError = await handlePushResult(teiPushResults, "Sync tracked entities failed: ", metadataMapping);
+      if (teiError) {
+        allErrors.push(teiError);
+      }
+    } catch (error) {
+      allErrors.push(`Sync tracked entities failed: ${error.message}`);
+    }
 
     // push enrollments
-    const enrPushResults = await enrollmentManager.push((progress) =>
-      showingCurrentOfflineLoading({ dispatch, ...progress }),
-    );
-    await handlePushResult(enrPushResults, "Sync enrollments failed: ", metadataMapping);
+    try {
+      const enrPushResults = await enrollmentManager.push((progress) =>
+        showingCurrentOfflineLoading({ dispatch, ...progress }),
+      );
+      const enrError = await handlePushResult(enrPushResults, "Sync enrollments failed: ", metadataMapping);
+      if (enrError) {
+        allErrors.push(enrError);
+      }
+    } catch (error) {
+      allErrors.push(`Sync enrollments failed: ${error.message}`);
+    }
 
     // push events
-    const eventPushRetuls = await eventManager.push((progress) =>
-      showingCurrentOfflineLoading({ dispatch, ...progress }),
-    );
-    await handlePushResult(eventPushRetuls, "Sync events failed: ", metadataMapping);
+    try {
+      const eventPushRetuls = await eventManager.push((progress) =>
+        showingCurrentOfflineLoading({ dispatch, ...progress }),
+      );
+      const eventError = await handlePushResult(eventPushRetuls, "Sync events failed: ", metadataMapping);
+      if (eventError) {
+        allErrors.push(eventError);
+      }
+    } catch (error) {
+      allErrors.push(`Sync events failed: ${error.message}`);
+    }
 
-    // wait for 3 second to show 100% progress bar
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    // If there are any errors, display them all
+    if (allErrors.length > 0) {
+      setError(allErrors.join("\n\n"));
+    }
+
     // dispatch(setOfflineStatus(false));
   } catch (error) {
+    // Only catch critical errors like network connection
     setError(error ? error.message : "Sync data to server failed!");
     console.table(error);
   } finally {
