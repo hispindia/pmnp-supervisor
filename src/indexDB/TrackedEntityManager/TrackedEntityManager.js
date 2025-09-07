@@ -340,7 +340,6 @@ export const setTrackedEntityInstances = async ({ trackedEntities }) => {
 };
 
 const persist = async (trackedEntities) => {
-  console.log("persist trackedEntities", { trackedEntities });
   await db[TABLE_NAME].bulkPut(trackedEntities);
 };
 

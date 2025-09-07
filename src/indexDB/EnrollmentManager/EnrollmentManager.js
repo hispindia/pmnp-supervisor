@@ -109,7 +109,6 @@ export const push = async (progressCallback) => {
 };
 
 export const persist = async (enrollments) => {
-  console.log("persist enrollments", { enrollments });
   await db[TABLE_NAME].bulkPut(enrollments);
 };
 

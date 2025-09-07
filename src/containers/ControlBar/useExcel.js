@@ -18,54 +18,109 @@ export const useExcel = () => {
   const { user } = useUser();
   const { selectedOrgUnit } = useSelector((state) => state.metadata);
 
-  const importExcel = async (fileList) => {
-    for (let i = 0; i < fileList.length; i++) {
-      const data = await fileList[i].arrayBuffer();
-      const workbook = XLSX.read(data, { type: "array" });
-
-      // Clear all tables before import
+  const importExcel = async (fileList, progressCallback = null) => {
+    try {
+      // Clear all tables once before importing all files
       await trackedEntityManager.clearTable();
       await enrollmentManager.clearTable();
       await eventManager.clearTable();
 
-      // TEIs
-      const teiSheetName = workbook.SheetNames[2];
-      const teiSheet = workbook.Sheets[teiSheetName];
+      notification.info({
+        message: "Import Started",
+        description: `Starting import of ${fileList.length} file(s)`,
+        placement: "bottomRight",
+        duration: 3,
+      });
 
-      if (sheetNames.includes(teiSheetName) && teiSheet) {
-        const teisData = toDhis2TrackedEntities(XLSX.utils.sheet_to_json(teiSheet));
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        console.log(`Processing file ${i + 1}/${fileList.length}: ${file.name}`);
 
-        await trackedEntityManager.setTrackedEntityInstances({
-          trackedEntities: teisData,
-        });
-      }
+        // Report progress for current file
+        if (progressCallback) {
+          progressCallback({
+            currentFile: i + 1,
+            totalFiles: fileList.length,
+            fileName: file.name,
+            status: "processing",
+          });
+        }
 
-      // ENROLLMENTS
-      const enrSheetName = workbook.SheetNames[1];
-      const enrSheet = workbook.Sheets[enrSheetName];
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: "array" }); // TEIs
+        const teiSheetName = workbook.SheetNames[2];
+        const teiSheet = workbook.Sheets[teiSheetName];
 
-      if (sheetNames.includes(enrSheetName) && enrSheet) {
-        const enrsData = toDhis2Enrollments(XLSX.utils.sheet_to_json(enrSheet));
+        if (sheetNames.includes(teiSheetName) && teiSheet) {
+          const teisData = toDhis2TrackedEntities(XLSX.utils.sheet_to_json(teiSheet));
 
-        // Import enrollments using setEnrollment from EnrollmentManager
-        for (const enrollment of enrsData) {
-          await enrollmentManager.setEnrollment({
-            enrollment,
-            program: enrollment.program,
+          await trackedEntityManager.setTrackedEntityInstances({
+            trackedEntities: teisData,
+          });
+        }
+
+        // ENROLLMENTS
+        const enrSheetName = workbook.SheetNames[1];
+        const enrSheet = workbook.Sheets[enrSheetName];
+
+        if (sheetNames.includes(enrSheetName) && enrSheet) {
+          const enrsData = toDhis2Enrollments(XLSX.utils.sheet_to_json(enrSheet));
+
+          // Import enrollments using setEnrollment from EnrollmentManager
+          for (const enrollment of enrsData) {
+            await enrollmentManager.setEnrollment({
+              enrollment,
+              program: enrollment.program,
+            });
+          }
+        }
+
+        // EVENTS
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        if (sheetNames.includes(sheetName) && sheet) {
+          const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+          const eventsData = toDhis2Events(jsonData);
+          await eventManager.setEvents({ events: eventsData });
+        }
+
+        // Report progress for completed file
+        if (progressCallback) {
+          progressCallback({
+            currentFile: i + 1,
+            totalFiles: fileList.length,
+            fileName: file.name,
+            status: "completed",
           });
         }
       }
 
-      // EVENTS
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-
-      if (sheetNames.includes(sheetName) && sheet) {
-        const jsonData = XLSX.utils.sheet_to_json(sheet);
-
-        const eventsData = toDhis2Events(jsonData);
-        await eventManager.setEvents({ events: eventsData });
+      // Report final completion
+      if (progressCallback) {
+        progressCallback({
+          currentFile: fileList.length,
+          totalFiles: fileList.length,
+          fileName: "",
+          status: "finished",
+        });
       }
+
+      notification.success({
+        message: "Import Completed",
+        description: `Successfully imported ${fileList.length} file(s)`,
+        placement: "bottomRight",
+        duration: 5,
+      });
+    } catch (error) {
+      console.error("Error importing Excel files:", error);
+      notification.error({
+        message: "Import Failed",
+        description: `Error importing files: ${error.message}`,
+        placement: "bottomRight",
+        duration: 5,
+      });
     }
   };
 
