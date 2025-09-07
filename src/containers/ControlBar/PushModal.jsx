@@ -16,7 +16,7 @@ export const pushMapping = [
 const SYNC_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes in milliseconds
 const STORAGE_KEY = "syncTime";
 
-const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
+const PushModal = ({ pushData, open, onCancel, onOk, onClose, syncError, syncCompleted }) => {
   const { isSuperuser } = useUser();
   const { t } = useTranslation();
   const { currentOfflineLoading } = useSelector((state) => state.common);
@@ -204,12 +204,12 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
         );
       })}
 
-      {/* Export Excel button - shown above sync errors when there are errors */}
+      {syncCompleted && <ExportExcelButton />}
 
       {syncError ? (
         <div style={{ marginTop: 16, marginBottom: 16 }}>
           <Typography.Title level={5} type="danger" style={{ marginBottom: 8 }}>
-            {t("syncError", "Sync Error")}: <ExportExcelButton />
+            {t("syncError", "Sync Error")}:
           </Typography.Title>
 
           <div

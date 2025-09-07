@@ -1,9 +1,8 @@
 import { toDhis2Enrollments } from "@/indexDB/data/enrollment";
 import { toDhis2Events } from "@/indexDB/data/event";
 import { toDhis2TrackedEntities } from "@/indexDB/data/trackedEntity"; // Import the color from Ant Design
-import { resetCurrentOfflineLoading, setCurrentOfflineLoading, setOfflineStatus } from "@/redux/actions/common";
+import { resetCurrentOfflineLoading, setCurrentOfflineLoading } from "@/redux/actions/common";
 import { findChangedData } from "@/utils/offline";
-import { blue } from "@ant-design/colors";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, notification } from "antd";
 import { useState } from "react";
@@ -12,13 +11,12 @@ import { useDispatch } from "react-redux";
 
 import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
-import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 import * as ImportFileManager from "@/indexDB/ImportFileManager/ImportFileManager";
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
 
+import { useSelector } from "react-redux";
 import ExcelImportButton from "./ExcelImportButton";
 import PushModal, { pushMapping } from "./PushModal";
-import { useExcel } from "./useExcel";
-import { useSelector } from "react-redux";
 
 const handlePushResult = async (result, metadataMapping) => {
   if (result?.length > 0 && result.status != "OK") {
@@ -100,7 +98,7 @@ const showingCurrentOfflineLoading = ({ dispatch, id, percent }) => {
   dispatch(setCurrentOfflineLoading({ id, percent }));
 };
 
-const handlePushToServer = async (dispatch, metadataMapping, setError) => {
+const handlePushToServer = async (dispatch, metadataMapping, setError, setSyncCompleted) => {
   const allErrors = [];
   const combinedErrorsByFile = {};
 
@@ -200,6 +198,7 @@ const handlePushToServer = async (dispatch, metadataMapping, setError) => {
     console.table(error);
   } finally {
     console.log("handlePushToServer - finally");
+    setSyncCompleted(true);
   }
 };
 
@@ -272,21 +271,24 @@ const PushToServerButton = () => {
   const [pushModalOpen, setPushModalOpen] = useState(false);
   const [pushData, setPushData] = useState(pushMapping.reduce((acc, curr) => ({ ...acc, [curr.id]: 0 }), {}));
   const [syncError, setSyncError] = useState(null);
+  const [syncCompleted, setSyncCompleted] = useState(false);
 
   const handleCancelPush = () => {
     setPushModalOpen(false);
     setSyncError(null);
+    setSyncCompleted(false);
   };
 
   const handlePushClose = () => {
     setPushModalOpen(false);
     setSyncError(null);
+    setSyncCompleted(false);
   };
 
   const handlePush = async () => {
     if (Object.values(pushData).find(Boolean)) {
       setSyncError(null); // Clear any previous errors
-      await handlePushToServer(dispatch, programMetadataNameMapping, setSyncError);
+      await handlePushToServer(dispatch, programMetadataNameMapping, setSyncError, setSyncCompleted);
     }
   };
 
@@ -299,6 +301,7 @@ const PushToServerButton = () => {
         onClose={handlePushClose}
         onOk={handlePush}
         syncError={syncError}
+        syncCompleted={syncCompleted}
       />
       <Button
         onClick={async () => {
