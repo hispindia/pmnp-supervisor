@@ -104,13 +104,6 @@ const ImportModal = ({ open, onCancel, onOk, onClose, pushData }) => {
       }
 
       history.replace(`/list`);
-
-      notification.success({
-        message: t("success"),
-        description: t("importSuccess"),
-        placement: "bottomRight",
-        duration: 10,
-      });
     } catch (error) {
       setImporting(false);
       setImportProgress((prev) => ({ ...prev, status: "error" }));
@@ -162,10 +155,10 @@ const ImportModal = ({ open, onCancel, onOk, onClose, pushData }) => {
       onCancel={handleCancel}
       onOk={handleUpload}
       okText={
-        importing 
-          ? t("importing") || "Importing..." 
-          : importProgress.status === "finished" 
-            ? "Import Again" 
+        importing
+          ? t("importing") || "Importing..."
+          : importProgress.status === "finished"
+            ? "Import Again"
             : t("import")
       }
       okButtonProps={{
@@ -184,7 +177,13 @@ const ImportModal = ({ open, onCancel, onOk, onClose, pushData }) => {
         <div style={{ marginTop: 16 }}>
           <Progress
             percent={Math.round((importProgress.currentFile / importProgress.totalFiles) * 100)}
-            status={importProgress.status === "error" ? "exception" : importProgress.status === "finished" ? "success" : "active"}
+            status={
+              importProgress.status === "error"
+                ? "exception"
+                : importProgress.status === "finished"
+                  ? "success"
+                  : "active"
+            }
             format={() => `${importProgress.currentFile}/${importProgress.totalFiles}`}
           />
 

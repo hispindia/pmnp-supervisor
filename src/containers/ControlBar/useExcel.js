@@ -4,6 +4,7 @@ import { toDhis2TrackedEntities } from "@/indexDB/data/trackedEntity";
 import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import * as importFileManager from "@/indexDB/ImportFileManager/ImportFileManager";
 import { findChangedData } from "@/utils/offline";
 import { notification } from "antd";
 import * as XLSX from "xlsx";
@@ -20,10 +21,11 @@ export const useExcel = () => {
 
   const importExcel = async (fileList, progressCallback = null) => {
     try {
-      // Clear all tables once before importing all files
+      // Clear all tables before importing
       await trackedEntityManager.clearTable();
       await enrollmentManager.clearTable();
       await eventManager.clearTable();
+      await importFileManager.clearTable();
 
       notification.info({
         message: "Import Started",
@@ -35,6 +37,11 @@ export const useExcel = () => {
       for (let i = 0; i < fileList.length; i++) {
         const file = fileList[i];
         console.log(`Processing file ${i + 1}/${fileList.length}: ${file.name}`);
+
+        // Create import file record with just fileName
+        await importFileManager.createImportFile({
+          fileName: file.name,
+        });
 
         // Report progress for current file
         if (progressCallback) {

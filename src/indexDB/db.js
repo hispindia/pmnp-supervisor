@@ -9,11 +9,12 @@ import * as trackedEntity from "./TrackedEntityManager";
 import * as program from "./ProgramManager";
 import * as optionSet from "./OptionSetManager";
 import * as event from "./EventManager";
+import * as importFile from "./ImportFileManager";
 
 export const db = new Dexie("FI_Offline");
-db.version(1).stores({
+
+db.version(2).stores({
   [me.TABLE_NAME]: me.TABLE_FIELDS,
-  // organisationsPath: 'id, path', // Primary key and indexed props
   [organisationUnit.TABLE_NAME]: organisationUnit.TABLE_FIELDS,
   [organisationsUnitLevel.TABLE_NAME]: organisationsUnitLevel.TABLE_FIELDS,
   [enrollment.TABLE_NAME]: enrollment.TABLE_FIELDS,
@@ -21,6 +22,7 @@ db.version(1).stores({
   [program.TABLE_NAME]: program.TABLE_FIELDS,
   [optionSet.TABLE_NAME]: optionSet.TABLE_FIELDS,
   [event.TABLE_NAME]: event.TABLE_FIELDS,
+  [importFile.TABLE_NAME]: importFile.TABLE_FIELDS,
 });
 
 export default db;
