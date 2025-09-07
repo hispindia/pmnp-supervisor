@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { convertValueBack } from "./utils";
 
 const toDhis2Tei = (trackedEntity, teiData, enrs = []) => {
   let attributes = [];
@@ -6,14 +7,13 @@ const toDhis2Tei = (trackedEntity, teiData, enrs = []) => {
   teiData.map((e) => {
     attributes.push({
       attribute: e.attribute,
-      value: e.value,
+      value: convertValueBack(e.valueType, e.value),
       valueType: e.valueType,
       displayName: e.displayName,
     });
   });
 
-  let { isOnline, orgUnit, isDeleted, trackedEntityType, updatedAt } =
-    teiData[0];
+  let { isOnline, orgUnit, isDeleted, trackedEntityType, updatedAt } = teiData[0];
 
   return {
     trackedEntity,
@@ -31,9 +31,7 @@ export const toDhis2TrackedEntities = (teis) => {
   if (!teis) return [];
   let resTEIS = _.groupBy(teis, "trackedEntity");
 
-  return Object.entries(resTEIS).map(([trackedEntity, teiData]) =>
-    toDhis2Tei(trackedEntity, teiData)
-  );
+  return Object.entries(resTEIS).map(([trackedEntity, teiData]) => toDhis2Tei(trackedEntity, teiData));
 };
 
 export const toDhis2TrackedEntity = (tei, enrs = []) => {

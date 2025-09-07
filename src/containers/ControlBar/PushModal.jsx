@@ -1,9 +1,9 @@
 import { Modal, Progress, Typography } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
+import { useUser } from "@/hooks/useUser";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useUser } from "@/hooks/useUser";
 
 export const pushMapping = [
   { id: "tei", label: "Sync tracked entities" },

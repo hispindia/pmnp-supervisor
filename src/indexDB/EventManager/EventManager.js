@@ -433,6 +433,11 @@ export const setEvents = async ({ events }) => {
   }
 };
 
+export const clearTable = async () => {
+  console.log("Clearing Event table");
+  await db[TABLE_NAME].clear();
+};
+
 const setEvent = async (ev) => {
   try {
     const ids = [];

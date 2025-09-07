@@ -4,22 +4,21 @@ import db from "../db";
 
 import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
+import * as meManager from "@/indexDB/MeManager/MeManager";
 import * as orgUnitManager from "@/indexDB/OrganisationUnitManager/OrganisationUnitManager";
 import * as programManager from "@/indexDB/ProgramManager/ProgramManager";
-import * as meManager from "@/indexDB/MeManager/MeManager";
 
-import { chunk } from "lodash";
-import { toDhis2Enrollments } from "../data/enrollment";
-import { toDhis2Events } from "../data/event";
-import { toDhis2TrackedEntities, toDhis2TrackedEntity } from "../data/trackedEntity";
 import {
-  DATA_COLLECT_ATTRIBUTE_ID,
   FAMILY_UID_ATTRIBUTE_ID,
   HOUSEHOLD_DATA_COLLECTOR_ATTR_ID,
   HOUSEHOLD_PROGRAM_ID,
   MEMBER_PROGRAM_ID,
 } from "@/constants/app-config";
 import { extractTeis } from "@/utils/common";
+import { chunk } from "lodash";
+import { toDhis2Enrollments } from "../data/enrollment";
+import { toDhis2Events } from "../data/event";
+import { toDhis2TrackedEntities, toDhis2TrackedEntity } from "../data/trackedEntity";
 
 export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelectedOrgUnits }) => {
   try {
@@ -668,6 +667,11 @@ export const deleteTrackedEntityInstances = async ({ trackedEntities }) => {
   } catch (error) {
     console.error(`Failed to add trackedEntity`, error);
   }
+};
+
+export const clearTable = async () => {
+  console.log("clearing TrackedEntity table...");
+  return await db[TABLE_NAME].clear();
 };
 
 // trackedEntity	INTEGER	NO	NULL

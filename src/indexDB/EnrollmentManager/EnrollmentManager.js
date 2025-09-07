@@ -269,3 +269,8 @@ export const findOne = async (id) => {
     console.error(`Failed to get enrollment`, error);
   }
 };
+
+export const clearTable = async () => {
+  console.log("clearing Enrollment table...");
+  return await db[TABLE_NAME].clear();
+};

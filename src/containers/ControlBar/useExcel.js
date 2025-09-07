@@ -23,6 +23,11 @@ export const useExcel = () => {
       const data = await fileList[i].arrayBuffer();
       const workbook = XLSX.read(data, { type: "array" });
 
+      // Clear all tables before import
+      await trackedEntityManager.clearTable();
+      await enrollmentManager.clearTable();
+      await eventManager.clearTable();
+
       // TEIs
       const teiSheetName = workbook.SheetNames[2];
       const teiSheet = workbook.Sheets[teiSheetName];
