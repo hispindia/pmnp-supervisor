@@ -38,11 +38,6 @@ export const useExcel = () => {
         const file = fileList[i];
         console.log(`Processing file ${i + 1}/${fileList.length}: ${file.name}`);
 
-        // Create import file record with just fileName
-        await importFileManager.createImportFile({
-          fileName: file.name,
-        });
-
         // Report progress for current file
         if (progressCallback) {
           progressCallback({
@@ -54,12 +49,25 @@ export const useExcel = () => {
         }
 
         const data = await file.arrayBuffer();
-        const workbook = XLSX.read(data, { type: "array" }); // TEIs
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // Extract UIDs from all sheets
+        const allUids = new Set(); // Use Set to automatically remove duplicates
+
+        // TEIs
         const teiSheetName = workbook.SheetNames[2];
         const teiSheet = workbook.Sheets[teiSheetName];
 
         if (sheetNames.includes(teiSheetName) && teiSheet) {
-          const teisData = toDhis2TrackedEntities(XLSX.utils.sheet_to_json(teiSheet));
+          const teiJsonData = XLSX.utils.sheet_to_json(teiSheet);
+          // Extract UIDs from trackedEntity column
+          teiJsonData.forEach((row) => {
+            if (row.trackedEntity) {
+              allUids.add(row.trackedEntity);
+            }
+          });
+
+          const teisData = toDhis2TrackedEntities(teiJsonData);
 
           await trackedEntityManager.setTrackedEntityInstances({
             trackedEntities: teisData,
@@ -71,7 +79,15 @@ export const useExcel = () => {
         const enrSheet = workbook.Sheets[enrSheetName];
 
         if (sheetNames.includes(enrSheetName) && enrSheet) {
-          const enrsData = toDhis2Enrollments(XLSX.utils.sheet_to_json(enrSheet));
+          const enrJsonData = XLSX.utils.sheet_to_json(enrSheet);
+          // Extract UIDs from enrollment column
+          enrJsonData.forEach((row) => {
+            if (row.enrollment) {
+              allUids.add(row.enrollment);
+            }
+          });
+
+          const enrsData = toDhis2Enrollments(enrJsonData);
 
           // Import enrollments using setEnrollment from EnrollmentManager
           for (const enrollment of enrsData) {
@@ -88,10 +104,26 @@ export const useExcel = () => {
 
         if (sheetNames.includes(sheetName) && sheet) {
           const jsonData = XLSX.utils.sheet_to_json(sheet);
+          // Extract UIDs from event column
+          jsonData.forEach((row) => {
+            if (row.event) {
+              allUids.add(row.event);
+            }
+          });
 
           const eventsData = toDhis2Events(jsonData);
           await eventManager.setEvents({ events: eventsData });
         }
+
+        // Convert Set to comma-separated string
+        const uidsString = Array.from(allUids).join(",");
+        console.log(`Extracted ${allUids.size} unique UIDs from file: ${file.name}`);
+
+        // Create import file record with fileName and UIDs
+        await importFileManager.createImportFile({
+          fileName: file.name,
+          uids: uidsString,
+        });
 
         // Report progress for completed file
         if (progressCallback) {

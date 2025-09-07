@@ -13,13 +13,14 @@ import { useDispatch } from "react-redux";
 import * as enrollmentManager from "@/indexDB/EnrollmentManager/EnrollmentManager";
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import * as ImportFileManager from "@/indexDB/ImportFileManager/ImportFileManager";
 
 import ExcelImportButton from "./ExcelImportButton";
 import PushModal, { pushMapping } from "./PushModal";
 import { useExcel } from "./useExcel";
 import { useSelector } from "react-redux";
 
-const handlePushResult = async (result, message, metadataMapping) => {
+const handlePushResult = async (result, metadataMapping) => {
   if (result?.length > 0 && result.status != "OK") {
     if (result.some((result) => result.status != "OK")) {
       const errors = [];
@@ -31,48 +32,68 @@ const handlePushResult = async (result, message, metadataMapping) => {
         } catch (err) {}
       }
 
+      // Get all import files to map UIDs to filenames
+      const importFiles = await ImportFileManager.findAll();
+      console.log("Import files for error mapping:", importFiles);
+
       const checkDuplicateMapping = {};
+      const errorsByFile = {};
 
-      const errorMessages = errors
-        .map((error) => {
-          return error.validationReport.errorReports
-            .map((errorReport) => {
-              let message = errorReport.message;
-              const uid = errorReport.uid || message;
-              const mapKey = errorReport.message + " " + uid;
+      // Process all errors and group by file
+      for (const error of errors) {
+        for (const errorReport of error.validationReport.errorReports) {
+          let message = errorReport.message;
+          const uid = errorReport.uid || message;
+          const mapKey = errorReport.message + " " + uid;
 
-              // Check if this error message already exists
-              if (checkDuplicateMapping[mapKey]) {
-                return ""; // Return empty string for duplicates
+          // Check if this error message already exists
+          if (checkDuplicateMapping[mapKey]) {
+            continue; // Skip duplicates
+          }
+
+          // Mark this message as seen
+          checkDuplicateMapping[mapKey] = true;
+
+          // Find UUIDs (11 character alphanumeric strings) and replace with display names
+          if (metadataMapping) {
+            // Regex to match 11-character alphanumeric strings (DHIS2 UIDs)
+            const uuidRegex = /\b[A-Za-z0-9]{11}\b/g;
+            message = message.replace(uuidRegex, (match) => {
+              // If we have a mapping for this UUID, replace it with the display name
+              return metadataMapping[match] ? `<b>${metadataMapping[match]}</b> (${match})` : `<b>${match}</b>`;
+            });
+          }
+
+          // Determine which file this error belongs to
+          let belongsToFile = "Unknown File";
+
+          if (uid && uid.length === 11) {
+            // Check which import file contains this UID
+            for (const importFile of importFiles) {
+              if (importFile.uids && importFile.uids.includes(uid)) {
+                belongsToFile = importFile.fileName;
+                break;
               }
+            }
+          }
 
-              // Mark this message as seen
-              checkDuplicateMapping[mapKey] = true;
+          // Group errors by file
+          if (!errorsByFile[belongsToFile]) {
+            errorsByFile[belongsToFile] = [];
+          }
+          errorsByFile[belongsToFile].push(message);
+        }
+      }
 
-              // Find UUIDs (11 character alphanumeric strings) and replace with display names
-              if (metadataMapping) {
-                // Regex to match 11-character alphanumeric strings (DHIS2 UIDs)
-                const uuidRegex = /\b[A-Za-z0-9]{11}\b/g;
-                message = message.replace(uuidRegex, (match) => {
-                  // If we have a mapping for this UUID, replace it with the display name
-                  return metadataMapping[match] ? `<b>${metadataMapping[match]}</b> (${match})` : `<b>${match}</b>`;
-                });
-              }
+      console.log("Errors grouped by file:", errorsByFile);
 
-              return message;
-            })
-            .filter((msg) => msg !== "") // Filter out empty strings
-            .join("\n");
-        })
-        .filter((msg) => msg !== ""); // Filter out empty error message groups
-
-      // Return error message instead of throwing
-      return message + "\n" + errorMessages.join("\n");
+      // Return errorsByFile object instead of formatted string
+      return errorsByFile;
     }
   }
 
-  // Return null if no errors
-  return null;
+  // Return empty object if no errors
+  return {};
 };
 
 const showingCurrentOfflineLoading = ({ dispatch, id, percent }) => {
@@ -81,6 +102,7 @@ const showingCurrentOfflineLoading = ({ dispatch, id, percent }) => {
 
 const handlePushToServer = async (dispatch, metadataMapping, setError) => {
   const allErrors = [];
+  const combinedErrorsByFile = {};
 
   try {
     // Check internet connection
@@ -96,9 +118,15 @@ const handlePushToServer = async (dispatch, metadataMapping, setError) => {
       const teiPushResults = await trackedEntityManager.push((progress) =>
         showingCurrentOfflineLoading({ dispatch, ...progress }),
       );
-      const teiError = await handlePushResult(teiPushResults, "Sync tracked entities failed: ", metadataMapping);
-      if (teiError) {
-        allErrors.push(teiError);
+      const teiErrorsByFile = await handlePushResult(teiPushResults, metadataMapping);
+      if (Object.keys(teiErrorsByFile).length > 0) {
+        // Merge errors by file
+        Object.keys(teiErrorsByFile).forEach((fileName) => {
+          if (!combinedErrorsByFile[fileName]) {
+            combinedErrorsByFile[fileName] = [];
+          }
+          combinedErrorsByFile[fileName].push(...teiErrorsByFile[fileName]);
+        });
       }
     } catch (error) {
       allErrors.push(`Sync tracked entities failed: ${error.message}`);
@@ -109,9 +137,15 @@ const handlePushToServer = async (dispatch, metadataMapping, setError) => {
       const enrPushResults = await enrollmentManager.push((progress) =>
         showingCurrentOfflineLoading({ dispatch, ...progress }),
       );
-      const enrError = await handlePushResult(enrPushResults, "Sync enrollments failed: ", metadataMapping);
-      if (enrError) {
-        allErrors.push(enrError);
+      const enrErrorsByFile = await handlePushResult(enrPushResults, metadataMapping);
+      if (Object.keys(enrErrorsByFile).length > 0) {
+        // Merge errors by file
+        Object.keys(enrErrorsByFile).forEach((fileName) => {
+          if (!combinedErrorsByFile[fileName]) {
+            combinedErrorsByFile[fileName] = [];
+          }
+          combinedErrorsByFile[fileName].push(...enrErrorsByFile[fileName]);
+        });
       }
     } catch (error) {
       allErrors.push(`Sync enrollments failed: ${error.message}`);
@@ -122,17 +156,41 @@ const handlePushToServer = async (dispatch, metadataMapping, setError) => {
       const eventPushRetuls = await eventManager.push((progress) =>
         showingCurrentOfflineLoading({ dispatch, ...progress }),
       );
-      const eventError = await handlePushResult(eventPushRetuls, "Sync events failed: ", metadataMapping);
-      if (eventError) {
-        allErrors.push(eventError);
+      const eventErrorsByFile = await handlePushResult(eventPushRetuls, metadataMapping);
+      if (Object.keys(eventErrorsByFile).length > 0) {
+        // Merge errors by file
+        Object.keys(eventErrorsByFile).forEach((fileName) => {
+          if (!combinedErrorsByFile[fileName]) {
+            combinedErrorsByFile[fileName] = [];
+          }
+          combinedErrorsByFile[fileName].push(...eventErrorsByFile[fileName]);
+        });
       }
     } catch (error) {
       allErrors.push(`Sync events failed: ${error.message}`);
     }
 
-    // If there are any errors, display them all
+    // Combine file-based errors and general errors
+    let finalErrorMessage = "";
+
+    // Add file-based errors
+    if (Object.keys(combinedErrorsByFile).length > 0) {
+      const fileErrorMessages = Object.keys(combinedErrorsByFile).map((fileName) => {
+        const fileErrors = combinedErrorsByFile[fileName];
+        return `<b>${fileName}:</b>\n${fileErrors.join("\n")}`;
+      });
+      finalErrorMessage += fileErrorMessages.join("\n\n");
+    }
+
+    // Add general errors
     if (allErrors.length > 0) {
-      setError(allErrors.join("\n\n"));
+      if (finalErrorMessage) finalErrorMessage += "\n\n";
+      finalErrorMessage += `<b>General Errors:</b>\n${allErrors.join("\n")}`;
+    }
+
+    // If there are any errors, display them all
+    if (finalErrorMessage) {
+      setError(finalErrorMessage);
     }
 
     // dispatch(setOfflineStatus(false));
@@ -203,7 +261,6 @@ const getProgramMetadataNameMapping = ({ programMetadata, programMetadataMember,
 const PushToServerButton = () => {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
-  const { exportExcel } = useExcel();
   const { programMetadata, programMetadataMember } = useSelector((state) => state.metadata);
 
   const programMetadataNameMapping = getProgramMetadataNameMapping({
@@ -279,19 +336,6 @@ const PushToServerButton = () => {
         icon={<UploadOutlined />}
       >
         {t("sync")}
-      </Button>
-      <Button
-        onClick={exportExcel}
-        style={{
-          marginRight: "10px",
-          backgroundColor: blue[5],
-        }}
-        shape="round"
-        size="small"
-        type="primary"
-        icon={<UploadOutlined />}
-      >
-        {t("exportExcel")}
       </Button>
 
       <ExcelImportButton />

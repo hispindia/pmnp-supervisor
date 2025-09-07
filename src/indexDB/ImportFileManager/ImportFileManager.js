@@ -1,7 +1,7 @@
 import db from "../db";
 
 export const TABLE_NAME = "importFile";
-export const TABLE_FIELDS = "++id, fileName, importStatus, createdAt, updatedAt";
+export const TABLE_FIELDS = "++id, fileName, importStatus, uids, createdAt, updatedAt";
 
 /**
  * ImportFile Table Schema:
@@ -65,23 +65,30 @@ export const findByStatus = async (status) => {
  * @param {Object} params - The parameters for creating an import file
  * @param {string} params.fileName - The name of the imported file
  * @param {string} [params.importStatus='processing'] - The initial status of the import
- * @returns {Promise<number>} The ID of the created import file record
+ * @param {string} [params.uids=''] - Comma-separated string of UIDs from the file
+ * @returns {Promise<Object>} The created import file record with ID
  */
-export const createImportFile = async ({ fileName, importStatus = IMPORT_STATUS.PROCESSING }) => {
+export const createImportFile = async ({ fileName, importStatus = IMPORT_STATUS.PROCESSING, uids = "" }) => {
   try {
     if (!fileName) {
       throw new Error("fileName is required");
     }
 
-    const id = await db[TABLE_NAME].add({
+    const record = {
       fileName,
       importStatus,
+      uids,
       createdAt: new Date().toISOString(),
       updatedAt: null,
-    });
+    };
 
-    console.log(`Import file record created with ID: ${id} for file: ${fileName}`);
-    return id;
+    const id = await db[TABLE_NAME].add(record);
+
+    const createdRecord = { ...record, id };
+    console.log(
+      `Import file record created with ID: ${id} for file: ${fileName}, UIDs: ${uids ? uids.split(",").length : 0} total`,
+    );
+    return createdRecord;
   } catch (error) {
     console.error("Error creating import file record:", error);
     throw error;

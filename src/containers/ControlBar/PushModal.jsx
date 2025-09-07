@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useUser } from "@/hooks/useUser";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import ExportExcelButton from "./ExportExcelButton";
 
 export const pushMapping = [
   { id: "tei", label: "Sync tracked entities" },
@@ -203,11 +204,14 @@ const PushModal = ({ open, onCancel, onOk, onClose, pushData, syncError }) => {
         );
       })}
 
+      {/* Export Excel button - shown above sync errors when there are errors */}
+
       {syncError ? (
         <div style={{ marginTop: 16, marginBottom: 16 }}>
           <Typography.Title level={5} type="danger" style={{ marginBottom: 8 }}>
-            {t("syncError", "Sync Error")}:
+            {t("syncError", "Sync Error")}: <ExportExcelButton />
           </Typography.Title>
+
           <div
             style={{
               maxHeight: "50vh",
