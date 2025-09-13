@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Form, Row } from "antd";
+import { useEffect, useState } from "react";
+import { Form } from "antd";
 import tableRenderData from "@/components/CensusDetailForm/houseServey";
 import { useSelector } from "react-redux";
 import _ from "lodash";
@@ -27,9 +27,7 @@ const useHouseholdSurveyForm = (values) => {
     "uMRfJEDErNx",
   ];
 
-  const selectedOuPath = useSelector(
-    (state) => state.metadata.selectedOrgUnit.path
-  );
+  const selectedOuPath = useSelector((state) => state.metadata.selectedOrgUnit.path);
 
   useEffect(() => {
     form.resetFields();
@@ -79,10 +77,7 @@ const useHouseholdSurveyForm = (values) => {
         // values['NPb0hOBn6g9'] = value
         form.setFieldsValue(values);
       } else if (uuid == "a0t6coJR4bG") {
-        let dwelling = [
-          "Pipe in compound but outside the dwelling",
-          "Piped in dwelling",
-        ];
+        let dwelling = ["Pipe in compound but outside the dwelling", "Piped in dwelling"];
 
         if (value == "Pipe in compound but outside the dwelling") {
           values["lRVDgo5HwYe"] = "In own dwelling";
@@ -148,11 +143,7 @@ const useHouseholdSurveyForm = (values) => {
         }
         form.setFieldsValue(values);
       } else if (uuid == "R0AYFvHFg6u") {
-        let ifExist = [
-          "No handwashing place in dwelling/yard/plot",
-          "No permission to see",
-          "Other reasons",
-        ];
+        let ifExist = ["No handwashing place in dwelling/yard/plot", "No permission to see", "Other reasons"];
         if (ifExist.includes(value)) {
           tableRenderData.forEach((item) => {
             if (item.uid == "d4VMT4orArm" || item.uid == "Ju3AkdRHT52") {
@@ -170,13 +161,7 @@ const useHouseholdSurveyForm = (values) => {
         }
         form.setFieldsValue(values);
       } else if (uuid == "GtSSMCc6nXz") {
-        let ifExist = [
-          "Ojvu6krZKBX",
-          "WTFyAoDjI4X",
-          "S4G690Rx8KD",
-          "FL0F1NaV4e2",
-          "b60lyh4IRgb",
-        ];
+        let ifExist = ["Ojvu6krZKBX", "WTFyAoDjI4X", "S4G690Rx8KD", "FL0F1NaV4e2", "b60lyh4IRgb"];
         if (value == "false") {
           tableRenderData.forEach((item) => {
             if (ifExist.includes(item.uid)) {

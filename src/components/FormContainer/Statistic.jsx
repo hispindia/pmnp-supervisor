@@ -1,7 +1,6 @@
 // node_modules
-import React, { useState, useEffect, useContext } from "react";
-import { Button, Card, Modal } from "react-bootstrap";
-import Portal from "../Portal/Portal.jsx";
+import React, { useState } from "react";
+import { Button } from "react-bootstrap";
 
 // Icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,12 +10,7 @@ import { faChartBar, faTimes } from "@fortawesome/free-solid-svg-icons";
 import styles from "./FormContainer.module.css";
 const { statisticBtn, closeBtn } = styles;
 
-const Statistic = ({
-  components,
-  handleChangeStep,
-  history,
-  handleSaveButton,
-}) => {
+const Statistic = ({ components, handleChangeStep, history, handleSaveButton }) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -24,11 +18,7 @@ const Statistic = ({
 
   return (
     <div>
-      <Button
-        variant="info"
-        className={statisticBtn}
-        onClick={(e) => handleChangeStep(3)}
-      >
+      <Button variant="info" className={statisticBtn} onClick={(e) => handleChangeStep(3)}>
         <FontAwesomeIcon icon={faChartBar} size="lg" />
       </Button>
 

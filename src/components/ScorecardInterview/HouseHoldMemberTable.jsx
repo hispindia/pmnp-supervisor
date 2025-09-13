@@ -21,7 +21,6 @@ import { submitEvent } from "@/redux/actions/data";
 import { getQuarterlyFromDate } from "@/utils/date";
 import { transformEvent } from "@/utils/event";
 import { Chip } from "@material-ui/core";
-import { Button, Modal, Table } from "antd";
 import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears, toDate } from "date-fns";
 import _ from "lodash";
 import CaptureForm from "../CaptureForm";

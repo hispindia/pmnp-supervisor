@@ -1,5 +1,3 @@
-import { name } from "file-loader";
-
 export const BASE64_IMAGES = {
   EMHed4Yi7L6: {
     name: "Q403 Data Element Name: CH_Age appropriate vaccine given",

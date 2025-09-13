@@ -1,4 +1,3 @@
-import React from "react";
 import { generateUid, pickTranslation } from "@/utils";
 import { FAMILY_UID_ATTRIBUTE_ID } from "@/constants/app-config";
 import i18n from "i18next";

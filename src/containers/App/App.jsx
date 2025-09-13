@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import App from "../../components/App/App";
 import { metadataApi } from "@/api";
-// import { setUpDatabase } from '../../libs/idb-handler';
 import AppSkeleton from "../../skeletons/App";
 
 /* REDUX */
@@ -39,46 +38,6 @@ const AppContainer = () => {
       return null;
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      // //  GET EVENTs by query
-      // let memberEventsByYear = await eventManager.getEventsByQuery({
-      //     programStage: 'Ux1dcyOiHe7',
-      //     orgUnit: 'ia7PTbi01id',
-      //     filters: [`filter=ig2YSpQdP55:EQ:maFOg35J5Hg`],
-      //     startDate: `${2022}-01-01`,
-      //     endDate: `${2022}-12-31`,
-      // });
-      // console.log({ memberEventsByYear });
-      // TODO
-      // console.log(await enrollmentManager.findOne('o69vgj9q3x0'));
-      // console.log(
-      //     await trackedEntityManager.findOne('APbHHVQxFWy')
-      // );
-      // console.log(await eventManager.findOne('sLKnpFaCJU9'));
-      // console.log(
-      //     await trackedEntityManager.find({
-      //         paging: false,
-      //         program: 'L0EgY4EomHv',
-      //         page: true,
-      //         pageSize: 10,
-      //     })
-      // );
-      // Test code
-      // console.log(await programManager.getPrograms());
-      // console.log(await programManager.getProgramById('L0EgY4EomHv'));
-      // console.log(await programManager.getProgramById('xvzrp56zKvI'));
-      // console.log(
-      //     await organisationUnitManager.getAllOrganisationUnits()
-      // );
-      // console.log(await organisationUnitManager.getUserOrgs());
-      // console.log(
-      //     await organisationUnitLevelsManager.getAllOrganisationUnitLevels()
-      // );
-      // console.log(await meManager.getMe());
-    })();
-  }, []);
 
   useEffect(() => {
     (async () => {

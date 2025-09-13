@@ -1,7 +1,7 @@
 import { setSelectedOrgUnit } from "@/redux/actions/metadata";
 import { filter } from "@/redux/actions/teis";
-import { UploadOutlined, CheckCircleOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Button, Modal, Upload, notification, Progress, List } from "antd";
+import { CheckCircleOutlined, LoadingOutlined, UploadOutlined } from "@ant-design/icons";
+import { Button, List, Modal, notification, Progress, Upload } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
