@@ -25,7 +25,6 @@ const calculateAge = (year, month, day, curEvent) => {
 
 const calcAgeFromDOB = (dateOfBirth, birthYear, age, curEvent, t) => {
   var returnResult = "";
-  // var allowedDateFormats = ["DD/MM/YYYY", "YYYY-MM-DD"];
   var allowedDateFormats = ["YYYY-MM-DD"];
   let yrText = t ? t("year") : "yr";
   let monthText = t ? t("month") : "month";
@@ -65,13 +64,6 @@ const calcAgeFromDOB = (dateOfBirth, birthYear, age, curEvent, t) => {
       result += data.months + " " + monthText + " ";
     }
 
-    return result;
-  }
-
-  // Legacy code, should be removed
-  if (age != "" && age != null) {
-    var result = "";
-    result += age + " " + yrText + " ";
     return result;
   }
 
@@ -121,8 +113,7 @@ const calculateAgeGroup = (data, currentEvent) => {
       "NnsZ7Yq0ZMl",
     [`value["ethnicity"] ==="ອາຄາ" ||value["ethnicity"] ==="ພູນ້ອຍ" ||value["ethnicity"] ==="ລາຫູ" ||value["ethnicity"] ==="ສີລາ" ||value["ethnicity"] ==="ຮາຍີ" ||value["ethnicity"] ==="ໂລໂລ" ||value["ethnicity"] ==="ຫໍ້" ||value["ethnicity"] ==="Akha" ||value["ethnicity"] ==="Phou-noy" ||value["ethnicity"] ==="Lahou" ||value["ethnicity"] ==="Sila" ||value["ethnicity"] ==="Hayi" ||value["ethnicity"] ==="Lolo" ||value["ethnicity"] ==="Ho"`]:
       "AZULo0fgAPA",
-    [`value["ethnicity"] === "Others" || value["ethnicity"] === "ອື່ນໆ"`]:
-      "jObBjI31SHJ",
+    [`value["ethnicity"] === "Others" || value["ethnicity"] === "ອື່ນໆ"`]: "jObBjI31SHJ",
 
     [`value["insurance"] === "a"`]: "bXy7dRTxSUN",
     [`value["insurance"] === "b"`]: "Pwttxh8qzbh",
@@ -132,14 +123,10 @@ const calculateAgeGroup = (data, currentEvent) => {
     [`value["insurance"] === "f"`]: "C2zynun5YMh",
     [`value["insurance"] === "g"`]: "fqdxmeIjMGq",
 
-    [`parseInt(evalValue["age"].split(" ")[0]) < 1 && value["sex"] === "M"`]:
-      "Eqi1288N8Nd",
-    [`parseInt(evalValue["age"].split(" ")[0]) < 1 && value["sex"] === "F"`]:
-      "eDwcbrF4Qsr",
-    [`parseInt(evalValue["age"].split(" ")[0]) === 1 && value["sex"] === "M"`]:
-      "hx5FKOqT18B",
-    [`parseInt(evalValue["age"].split(" ")[0]) === 1 && value["sex"] === "F"`]:
-      "xllqsmDiexq",
+    [`parseInt(evalValue["age"].split(" ")[0]) < 1 && value["sex"] === "M"`]: "Eqi1288N8Nd",
+    [`parseInt(evalValue["age"].split(" ")[0]) < 1 && value["sex"] === "F"`]: "eDwcbrF4Qsr",
+    [`parseInt(evalValue["age"].split(" ")[0]) === 1 && value["sex"] === "M"`]: "hx5FKOqT18B",
+    [`parseInt(evalValue["age"].split(" ")[0]) === 1 && value["sex"] === "F"`]: "xllqsmDiexq",
     [`(parseInt(evalValue["age"].split(" ")[0]) >=2 && parseInt(evalValue["age"].split(" ")[0]) <= 4) && value["sex"] === "M"`]:
       "cz6oa275ize",
     [`(parseInt(evalValue["age"].split(" ")[0]) >=2 && parseInt(evalValue["age"].split(" ")[0]) <= 4) && value["sex"] === "F"`]:
@@ -160,10 +147,8 @@ const calculateAgeGroup = (data, currentEvent) => {
       "GTEknIuyEiO",
     [`(parseInt(evalValue["age"].split(" ")[0]) >=50 && parseInt(evalValue["age"].split(" ")[0]) <= 59) && value["sex"] === "F"`]:
       "AI5nHnkf5WR",
-    [`parseInt(evalValue["age"].split(" ")[0]) >= 60 && value["sex"] === "M"`]:
-      "y9zGBpMBAhQ",
-    [`parseInt(evalValue["age"].split(" ")[0]) >= 60 && value["sex"] === "F"`]:
-      "dE6mw0hXdAt",
+    [`parseInt(evalValue["age"].split(" ")[0]) >= 60 && value["sex"] === "M"`]: "y9zGBpMBAhQ",
+    [`parseInt(evalValue["age"].split(" ")[0]) >= 60 && value["sex"] === "F"`]: "dE6mw0hXdAt",
     [`value["sex"] === "M"`]: "SHCRzRWFaii",
     [`value["sex"] === "F"`]: "PFwymX0Io0y",
     // true: "Va3FC8Io1b0",
@@ -176,27 +161,17 @@ const calculateAgeGroup = (data, currentEvent) => {
 
   data.forEach((value) => {
     // Calculate from dob
-    let res = calcAgeFromDOB(
-      value["DOB"],
-      value["birthyear"],
-      value["age"],
-      currentEvent,
-      null
-    );
+    let res = calcAgeFromDOB(value["DOB"], value["birthyear"], value["age"], currentEvent, null);
     var evalValue1 = { age: res };
     Object.entries(mapping).forEach((m) => {
       if (
         eval(
-          `let value = ${JSON.stringify(
-            value
-          )} ; let evalValue = ${JSON.stringify(evalValue1)};` +
+          `let value = ${JSON.stringify(value)} ; let evalValue = ${JSON.stringify(evalValue1)};` +
             m[0] +
-            `&& value["status"] !== "dead"`
+            `&& value["status"] !== "dead"`,
         ) &&
         // Skip all if member is dead
-        eval(
-          `let value = ${JSON.stringify(value)};` + `value["status"] !== "dead"`
-        )
+        eval(`let value = ${JSON.stringify(value)};` + `value["status"] !== "dead"`)
       ) {
         tempValues[m[1]] = tempValues[m[1]] + 1;
       }
@@ -206,9 +181,4 @@ const calculateAgeGroup = (data, currentEvent) => {
   return tempValues;
 };
 
-export {
-  calculateAgeGroup,
-  calculateAge,
-  calcAgeFromDOB,
-  calculateDataElements,
-};
+export { calculateAgeGroup, calculateAge, calcAgeFromDOB, calculateDataElements };

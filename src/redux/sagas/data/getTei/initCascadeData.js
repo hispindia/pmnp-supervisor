@@ -45,7 +45,7 @@ function* initCascadeDataFromTEIsEvents(payload, eventIncluded = true) {
   yield put(
     getCascadeSuccess({
       currentCascade,
-    })
+    }),
   );
 }
 
@@ -72,12 +72,8 @@ function* initCascadeData(payload) {
   yield put(
     getCascadeSuccess({
       currentCascade,
-    })
+    }),
   );
 }
 
 export default initCascadeDataFromTEIsEvents;
-
-// export default function* initData() {
-//   yield takeLatest(INIT_DATA, handleInitData);
-// }

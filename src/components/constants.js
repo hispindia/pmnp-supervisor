@@ -341,118 +341,119 @@ const FAMILY_MEMBER_VALUE = {
 
 //{names, age in days, doses in month, ids: {'Vaccine given', 'Vaccine Date', 'Vaccine discrepency'}
 export const CHILD_VACCINES = {
-  type: 'table',
-  list: [{
-    name: 'BCG',
-    age: {type:'days', value:'1'},
-    vaccineMonth: {start:'0', end: '12'},
-    ids: { vaccineDone: 'v98slN2SMpf', vaccineDate: 'K37pq3b5Qra', discrepancy: 'Z7pjlseI2ox' }
-  },
-  {
-    name: 'Hepatitis B',
-    age: {type:'days', value: '1'},
-    vaccineMonth: {start:'0', end: '12'},
-    ids:{vaccineDone: 'AF4aauVCm9B', vaccineDate: 'bsPGbR6F18a', discrepancy: 'zSrRt5X4Go7'}
-  },
-  {
-    name: 'Pentavalent 1',
-    age: {type:'days', value: '42'},
-    vaccineMonth: {start:'1.5', end: '23'},
-    ids:{vaccineDone: 'XhrgV4nfrRK', vaccineDate: 'kzaCPuPzy6o', discrepancy: 'x1mb26EuGjd'}
-  },
-  {
-    name: 'Pentavalent 2',
-    age: {type:'days', value: '70'},
-    vaccineMonth: {start:'2.5', end: '23'},
-    ids:{vaccineDone: 'mSfZRdFRWdh', vaccineDate: 'PQS3vSrsIBO', discrepancy: 'TdaW1MryBat'}
-  },
-  {
-    name: 'Pentavalent 3',
-    age: {type:'days', value: '98'},
-    vaccineMonth: {start:'3.5', end: '23'},
-    ids:{vaccineDone: 'eXwMBOUSwuB', vaccineDate: 'EhIlZ6OO8Fu', discrepancy: 'V3ZtczKhq8L'}
-  },
-  {
-    name: 'HEXA 1',
-    age: {type:'days', value: '42'},
-    vaccineMonth: {start:'1.5', end: '23'},
-    ids:{vaccineDone: 'Lp9Y5Z5P78t', vaccineDate: 'DHXhabUfBHA', discrepancy: 'AUyZi2f2etM'}
-  },
-  {
-    name: 'HEXA 2',
-    age: {type:'days', value: '70'},
-    vaccineMonth: {start:'2.5', end: '23'},
-    ids:{vaccineDone: 'zQK0SZQ7Dot', vaccineDate: 'i4gomCWd0y9', discrepancy: 'KJJUAVNBYOw'}
-  },
-  {
-    name: 'HEXA 3',
-    age: {type:'days', value: '98'},
-    vaccineMonth: {start:'3.5', end: '23'},
-    ids:{vaccineDone: 'IjbZlh5uehM', vaccineDate: 'ew3lMYvyfeV', discrepancy: 'zM9agTnKXP1'}
-  },
-  {
-    name: 'PCV 1',
-    age: {type:'days', value: '42'},
-    vaccineMonth: {start:'1.5', end: '23'},
-    ids:{vaccineDone: 'g7do0N1hjSt', vaccineDate: 'By0qcLTxEPN', discrepancy: 'GLhTUJhwLkm'}
-  },
-  {
-    name: 'PCV 2',
-    age: {type:'days', value: '70'},
-    vaccineMonth: {start:'2.5', end: '23'},
-    ids:{vaccineDone: 'gY3CmzKjYL7', vaccineDate: 'd5WhzyidsX8', discrepancy: 'svI1JO2Rc7o'}
-  },
-  {
-    name: 'PCV 3',
-    age: {type:'days', value: '98'},
-    vaccineMonth: {start:'3.5', end: '23'},
-    ids:{vaccineDone: 'e42qQtK3tRM', vaccineDate: 'jnumk6j4OJ3', discrepancy: 'wyBkuawmGlY'}
-  },
-  {
-    name: 'OPV 1',
-    age: {type:'days', value: '42'},
-    vaccineMonth: {start:'1.5', end: '23'},
-    ids:{vaccineDone: 'uxGX9k4mJ51', vaccineDate: 'EH1L3NCv2tC', discrepancy: 'U1vWDWFwQgS'}
-  },
-  {
-    name: 'OPV 2',
-    age: {type:'days', value: '70'},
-    vaccineMonth: {start:'2.5', end: '23'},
-    ids:{vaccineDone: 'l48paDcsu9Y', vaccineDate: 'AVpmlIXDUmW', discrepancy: 'XRMg3n4CNIU'}
-  },
-  {
-    name: 'OPV 3',
-    age: {type:'days', value: '98'},
-    vaccineMonth: {start:'3.5', end: '23'},
-    ids:{vaccineDone: 'v6emyxZlDds', vaccineDate: 'qD6ZrhRMGjk', discrepancy: 'KrkQEnxvyTK'}
-  },
-  {
-    name: 'IPV 1',
-    age: {type:'days', value: '98'},
-    vaccineMonth: {start:'3.5', end: '23'},
-    ids:{vaccineDone: 'YkaEO9PDBvy', vaccineDate: 'LE5EQiIK7Lz', discrepancy: 'io1c00FtaI5'}
-  },
-  {
-    name: 'IPV 2',
-    age: {type:'month', value: '9'},
-    vaccineMonth: {start:'9', end: '23'},
-    ids:{vaccineDone: 'tkOnbJSiKXy', vaccineDate: 'WfeWZFMoy6E', discrepancy: 'PtTNvb6pNcO'}
-  },
-  {
-    name: 'MMR 1 / MCV 1',
-    age: {type:'month', value: '9'},
-    vaccineMonth: {start:'9', end: '23'},
-    ids:{vaccineDone: 'r3zAoTxKpTt', vaccineDate: 'NL22zOZXlvb', discrepancy: 'p368waQHLvD'}
-  },
-  {
-    name: 'MMR 2 / MCV 2',
-    age: {type:'month', value: '12'},
-    vaccineMonth: {start:'12', end: '23'},
-    ids:{vaccineDone: 'tQbe491SjPw', vaccineDate: 'vxIQzyyUq1M', discrepancy: 'yv5e81MGJlK'}
-  },
-]};
+  type: "table",
+  list: [
+    {
+      name: "BCG",
+      age: { type: "days", value: "1" },
+      vaccineMonth: { start: "0", end: "12" },
+      ids: { vaccineDone: "v98slN2SMpf", vaccineDate: "K37pq3b5Qra", discrepancy: "Z7pjlseI2ox" },
+    },
+    {
+      name: "Hepatitis B",
+      age: { type: "days", value: "1" },
+      vaccineMonth: { start: "0", end: "12" },
+      ids: { vaccineDone: "AF4aauVCm9B", vaccineDate: "bsPGbR6F18a", discrepancy: "zSrRt5X4Go7" },
+    },
+    {
+      name: "Pentavalent 1",
+      age: { type: "days", value: "42" },
+      vaccineMonth: { start: "1.5", end: "23" },
+      ids: { vaccineDone: "XhrgV4nfrRK", vaccineDate: "kzaCPuPzy6o", discrepancy: "x1mb26EuGjd" },
+    },
+    {
+      name: "Pentavalent 2",
+      age: { type: "days", value: "70" },
+      vaccineMonth: { start: "2.5", end: "23" },
+      ids: { vaccineDone: "mSfZRdFRWdh", vaccineDate: "PQS3vSrsIBO", discrepancy: "TdaW1MryBat" },
+    },
+    {
+      name: "Pentavalent 3",
+      age: { type: "days", value: "98" },
+      vaccineMonth: { start: "3.5", end: "23" },
+      ids: { vaccineDone: "eXwMBOUSwuB", vaccineDate: "EhIlZ6OO8Fu", discrepancy: "V3ZtczKhq8L" },
+    },
+    {
+      name: "HEXA 1",
+      age: { type: "days", value: "42" },
+      vaccineMonth: { start: "1.5", end: "23" },
+      ids: { vaccineDone: "Lp9Y5Z5P78t", vaccineDate: "DHXhabUfBHA", discrepancy: "AUyZi2f2etM" },
+    },
+    {
+      name: "HEXA 2",
+      age: { type: "days", value: "70" },
+      vaccineMonth: { start: "2.5", end: "23" },
+      ids: { vaccineDone: "zQK0SZQ7Dot", vaccineDate: "i4gomCWd0y9", discrepancy: "KJJUAVNBYOw" },
+    },
+    {
+      name: "HEXA 3",
+      age: { type: "days", value: "98" },
+      vaccineMonth: { start: "3.5", end: "23" },
+      ids: { vaccineDone: "IjbZlh5uehM", vaccineDate: "ew3lMYvyfeV", discrepancy: "zM9agTnKXP1" },
+    },
+    {
+      name: "PCV 1",
+      age: { type: "days", value: "42" },
+      vaccineMonth: { start: "1.5", end: "23" },
+      ids: { vaccineDone: "g7do0N1hjSt", vaccineDate: "By0qcLTxEPN", discrepancy: "GLhTUJhwLkm" },
+    },
+    {
+      name: "PCV 2",
+      age: { type: "days", value: "70" },
+      vaccineMonth: { start: "2.5", end: "23" },
+      ids: { vaccineDone: "gY3CmzKjYL7", vaccineDate: "d5WhzyidsX8", discrepancy: "svI1JO2Rc7o" },
+    },
+    {
+      name: "PCV 3",
+      age: { type: "days", value: "98" },
+      vaccineMonth: { start: "3.5", end: "23" },
+      ids: { vaccineDone: "e42qQtK3tRM", vaccineDate: "jnumk6j4OJ3", discrepancy: "wyBkuawmGlY" },
+    },
+    {
+      name: "OPV 1",
+      age: { type: "days", value: "42" },
+      vaccineMonth: { start: "1.5", end: "23" },
+      ids: { vaccineDone: "uxGX9k4mJ51", vaccineDate: "EH1L3NCv2tC", discrepancy: "U1vWDWFwQgS" },
+    },
+    {
+      name: "OPV 2",
+      age: { type: "days", value: "70" },
+      vaccineMonth: { start: "2.5", end: "23" },
+      ids: { vaccineDone: "l48paDcsu9Y", vaccineDate: "AVpmlIXDUmW", discrepancy: "XRMg3n4CNIU" },
+    },
+    {
+      name: "OPV 3",
+      age: { type: "days", value: "98" },
+      vaccineMonth: { start: "3.5", end: "23" },
+      ids: { vaccineDone: "v6emyxZlDds", vaccineDate: "qD6ZrhRMGjk", discrepancy: "KrkQEnxvyTK" },
+    },
+    {
+      name: "IPV 1",
+      age: { type: "days", value: "98" },
+      vaccineMonth: { start: "3.5", end: "23" },
+      ids: { vaccineDone: "YkaEO9PDBvy", vaccineDate: "LE5EQiIK7Lz", discrepancy: "io1c00FtaI5" },
+    },
+    {
+      name: "IPV 2",
+      age: { type: "month", value: "9" },
+      vaccineMonth: { start: "9", end: "23" },
+      ids: { vaccineDone: "tkOnbJSiKXy", vaccineDate: "WfeWZFMoy6E", discrepancy: "PtTNvb6pNcO" },
+    },
+    {
+      name: "MMR 1 / MCV 1",
+      age: { type: "month", value: "9" },
+      vaccineMonth: { start: "9", end: "23" },
+      ids: { vaccineDone: "r3zAoTxKpTt", vaccineDate: "NL22zOZXlvb", discrepancy: "p368waQHLvD" },
+    },
+    {
+      name: "MMR 2 / MCV 2",
+      age: { type: "month", value: "12" },
+      vaccineMonth: { start: "12", end: "23" },
+      ids: { vaccineDone: "tQbe491SjPw", vaccineDate: "vxIQzyyUq1M", discrepancy: "yv5e81MGJlK" },
+    },
+  ],
+};
 
-// const HAS_INITIAN_NOVALUE = ['mt37cOH28F9', 'uQg4s7Jd8WW', 'UjLxTtDk9qc']
 const HAS_INITIAN_NOVALUE = ["uQg4s7Jd8WW", "mt37cOH28F9"];
 
 const MIN_MAX_TEXT = {
@@ -469,10 +470,6 @@ const MIN_MAX_TEXT = {
     max: 300,
   },
 };
-// const MIN_MAX_TEXT = {
-//   ele: ['CMyXmIIL2Pg', 'RDXCYFo4Uv8', 'kzp9TltHi2M'],
-//   msg: 'Value range: Minimum 30 and maximum 150!!'
-// }
 
 export {
   CODE_VARIANTS,

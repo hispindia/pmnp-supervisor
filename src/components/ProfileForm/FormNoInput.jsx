@@ -1,21 +1,17 @@
-import React, { useCallback, useMemo } from "react";
-import InputField from "../CustomAntForm/InputField";
-import CFormControl from "../CustomAntForm/CFormControl";
-import withDhis2FormItem from "../../hocs/withDhis2Field";
-// import CFormItem from "../CustomAntForm/CFormItem";
-import { useSelector } from "react-redux";
 import debounce from "lodash/debounce";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import withDhis2FormItem from "../../hocs/withDhis2Field";
+import CFormControl from "../CustomAntForm/CFormControl";
+import InputField from "../CustomAntForm/InputField";
 
 const FormNoInput = ({ checkUnique, form, id, ...props }) => {
   const { t } = useTranslation();
   const {
     programMetadata: { trackedEntityAttributes },
   } = useSelector((state) => state.metadata);
-  const Dhis2FormItem = useMemo(
-    () => withDhis2FormItem(trackedEntityAttributes)(CFormControl),
-    []
-  );
+  const Dhis2FormItem = useMemo(() => withDhis2FormItem(trackedEntityAttributes)(CFormControl), []);
 
   let checkFormNoUnique = debounce((...params) => {
     return checkUnique(...params);

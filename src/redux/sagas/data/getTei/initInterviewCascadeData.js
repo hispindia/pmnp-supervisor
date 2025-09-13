@@ -16,7 +16,7 @@ function* initInterviewCascadeDataFromTEIsEvents(payload) {
   const currentEvents = yield select((state) => state.data.tei.data.currentEvents);
 
   const interviewDetailEvents = currentEvents.filter(
-    (e) => e.programStage === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
+    (e) => e.programStage === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   );
 
   const memberTEIsWithEvents = payload ? payload.instances : [];
@@ -77,39 +77,8 @@ function* initInterviewCascadeDataFromTEIsEvents(payload) {
   yield put(
     getInterviewCascadeSuccess({
       currentInterviewCascade,
-    })
-  );
-}
-
-// getting cascade data from oC9jreyd9SD
-function* initCascadeData(payload) {
-  // const programStages = yield select(
-  //     (state) => state.metadata.programMetadata.programStages
-  // );
-  let currentCascade = {};
-
-  const currentEvents = yield select((state) => state.data.tei.data.currentEvents);
-
-  currentCascade =
-    payload &&
-    currentEvents.reduce((res, ce) => {
-      let year = moment(ce.occurredAt).year();
-
-      const cascadeByYear = JSON.parse(ce.dataValues.oC9jreyd9SD);
-
-      res[year] = cascadeByYear.dataVals;
-      return res;
-    }, {});
-
-  yield put(
-    getCascadeSuccess({
-      currentCascade,
-    })
+    }),
   );
 }
 
 export default initInterviewCascadeDataFromTEIsEvents;
-
-// export default function* initData() {
-//   yield takeLatest(INIT_DATA, handleInitData);
-// }

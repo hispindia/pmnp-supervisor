@@ -13,8 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 /* SELECTOR */
 import { changeMember } from "../../redux/actions/data/tei";
 
-// Import utils
-
 // Styles
 import { FAMILY_UID_ATTRIBUTE_ID, HOUSEHOLD_ID_ATTR_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
 import { getMaxHHMemberID } from "@/utils/member";
@@ -333,7 +331,7 @@ const convertOriginMetadata = ({
     currentEvent,
     currentEnrollment,
     "PIGLwIaw0wy",
-    "Cn37lbyhz6f"
+    "Cn37lbyhz6f",
   );
 
   let trackedEntityAttributes = programMetadata.trackedEntityAttributes.map((attr) => {

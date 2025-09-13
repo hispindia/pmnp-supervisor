@@ -72,12 +72,8 @@ function* handleInitData(trackedEntity) {
       currentTei,
       currentEnrollment,
       currentEvents,
-    })
+    }),
   );
 }
 
 export default handleInitData;
-
-// export default function* initData() {
-//   yield takeLatest(INIT_DATA, handleInitData);
-// }
