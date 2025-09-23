@@ -52,6 +52,9 @@ const ProfileForm = ({
       initialValues={profile.attributes}
       form={form}
       name="familyRegistration"
+      onValuesChange={(changedValues, allValues) => {
+        console.log("Form values changed:", { changedValues, allValues });
+      }}
       onFinish={(fieldsValue) => {
         onSubmit(fieldsValue);
       }}
@@ -70,9 +73,20 @@ const ProfileForm = ({
       </div>
       <div className="row col-lg-12">
         {items.map((item) => (
-          <div className="col-lg-3">
+          <div className="col-lg-3" key={item.id}>
             <Dhis2FormItem
               id={item.id}
+              dependentFields={item.id === HH_STATUS_ATTR_ID ? ["eNSVMKSqOVY"] : undefined}
+              setValuesFunc={
+                item.id === HH_STATUS_ATTR_ID
+                  ? ([isDuplicate]) => {
+                      if (isDuplicate === "true" || isDuplicate === true) {
+                        return { [HH_STATUS_ATTR_ID]: "Duplicate" };
+                      }
+                      return {};
+                    }
+                  : undefined
+              }
               rules={[
                 {
                   validator: (_, value) => {
@@ -90,6 +104,13 @@ const ProfileForm = ({
             </Dhis2FormItem>
           </div>
         ))}
+        {/* HH - Duplicate */}
+        <div className="col-lg-3">
+          <Dhis2FormItem id={"eNSVMKSqOVY"}>
+            <InputField size="large" />
+          </Dhis2FormItem>
+        </div>
+
         <div className="col-lg-3">
           <Dhis2FormItem id={HOUSEHOLD_DATA_COLLECTOR_ATTR_ID}>
             <InputField size="large" disabled={true} />

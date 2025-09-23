@@ -146,12 +146,13 @@ const InputField = ({
     case "TRUE_ONLY":
       return (
         <Checkbox
-          // checked={value}
-          // onChange={(event) => {
-          //   onChange(event.target.checked, event);
-          // }}
-          // disabled={disabled}
-          {...props}
+          checked={props.value}
+          onChange={(event) => {
+            if (props.onChange) {
+              props.onChange(event.target.checked, event);
+            }
+          }}
+          disabled={props.disabled}
         />
       );
     case "AGE":

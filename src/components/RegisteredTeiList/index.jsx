@@ -149,7 +149,7 @@ const RegisteredTeiList = ({
         if (column.key === HH_STATUS_ATTR_ID && attribute?.value) {
           const option = column.valueSet && column.valueSet.find((o) => o.value === attribute.value);
 
-          rowObject["CNqaoQva9S2"] = (
+          rowObject[HH_STATUS_ATTR_ID] = (
             <Chip
               size="small"
               style={{ backgroundColor: option?.color, color: option?.color && "#fff", borderRadius: 4 }}

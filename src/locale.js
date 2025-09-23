@@ -48,7 +48,7 @@ const locale = {
     // [cebuano]: "3. Resulta sa Interbyu",
     // [tagalog]: "3. Resulta ng Panayam",
   },
-  "Household Survey": {
+  "General Survey": {
     [english]: "2. General Survey",
     // [cebuano]: "2. Panimalay nga Survey",
     // [tagalog]: "2. Pagsusuri ng Sambahayan",

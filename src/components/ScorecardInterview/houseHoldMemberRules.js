@@ -67,7 +67,7 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   }
 };
 
-export const handleAgeFields = (metadata, { weeks, months, years }) => {
+export const handleAgeFields = (metadata) => {
   const de_year = "Hc9Vgt4LXjb";
   const de_month = "RoSxLAB5cfo";
   const de_week = "Gds5wTiXoSK";

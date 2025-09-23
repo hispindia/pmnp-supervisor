@@ -299,14 +299,15 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     metadata(HOUSEHOLD_INTERVIEW_ID_DE_ID).disabled = true;
 
     // Hide rest of the form if Membership status = "Deceased" or Migrated to "Non-PMNP Area" or "Not part of the HH"
-    const hhMemberStatus = data["Rb0k4fOdysI"];
+    const hhMemberStatus = data["vcVNGyzdJ2l"];
 
     if (hhMemberStatus === "001" || hhMemberStatus === "004" || hhMemberStatus === "002") {
       Object.keys(metadataOrigin).forEach((de) => {
         if (
           [
             HOUSEHOLD_INTERVIEW_ID_DE_ID,
-            "Rb0k4fOdysI",
+            // "Rb0k4fOdysI",
+            // "vcVNGyzdJ2l",
             "Hc9Vgt4LXjb",
             "RoSxLAB5cfo",
             "Gds5wTiXoSK",
@@ -323,6 +324,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         metadata(de).hidden = true;
       });
 
+      handleAgeFields(metadata);
       clearHiddenFieldData(metadataOrigin, data, (item) => (item.isAttribute ? false : true));
 
       // workaround for hidden section
@@ -451,7 +453,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     childNutritionRules(metadata, data, ages);
     handleAgeAttrsOfTEI(data, ages);
     clearHiddenFieldData(metadataOrigin, data, (item) => (item.isAttribute ? false : true));
-    handleAgeFields(metadata, ages);
+    handleAgeFields(metadata);
     handleTetanusVaccineLogics({ metadata, data, eventDate });
 
     // hide all attribute
@@ -459,7 +461,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       if (metadataOrigin[key].isAttribute) metadataOrigin[key].hidden = true;
     });
 
-    if (!data["B3jiLplNUeS"]) data["B3jiLplNUeS"] = "na";
+    // HH member remarks
+    if (!data["QcMlcgBJaM4"]) data["QcMlcgBJaM4"] = "na";
   };
 
   const clearForm = () => {
@@ -509,14 +512,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       setSelectedData(cascadeData[selectedRowIndex]);
     }
   }, [currentInterviewCascade, selectedRowIndex]);
-
-  const rowClasses = (row, rowIndex) => {
-    if (row.isSaved && row.status === "COMPLETED") {
-      return "disabled-row";
-    } else {
-      return "open-row";
-    }
-  };
 
   // remove programSections
   const { programSections, ...formProgramMetadata } = programMetadataMember;

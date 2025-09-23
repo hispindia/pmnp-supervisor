@@ -3,7 +3,7 @@ import { call, put, select, takeLatest } from "redux-saga/effects";
 import { dataApi } from "../../../api";
 import { SUBMIT_EVENT, SUBMIT_EVENTS } from "../../types/data/tei";
 
-import { getTei, getTeiError, loadTei } from "../../actions/data/tei";
+import { getTei, loadTei } from "../../actions/data/tei";
 
 import * as eventManager from "@/indexDB/EventManager/EventManager";
 import { notification } from "antd";

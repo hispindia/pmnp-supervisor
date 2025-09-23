@@ -57,10 +57,10 @@ const InterviewDetailContainer = () => {
 
   useEffect(() => {
     const interviewEvents = currentEvents.filter(
-      (e) => e.programStage === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
+      (e) => e.programStage === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
     );
     const interviewResultEvents = currentEvents.filter(
-      (e) => e.programStage === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID
+      (e) => e.programStage === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID,
     );
 
     // if having event => disabled = true, except the "partially completed"
@@ -105,7 +105,7 @@ const convertOriginMetadata = (programMetadata, currentCascade) => {
 
   const householdMembersValueSet = getHouseholdMemberValueSet(currentCascade);
   const interviewDetailsProgramStage = programMetadata.programStages.find(
-    (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID
+    (stage) => stage.id === HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   );
 
   const dataElements = interviewDetailsProgramStage.dataElements.map((de) => {

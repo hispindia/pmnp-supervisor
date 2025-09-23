@@ -149,7 +149,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   };
 
   const editRowCallback = (metadata, previousData, data, code, value) => {
-    console.log("InterviewDetailForm", {
+    console.log("New InterviewDetailForm", {
       enrollment,
       metadata,
       previousData,
@@ -234,7 +234,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     onClick: (e, row, rowIndex) => {
       if (e.currentTarget && e.currentTarget.contains(e.target)) {
         if (row.disabled) setFormStatus(FORM_ACTION_TYPES.VIEW);
-        console.log("selected", row);
+        console.log("InterviewDetailTable selected", row);
         setSelectedData(row);
         setSelectedRowIndex(rowIndex);
       }

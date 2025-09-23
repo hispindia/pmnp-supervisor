@@ -16,7 +16,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { FORM_ACTION_TYPES, HH_STATUSES } from "../constants";
+import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID, HH_STATUSES } from "../constants";
 import { clearHiddenFieldData, updateMetadata, updateMetadataValueSet } from "./utils";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 
@@ -29,13 +29,14 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
   const { isAllMemberEventsCompleted } = useInterviewCascadeData(interviewData);
   const { selectedOrgUnit, programMetadata } = useSelector((state) => state.metadata);
   const foundProgramStage = programMetadata.programStages.find(
-    (stage) => stage.id === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID
+    (stage) => stage.id === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID,
   );
   const attributes = useSelector((state) => state.data.tei.data.currentTei.attributes);
   const trackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
 
   const originMetadata = convertOriginMetadata(foundProgramStage);
+  const noEligibleMember = interviewData["WBZ6d5BF26K"] === "No eligible HH member";
 
   const [data, setData] = useState(null);
   const [defaultData, setDefaultData] = useState({});
@@ -44,6 +45,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
   const [formDirty, setFormDirty] = useState(false);
 
   const getHHStatus = (interviewResult) => {
+    if (interviewResult === "Non-Eligible") return HH_STATUSES.nonEligible;
     if (!interviewResult || interviewResult === "Postponed" || interviewResult === "Not at home") {
       return HH_STATUSES.pending;
     }
@@ -53,17 +55,16 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
   };
 
   const handleAddNew = (e, newData, continueAdd) => {
-    // Add new data
     setData(newData);
-    let updatedMetadata = updateMetadata(metadata, data);
+    let updatedMetadata = updateMetadata(metadata, newData);
     setMetadata([...updatedMetadata]);
-
-    console.log("handleAddNew", { updatedMetadata, data });
 
     // submit new event
     const { id: event, ...dataValues } = newData;
+
     // init new event
     const occurredAt = interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
+
     const eventPayload = transformEvent({
       event,
       enrollment,
@@ -79,7 +80,8 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     });
 
     const hhStatus = getHHStatus(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]);
-    dispatch(submitAttributes({ ...attributes, CNqaoQva9S2: hhStatus }));
+    console.log({ hhStatus, newData });
+    dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
   };
@@ -107,7 +109,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     });
 
     const hhStatus = getHHStatus(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]);
-    dispatch(submitAttributes({ ...attributes, CNqaoQva9S2: hhStatus }));
+    dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
   };
@@ -127,10 +129,16 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
       newData,
       code,
       value,
+      interviewData,
     });
 
     if (!isAllMemberEventsCompleted) {
       updateMetadataValueSet(metadata[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID], "Completed", "isDisabled", true);
+    }
+
+    // Update data per logic
+    if (noEligibleMember) {
+      newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = "Non-Eligible";
     }
 
     metadata["JzxYzLgo0P9"].disabled = true;
@@ -167,8 +175,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
       setFormDirty(true);
     }
 
-    if (newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] === "Completed")
-      newData["Zk72MWfJJKU"] = format(new Date(), "HH:mm");
+    newData["Zk72MWfJJKU"] = format(new Date(), "HH:mm");
 
     clearHiddenFieldData(metadata, data);
     if (previousData) setFormDirty(true);
@@ -184,7 +191,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     const found = currentEvents.find(
       (e) =>
         e.programStage === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID &&
-        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID]
+        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
     );
 
     if (found) {

@@ -16,14 +16,14 @@ import { useSelector } from "react-redux";
 import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID } from "../constants";
 
 const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStatus }) => {
+  const { t } = useTranslation();
   const [currentTab, setCurrentTab] = useState();
   const { interviewCascadeData } = useInterviewCascadeData(interviewData);
   const trackedEntityAttributes = useSelector((state) => state.metadata.programMetadata.trackedEntityAttributes);
   const attributeValues = useSelector((state) => state.data.tei.data.currentTei.attributes);
   const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
 
-  const { t } = useTranslation();
-
+  const noEligibleMember = interviewData["WBZ6d5BF26K"] === "No eligible HH member";
   const disabled = formStatus === FORM_ACTION_TYPES.VIEW;
   const statusAttr = trackedEntityAttributes.find((item) => item.id === HH_STATUS_ATTR_ID) || { valueSet: [] };
   const currentStatus = statusAttr.valueSet.find((o) => o.value === attributeValues[HH_STATUS_ATTR_ID]);
@@ -33,6 +33,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
     {
       label: t("householdMembersWithNumber"),
       key: "1",
+      disabled: noEligibleMember,
       children: (
         <Card classNames={{ body: "p-0 px-1" }}>
           <HouseHoldMemberTable interviewData={interviewData} onClose={onClose} disabled={disabled} />
@@ -46,8 +47,9 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
       ),
     },
     {
-      label: t("Household Survey"),
+      label: t("General Survey"),
       key: "2",
+      disabled: noEligibleMember,
       children: (
         <Card>
           <HouseHoldSurveyForm
@@ -135,7 +137,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
             destroyInactiveTabPane
             activeKey={currentTab}
             onChange={setCurrentTab}
-            defaultActiveKey="1"
+            defaultActiveKey={noEligibleMember ? "3" : "1"}
             items={items}
           />
         </div>

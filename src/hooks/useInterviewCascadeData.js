@@ -42,6 +42,10 @@ const filterChildrenUnder5 = (eventDate) => (member) => {
   return ageInYears < 5;
 };
 
+const filterByMemberData = (member) => (metadataUID, data) => {
+  return member?.[metadataUID] === data;
+};
+
 export const useInterviewCascadeData = (interviewData) => {
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
   const { currentInterviewCascade, currentEvents } = useSelector((state) => state.data.tei.data);
@@ -53,9 +57,11 @@ export const useInterviewCascadeData = (interviewData) => {
       const isSaved = r.events.length > 0;
       const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
       const memberData = r.memberData;
+
       const ableToStart =
         !filterMalesMoreThan5(eventDate)(memberData) &&
-        (filterFemalesIn10And49(eventDate)(memberData) || filterChildrenUnder5(eventDate)(memberData));
+        (filterFemalesIn10And49(eventDate)(memberData) || filterChildrenUnder5(eventDate)(memberData)) &&
+        !filterByMemberData(memberData)("vcVNGyzdJ2l", "008");
 
       return {
         ...r,
@@ -73,7 +79,7 @@ export const useInterviewCascadeData = (interviewData) => {
   const interviewCascadeData = getInterviewCascadeData();
   const femalesIn15And49 =
     currentInterviewCascade?.[interviewId]?.filter((member) =>
-      filterFemalesIn15And49(new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]))(member.memberData)
+      filterFemalesIn15And49(new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]))(member.memberData),
     ) || [];
 
   let isAllMemberEventsCompleted = true;
@@ -83,7 +89,8 @@ export const useInterviewCascadeData = (interviewData) => {
 
   const foundHHEvent = currentEvents.find(
     (e) =>
-      e.programStage === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID && e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewId
+      e.programStage === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID &&
+      e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewId,
   );
 
   if (!foundHHEvent || (foundHHEvent && foundHHEvent.status !== "COMPLETED")) isAllMemberEventsCompleted = false;
