@@ -23,6 +23,7 @@ import "../../index.css";
 import { CHILD_VACCINES, HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
 import styles from "./FamilyMemberForm.module.css";
 import { childHeathRules, handleAgeAttrsOfTEI, hhMemberRules } from "./houseHoldMemberRules";
+import { generateRandomThreeDigitString } from "@/redux/sagas/data/utils";
 
 const { familyMemberFormContainer } = styles;
 const LoadingCascadeTable = withSkeletonLoading()(CascadeTable);
@@ -67,6 +68,7 @@ const FamilyMemberForm = ({
   const attributes = useSelector((state) => state.data.tei.data.currentTei.attributes);
   const currentEnrollment = useSelector((state) => state.data.tei.data.currentEnrollment);
   const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
+  const currentCascadePMNP_IDs = currentCascade?.map((member) => member[PMNP_ID]) || [];
 
   const originMetadata = convertOriginMetadata({
     programMetadata: programMetadataMember,
@@ -158,7 +160,26 @@ const FamilyMemberForm = ({
     metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
 
     metadata[HOUSEHOLD_MEMBER_ID].disabled = true;
-    data[HOUSEHOLD_MEMBER_ID] = data.isNew ? getMaxHHMemberID(currentCascade) : data[HOUSEHOLD_MEMBER_ID];
+    if (data.isNew) {
+      // Generate unique household member ID
+      let newMemberID = generateRandomThreeDigitString();
+      let attempts = 0;
+      const maxAttempts = 1000; // Prevent infinite loop
+
+      // Keep generating until we find a unique PMNP_ID
+      while (attempts < maxAttempts) {
+        const potentialPMNP_ID = `PMNP-${BarangayCode}-${attributes[HOUSEHOLD_ID_ATTR_ID]}-${newMemberID}`;
+        if (!currentCascadePMNP_IDs.includes(potentialPMNP_ID)) {
+          break;
+        }
+        newMemberID = generateRandomThreeDigitString();
+        attempts++;
+      }
+
+      data[HOUSEHOLD_MEMBER_ID] = newMemberID;
+    } else {
+      data[HOUSEHOLD_MEMBER_ID] = data[HOUSEHOLD_MEMBER_ID];
+    }
 
     metadata[MEMBER_HOUSEHOLD_UID].disabled = true;
     data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];

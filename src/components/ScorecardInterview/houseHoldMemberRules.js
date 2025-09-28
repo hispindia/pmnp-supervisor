@@ -290,23 +290,23 @@ export const childNutritionRules = (metadata, data, { months, years }) => {
 
   // should not accept values less than 5.0 and more than 26.5. Show warning otherwise.
   if (cm < 5.0 || cm > 26.5) {
-    metadata("sCOCt8eF0Fr").error = "Please enter a value between 5.0 and 26.5";
+    metadata("sCOCt8eF0Fr").warning = "Please enter a value between 5.0 and 26.5";
   } else {
-    metadata("sCOCt8eF0Fr").error = "";
+    metadata("sCOCt8eF0Fr").warning = "";
   }
 
   // Values are beyond 2.41 - 18.0 kg range
   if (data["iFiOPAxrJIF"] < 2.41 || data["iFiOPAxrJIF"] > 18.0) {
-    metadata("iFiOPAxrJIF").error = "Values are beyond 2.4 - 18.0 kg range";
+    metadata("iFiOPAxrJIF").warning = "Values are beyond 2.4 - 18.0 kg range";
   } else {
-    metadata("iFiOPAxrJIF").error = "";
+    metadata("iFiOPAxrJIF").warning = "";
   }
 
   // Values are beyond 30 - 120 cm range
   if (data["CY4OTulUceX"] < 30 || data["CY4OTulUceX"] > 120) {
-    metadata("CY4OTulUceX").error = "Values are beyond 30 - 120 cm range";
+    metadata("CY4OTulUceX").warning = "Values are beyond 30 - 120 cm range";
   } else {
-    metadata("CY4OTulUceX").error = "";
+    metadata("CY4OTulUceX").warning = "";
   }
 
   if (cm > 0 && cm < 11.5) {

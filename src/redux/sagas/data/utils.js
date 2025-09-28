@@ -48,6 +48,15 @@ const dataMapping = {
   Dead: "dead",
 };
 
+/**
+ * Generate a random 3-digit string from "000" to "999"
+ * @returns {string} A random 3-digit string (e.g., "001", "042", "999")
+ */
+export const generateRandomThreeDigitString = () => {
+  const randomNumber = Math.floor(Math.random() * 1000);
+  return randomNumber.toString().padStart(3, "0");
+};
+
 const convertValueBack = (valueType, value) => {
   if (value === undefined || value === null) {
     return "";

@@ -1,0 +1,200 @@
+/* Access Restriction Message Styles */
+.access-restriction-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.access-restriction-content {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.access-restriction-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  padding: 40px 32px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.access-restriction-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.access-restriction-icon {
+  margin-bottom: 24px;
+}
+
+.restriction-icon {
+  font-size: 64px;
+  color: #faad14;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.access-restriction-title {
+  color: #262626 !important;
+  margin-bottom: 24px !important;
+  font-weight: 600 !important;
+}
+
+.access-restriction-alert {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  border: 1px solid #faad14;
+  background-color: #fffbe6;
+}
+
+.access-restriction-description {
+  text-align: left;
+}
+
+.restriction-message {
+  display: block;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #595959;
+  margin-bottom: 16px;
+}
+
+.user-role-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #faad14;
+}
+
+.user-icon {
+  color: #faad14;
+  font-size: 16px;
+}
+
+.current-role {
+  font-size: 14px;
+  color: #262626;
+}
+
+.access-restriction-footer {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 20px;
+  margin-top: 24px;
+}
+
+.footer-text {
+  font-size: 14px;
+  color: #8c8c8c;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .access-restriction-container {
+    padding: 16px;
+  }
+
+  .access-restriction-card {
+    padding: 32px 24px;
+  }
+
+  .restriction-icon {
+    font-size: 48px;
+  }
+
+  .access-restriction-title {
+    font-size: 20px !important;
+  }
+
+  .restriction-message {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .access-restriction-container {
+    padding: 12px;
+  }
+
+  .access-restriction-card {
+    padding: 24px 20px;
+  }
+
+  .restriction-icon {
+    font-size: 40px;
+  }
+
+  .access-restriction-title {
+    font-size: 18px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .restriction-message {
+    font-size: 14px;
+  }
+
+  .user-role-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .access-restriction-container {
+    background: linear-gradient(135deg, #1f1f1f 0%, #2d2d2d 100%);
+  }
+
+  .access-restriction-card {
+    background: #2d2d2d;
+    color: #ffffff;
+  }
+
+  .access-restriction-title {
+    color: #ffffff !important;
+  }
+
+  .restriction-message {
+    color: #d9d9d9;
+  }
+
+  .current-role {
+    color: #ffffff;
+  }
+
+  .user-role-info {
+    background-color: #3a3a3a;
+  }
+
+  .access-restriction-footer {
+    border-top-color: #424242;
+  }
+
+  .footer-text {
+    color: #a6a6a6;
+  }
+}
