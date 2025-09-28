@@ -37,6 +37,9 @@ export const hhMemberRules = (metadata, data, { years }) => {
   //PWD ID number (E6KdOG1IB6O)	Only show when PWD = 1, (xwMJHEDdpGc)
   metadata["E6KdOG1IB6O"].hidden = data["xwMJHEDdpGc"] !== "1";
 
+  // 004 - Migrated  -> if selected, it will ask for the Region, Province, City/Municipality, Barangay (based on updated PSGC, including non-PMNP Areas, add Unknown City/Municipality and Unknown Barangay in the options)
+  metadata["GoIB6wTqQq1"].hidden = data["vcVNGyzdJ2l"] !== "004";
+
   // Hide Philhealth ques for child <5 y (0-59 mo)
   metadata["JjFcU1L7Ll1"].hidden = !(years > 5);
   metadata["JjFcU1L7Ll1"].error = !metadata["JjFcU1L7Ll1"].hidden && !data["JjFcU1L7Ll1"] && "This field is required";
