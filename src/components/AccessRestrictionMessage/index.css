@@ -75,7 +75,7 @@
   display: block;
   font-size: 16px;
   line-height: 1.6;
-  color: #595959;
+  color: #000;
   margin-bottom: 16px;
 }
 
@@ -96,7 +96,7 @@
 
 .current-role {
   font-size: 14px;
-  color: #262626;
+  color: #000;
 }
 
 .access-restriction-footer {
@@ -107,7 +107,7 @@
 
 .footer-text {
   font-size: 14px;
-  color: #8c8c8c;
+  color: #000;
   line-height: 1.5;
 }
 
@@ -191,10 +191,10 @@
   }
 
   .access-restriction-footer {
-    border-top-color: #424242;
+    border-top-color: #000;
   }
 
   .footer-text {
-    color: #a6a6a6;
+    color: #000;
   }
 }
