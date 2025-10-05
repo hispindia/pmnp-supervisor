@@ -34,7 +34,7 @@ const ATTRIBUTE_UIDS = {
 };
 
 // Paging configuration
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 500;
 const TOTAL_PAGES_LIMIT = null; // Set to a number to limit pages, null for all
 
 // Statistics
@@ -109,18 +109,35 @@ function makeRequest(url, method = "GET", data = null) {
 /**
  * Fetch tracked entities with paging using tracker API
  */
-// https://dhis2.world/pmnp/api/tracker/trackedEntities.json?paging=true&pageSize=10&page=1&totalPages=true&orgUnit=Oyq1wCBL4h5&ouMode=SELECTED&program=VVLirjoOGbj&fields=:all,!enrollments
-async function fetchTrackedEntities(page = 1) {
-  const url = `${BASE_URL}/api/tracker/trackedEntities.json?paging=true&pageSize=${PAGE_SIZE}&page=${page}&totalPages=true&orgUnit=Oyq1wCBL4h5&ouMode=SELECTED&program=VVLirjoOGbj&fields=:all,!enrollments`;
+// https://dhis2.world/pmnp/api/tracker/trackedEntities.json?paging=true&pageSize=10&page=1&totalPages=true&orgUnit=Oyq1wCBL4h5&ouMode=DESCENDANTS&program=VVLirjoOGbj&fields=:all,!enrollments
 
-  console.log(`\n📥 Fetching page ${page} (${PAGE_SIZE} per page)...`);
+const allOrgs = [
+  //   { id: "WUaHfX4rTWE" },
+  //   { id: "spXTh9hs5dz" },
+  { id: "P2cGU4ONQ4p" },
+  { id: "ROABO86LJAF" },
+  { id: "kbhtXImEkFR" },
+  { id: "zqTkGmyJZeh" },
+  { id: "yf6NQpWFfWG" },
+  { id: "TjpdF3jzRCM" },
+  { id: "GBS2VLfCzaU" },
+  { id: "v70IgUHgZYD" },
+  { id: "g6OKJ39e5pV" },
+  { id: "znR5iUoZ8Ql" },
+  { id: "NEvFicY3NsS" },
+];
+
+async function fetchTrackedEntities(orgUnitId, page = 1) {
+  const url = `${BASE_URL}/api/tracker/trackedEntities.json?paging=true&pageSize=${PAGE_SIZE}&page=${page}&totalPages=true&orgUnit=${orgUnitId}&ouMode=DESCENDANTS&program=VVLirjoOGbj&fields=:all,!enrollments`;
+
+  console.log(`\n📥 Fetching page ${page} for org ${orgUnitId} (${PAGE_SIZE} per page)...`);
 
   try {
     const response = await makeRequest(url);
 
     return response;
   } catch (error) {
-    console.error(`❌ Error fetching page ${page}:`, error.message);
+    console.error(`❌ Error fetching page ${page} for org ${orgUnitId}:`, error.message);
     throw error;
   }
 }
@@ -211,8 +228,6 @@ async function sendBatchUpdate(trackedEntities) {
     console.log(`\n📤 Sending batch update for ${trackedEntities.length} tracked entities...`);
     const response = await makeRequest(url, "POST", payload);
 
-    console.log("Response:", JSON.stringify(response, null, 2));
-
     // Check for errors in response
     if (response.status === "ERROR") {
       console.error("❌ Batch update failed:", JSON.stringify(response.validationReport || response, null, 2));
@@ -258,19 +273,6 @@ function processTrackedEntity(trackedEntity, index, total) {
       return null;
     }
 
-    const fullName = [
-      soundexData.names.firstname,
-      soundexData.names.middlename,
-      soundexData.names.lastname,
-      soundexData.names.extname,
-    ]
-      .filter(Boolean)
-      .join(" ");
-
-    console.log(`  🔄 [${index + 1}/${total}] Preparing TEI ${teiId}`);
-    console.log(`     Name: ${fullName}`);
-    console.log(`     Soundex: ${soundexData.combinedSoundex}`);
-
     // Prepare the update (don't send yet)
     const preparedUpdate = prepareTrackedEntityUpdate(trackedEntity, soundexData.combinedSoundex);
     return preparedUpdate;
@@ -290,67 +292,82 @@ async function processAllTrackedEntities() {
   console.log(`Base URL: ${BASE_URL}`);
   console.log(`Username: ${USERNAME}`);
   console.log(`Page Size: ${PAGE_SIZE}`);
+  console.log(`Total Organizations: ${allOrgs.length}`);
   console.log("========================================\n");
 
-  let currentPage = 1;
-  let hasMorePages = true;
+  // Loop through all organizations
+  for (let orgIndex = 0; orgIndex < allOrgs.length; orgIndex++) {
+    const org = allOrgs[orgIndex];
+    const orgUnitId = org.id;
 
-  while (hasMorePages) {
-    try {
-      // Check page limit
-      if (TOTAL_PAGES_LIMIT && currentPage > TOTAL_PAGES_LIMIT) {
-        console.log(`\n⚠️  Reached page limit (${TOTAL_PAGES_LIMIT}). Stopping.`);
+    console.log(`\n${"=".repeat(60)}`);
+    console.log(`🏢 Processing Organization [${orgIndex + 1}/${allOrgs.length}]: ${orgUnitId}`);
+    console.log(`${"=".repeat(60)}`);
+
+    let currentPage = 1;
+    let hasMorePages = true;
+
+    while (hasMorePages) {
+      try {
+        // Check page limit
+        if (TOTAL_PAGES_LIMIT && currentPage > TOTAL_PAGES_LIMIT) {
+          console.log(`\n⚠️  Reached page limit (${TOTAL_PAGES_LIMIT}) for org ${orgUnitId}. Moving to next org.`);
+          break;
+        }
+
+        // Fetch page for this organization
+        const response = await fetchTrackedEntities(orgUnitId, currentPage);
+        const trackedEntities = response.instances || [];
+
+        console.log(
+          `📊 Org ${orgUnitId} - Page ${currentPage}/${response.pageCount || "?"}: Found ${trackedEntities.length} tracked entities`,
+        );
+        console.log(`   Total in org: ${response.total || "unknown"}`);
+
+        stats.totalFetched += trackedEntities.length;
+
+        // Collect updates for this page only
+        const pagePreparedUpdates = [];
+
+        // Process each tracked entity in this page
+        for (let i = 0; i < trackedEntities.length; i++) {
+          const preparedUpdate = processTrackedEntity(trackedEntities[i], i, trackedEntities.length);
+          if (preparedUpdate) {
+            pagePreparedUpdates.push(preparedUpdate);
+          }
+        }
+
+        // Send batch update for this page
+        if (pagePreparedUpdates.length > 0) {
+          console.log(`\n   📦 Prepared ${pagePreparedUpdates.length} updates for this page`);
+
+          const result = await sendBatchUpdate(pagePreparedUpdates);
+          stats.totalUpdated += result.success;
+          stats.totalFailed += result.failed;
+        } else {
+          console.log(`\n   ⚠️  No updates needed for this page`);
+        }
+
+        // Check if there are more pages for this org
+        hasMorePages = response.page < response.pageCount;
+
+        if (hasMorePages) {
+          currentPage++;
+          console.log(`\n⏭️  Moving to next page (${currentPage}) for org ${orgUnitId}...\n`);
+        } else {
+          console.log(`\n✅ All pages processed for org ${orgUnitId}!`);
+        }
+      } catch (error) {
+        console.error(`\n❌ Error processing page ${currentPage} for org ${orgUnitId}:`, error.message);
+        console.log("⚠️  Skipping to next organization.");
         break;
       }
-
-      // Fetch page
-      const response = await fetchTrackedEntities(currentPage);
-      const trackedEntities = response.instances || [];
-
-      console.log(
-        `📊 Page ${currentPage}/${response.pageCount || "?"}: Found ${trackedEntities.length} tracked entities`,
-      );
-      console.log(`   Total in system: ${response.total || "unknown"}`);
-
-      stats.totalFetched += trackedEntities.length;
-
-      // Collect updates for this page only
-      const pagePreparedUpdates = [];
-
-      // Process each tracked entity in this page
-      for (let i = 0; i < trackedEntities.length; i++) {
-        const preparedUpdate = processTrackedEntity(trackedEntities[i], i, trackedEntities.length);
-        if (preparedUpdate) {
-          pagePreparedUpdates.push(preparedUpdate);
-        }
-      }
-
-      // Send batch update for this page
-      if (pagePreparedUpdates.length > 0) {
-        console.log(`\n   📦 Prepared ${pagePreparedUpdates.length} updates for this page`);
-
-        const result = await sendBatchUpdate(pagePreparedUpdates);
-        stats.totalUpdated += result.success;
-        stats.totalFailed += result.failed;
-      } else {
-        console.log(`\n   ⚠️  No updates needed for this page`);
-      }
-
-      // Check if there are more pages
-      hasMorePages = response.page < response.pageCount;
-
-      if (hasMorePages) {
-        currentPage++;
-        console.log(`\n⏭️  Moving to next page (${currentPage})...\n`);
-      } else {
-        console.log(`\n✅ All pages processed!`);
-      }
-    } catch (error) {
-      console.error(`\n❌ Error processing page ${currentPage}:`, error.message);
-      console.log("⚠️  Stopping process due to error.");
-      break;
     }
   }
+
+  console.log(`\n${"=".repeat(60)}`);
+  console.log("✅ All organizations processed!");
+  console.log(`${"=".repeat(60)}`);
 
   // Print final statistics
   const elapsedTime = ((Date.now() - stats.startTime) / 1000).toFixed(2);
