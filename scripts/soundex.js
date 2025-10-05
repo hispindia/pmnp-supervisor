@@ -140,9 +140,9 @@ function compareSoundex(name1, name2) {
   const soundex1 = generateSoundex(name1.firstname, name1.middlename, name1.lastname, name1.extname);
   const soundex2 = generateSoundex(name2.firstname, name2.middlename, name2.lastname, name2.extname);
 
-  // Create concatenated codes: lastname + firstname + middlename + extname
-  const combined1 = soundex1.lastname + soundex1.firstname + soundex1.middlename + soundex1.extname;
-  const combined2 = soundex2.lastname + soundex2.firstname + soundex2.middlename + soundex2.extname;
+  // Create concatenated codes: firstname + middlename + lastname + extname
+  const combined1 = soundex1.firstname + soundex1.middlename + soundex1.lastname + soundex1.extname;
+  const combined2 = soundex2.firstname + soundex2.middlename + soundex2.lastname + soundex2.extname;
 
   // Generate binary comparison
   const binaryComparison = compareSoundexCodes(combined1, combined2);

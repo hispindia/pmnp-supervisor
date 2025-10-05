@@ -144,7 +144,7 @@ function generateSoundexName(trackedEntity) {
 
   const soundexCodes = generateSoundex(firstname, middlename, lastname, extname);
 
-  // Concatenate: lastname + firstname + middlename + extname
+  // Concatenate: firstname + middlename + lastname + extname
   const combinedSoundex =
     soundexCodes.firstname + soundexCodes.middlename + soundexCodes.lastname + soundexCodes.extname;
 
