@@ -66,7 +66,7 @@ const AppContainer = () => {
         }
 
         dispatch(setOrgUnits(results[5].organisationUnits));
-        dispatch(setReportId(results[7]));
+        dispatch(setReportId(results[6]));
         dispatch(setMe(results[2]));
         setLoading(false);
         setLoaded(true);
