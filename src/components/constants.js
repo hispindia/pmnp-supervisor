@@ -74,6 +74,8 @@ const TYPE_OF_ACTION = {
   NEVER: "Never",
 };
 
+export const META_ATTR_ADD_INTERVIEW_ID = "ksnlMDtxcWY";
+
 export const HOUSEHOLD_MEMBER_ID = "Cn37lbyhz6f";
 export const HH_STATUS_ATTR_ID = "CNqaoQva9S2";
 export const PMNP_ID = "NOKzq4dAKF7";

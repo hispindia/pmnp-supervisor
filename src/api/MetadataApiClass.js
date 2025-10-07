@@ -156,6 +156,12 @@ export default class MetadataApiClass extends BaseApiClass {
     programMetadata.trackedEntityType = p.trackedEntityType.id;
     programMetadata.organisationUnits = p.organisationUnits;
     programMetadata.programSections = p.programSections;
+    const metaAttr =
+      programMetadata.attributeValues?.reduce((prev, curr) => {
+        prev[curr.attribute.id] = curr.value;
+        return prev;
+      }, {}) || {};
+    programMetadata.attributeValues = metaAttr;
     programMetadata.trackedEntityAttributes = p.programTrackedEntityAttributes.map((ptea) => {
       const tea = {
         compulsory: ptea.mandatory,

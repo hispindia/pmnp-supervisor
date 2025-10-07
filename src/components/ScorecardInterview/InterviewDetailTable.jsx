@@ -4,7 +4,7 @@ import { Card, Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID, HH_STATUSES } from "../constants";
+import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID, HH_STATUSES, META_ATTR_ADD_INTERVIEW_ID } from "../constants";
 
 // Icon
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -57,7 +57,9 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
   const { attributes } = currentTei;
   const HH_Status = attributes[HH_STATUS_ATTR_ID];
-  const isAddNewInterviewButtonEnable = HH_Status == HH_STATUSES.pending || !HH_Status;
+  const isAttributeAddInterviewEnable = programMetadata.attributeValues?.[META_ATTR_ADD_INTERVIEW_ID] === "true";
+  const isAddNewInterviewButtonEnable =
+    (HH_Status == HH_STATUSES.pending || !HH_Status) && isAttributeAddInterviewEnable;
   const addableStatus = [HH_STATUSES.approved, HH_STATUSES.refused, HH_STATUSES.synced];
 
   const showData = useMemo(() => {

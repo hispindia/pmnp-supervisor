@@ -1,13 +1,13 @@
+import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
+import { isImmutableYear } from "@/utils/event";
 import { DeleteTwoTone, LinkOutlined } from "@ant-design/icons";
+import { Chip } from "@material-ui/core";
 import { Button, Popconfirm, Table } from "antd";
 import { useTranslation } from "react-i18next";
-import { pickTranslation, TableColumn, TableFilter } from "../../utils";
-import "./index.css";
-import { isImmutableYear } from "@/utils/event";
 import { useSelector } from "react-redux";
-import { HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
+import { pickTranslation, TableColumn, TableFilter } from "../../utils";
 import { HH_STATUS_ATTR_ID } from "../constants";
-import { Chip } from "@material-ui/core";
+import "./index.css";
 
 const RegisteredTeiList = ({
   teis,
@@ -152,8 +152,12 @@ const RegisteredTeiList = ({
           rowObject[HH_STATUS_ATTR_ID] = (
             <Chip
               size="small"
-              style={{ backgroundColor: option?.color, color: option?.color && "#fff", borderRadius: 4 }}
-              label={attribute ? attribute.value : ""}
+              style={{
+                backgroundColor: option?.color,
+                color: option?.color && "#fff",
+                borderRadius: 4,
+              }}
+              label={option ? option.label : ""}
             />
           );
           return;

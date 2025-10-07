@@ -3,6 +3,9 @@
     "id": "oSNoNtcmLXL",
     "trackedEntityType": "XXmSdjaI4vU",
     "programSections": [],
+    "attributeValues": {
+      "ksnlMDtxcWY": "true"
+    },
     "trackedEntityAttributes": [
       {
         "compulsory": true,
