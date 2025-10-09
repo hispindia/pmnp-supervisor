@@ -37,6 +37,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
   const originMetadata = convertOriginMetadata(foundProgramStage);
   const noEligibleMember = interviewData["WBZ6d5BF26K"] === "No eligible HH member";
+  const informedConsentForInterview = interviewData["X28FSoTIkGv"];
 
   const [data, setData] = useState(null);
   const [defaultData, setDefaultData] = useState({});
@@ -129,6 +130,10 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     // Update data per logic
     if (noEligibleMember) {
       newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = "Non-Eligible";
+    }
+
+    if (informedConsentForInterview != "Yes") {
+      newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = "Refused";
     }
 
     metadata["JzxYzLgo0P9"].disabled = true;

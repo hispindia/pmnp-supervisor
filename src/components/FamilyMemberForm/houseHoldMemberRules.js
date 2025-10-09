@@ -31,6 +31,9 @@ export const hhMemberRules = (metadata, data, { years }) => {
   // Name of IP group (Ethnicity)	Only show when 'IP membership' = Yes /1
   metadata["g276qF2fXHi"].hidden = data["OiOvGqVEyY9"] !== "1";
 
+  //  SHOW Other IP Membership when  IP group (Ethnicity) = 999
+  metadata["wLc3kaB9MAk"].hidden = data["g276qF2fXHi"] != "999";
+
   // 4Ps Household ID number	Only show when '4Ps membership' = Yes / 1
   metadata["CEF6Dkpe2jW"].hidden = data["wxN2PuLymoY"] !== "1";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { TextField as MuiTextField } from "@material-ui/core";
 
-const TextField = ({ value, handleChange, handleBlur, type, disabled, onInput, maxLength, ...props }) => {
+const TextField = ({ value, handleChange, handleBlur, type, disabled, onInput, maxLength, style, ...props }) => {
   return (
     <MuiTextField
       disabled={disabled}
@@ -12,11 +12,14 @@ const TextField = ({ value, handleChange, handleBlur, type, disabled, onInput, m
       size="small"
       onInput={onInput}
       maxLength={maxLength}
+      style={{ textTransform: "uppercase", ...style }}
       onBlur={(event) => {
-        handleBlur && handleBlur(event.target.value);
+        const uppercaseValue = event.target.value.toUpperCase();
+        handleBlur && handleBlur(uppercaseValue);
       }}
       onChange={(event) => {
-        handleChange(event.target.value);
+        const uppercaseValue = event.target.value.toUpperCase();
+        handleChange(uppercaseValue);
       }}
       {...props}
     />

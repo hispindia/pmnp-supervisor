@@ -89,6 +89,13 @@ const InputField = ({
           // disabled={disabled}
           // ref={inputRef}
           {...props}
+          style={{ textTransform: "uppercase", ...props.style }}
+          onChange={(event) => {
+            const uppercaseValue = event.target.value.toUpperCase();
+            if (props.onChange) {
+              props.onChange({ ...event, target: { ...event.target, value: uppercaseValue } });
+            }
+          }}
         />
       );
     case "LONG_TEXT":
@@ -99,6 +106,13 @@ const InputField = ({
           //   onChange(event.target.value, event);
           // }}
           {...props}
+          style={{ textTransform: "uppercase", ...props.style }}
+          onChange={(event) => {
+            const uppercaseValue = event.target.value.toUpperCase();
+            if (props.onChange) {
+              props.onChange({ ...event, target: { ...event.target, value: uppercaseValue } });
+            }
+          }}
         />
       );
     case "DATE":
