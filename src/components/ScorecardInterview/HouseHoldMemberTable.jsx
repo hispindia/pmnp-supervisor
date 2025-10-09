@@ -288,7 +288,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     // WARNING: if it's hidden, the data will be removed
 
     let metadata = (metaId) => {
-      if (!metadataOrigin[metaId]) return;
+      if (!metadataOrigin[metaId]) return {};
       return metadataOrigin[metaId];
     };
 
@@ -297,6 +297,18 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     // stage
     metadata(HOUSEHOLD_INTERVIEW_ID_DE_ID).disabled = true;
+
+    // AGEs
+    const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
+    const dateOBbirth = new Date(data["fJPZFs2yYJQ"]);
+    const ages = calculateAge(dateOBbirth, eventDate);
+    const { years, months, weeks, days } = ages;
+    data["Hc9Vgt4LXjb"] = years ? years : "";
+    data["RoSxLAB5cfo"] = months ? months : "";
+    data["Gds5wTiXoSK"] = weeks ? weeks : "";
+    data["ICbJBQoOsVt"] = days ? days : "";
+
+    data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = interviewId;
 
     // Hide rest of the form if Membership status = "Deceased" or Migrated to "Non-PMNP Area" or "Not part of the HH"
     const hhMemberStatus = data["vcVNGyzdJ2l"];
@@ -312,6 +324,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
             "RoSxLAB5cfo",
             "Gds5wTiXoSK",
             "ICbJBQoOsVt",
+
             "d2n5w4zpxuo",
             "xDSSvssuNFs",
             "X2Oln1OyP5o",
@@ -349,19 +362,11 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     metadata("X2Oln1OyP5o").hidden = true;
     metadata("H42aYY9JMIR").hidden = true;
 
-    data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = interviewId;
-
     data["C4b8S7zjs0g"] = data[MEMBER_HOUSEHOLD_UID];
     metadata("C4b8S7zjs0g").disabled = true;
 
     metadata(HOUSEHOLD_INTERVIEW_TIME_DE_ID).disabled = true;
     data[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
-
-    const eventDate = new Date(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
-
-    const dateOBbirth = new Date(data["fJPZFs2yYJQ"]);
-    const ages = calculateAge(dateOBbirth, eventDate);
-    const { years, months, weeks, days } = ages;
 
     const lmpDate = data["qlt8LOSENj8"] && new Date(data["qlt8LOSENj8"]);
     const aogInWeeks = differenceInWeeks(eventDate, lmpDate);
@@ -418,11 +423,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     ];
 
     aogPPW.forEach((de) => (metadata(de).hidden = data["mT44qeiiVpv"] !== "true" || metadata(de).hidden));
-
-    data["Hc9Vgt4LXjb"] = years ? years : "";
-    data["RoSxLAB5cfo"] = months ? months : "";
-    data["Gds5wTiXoSK"] = weeks ? weeks : "";
-    data["ICbJBQoOsVt"] = days ? days : "";
 
     // z-score
     // Height	CY4OTulUceX

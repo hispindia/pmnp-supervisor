@@ -1,5 +1,16 @@
 import { MEMBER_TRACKED_ENTITY_TYPE_ID } from "@/constants/app-config";
 import { convertValueBack } from "@/utils";
+import { HH_STATUSES } from "../constants";
+
+export const getHHStatus = (interviewResult) => {
+  if (interviewResult === "Non-Eligible") return HH_STATUSES.nonEligible;
+  if (!interviewResult || interviewResult === "Postponed" || interviewResult === "Not at home") {
+    return HH_STATUSES.pending;
+  }
+  if (interviewResult === "Refused" || interviewResult === "Others") return HH_STATUSES.refused;
+  if (interviewResult === "Partially Completed") return HH_STATUSES.ongoing;
+  if (interviewResult === "Completed") return HH_STATUSES.submitted;
+};
 
 export const clearHiddenFieldData = (metadata, data, extCondition = (itemMetadata) => true) => {
   // clear data for hidden items

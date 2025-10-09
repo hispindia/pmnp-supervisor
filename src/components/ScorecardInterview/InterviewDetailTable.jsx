@@ -16,9 +16,11 @@ import {
   HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
 } from "@/constants/app-config";
+import { useUser } from "@/hooks/useUser";
 import { submitAttributes, submitEvent } from "@/redux/actions/data";
 import { deleteEvent } from "@/redux/actions/data/tei";
 import { transformEvent } from "@/utils/event";
+import { Button } from "antd";
 import { format } from "date-fns";
 import _ from "lodash";
 import withDeleteConfirmation from "../../hocs/withDeleteConfirmation";
@@ -28,8 +30,6 @@ import "../CustomStyles/css/bootstrap.min.css";
 import "./interview-detail-table.css";
 import InterviewDetailModal from "./InterviewDetailModal";
 import { clearHiddenFieldData, updateMetadata } from "./utils";
-import { useUser } from "@/hooks/useUser";
-import { Button } from "antd";
 
 const DeleteConfirmationButton = withDeleteConfirmation(Button);
 
@@ -105,8 +105,13 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       _isDirty: true,
     });
 
+    let hhStatus = HH_STATUSES.ongoing;
+    if (dataValues["WBZ6d5BF26K"] == "001") {
+      hhStatus = HH_STATUSES.nonEligible;
+    }
+
     // change HH status to pending
-    dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: HH_STATUSES.ongoing }));
+    dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
     // init new event
     dispatch(submitEvent(eventPayload));
   };

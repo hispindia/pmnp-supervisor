@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID, HH_STATUSES } from "../constants";
-import { clearHiddenFieldData, updateMetadata, updateMetadataValueSet } from "./utils";
+import { clearHiddenFieldData, updateMetadata, updateMetadataValueSet, getHHStatus } from "./utils";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 
 const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled }) => {
@@ -43,16 +43,6 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
   const [formStatus, setFormStatus] = useState(null);
   const [formDirty, setFormDirty] = useState(false);
-
-  const getHHStatus = (interviewResult) => {
-    if (interviewResult === "Non-Eligible") return HH_STATUSES.nonEligible;
-    if (!interviewResult || interviewResult === "Postponed" || interviewResult === "Not at home") {
-      return HH_STATUSES.pending;
-    }
-    if (interviewResult === "Refused" || interviewResult === "Others") return HH_STATUSES.refused;
-    if (interviewResult === "Partially Completed") return HH_STATUSES.ongoing;
-    if (interviewResult === "Completed") return HH_STATUSES.submitted;
-  };
 
   const handleAddNew = (e, newData, continueAdd) => {
     setData(newData);
@@ -80,7 +70,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     });
 
     const hhStatus = getHHStatus(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]);
-    console.log({ hhStatus, newData });
+
     dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);

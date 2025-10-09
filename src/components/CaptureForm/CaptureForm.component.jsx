@@ -121,6 +121,10 @@ function CaptureForm(props) {
     };
   }, []);
 
+  useEffect(() => {
+    checkFormFulfilled();
+  }, [data]);
+
   const editCall = (metadata, prevData, formData, code, value) => {
     let data = _.clone(formData);
     let cloneMetadata = _.clone(metadata).reduce((obj, md) => {
