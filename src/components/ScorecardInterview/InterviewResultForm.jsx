@@ -36,7 +36,8 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
   const enrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
 
   const originMetadata = convertOriginMetadata(foundProgramStage);
-  const noEligibleMember = interviewData["WBZ6d5BF26K"] === "No eligible HH member";
+  const HH_Update = interviewData["WBZ6d5BF26K"];
+  const noEligibleMember = HH_Update === "No eligible HH member";
   const informedConsentForInterview = interviewData["X28FSoTIkGv"];
 
   const [data, setData] = useState(null);
@@ -130,6 +131,12 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     // Update data per logic
     if (noEligibleMember) {
       newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = "Non-Eligible";
+    }
+    if (HH_Update === "Household is closed") {
+      newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = "Not at home";
+    }
+    if (HH_Update === "Others") {
+      newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = "Others";
     }
 
     if (informedConsentForInterview != "Yes") {

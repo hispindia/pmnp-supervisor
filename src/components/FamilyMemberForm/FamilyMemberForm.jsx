@@ -221,8 +221,13 @@ const FamilyMemberForm = ({
     }
 
     // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
-    if (data["QAYXozgCOHu"] === "2" && years < 15) {
-      metadata["QAYXozgCOHu"].error = "Spouse should be more than 15 years old";
+    if (data["QAYXozgCOHu"] === "2" && years >= 10 && years < 15) {
+      metadata["QAYXozgCOHu"].warning = "Spouse should be more than 15 years old";
+    }
+
+    // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
+    if (data["QAYXozgCOHu"] === "2" && years < 10) {
+      metadata["QAYXozgCOHu"].error = "Spouse should be more than 10 years old";
     }
 
     metadata["d2n5w4zpxuo"].hidden = true;

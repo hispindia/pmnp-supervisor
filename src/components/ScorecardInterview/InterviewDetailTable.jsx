@@ -59,7 +59,8 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   const HH_Status = attributes[HH_STATUS_ATTR_ID];
   const isAttributeAddInterviewEnable = programMetadata.attributeValues?.[META_ATTR_ADD_INTERVIEW_ID] === "true";
   const isAddNewInterviewButtonEnable =
-    (HH_Status == HH_STATUSES.pending || !HH_Status) && isAttributeAddInterviewEnable;
+    (HH_Status == HH_STATUSES.pending || !HH_Status) && isAttributeAddInterviewEnable && HH_Status !== "Migrated";
+
   const addableStatus = [HH_STATUSES.approved, HH_STATUSES.refused, HH_STATUSES.synced];
 
   const showData = useMemo(() => {
@@ -106,8 +107,21 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     });
 
     let hhStatus = HH_STATUSES.ongoing;
-    if (dataValues["WBZ6d5BF26K"] == "001") {
-      hhStatus = HH_STATUSES.nonEligible;
+    switch (dataValues["WBZ6d5BF26K"]) {
+      case "001":
+        hhStatus = HH_STATUSES.nonEligible;
+        break;
+      case "002":
+        hhStatus = HH_STATUSES.migrated;
+        break;
+      case "003":
+        hhStatus = HH_STATUSES.pending;
+        break;
+      case "Others":
+        hhStatus = HH_STATUSES.other;
+        break;
+      default:
+        break;
     }
 
     // change HH status to pending
@@ -164,6 +178,8 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       code,
       value,
     });
+
+    console.log(data["WBZ6d5BF26K"]);
 
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     metadata[HOUSEHOLD_INTERVIEW_DATE_DE_ID].disabled = true;

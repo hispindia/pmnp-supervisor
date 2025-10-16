@@ -93,6 +93,8 @@ export const HH_STATUSES = {
   approved: "Approved",
   synced: "Synced",
   nonEligible: "Non-Eligible",
+  migrated: "Migrated",
+  other: "Other",
 };
 
 export const MOTHER_CHILD_SECTION = [

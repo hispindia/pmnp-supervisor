@@ -107,7 +107,7 @@ const ProfileForm = ({
         {/* HH - Duplicate */}
         <div className="col-lg-3">
           <Dhis2FormItem id={"eNSVMKSqOVY"}>
-            <InputField size="large" />
+            <InputField size="large" disabled={!isEdit} />
           </Dhis2FormItem>
         </div>
 
