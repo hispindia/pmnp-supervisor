@@ -27,7 +27,7 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
   const noEligibleMember = HH_Update === "No eligible HH member";
   const disabled =
     formStatus === FORM_ACTION_TYPES.VIEW ||
-    ["Eligible HH has moved", "Household is closed", "Others"].includes(HH_Update);
+    ["Eligible HH has moved", "Household is closed (no resident)", "Others"].includes(HH_Update);
 
   const statusAttr = trackedEntityAttributes.find((item) => item.id === HH_STATUS_ATTR_ID) || { valueSet: [] };
   const currentStatus = statusAttr.valueSet.find((o) => o.value === attributeValues[HH_STATUS_ATTR_ID]);
