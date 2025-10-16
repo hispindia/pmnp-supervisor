@@ -393,10 +393,10 @@ const convertOriginMetadata = ({
   return [...trackedEntityAttributes, ...programStagesDataElements];
 };
 
-const filterFemalesIn15And49 = (eventDate) => (member) => {
+const filterFemalesIn15And54 = (eventDate) => (member) => {
   const dateOfbirth = new Date(member["fJPZFs2yYJQ"]);
   const ageInYears = differenceInYears(eventDate, dateOfbirth);
-  return member["Qt4YSwPxw0X"] == "1" && ageInYears >= 15 && ageInYears <= 49;
+  return member["Qt4YSwPxw0X"] == "1" && ageInYears >= 15 && ageInYears <= 54;
 };
 
 const createValueSet = (cascadeMembers, currentEvent, currentEnrollment, labelID, valueID) => {
@@ -408,7 +408,7 @@ const createValueSet = (cascadeMembers, currentEvent, currentEnrollment, labelID
       ? new Date()
       : lastDayOfYear(new Date(currentEvent.occurredAt || currentEnrollment.enrolledAt));
 
-    if (filterFemalesIn15And49(enrollmentDate)(curr)) {
+    if (filterFemalesIn15And54(enrollmentDate)(curr)) {
       acc.push({
         value,
         label,
