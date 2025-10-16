@@ -7,7 +7,8 @@ export const getHHStatus = (interviewResult) => {
   if (!interviewResult || interviewResult === "Postponed" || interviewResult === "Not at home") {
     return HH_STATUSES.pending;
   }
-  if (interviewResult === "Refused" || interviewResult === "Others") return HH_STATUSES.refused;
+  if (interviewResult === "Refused") return HH_STATUSES.refused;
+  if (interviewResult === "Others") return HH_STATUSES.other;
   if (interviewResult === "Partially Completed") return HH_STATUSES.ongoing;
   if (interviewResult === "Completed") return HH_STATUSES.submitted;
 };

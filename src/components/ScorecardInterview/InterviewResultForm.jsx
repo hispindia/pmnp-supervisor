@@ -16,7 +16,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID, HH_STATUSES } from "../constants";
+import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID } from "../constants";
 import { clearHiddenFieldData, updateMetadata, updateMetadataValueSet, getHHStatus } from "./utils";
 import { useInterviewCascadeData } from "@/hooks/useInterviewCascadeData";
 
