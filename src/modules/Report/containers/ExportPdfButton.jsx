@@ -5,13 +5,9 @@ import { faFilePdf, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 // import "svg2pdf.js";
-import {
-  exportHighChart,
-  toImageData,
-  convertSVGToBase64,
-} from "../services/hightchart";
+import { exportHighChart, toImageData, convertSVGToBase64 } from "../services/hightchart";
 import { useTranslation } from "react-i18next";
-import html2canvas from "html2canvas";
+// import html2canvas from "html2canvas";
 import "./fonts/Phetsarath-normal";
 
 const PADDING_BOT = 5;
@@ -79,14 +75,7 @@ function ExportPdfButton({ forwardingRefs, selectedOrgUnit, year }) {
                 pdf.addPage("a4");
                 offsetY = PAGE_MARGIN;
               }
-              pdf.addImage(
-                canvas.toDataURL(),
-                "PNG",
-                PAGE_MARGIN,
-                offsetY,
-                width,
-                height
-              );
+              pdf.addImage(canvas.toDataURL(), "PNG", PAGE_MARGIN, offsetY, width, height);
               offsetY += height + PADDING_BOT;
               break;
             }
@@ -101,14 +90,7 @@ function ExportPdfButton({ forwardingRefs, selectedOrgUnit, year }) {
                   pdf.addPage("a4");
                   offsetY = PAGE_MARGIN;
                 }
-                pdf.addImage(
-                  imageData,
-                  "PNG",
-                  PAGE_MARGIN,
-                  offsetY,
-                  width,
-                  height
-                );
+                pdf.addImage(imageData, "PNG", PAGE_MARGIN, offsetY, width, height);
                 offsetY += height + PADDING_BOT;
               } catch (error) {
                 console.log(error);
@@ -117,11 +99,7 @@ function ExportPdfButton({ forwardingRefs, selectedOrgUnit, year }) {
           }
         }
       }
-      pdf.save(
-        `${t("familyInformationReport")}_${
-          selectedOrgUnit.displayName
-        }_${year}.pdf`
-      );
+      pdf.save(`${t("familyInformationReport")}_${selectedOrgUnit.displayName}_${year}.pdf`);
     } catch (e) {
       console.log(e);
     } finally {

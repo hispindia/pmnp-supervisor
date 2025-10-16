@@ -1,4 +1,4 @@
-import { defineConfig, splitVendorChunkPlugin } from "vite";
+import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import manifest from "./manifest.webapp.json";
 import react from "@vitejs/plugin-react";
@@ -10,7 +10,6 @@ export default defineConfig({
   base: "./",
   plugins: [
     react(),
-    splitVendorChunkPlugin(),
     VitePWA({
       manifest,
       srcDir: ".",
