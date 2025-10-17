@@ -15,6 +15,8 @@ import {
   HOUSEHOLD_INTERVIEW_DATE_DE_ID,
   HOUSEHOLD_INTERVIEW_DETAILS_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
+  HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID,
+  HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID,
 } from "@/constants/app-config";
 import { useUser } from "@/hooks/useUser";
 import { submitAttributes, submitEvent } from "@/redux/actions/data";
@@ -59,7 +61,9 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
   const HH_Status = attributes[HH_STATUS_ATTR_ID];
   const isAttributeAddInterviewEnable = programMetadata.attributeValues?.[META_ATTR_ADD_INTERVIEW_ID] === "true";
   const isAddNewInterviewButtonEnable =
-    (HH_Status == HH_STATUSES.pending || !HH_Status) && isAttributeAddInterviewEnable && HH_Status !== "Migrated";
+    (HH_Status == HH_STATUSES.pending || !HH_Status) &&
+    isAttributeAddInterviewEnable &&
+    HH_Status !== HH_STATUSES.migrated;
 
   const addableStatus = [HH_STATUSES.approved, HH_STATUSES.refused, HH_STATUSES.synced];
 
@@ -72,6 +76,47 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     setFormStatus(FORM_ACTION_TYPES.ADD_NEW);
     setSelectedData({ id: generateUid() });
     setSelectedRowIndex(null);
+  };
+
+  const handleOnSave = (row) => {
+    // update hh status attributes
+    let hhStatus = HH_STATUSES.ongoing;
+    let hhResult = "";
+    switch (row["WBZ6d5BF26K"]) {
+      case "001":
+        hhResult = "Non-Eligible";
+        hhStatus = HH_STATUSES.nonEligible;
+        break;
+      case "002":
+        hhStatus = HH_STATUSES.migrated;
+        break;
+      case "003":
+        hhResult = "Not at home";
+        hhStatus = HH_STATUSES.pending;
+        break;
+      case "Others":
+        hhResult = "Others";
+        hhStatus = HH_STATUSES.other;
+        break;
+      default:
+        break;
+    }
+
+    // change HH status to pending
+    dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
+
+    // update hh result
+    const found = currentEvents.find(
+      (e) =>
+        e.programStage === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID &&
+        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === selectedData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
+    );
+
+    if (found) {
+      const newEvent = _.cloneDeep(found);
+      newEvent.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = hhResult;
+      dispatch(submitEvent(transformEvent(newEvent), false));
+    }
   };
 
   const handleAddNewRow = (e, row, continueAdd) => {
@@ -106,26 +151,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       _isDirty: true,
     });
 
-    let hhStatus = HH_STATUSES.ongoing;
-    switch (dataValues["WBZ6d5BF26K"]) {
-      case "001":
-        hhStatus = HH_STATUSES.nonEligible;
-        break;
-      case "002":
-        hhStatus = HH_STATUSES.migrated;
-        break;
-      case "003":
-        hhStatus = HH_STATUSES.pending;
-        break;
-      case "Others":
-        hhStatus = HH_STATUSES.other;
-        break;
-      default:
-        break;
-    }
-
-    // change HH status to pending
-    dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
+    handleOnSave(row);
     // init new event
     dispatch(submitEvent(eventPayload));
   };
@@ -160,6 +186,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       dataValues,
     });
 
+    handleOnSave(row);
     dispatch(submitEvent(eventPayload));
   };
 
@@ -179,11 +206,9 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       value,
     });
 
-    console.log(data["WBZ6d5BF26K"]);
-
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     metadata[HOUSEHOLD_INTERVIEW_DATE_DE_ID].disabled = true;
-    data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = generateUid();
+    if (!data[HOUSEHOLD_INTERVIEW_ID_DE_ID]) data[HOUSEHOLD_INTERVIEW_ID_DE_ID] = generateUid();
 
     // Interviewer's name
     metadata[InterviewDetails_DEs.InterviewerName_DE].disabled = true;
@@ -258,7 +283,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       if (e.currentTarget && e.currentTarget.contains(e.target)) {
         if (row.disabled) setFormStatus(FORM_ACTION_TYPES.VIEW);
         console.log("InterviewDetailTable selected", row);
-        setSelectedData(row);
+        setSelectedData(data[rowIndex]);
         setSelectedRowIndex(rowIndex);
       }
     },
@@ -287,7 +312,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
               size="small"
               disabled={extraData !== FORM_ACTION_TYPES.NONE || row.disabled}
               onClick={() => {
-                setSelectedData(row);
+                setSelectedData(data[rowIndex]);
                 setSelectedRowIndex(rowIndex);
                 setFormStatus(FORM_ACTION_TYPES.EDIT);
               }}

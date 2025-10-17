@@ -24,10 +24,8 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
   const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
 
   const HH_Update = interviewData["WBZ6d5BF26K"];
-  const noEligibleMember = HH_Update === "No eligible HH member";
-  const disabled =
-    formStatus === FORM_ACTION_TYPES.VIEW ||
-    ["Eligible HH has moved", "Household is closed (no resident)", "Others"].includes(HH_Update);
+  const noEligibleMember = HH_Update === "001";
+  const disabled = formStatus === FORM_ACTION_TYPES.VIEW || ["002", "003", "Others"].includes(HH_Update);
 
   const statusAttr = trackedEntityAttributes.find((item) => item.id === HH_STATUS_ATTR_ID) || { valueSet: [] };
   const currentStatus = statusAttr.valueSet.find((o) => o.value === attributeValues[HH_STATUS_ATTR_ID]);
