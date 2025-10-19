@@ -46,10 +46,10 @@ const calculateAge = (dateOBbirth, currentDate) => {
   const days = differenceInDays(currentDate, dateOBbirth);
 
   return {
-    years: years <= 0 ? "" : years,
-    months: months <= 0 ? "" : months,
-    weeks: weeks <= 0 ? "" : weeks,
-    days: days <= 0 ? "" : days,
+    years: Math.abs(years),
+    months: Math.abs(months),
+    weeks: Math.abs(weeks),
+    days: Math.abs(days),
   };
 };
 
@@ -303,6 +303,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     const dateOBbirth = new Date(data["fJPZFs2yYJQ"]);
     const ages = calculateAge(dateOBbirth, eventDate);
     const { years, months, weeks, days } = ages;
+
     data["Hc9Vgt4LXjb"] = years ? years : "";
     data["RoSxLAB5cfo"] = months ? months : "";
     data["Gds5wTiXoSK"] = weeks ? weeks : "";
@@ -436,9 +437,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     if (data["uYWxyRYP7GN"] && data["CY4OTulUceX"] && data["iFiOPAxrJIF"] && data["Qt4YSwPxw0X"]) {
       const monthsByLastMonitoring = differenceInMonths(new Date(data["uYWxyRYP7GN"]), dateOBbirth);
-
+      const ageInDays = differenceInDays(new Date(data["uYWxyRYP7GN"]), dateOBbirth);
       handleZScore(data, {
         ageInMonths: monthsByLastMonitoring,
+        ageInDays: ageInDays,
         heightInCm: data["CY4OTulUceX"],
         weight: data["iFiOPAxrJIF"],
         gender: data["Qt4YSwPxw0X"],
