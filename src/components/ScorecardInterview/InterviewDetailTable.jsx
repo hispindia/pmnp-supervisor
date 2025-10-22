@@ -109,7 +109,7 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     const found = currentEvents.find(
       (e) =>
         e.programStage === HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID &&
-        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === selectedData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
+        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === row[HOUSEHOLD_INTERVIEW_ID_DE_ID],
     );
 
     if (found) {
@@ -118,10 +118,10 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       dispatch(submitEvent(transformEvent(newEvent), false));
     } else {
       // init new event
-      const occurredAt = selectedData[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
+      const occurredAt = row[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
 
       const dataValues = {
-        [HOUSEHOLD_INTERVIEW_ID_DE_ID]: selectedData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
+        [HOUSEHOLD_INTERVIEW_ID_DE_ID]: row[HOUSEHOLD_INTERVIEW_ID_DE_ID],
         [HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]: hhResult,
       };
 
