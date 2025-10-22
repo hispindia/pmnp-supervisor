@@ -120,7 +120,7 @@ const ProfileForm = ({
 
         <div className="col-lg-3">
           <Dhis2FormItem id={"I32qp5UaNwq"} setValuesFunc={() => ({ I32qp5UaNwq: format(new Date(), "yyyy-MM-dd") })}>
-            <InputField size="large" disabled={!isEdit} />
+            <InputField size="large" disabled={true} />
           </Dhis2FormItem>
         </div>
       </div>
