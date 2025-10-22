@@ -81,7 +81,7 @@ const ChildHealthCustomForm = ({
         name: item.name,
         vaccineGiven: vaccineDone || {},
         VaccineDate: vaccineDate || {},
-        discrepancy: discrepancy || {},
+        defaulter: discrepancy || {},
       };
     });
 
@@ -104,9 +104,9 @@ const ChildHealthCustomForm = ({
       render: (f) => generateFields(formMetadata, f.code, true),
     },
     {
-      title: "Discrepancy",
-      dataIndex: "discrepancy",
-      key: "discrepancy",
+      title: "Defaulter",
+      dataIndex: "defaulter",
+      key: "defaulter",
       render: (f) => <Checkbox style={{ transform: "scale(1.5)" }} checked={formData[f.code] || ""} disabled={true} />,
     },
   ];

@@ -1,8 +1,6 @@
-import { MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID } from "@/constants/app-config";
 import { getZScoreHFA, getZScoreWFA, getZScoreWFH } from "@/d2-tracker/dhis2.angular.services";
-import { differenceInDays, differenceInMonths } from "date-fns";
 
-export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) => {
+export const handleZScore = (data, { ageInDays, heightInCm, weight, gender }) => {
   // HFA status	TON0hSWcaw7
   const HFA_DE = "TON0hSWcaw7";
 
@@ -10,7 +8,8 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   // 	stunted	:2:	- 3 < HFA < -2
   // 	severely stunted 	:3:	HFA < -3
   // 	tall	:4:	HFA > 2
-  const zScoreHFA = getZScoreHFA(ageInMonths, heightInCm, gender);
+  const zScoreHFA = getZScoreHFA(ageInDays, heightInCm, gender);
+  console.log({ zScoreHFA });
   if (zScoreHFA >= -2 && zScoreHFA < 2) {
     data[HFA_DE] = "1";
   }
@@ -31,7 +30,8 @@ export const handleZScore = (data, { ageInMonths, heightInCm, weight, gender }) 
   // underweight	:2:	- 3 < WFA < -2
   // Severely underweight	:3:	WFA < -3
   // overweight / obese	:4:	WFA > 2
-  const zScoreWFA = getZScoreWFA(ageInMonths, weight, gender);
+  const zScoreWFA = getZScoreWFA(ageInDays, weight, gender);
+  console.log({ zScoreWFA });
   if (zScoreWFA >= -2 && zScoreWFA < 2) {
     data[WFA_DE] = "1";
   }
