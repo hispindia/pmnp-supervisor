@@ -1,6 +1,7 @@
 import { onKeyDown } from "@/utils";
 import { Checkbox, DatePicker, Input, Radio, Select } from "antd";
 import dayjs from "dayjs";
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 const { TextArea } = Input;
 const { Option } = Select;
@@ -118,11 +119,11 @@ const InputField = ({
     case "DATE":
       return (
         <DatePicker
-          // value={value ? moment(value) : ""}
-          // onChange={(momentObject) => {
-          //   onChange(momentObject.format("YYYY-MM-DD"));
-          // }}
           {...props}
+          value={props.value ? dayjs(props.value) : ""}
+          onChange={(date, dateString) => {
+            props.onChange(dateString);
+          }}
         />
       );
     case "YEAR":

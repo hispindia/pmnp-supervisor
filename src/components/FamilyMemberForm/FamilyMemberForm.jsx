@@ -17,7 +17,14 @@ import { changeMember } from "../../redux/actions/data/tei";
 import { FAMILY_UID_ATTRIBUTE_ID, HOUSEHOLD_ID_ATTR_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
 import { getMaxHHMemberID } from "@/utils/member";
 import { getOrganisationUnitById } from "@/utils/organisation";
-import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears, lastDayOfYear } from "date-fns";
+import {
+  differenceInDays,
+  differenceInMonths,
+  differenceInWeeks,
+  differenceInYears,
+  format,
+  lastDayOfYear,
+} from "date-fns";
 import moment from "moment";
 import "../../index.css";
 import { CHILD_VACCINES, HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
@@ -186,6 +193,9 @@ const FamilyMemberForm = ({
 
     metadata[PMNP_ID].disabled = true;
     data[PMNP_ID] = `PMNP-${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
+
+    metadata["I32qp5UaNwq"].disabled = true;
+    if (!data["I32qp5UaNwq"]) data["I32qp5UaNwq"] = format(new Date(), "yyyy-MM-dd");
 
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
     const enrollmentDate = new Date();

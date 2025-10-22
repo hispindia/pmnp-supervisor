@@ -134,6 +134,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
 
     metadata["JzxYzLgo0P9"].disabled = true;
     metadata["upZKsrkhYmb"].disabled = true;
+    metadata["W8CDLLE5Vyq"].disabled = true;
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
     metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
     newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
@@ -166,6 +167,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
       setFormDirty(true);
     }
 
+    data["W8CDLLE5Vyq"] = format(new Date(), "yyyy-MM-dd");
     newData["Zk72MWfJJKU"] = format(new Date(), "HH:mm");
 
     clearHiddenFieldData(metadata, data);

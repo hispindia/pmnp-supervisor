@@ -10,6 +10,7 @@ import withDhis2FormItem from "../../hocs/withDhis2Field";
 import { HH_STATUS_ATTR_ID } from "../constants";
 import CFormControl from "../CustomAntForm/CFormControl";
 import InputField from "../CustomAntForm/InputField";
+import { format } from "date-fns";
 
 const disabledFields = [
   HOUSEHOLD_ID_ATTR_ID,
@@ -114,6 +115,12 @@ const ProfileForm = ({
         <div className="col-lg-3">
           <Dhis2FormItem id={HOUSEHOLD_DATA_COLLECTOR_ATTR_ID}>
             <InputField size="large" disabled={true} />
+          </Dhis2FormItem>
+        </div>
+
+        <div className="col-lg-3">
+          <Dhis2FormItem id={"I32qp5UaNwq"} setValuesFunc={() => ({ I32qp5UaNwq: format(new Date(), "yyyy-MM-dd") })}>
+            <InputField size="large" disabled={!isEdit} />
           </Dhis2FormItem>
         </div>
       </div>

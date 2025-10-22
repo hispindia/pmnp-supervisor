@@ -116,6 +116,30 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       const newEvent = _.cloneDeep(found);
       newEvent.dataValues[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = hhResult;
       dispatch(submitEvent(transformEvent(newEvent), false));
+    } else {
+      // init new event
+      const occurredAt = selectedData[HOUSEHOLD_INTERVIEW_DATE_DE_ID];
+
+      const dataValues = {
+        [HOUSEHOLD_INTERVIEW_ID_DE_ID]: selectedData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
+        [HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]: hhResult,
+      };
+
+      const eventPayload = transformEvent({
+        event: generateUid(),
+        enrollment,
+        occurredAt,
+        dueDate: occurredAt,
+        status: "ACTIVE",
+        programStage: HOUSEHOLD_INTERVIEW_RESULT_PROGRAM_STAGE_ID,
+        trackedEntity: currentTei.trackedEntity,
+        orgUnit: selectedOrgUnit.id,
+        program: programMetadata.id,
+        dataValues,
+        _isDirty: true,
+      });
+
+      dispatch(submitEvent(eventPayload, false));
     }
   };
 
