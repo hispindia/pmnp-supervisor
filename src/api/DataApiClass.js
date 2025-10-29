@@ -223,7 +223,6 @@ export default class DataApiClass extends BaseApiClass {
   };
 
   getTrackedEntityInstanceByQuery = (ou, filters, attributes) => {
-    console.log("getTrackedEntityInstanceByQuery");
     return pull(this.baseUrl, this.username, this.password, `/api/trackedEntityInstances/query.json`, {}, [
       `orgUnit=${ou}`,
       filters.join("&"),
@@ -231,7 +230,7 @@ export default class DataApiClass extends BaseApiClass {
     ]);
   };
 
-  getTrackedEntityInstances = ({ ou, filters, attributes, program, trackedEntityType }) => {
+  getTrackedEntityInstances = ({ ou, filters, attributes, program, trackedEntityType, fields, paging = true }) => {
     return pull(
       this.baseUrl,
       this.username,
@@ -244,6 +243,7 @@ export default class DataApiClass extends BaseApiClass {
         trackedEntityType ? `trackedEntityType=${trackedEntityType}` : null,
         filters.join("&"),
         attributes.map((e) => "attribute=" + e).join("&"),
+        fields && fields.length > 0 ? `fields=${fields.map((e) => e).join(",")}` : null,
       ].filter((e) => Boolean(e)),
     );
   };

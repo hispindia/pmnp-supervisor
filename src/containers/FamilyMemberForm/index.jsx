@@ -21,7 +21,7 @@ const FamilyMemberFormContainer = () => {
   const eventData = events && events.length > 0 ? events[0] : null;
 
   const { event, initEvent, changeEvent, changeEventDataValue, setEventDirty } = useEvent(
-    eventData ? JSON.parse(JSON.stringify(eventData)) : []
+    eventData ? JSON.parse(JSON.stringify(eventData)) : [],
   );
 
   useEffect(() => {

@@ -87,8 +87,8 @@ function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
   const programMetadataId = yield select((state) => state.metadata.programMetadata.id);
   const newEnrollment = {
     ...currentEnrollment,
-    enrolledAt: moment([+attributes.BUEzQEErqa7, 11, 31]).format("YYYY-MM-DD"),
-    incidentDate: moment([+attributes.BUEzQEErqa7, 11, 31]).format("YYYY-MM-DD"),
+    enrolledAt: moment().format("YYYY-MM-DD"),
+    incidentDate: moment().format("YYYY-MM-DD"),
   };
 
   console.log("postTeiToServer", {

@@ -392,6 +392,9 @@ function CaptureForm(props) {
           </div>
         </div>
       </div>
+
+      {/* External Components */}
+      <div className="row">{props?.externalComponents ? props.externalComponents : null}</div>
     </div>
   );
 }

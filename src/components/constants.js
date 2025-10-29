@@ -79,6 +79,7 @@ export const META_ATTR_ADD_INTERVIEW_ID = "ksnlMDtxcWY";
 export const HOUSEHOLD_MEMBER_ID = "Cn37lbyhz6f";
 export const HH_STATUS_ATTR_ID = "CNqaoQva9S2";
 export const PMNP_ID = "NOKzq4dAKF7";
+export const SOUNDEX_CODE_ATTR_ID = "mDdoqGKJDOU";
 export const MEMBER_HOUSEHOLD_UID = "RDQQ3t9oXw5";
 export const REPORT_ID_CONSTANT = "lfMDT7HdaFh";
 export const REPORT_ID_CONSTANT_ATTRIBUTE_ID = "TElcDF7Vzyx";

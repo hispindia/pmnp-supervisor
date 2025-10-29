@@ -1,4 +1,5 @@
 import CascadeTable from "@/components/CascadeTable";
+import DuplicateTable from "@/components/ReviewPossibleDuplicates";
 import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import i18n from "i18next";
@@ -14,8 +15,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeMember } from "../../redux/actions/data/tei";
 
 // Styles
-import { FAMILY_UID_ATTRIBUTE_ID, HOUSEHOLD_ID_ATTR_ID, SHOULD_NOT_CLEAR_LIST } from "@/constants/app-config";
-import { getMaxHHMemberID } from "@/utils/member";
+import {
+  FAMILY_UID_ATTRIBUTE_ID,
+  HOUSEHOLD_ID_ATTR_ID,
+  MEMBER_EXTENSION_NAME_ATTRIBUTE_ID,
+  MEMBER_FIRST_NAME_ATTRIBUTE_ID,
+  MEMBER_LAST_NAME_ATTRIBUTE_ID,
+  MEMBER_MIDDLE_NAME_ATTRIBUTE_ID,
+  SHOULD_NOT_CLEAR_LIST,
+} from "@/constants/app-config";
+import useReviewDuplicates from "@/hooks/useReviewDuplicates";
+import { generateRandomThreeDigitString } from "@/redux/sagas/data/utils";
 import { getOrganisationUnitById } from "@/utils/organisation";
 import {
   differenceInDays,
@@ -27,10 +37,17 @@ import {
 } from "date-fns";
 import moment from "moment";
 import "../../index.css";
-import { CHILD_VACCINES, HAS_INITIAN_NOVALUE, HOUSEHOLD_MEMBER_ID, MEMBER_HOUSEHOLD_UID, PMNP_ID } from "../constants";
+import {
+  CHILD_VACCINES,
+  HAS_INITIAN_NOVALUE,
+  HOUSEHOLD_MEMBER_ID,
+  MEMBER_HOUSEHOLD_UID,
+  PMNP_ID,
+  SOUNDEX_CODE_ATTR_ID,
+} from "../constants";
 import styles from "./FamilyMemberForm.module.css";
 import { childHeathRules, handleAgeAttrsOfTEI, hhMemberRules } from "./houseHoldMemberRules";
-import { generateRandomThreeDigitString } from "@/redux/sagas/data/utils";
+import { generateCombinedSoundex } from "@/utils/soundex";
 
 const { familyMemberFormContainer } = styles;
 const LoadingCascadeTable = withSkeletonLoading()(CascadeTable);
@@ -58,6 +75,7 @@ const FamilyMemberForm = ({
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
+  const { loading: reviewLoading, searchDuplicates, potentialDuplicates } = useReviewDuplicates();
 
   const {
     programMetadataMember,
@@ -120,10 +138,10 @@ const FamilyMemberForm = ({
     setMetadata(_.cloneDeep(originMetadata));
   }, [currentEvent, currentCascade]);
 
-  const editRowCallback = (metadata, previousData, data, code, value) => {
+  const editRowCallback = (metadataOrigin, previousData, data, code, value) => {
     // keep selected member details
     console.log("Family Member Details", {
-      metadata,
+      metadataOrigin,
       previousData,
       data,
       currentCascade,
@@ -131,42 +149,94 @@ const FamilyMemberForm = ({
       value,
     });
 
+    let metadata = (metaId) => {
+      if (!metadataOrigin[metaId]) return {};
+      return metadataOrigin[metaId];
+    };
+
     // clear all "error" and "warning" messages
     for (let meta in metadata) {
-      if (metadata[meta].error) {
-        metadata[meta].error = "";
+      if (metadata(meta).error) {
+        metadata(meta).error = "";
       }
-      if (metadata[meta].warning) {
-        metadata[meta].warning = "";
+      if (metadata(meta).warning) {
+        metadata(meta).warning = "";
       }
+    }
+
+    // Generate soundex codes for current member data
+    const firstName = data[MEMBER_FIRST_NAME_ATTRIBUTE_ID] || "";
+    const lastName = data[MEMBER_LAST_NAME_ATTRIBUTE_ID] || "";
+    const middleName = data[MEMBER_MIDDLE_NAME_ATTRIBUTE_ID] || "";
+    const extensionName = data[MEMBER_EXTENSION_NAME_ATTRIBUTE_ID] || "";
+
+    // Check if we have sufficient name data for duplicate search
+    const hasBasicNames = firstName.trim() && lastName.trim();
+    const hasMiddleName = middleName.trim();
+    const requiresMiddleName = data["X5YLeBE3BzL"] === "true";
+
+    // Search for duplicates if:
+    // 1. We have at least first and last name, OR
+    // 2. Middle name is required (X5YLeBE3BzL = true) and we have all three names
+    const shouldSearchDuplicates = hasBasicNames && (!requiresMiddleName || hasMiddleName);
+
+    if (shouldSearchDuplicates) {
+      // only search when name fields are changed
+      if (
+        [
+          MEMBER_FIRST_NAME_ATTRIBUTE_ID,
+          MEMBER_LAST_NAME_ATTRIBUTE_ID,
+          MEMBER_MIDDLE_NAME_ATTRIBUTE_ID,
+          MEMBER_EXTENSION_NAME_ATTRIBUTE_ID,
+          "X5YLeBE3BzL",
+        ].includes(code)
+      ) {
+        searchDuplicates({
+          firstname: firstName,
+          lastname: lastName,
+          middlename: middleName,
+          extname: extensionName,
+          dateOfbirth: data["fJPZFs2yYJQ"],
+          excludeIds: [data.id], // Exclude current member
+        });
+      }
+
+      // Generate combined Soundex code for current member
+      const soundexCode = generateCombinedSoundex({
+        firstname: firstName,
+        middlename: middleName,
+        lastname: lastName,
+        extname: extensionName,
+      });
+      data["mDdoqGKJDOU"] = soundexCode;
     }
 
     const householdHeadMember = currentCascade?.find((member) => member["QAYXozgCOHu"] === "1");
     if (!currentCascade?.length) {
-      metadata["QAYXozgCOHu"].valueSet.forEach((option) => {
+      metadata("QAYXozgCOHu").valueSet.forEach((option) => {
         if (option.value !== "1") option.isDisabled = true;
       });
     } else {
-      metadata["QAYXozgCOHu"].valueSet.forEach((option) => {
+      metadata("QAYXozgCOHu").valueSet.forEach((option) => {
         option.isDisabled = false;
       });
     }
 
-    metadata["X5YLeBE3BzL"].displayOption = "RADIO";
+    metadata("X5YLeBE3BzL").displayOption = "RADIO";
 
     if (data["X5YLeBE3BzL"] === "true") {
-      metadata["WC0cShCpae8"].hidden = false;
-      metadata["WC0cShCpae8"].compulsory = true;
+      metadata("WC0cShCpae8").hidden = false;
+      metadata("WC0cShCpae8").compulsory = true;
     } else {
-      metadata["WC0cShCpae8"].hidden = true;
-      metadata["WC0cShCpae8"].compulsory = false;
+      metadata("WC0cShCpae8").hidden = true;
+      metadata("WC0cShCpae8").compulsory = false;
       data["WC0cShCpae8"] = "";
     }
 
     // WARNING: if it's hidden, the data will be removed
-    metadata[FAMILY_UID_ATTRIBUTE_ID].hidden = true;
+    metadata(FAMILY_UID_ATTRIBUTE_ID).hidden = true;
 
-    metadata[HOUSEHOLD_MEMBER_ID].disabled = true;
+    metadata(HOUSEHOLD_MEMBER_ID).disabled = true;
     if (data.isNew) {
       // Generate unique household member ID
       let newMemberID = generateRandomThreeDigitString();
@@ -188,20 +258,18 @@ const FamilyMemberForm = ({
       data[HOUSEHOLD_MEMBER_ID] = data[HOUSEHOLD_MEMBER_ID];
     }
 
-    metadata[MEMBER_HOUSEHOLD_UID].disabled = true;
+    metadata(MEMBER_HOUSEHOLD_UID).disabled = true;
     data[MEMBER_HOUSEHOLD_UID] = attributes[HOUSEHOLD_ID_ATTR_ID];
 
-    metadata[PMNP_ID].disabled = true;
+    metadata(PMNP_ID).disabled = true;
+    metadata(SOUNDEX_CODE_ATTR_ID).disabled = true;
     data[PMNP_ID] = `PMNP-${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
 
-    metadata["I32qp5UaNwq"].disabled = true;
+    metadata("I32qp5UaNwq").disabled = true;
     if (!data["I32qp5UaNwq"]) data["I32qp5UaNwq"] = format(new Date(), "yyyy-MM-dd");
 
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
     const enrollmentDate = new Date();
-    // const enrollmentDate = data.isNew
-    // ? new Date()
-    // : lastDayOfYear(new Date(currentEvent.occurredAt || currentEnrollment.enrolledAt));
 
     const years = differenceInYears(enrollmentDate, dateOfbirth);
     const months = differenceInMonths(enrollmentDate, dateOfbirth);
@@ -210,45 +278,45 @@ const FamilyMemberForm = ({
     const ages = { years, months, weeks, days };
 
     // vaccine before date of birth
-    CHILD_VACCINES.list.forEach((vaccine) => (metadata[vaccine.ids.vaccineDate].minDate = data["fJPZFs2yYJQ"]));
+    CHILD_VACCINES.list.forEach((vaccine) => (metadata(vaccine.ids.vaccineDate).minDate = data["fJPZFs2yYJQ"]));
 
     childHeathRules(metadata, data, ages, code, CHILD_VACCINES);
 
     if (data["QAYXozgCOHu"] === "1") {
       // Household head should more than 18 years old
       if (years < 15) {
-        metadata["QAYXozgCOHu"].error = "Household head should be more than 18 years old";
+        metadata("QAYXozgCOHu").error = "Household head should be more than 18 years old";
       }
 
       if (years >= 15 && years < 18) {
-        metadata["QAYXozgCOHu"].warning = "Are you sure that this person is the Household Head?";
+        metadata("QAYXozgCOHu").warning = "Are you sure that this person is the Household Head?";
       }
 
       // Allow only one household head per household
       if (householdHeadMember && householdHeadMember.id != data.id) {
-        metadata["QAYXozgCOHu"].error = "Only one household head is allowed";
+        metadata("QAYXozgCOHu").error = "Only one household head is allowed";
       }
     }
 
     // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
     if (data["QAYXozgCOHu"] === "2" && years >= 10 && years < 15) {
-      metadata["QAYXozgCOHu"].warning = "Spouse should be more than 15 years old";
+      metadata("QAYXozgCOHu").warning = "Spouse should be more than 15 years old";
     }
 
     // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
     if (data["QAYXozgCOHu"] === "2" && years < 10) {
-      metadata["QAYXozgCOHu"].error = "Spouse should be more than 10 years old";
+      metadata("QAYXozgCOHu").error = "Spouse should be more than 10 years old";
     }
 
-    metadata["d2n5w4zpxuo"].hidden = true;
-    metadata["xDSSvssuNFs"].hidden = true;
-    metadata["X2Oln1OyP5o"].hidden = true;
-    metadata["H42aYY9JMIR"].hidden = true;
+    metadata("d2n5w4zpxuo").hidden = true;
+    metadata("xDSSvssuNFs").hidden = true;
+    metadata("X2Oln1OyP5o").hidden = true;
+    metadata("H42aYY9JMIR").hidden = true;
 
     data["H42aYY9JMIR"] = years;
 
     // Show if 'Relationship with HH Head' has option code 1,2,3,4,5,6,7,8
-    metadata["BbdQMKOObps"].hidden = data["QAYXozgCOHu"] == "1" || !data["QAYXozgCOHu"];
+    metadata("BbdQMKOObps").hidden = data["QAYXozgCOHu"] == "1" || !data["QAYXozgCOHu"];
 
     // Auto-select first value if only one family exists
     const familyCount = attributes["ZGPJg7g997n"];
@@ -264,7 +332,7 @@ const FamilyMemberForm = ({
         continue;
       }
 
-      if (metadata[meta].hidden) {
+      if (metadata(meta).hidden) {
         delete data[meta];
       }
     }
@@ -290,7 +358,6 @@ const FamilyMemberForm = ({
     // set selected member is about to be deleted
     if (actionType === "delete_member_selected") {
       const memberData = JSON.parse(JSON.stringify(dataRows)); // only for delete case
-      console.log({ memberData });
       dispatch(changeMember({ ...memberData, isDelete: true })); // only for data
       console.log("callbackFunction rowIndex delete", rowIndex, actionType);
       return;
@@ -328,6 +395,7 @@ const FamilyMemberForm = ({
   return (
     <div className={familyMemberFormContainer}>
       {blockEntry && <div className={"modalBackdrop"}></div>}
+
       <Paper elevation={0} className={classes.paper}>
         <LoadingCascadeTable
           loading={loading}
@@ -345,7 +413,7 @@ const FamilyMemberForm = ({
           setMetadata={setMetadata}
           setData={setData}
           t={t}
-          externalComponents={externalComponents}
+          externalComponents={<DuplicateTable members={potentialDuplicates} visible={true} loading={reviewLoading} />}
           maxDate={`${moment().year()}-12-31`}
           minDate={props.minDate}
         />

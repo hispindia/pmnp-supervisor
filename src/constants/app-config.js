@@ -28,8 +28,12 @@ export const FAMILY_UID_ATTRIBUTE_ID = "gv9xX5w4kKt"; // Use to link between hou
 export const MEMBER_FAMILY_UID_ATTRIBUTE_ID = "ig2YSpQdP55"; // Use to store Family UID in member TEI
 export const DATA_COLLECT_ATTRIBUTE_ID = "AaFN0HwuzeK"; // use to filter HH by collector
 
+// Member Attributes UIDs
 export const MEMBER_FIRST_NAME_ATTRIBUTE_ID = "PIGLwIaw0wy";
 export const MEMBER_LAST_NAME_ATTRIBUTE_ID = "IENWcinF8lM";
+export const MEMBER_MIDDLE_NAME_ATTRIBUTE_ID = "WC0cShCpae8";
+export const MEMBER_EXTENSION_NAME_ATTRIBUTE_ID = "nyVsU3fTk2b";
+
 export const MULTIPLE_SELECTION_ATTRIBUTE_ID = "C4JIkMYwJlX";
 export const SELECT_SEARCHABLE_ATTRIBUTE_ID = "QExndoSDDhD";
 

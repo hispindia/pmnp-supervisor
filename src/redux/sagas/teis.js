@@ -60,7 +60,7 @@ function* getTeis(newPayload = {}) {
         nextPayload.pageSize,
         nextPayload.page,
         returnFilterString(nextPayload.filters),
-        nextPayload.orderString
+        nextPayload.orderString,
       );
     }
 
@@ -76,7 +76,7 @@ function* getTeis(newPayload = {}) {
           pageSize: instanceList.pageSize,
           total: instanceList.total,
           pageCount: instanceList.pageCount,
-        })
+        }),
       ),
     ]);
     yield put(getTeisSuccessMessage("Get tracked entity instances successfully"));

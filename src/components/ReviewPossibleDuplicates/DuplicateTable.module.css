@@ -1,0 +1,56 @@
+/* DuplicateTable Component Styles */
+
+.duplicate-table-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.duplicate-table-row:hover {
+  background-color: #f0f8ff !important;
+}
+
+/* Ensure table scrolls horizontally when content exceeds container */
+.ant-table-wrapper .ant-table-tbody > tr > td {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* Custom styling for the table header */
+.ant-table-thead > tr > th {
+  background-color: #fafafa !important;
+  font-weight: 600;
+  border-bottom: 2px solid #e8e8e8;
+}
+
+/* Ensure proper spacing and alignment */
+.ant-table-cell {
+  padding: 8px 12px !important;
+}
+
+/* Modal overlay styling */
+.duplicate-table-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .duplicate-table-container {
+    width: 98% !important;
+    height: 95% !important;
+  }
+
+  .ant-table-cell {
+    padding: 6px 8px !important;
+    font-size: 0.75rem;
+  }
+}

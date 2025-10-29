@@ -93,7 +93,7 @@ export const generateSoundex = ({ firstname, middlename, lastname, extname }) =>
     firstname: generateSoundexCode(firstname),
     middlename: generateSoundexCode(middlename),
     lastname: generateSoundexCode(lastname),
-    extname: generateSoundexCode(extname),
+    extname: generateSoundexCode(extname).substring(0, 2),
   };
 };
 
@@ -108,7 +108,7 @@ export const generateSoundex = ({ firstname, middlename, lastname, extname }) =>
  */
 export const generateCombinedSoundex = ({ firstname, middlename, lastname, extname }) => {
   const codes = generateSoundex({ firstname, middlename, lastname, extname });
-  return `${codes.lastname}-${codes.firstname}-${codes.middlename}-${codes.extname}`;
+  return `${codes.firstname}${codes.middlename}${codes.lastname}${codes.extname.substring(0, 2)}`;
 };
 
 /**
@@ -174,6 +174,35 @@ function compareSoundex(name1, name2) {
 }
 
 /**
+ * Calculate similarity score between two soundex codes (0-100)
+ * @param {string} soundexCode1 - First soundex code (e.g., "J500M200S530J5")
+ * @param {string} soundexCode2 - Second soundex code (e.g., "J500M200S530J5")
+ * @returns {number} - Similarity score (0-100)
+ */
+export const calculateSoundexSimilarityScore = (soundexCode1, soundexCode2) => {
+  if (!soundexCode1 || !soundexCode2 || typeof soundexCode1 !== "string" || typeof soundexCode2 !== "string") {
+    return 0;
+  }
+
+  // Ensure both codes have the same length for comparison
+  const maxLength = Math.max(soundexCode1.length, soundexCode2.length);
+  const code1 = soundexCode1.padEnd(maxLength, "0");
+  const code2 = soundexCode2.padEnd(maxLength, "0");
+
+  let matches = 0;
+
+  // Compare character by character
+  for (let i = 0; i < maxLength; i++) {
+    if (code1[i] === code2[i]) {
+      matches++;
+    }
+  }
+
+  // Calculate percentage similarity
+  return Math.round((matches / maxLength) * 100);
+};
+
+/**
  * Calculate similarity score between two names (0-100)
  * @param {Object} name1 - First name object
  * @param {Object} name2 - Second name object
@@ -221,5 +250,6 @@ export default {
   generateCombinedSoundex,
   compareSoundex,
   calculateSimilarityScore,
+  calculateSoundexSimilarityScore,
   areSimilarNames,
 };
