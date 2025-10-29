@@ -32,6 +32,7 @@ export const hhMemberRules = (metadata, data, { years }) => {
 
   // 004 - Migrated  -> if selected, it will ask for the Region, Province, City/Municipality, Barangay (based on updated PSGC, including non-PMNP Areas, add Unknown City/Municipality and Unknown Barangay in the options)
   metadata("GoIB6wTqQq1").hidden = data["vcVNGyzdJ2l"] !== "004";
+  metadata("KqXbvzxxwQl").hidden = data["vcVNGyzdJ2l"] !== "004";
 
   // Hide Philhealth ques for child <5 y (0-59 mo)
   metadata("JjFcU1L7Ll1").hidden = !(years > 5);
