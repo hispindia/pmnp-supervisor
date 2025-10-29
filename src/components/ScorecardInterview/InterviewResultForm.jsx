@@ -72,6 +72,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     });
 
     const hhStatus = getHHStatus(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]);
+    console.log({ hhStatus, newData });
 
     dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
     dispatch(submitEvent(eventPayload));

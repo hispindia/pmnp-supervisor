@@ -65,8 +65,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
     isAttributeAddInterviewEnable &&
     HH_Status !== HH_STATUSES.migrated;
 
-  const addableStatus = [HH_STATUSES.approved, HH_STATUSES.refused, HH_STATUSES.synced];
-
   const showData = useMemo(() => {
     return transformData(metadata, data, dataValuesTranslate, locale);
   }, [metadata, data, dataValuesTranslate, locale]);
@@ -100,6 +98,12 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
         break;
       default:
         break;
+    }
+
+    // Row 33
+    if (row["X28FSoTIkGv"] === "false") {
+      hhStatus = HH_STATUSES.refused;
+      hhResult = HH_STATUSES.refused;
     }
 
     // change HH status to pending

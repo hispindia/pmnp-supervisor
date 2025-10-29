@@ -13,7 +13,7 @@ import { Card, Modal, Tabs } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID } from "../constants";
+import { FORM_ACTION_TYPES, HH_STATUS_ATTR_ID, HH_STATUSES } from "../constants";
 
 const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStatus }) => {
   const { t } = useTranslation();
@@ -24,7 +24,8 @@ const InterviewDetailModal = ({ metadata, open, onClose, interviewData, formStat
   const currentCascade = useSelector((state) => state.data.tei.data.currentCascade);
 
   const HH_Update = interviewData["WBZ6d5BF26K"];
-  const noEligibleMember = HH_Update === "001";
+  const HH_InterviewConsent = interviewData["X28FSoTIkGv"];
+  const noEligibleMember = HH_Update === "001" || HH_InterviewConsent === "false";
   const disabled = formStatus === FORM_ACTION_TYPES.VIEW || ["002", "003", "Others"].includes(HH_Update);
 
   const statusAttr = trackedEntityAttributes.find((item) => item.id === HH_STATUS_ATTR_ID) || { valueSet: [] };

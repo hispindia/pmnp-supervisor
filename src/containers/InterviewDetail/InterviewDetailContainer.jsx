@@ -76,7 +76,7 @@ const InterviewDetailContainer = () => {
       }
       return acc;
     }, {});
-
+    console.log({ interviewEvents, disabledInterviews });
     const transformed = interviewEvents.map((e) => ({
       id: e.event,
       ...e.dataValues,
