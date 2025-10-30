@@ -286,26 +286,36 @@ const FamilyMemberForm = ({
       // Household head should more than 18 years old
       if (years < 15) {
         metadata("QAYXozgCOHu").error = "Household head should be more than 18 years old";
-      }
-
-      if (years >= 15 && years < 18) {
-        metadata("QAYXozgCOHu").warning = "Are you sure that this person is the Household Head?";
+      } else {
+        metadata("QAYXozgCOHu").error = "";
       }
 
       // Allow only one household head per household
       if (householdHeadMember && householdHeadMember.id != data.id) {
         metadata("QAYXozgCOHu").error = "Only one household head is allowed";
+      } else {
+        metadata("QAYXozgCOHu").error = "";
       }
-    }
 
-    // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
-    if (data["QAYXozgCOHu"] === "2" && years >= 10 && years < 15) {
-      metadata("QAYXozgCOHu").warning = "Spouse should be more than 15 years old";
-    }
+      if (years >= 15 && years < 18) {
+        metadata("QAYXozgCOHu").warning = "Are you sure that this person is the Household Head?";
+      } else {
+        metadata("QAYXozgCOHu").warning = "";
+      }
+    } else {
+      // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
+      if (data["QAYXozgCOHu"] === "2" && years >= 10 && years < 15) {
+        metadata("QAYXozgCOHu").warning = "Spouse should be more than 15 years old";
+      } else {
+        metadata("QAYXozgCOHu").warning = "";
+      }
 
-    // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
-    if (data["QAYXozgCOHu"] === "2" && years < 10) {
-      metadata("QAYXozgCOHu").error = "Spouse should be more than 10 years old";
+      // If "Spouse" is selected; Age should be  >=15 , do not allow to add DOB less than 15 yrs
+      if (data["QAYXozgCOHu"] === "2" && years < 10) {
+        metadata("QAYXozgCOHu").error = "Spouse should be more than 10 years old";
+      } else {
+        metadata("QAYXozgCOHu").error = "";
+      }
     }
 
     metadata("d2n5w4zpxuo").hidden = true;
