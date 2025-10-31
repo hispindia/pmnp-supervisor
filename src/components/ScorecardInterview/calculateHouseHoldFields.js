@@ -6,12 +6,15 @@ export const countValue = (data, de_ids, value) => {
 };
 
 export const countValues = (data, de_ids, values = []) => {
-  return data.reduce((acc, item) => {
-    values.forEach((value, valueIndex) => {
-      if (item[de_ids] === value) acc[valueIndex]++;
-    });
-    return acc;
-  }, Array.from({ length: values.length }).fill(0));
+  return data.reduce(
+    (acc, item) => {
+      values.forEach((value, valueIndex) => {
+        if (item[de_ids] === value) acc[valueIndex]++;
+      });
+      return acc;
+    },
+    Array.from({ length: values.length }).fill(0),
+  );
 };
 
 const countValueForEachMember = (data, de_ids = [], value) => {
@@ -22,7 +25,7 @@ const countValueForEachMember = (data, de_ids = [], value) => {
       });
       return acc;
     },
-    Array.from({ length: data.length }).map(() => Array.from({ length: de_ids.length }).fill(0))
+    Array.from({ length: data.length }).map(() => Array.from({ length: de_ids.length }).fill(0)),
   );
 };
 
@@ -51,7 +54,7 @@ export const calculateHouseHoldFieldsFromAttribute = (newData, currentCascade, i
     const transformed = foundMetadata.valueSet.reduce((acc, curr) => ({ ...acc, [curr.memberId]: curr }), {});
 
     const respondent = currentCascade.find(
-      (item) => transformed[item?.["Cn37lbyhz6f"]]?.value === interviewData["SrFa2O3m6ff"]
+      (item) => transformed[item?.["Cn37lbyhz6f"]]?.value === interviewData["SrFa2O3m6ff"],
     );
 
     if (respondent) {
@@ -94,7 +97,7 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
 
   //"Yes, if yes for any member of the HH
   // No, if no for any member and none of them reported yes
-  // NA, if blank for all members"
+  // NA, if blank or NA (option code: NA) for all members"
   const mapDE = {
     EfmBmtzUDtA: "wqR0L5WGV6S",
     XyB2wZHVIl2: "cMg8stHS4aH",
@@ -108,6 +111,8 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
     wf68PYq7Loa: "L6IwuUPsbOT",
     l3vrPTVrY45: "jIAwnqn8GTU",
     ULshoKF1PfR: "AhH8CegcpvQ",
+    ZDoQ5iZUEB3: "EadgXIE9RbC",
+    Z8Gcu624BsF: "sOsvy89ROmD",
     d8YNAX1lDm6: "CBiTOMjcxNk",
     DFTA7Pmksoe: "hcFTBjB1VAT",
     cQj7wYS66HD: "p6NUCwXg99o",
@@ -123,13 +128,20 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
   const yesNoNa = { YES: "1", NO: "0", NA: "NA" };
   Object.keys(mapDE).map((surveyDe) => {
     const HH_DE = mapDE[surveyDe];
-    const [count_true, count_false] = countValues(interviewCascadeData, HH_DE, ["true", "false"]);
+    const [count_true, count_false, count_na] = countValues(interviewCascadeData, HH_DE, ["true", "false", "NA"]);
 
-    if (count_true === 0 && count_false === 0) {
+    // Count blank/empty values
+    const count_blank = interviewCascadeData.filter((item) => !item[HH_DE] || item[HH_DE] === "").length;
+    const total_blank_and_na = count_blank + count_na;
+
+    if (count_true === 0 && count_false === 0 && total_blank_and_na === interviewCascadeData.length) {
+      // All members are either blank or have NA value
       newData[surveyDe] = yesNoNa.NA;
     } else if (count_false > 0 && count_true === 0) {
+      // Some members have false, none have true
       newData[surveyDe] = yesNoNa.NO;
     } else {
+      // At least one member has true
       newData[surveyDe] = yesNoNa.YES;
     }
   });
@@ -149,7 +161,7 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
   const [count_moderately_wasted, count_severely_wasted, count_overweight_obese] = countValues(
     interviewCascadeData,
     "RXWSlNxAwq1",
-    ["2", "3", "4"]
+    ["2", "3", "4"],
   );
   newData["Hx4Qt40JpnN"] =
     count_moderately_wasted > 0 || count_severely_wasted > 0 || count_overweight_obese > 0 ? "true" : undefined;
