@@ -31,6 +31,8 @@ export const getHouseholdMemberValueSet = (cascadeData) => {
   }
 
   const allMemberIDs = cascadeData
+    // only HH Member status (UID: vcVNGyzdJ2l) is not Deceased (option code: 001)
+    .filter((member) => member["vcVNGyzdJ2l"] !== "001")
     .map((member) => {
       const age = Number(member["H42aYY9JMIR"] || 0);
       if (age < 18) return;
@@ -47,6 +49,7 @@ export const getHouseholdMemberValueSet = (cascadeData) => {
       }
       return { label, value: label, memberId: member["Cn37lbyhz6f"] };
     })
+
     .filter(Boolean);
 
   // filter duplicates

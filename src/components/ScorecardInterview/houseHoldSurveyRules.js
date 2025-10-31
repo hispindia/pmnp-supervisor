@@ -121,11 +121,33 @@ export const houseHoldSurveyRules = (metadata, newData) => {
     return "false";
   };
 
+  /**
+   * Calculate score based on minimum required "yes" responses from multiple data elements
+   * @param {Array} values - Array of data element values to check
+   * @param {number} minRequired - Minimum number of "yes" responses required (default: 2)
+   * @returns {string|null} - "true" if requirement met, "false" if not, null if all blank/NA
+   */
+  const calculateMinYesScore = (values = [], minRequired = 2) => {
+    const yesCount = values.filter((v) => v === "1").length;
+
+    if (values.filter((v) => v && v !== "NA").length === 0) {
+      return null; // All are blank or NA
+    } else {
+      return yesCount >= minRequired ? "true" : "false";
+    }
+  };
+
   const score4 = newData["dxag8YT8w46"];
   const score5 = yesNoNaToBool(newData["EfmBmtzUDtA"]);
   const score6 = yesNoNaToBool(newData["BRxB2mqlxtq"]);
   const score7 = yesNoNaToBool(newData["wf68PYq7Loa"]);
-  const score8 = yesNoNaListToBool([newData["l3vrPTVrY45"], newData["ULshoKF1PfR"]]);
+
+  // Score 8 - If any 2 out of 4 data elements = yes, then yes (Sum of the 4 DE is 2 or more)
+  const score8 = calculateMinYesScore(
+    [newData["l3vrPTVrY45"], newData["ULshoKF1PfR"], newData["Z8Gcu624BsF"], newData["ZDoQ5iZUEB3"]],
+    2,
+  );
+
   const score9 = yesNoNaToBool(newData["sbKn8bylu58"]);
   const score10 = yesNoNaToBool(newData["Kl5LLsA10rk"]);
   const score11 = yesNoNaListToBool([newData["Xsi5z2a7JMY"], newData["kL0aNVBx5M"]]);
