@@ -464,7 +464,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     });
 
     // HH member remarks
-    if (!data["QcMlcgBJaM4"]) data["QcMlcgBJaM4"] = "na";
+    if (!data["B3jiLplNUeS"]) data["B3jiLplNUeS"] = "na";
   };
 
   const clearForm = () => {

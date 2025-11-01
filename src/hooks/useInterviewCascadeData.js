@@ -61,7 +61,8 @@ export const useInterviewCascadeData = (interviewData) => {
       const ableToStart =
         !filterMalesMoreThan5(eventDate)(memberData) &&
         (filterFemalesIn10And49(eventDate)(memberData) || filterChildrenUnder5(eventDate)(memberData)) &&
-        !filterByMemberData(memberData)("vcVNGyzdJ2l", "008");
+        !filterByMemberData(memberData)("vcVNGyzdJ2l", "008") &&
+        !filterByMemberData(memberData)("vcVNGyzdJ2l", "001");
 
       return {
         ...r,
