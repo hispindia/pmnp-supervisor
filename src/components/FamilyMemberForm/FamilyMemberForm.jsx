@@ -44,9 +44,10 @@ import {
   MEMBER_HOUSEHOLD_UID,
   PMNP_ID,
   SOUNDEX_CODE_ATTR_ID,
+  TETANUS_VACCINES,
 } from "../constants";
 import styles from "./FamilyMemberForm.module.css";
-import { childHeathRules, handleAgeAttrsOfTEI, hhMemberRules } from "./houseHoldMemberRules";
+import { childHeathTetanusRule, childHeathRules, handleAgeAttrsOfTEI, hhMemberRules} from "./houseHoldMemberRules";
 import { generateCombinedSoundex } from "@/utils/soundex";
 
 const { familyMemberFormContainer } = styles;
@@ -279,8 +280,9 @@ const FamilyMemberForm = ({
 
     // vaccine before date of birth
     CHILD_VACCINES.list.forEach((vaccine) => (metadata(vaccine.ids.vaccineDate).minDate = data["fJPZFs2yYJQ"]));
-
+    TETANUS_VACCINES.list.forEach((vaccine) => (metadata(vaccine.ids.vaccineDate).minDate = data["fJPZFs2yYJQ"]));
     childHeathRules(metadata, data, ages, code, CHILD_VACCINES);
+    childHeathTetanusRule(metadata,data,ages, code, TETANUS_VACCINES)
 
     if (data["QAYXozgCOHu"] === "1") {
       // Household head should more than 18 years old

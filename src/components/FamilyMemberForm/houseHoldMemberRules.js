@@ -140,3 +140,67 @@ export const childHeathRules = (metadata, data, { months, years }, code, CHILD_V
     metadata("EhIlZ6OO8Fu").disabled = true;
   }
 };
+
+export const childHeathTetanusRule = (
+  metadata, 
+  data, 
+  { months, years }, 
+  code, 
+  TETANUS_VACCINES
+) => {
+  // Hide all tetanus vaccine fields if age is not between 15–49 OR condition not met
+  const showTetanus = (years >= 15 && years <= 49) && (data["Qt4YSwPxw0X"] === "1");
+
+  if (!showTetanus) {
+    TETANUS_VACCINES.list.forEach((item) => {
+      const doneMeta = metadata(item.ids.vaccineDone);
+      const dateMeta = metadata(item.ids.vaccineDate);
+
+      if (doneMeta) doneMeta.hidden = true;
+      if (dateMeta) dateMeta.hidden = true;
+    });
+    return; // ✅ exit early
+  }
+
+  // ✅ If showTetanus = true → handle showing/hiding and disabling based on conditions
+  TETANUS_VACCINES.list.forEach((item) => {
+    const doneMeta = metadata(item.ids.vaccineDone);
+    const dateMeta = metadata(item.ids.vaccineDate);
+
+    if (!doneMeta || !dateMeta) return; // safety guard
+
+    // Always start by showing both
+    doneMeta.hidden = false;
+    dateMeta.hidden = false;
+
+    // Hide if the vaccine month is in the future
+    if (item.vaccineMonth.start > months) {
+      doneMeta.hidden = true;
+      dateMeta.hidden = true;
+    }
+
+    // Disable date if vaccine not done or unchecked
+    if (data[item.ids.vaccineDone] === "false" || !data[item.ids.vaccineDone]) {
+      dateMeta.disabled = true;
+    }
+  });
+
+  // ✅ Handle when the user just toggled a vaccineDone field
+  const vaccineDoneDetails = TETANUS_VACCINES.list.find(
+    (vaccine) => vaccine.ids.vaccineDone === code
+  );
+
+  if (vaccineDoneDetails) {
+    const dateMeta = metadata(vaccineDoneDetails.ids.vaccineDate);
+    if (!dateMeta) return;
+
+    if (data[vaccineDoneDetails.ids.vaccineDone] === "true") {
+      // Enable date field when vaccineDone = true
+      dateMeta.disabled = false;
+    } else if (data[vaccineDoneDetails.ids.vaccineDone] === "false") {
+      // Clear and disable when vaccineDone = false
+      data[vaccineDoneDetails.ids.vaccineDate] = "";
+      dateMeta.disabled = true;
+    }
+  }
+};

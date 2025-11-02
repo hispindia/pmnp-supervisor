@@ -344,7 +344,43 @@ const FAMILY_MEMBER_VALUE = {
   TRANSFERRED: "Transferred",
   EX_COUNTRY: "Ex country",
 };
-
+// TTD TABLE
+export const TETANUS_VACCINES = {
+  type: "table",
+  list: [
+    {
+      name: "Tetanus vaccine 1",
+      age: { type: "days", value: "1" },
+      vaccineMonth: { start: "0", end: "12" },
+      ids: { vaccineDone: "Fk5ZMoIlXT8", vaccineDate: "VQ9dyZbj843"},
+    },
+    {
+      name: "Tetanus vaccine 2",
+      age: { type: "days", value: "1" },
+      vaccineMonth: { start: "0", end: "12" },
+      ids: { vaccineDone: "RHPYuRqBfes", vaccineDate: "sBzNt7bbggE"},
+    },
+    {
+      name: "Tetanus vaccine 3",
+      age: { type: "days", value: "42" },
+      vaccineMonth: { start: "1.5", end: "23" },
+      ids: { vaccineDone: "t1bww8nlliW", vaccineDate: "EeL84itsEVm" },
+    },
+    {
+      name: "Tetanus vaccine 4",
+      age: { type: "days", value: "70" },
+      vaccineMonth: { start: "2.5", end: "23" },
+      ids: { vaccineDone: "PBpaWllxVXI", vaccineDate: "dxM5jWLEKXq"},
+    },
+    {
+      name: "Tetanus vaccine 5",
+      age: { type: "days", value: "98" },
+      vaccineMonth: { start: "3.5", end: "23" },
+      ids: { vaccineDone: "mStnGYOeEX3", vaccineDate: "lRI8oJTn3jL" },
+    },
+   
+  ],
+};
 //{names, age in days, doses in month, ids: {'Vaccine given', 'Vaccine Date', 'Vaccine discrepency'}
 export const CHILD_VACCINES = {
   type: "table",

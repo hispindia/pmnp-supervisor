@@ -1,5 +1,6 @@
 import {
   CHILD_VACCINES,
+  TETANUS_VACCINES,
   FAMILY_MEMBER_METADATA_CUSTOMUPDATE,
   MIN_MAX_TEXT,
   MOBILE_NUM_REGEX,
@@ -177,6 +178,7 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
     customValidationCheck("min_max", MIN_MAX_TEXT, valText);
     customValidationCheck("contact", FAMILY_MEMBER_METADATA_CUSTOMUPDATE.CONTECT_NUMBER, valText);
     customValidationCheck("child_vaccine", CHILD_VACCINES, valText);
+    customValidationCheck("tetanus_vaccine", TETANUS_VACCINES, valText);
     console.log({ valText, warningText, isFormFulfilled });
     // custom fileds validations
     setValidationText(valText);
