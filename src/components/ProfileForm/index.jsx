@@ -117,12 +117,12 @@ const ProfileForm = ({
             <InputField size="large" disabled={true} />
           </Dhis2FormItem>
         </div>
-
+        {/* 
         <div className="col-lg-3">
           <Dhis2FormItem id={"I32qp5UaNwq"} setValuesFunc={() => ({ I32qp5UaNwq: format(new Date(), "yyyy-MM-dd") })}>
             <InputField size="large" disabled={true} />
           </Dhis2FormItem>
-        </div>
+        </div> */}
       </div>
       {/* <div className="row col-lg-12">
         <div className="col-lg-3">

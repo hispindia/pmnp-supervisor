@@ -47,7 +47,7 @@ import {
   TETANUS_VACCINES,
 } from "../constants";
 import styles from "./FamilyMemberForm.module.css";
-import { childHeathTetanusRule, childHeathRules, handleAgeAttrsOfTEI, hhMemberRules} from "./houseHoldMemberRules";
+import { childHeathTetanusRule, childHeathRules, handleAgeAttrsOfTEI, hhMemberRules } from "./houseHoldMemberRules";
 import { generateCombinedSoundex } from "@/utils/soundex";
 
 const { familyMemberFormContainer } = styles;
@@ -266,8 +266,8 @@ const FamilyMemberForm = ({
     metadata(SOUNDEX_CODE_ATTR_ID).disabled = true;
     data[PMNP_ID] = `PMNP-${BarangayCode}-${data[MEMBER_HOUSEHOLD_UID]}-${data[HOUSEHOLD_MEMBER_ID]}`;
 
-    metadata("I32qp5UaNwq").disabled = true;
-    if (!data["I32qp5UaNwq"]) data["I32qp5UaNwq"] = format(new Date(), "yyyy-MM-dd");
+    // metadata("I32qp5UaNwq").disabled = true;
+    // if (!data["I32qp5UaNwq"]) data["I32qp5UaNwq"] = format(new Date(), "yyyy-MM-dd");
 
     const dateOfbirth = new Date(data["fJPZFs2yYJQ"]);
     const enrollmentDate = new Date();
@@ -282,7 +282,7 @@ const FamilyMemberForm = ({
     CHILD_VACCINES.list.forEach((vaccine) => (metadata(vaccine.ids.vaccineDate).minDate = data["fJPZFs2yYJQ"]));
     TETANUS_VACCINES.list.forEach((vaccine) => (metadata(vaccine.ids.vaccineDate).minDate = data["fJPZFs2yYJQ"]));
     childHeathRules(metadata, data, ages, code, CHILD_VACCINES);
-    childHeathTetanusRule(metadata,data,ages, code, TETANUS_VACCINES)
+    childHeathTetanusRule(metadata, data, ages, code, TETANUS_VACCINES);
 
     if (data["QAYXozgCOHu"] === "1") {
       // Household head should more than 18 years old
