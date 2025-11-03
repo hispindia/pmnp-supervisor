@@ -90,7 +90,17 @@ const useForm = (metadata, data, uiLocale, displayFields) => {
           if (formData[el.ids.vaccineDone]) {
             if (!formData[el.ids.vaccineDate] && formData[el.ids.vaccineDone] == "true")
               valText[el.ids.vaccineDate] = { text: "This field is required" };
-            else delete valText[elements];
+            else delete valText[el.ids.vaccineDate];
+          }
+        });
+        break;
+
+        case "tetanus_vaccine":
+        elements.list.forEach((el) => {
+          if (formData[el.ids.vaccineDone]) {
+            if (!formData[el.ids.vaccineDate] && formData[el.ids.vaccineDone] == "true")
+              valText[el.ids.vaccineDate] = { text: "This field is required" };
+            else delete valText[el.ids.vaccineDate];
           }
         });
         break;
