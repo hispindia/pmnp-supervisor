@@ -114,10 +114,10 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     NextVisitTime_DE: "Z7BdeNfK9r6",
   };
 
-  const editRowCallback = (metadata, previousData, newData, code, value) => {
+  const editRowCallback = (metadataOrigin, previousData, newData, code, value) => {
     console.log("InterviewResultForm change", {
       defaultData,
-      metadata,
+      metadataOrigin,
       previousData,
       newData,
       code,
@@ -125,19 +125,24 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
       interviewData,
     });
 
+    let metadata = (metaId) => {
+      if (!metadataOrigin[metaId]) return {};
+      return metadataOrigin[metaId];
+    };
+
     if (!isAllMemberEventsCompleted) {
-      updateMetadataValueSet(metadata[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID], "Completed", "isDisabled", true);
+      updateMetadataValueSet(metadata(HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID), "Completed", "isDisabled", true);
     }
 
     if (informedConsentForInterview != "true") {
       newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID] = "Refused";
     }
 
-    metadata["JzxYzLgo0P9"].disabled = true;
-    metadata["upZKsrkhYmb"].disabled = true;
-    metadata["W8CDLLE5Vyq"].disabled = true;
-    metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
-    metadata[HOUSEHOLD_INTERVIEW_TIME_DE_ID].disabled = true;
+    metadata("JzxYzLgo0P9").disabled = true;
+    metadata("upZKsrkhYmb").disabled = true;
+    metadata("W8CDLLE5Vyq").disabled = true;
+    metadata(HOUSEHOLD_INTERVIEW_ID_DE_ID).disabled = true;
+    metadata(HOUSEHOLD_INTERVIEW_TIME_DE_ID).disabled = true;
     newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     if (code == HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID) {
@@ -145,21 +150,21 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     }
 
     // InterviewResult_DEs
-    metadata[InterviewResult_DEs.Order_DE].hidden = true;
-    metadata[InterviewResult_DEs.NextVisitDate_DE].hidden = true;
-    metadata[InterviewResult_DEs.NextVisitTime_DE].hidden = true;
+    metadata(InterviewResult_DEs.Order_DE).hidden = true;
+    metadata(InterviewResult_DEs.NextVisitDate_DE).hidden = true;
+    metadata(InterviewResult_DEs.NextVisitTime_DE).hidden = true;
 
     switch (data[InterviewResult_DEs.ResultOfInterview_DE]) {
       case "Others":
-        metadata[InterviewResult_DEs.Order_DE].hidden = false;
+        metadata(InterviewResult_DEs.Order_DE).hidden = false;
         break;
       case "Postponed":
         // future date
-        metadata[InterviewResult_DEs.NextVisitDate_DE].maxDate = moment().add(1, "Y").format("YYYY-MM-DD");
-        metadata[InterviewResult_DEs.NextVisitDate_DE].hidden = false;
+        metadata(InterviewResult_DEs.NextVisitDate_DE).maxDate = moment().add(1, "Y").format("YYYY-MM-DD");
+        metadata(InterviewResult_DEs.NextVisitDate_DE).hidden = false;
 
-        metadata[InterviewResult_DEs.NextVisitTime_DE].maxDate = moment().add(1, "Y").format("YYYY-MM-DD");
-        metadata[InterviewResult_DEs.NextVisitTime_DE].hidden = false;
+        metadata(InterviewResult_DEs.NextVisitTime_DE).maxDate = moment().add(1, "Y").format("YYYY-MM-DD");
+        metadata(InterviewResult_DEs.NextVisitTime_DE).hidden = false;
         break;
     }
 
