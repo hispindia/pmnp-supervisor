@@ -1,7 +1,7 @@
 {
   "name": "vite-pwa-fi",
   "private": true,
-  "version": "0.0.76",
+  "version": "0.0.77",
   "scripts": {
     "dev": "vite",
     "start": "vite",
