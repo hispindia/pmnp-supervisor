@@ -76,12 +76,15 @@ const InterviewDetailContainer = () => {
       }
       return acc;
     }, {});
-    console.log({ interviewEvents, disabledInterviews });
-    const transformed = interviewEvents.map((e) => ({
+
+    const transformed = interviewEvents.map((e, index) => ({
       id: e.event,
       ...e.dataValues,
       disabled: disabledInterviews[e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID]] || false,
+      ...(interviewResultEvents[index]?.dataValues || {}),
     }));
+
+    console.log({ interviewEvents, interviewResultEvents, disabledInterviews, transformed });
 
     setData(_.orderBy(transformed, (event) => Number(event["Wdg76PCqsBn"]), ["desc"]));
   }, [currentEvents]);

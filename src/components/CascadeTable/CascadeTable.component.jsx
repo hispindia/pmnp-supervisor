@@ -264,7 +264,6 @@ const CascadeTable = (props) => {
       },
     },
     ...columns,
-    // TODO
     {
       dataField: "actions",
       text: "Actions",

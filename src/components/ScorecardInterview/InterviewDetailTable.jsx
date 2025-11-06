@@ -327,7 +327,6 @@ const InterviewDetailTable = ({ data, setData, metadata, originMetadata, setMeta
       },
     },
     ...columns,
-    // TODO
     {
       dataField: "actions",
       text: "Actions",
