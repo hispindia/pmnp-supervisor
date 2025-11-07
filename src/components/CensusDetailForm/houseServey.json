@@ -1,0 +1,111 @@
+[
+  {
+    "type": "title",
+    "name": "WASH",
+    "hide": false,
+    "styles": { "fontWeight": "bold" }
+  },
+  {
+    "type": "data",
+    "name": "Primary source of drinking water",
+    "uid": "MNu4naFgvBC",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Primary source of water for handwashing",
+    "uid": "EeraoiUKKA6",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Access to a sanitary toilet",
+    "uid": "JOsQfzE5Lrl",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "title",
+    "name": "Social Welfare",
+    "hide": false,
+    "styles": { "fontWeight": "bold" }
+  },
+  {
+    "type": "data",
+    "name": "Assistance from government programs received",
+    "uid": "dtTG7cjn1CH",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Government programs for assistance",
+    "uid": "RC5B8EETrOM",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "title",
+    "name": "Household Set",
+    "hide": false,
+    "styles": { "fontWeight": "bold" }
+  },
+  {
+    "type": "data",
+    "name": "Attended SBC session in last 3 months",
+    "uid": "dxag8YT8w46",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Social and Behaviour Change (SBC) sessions",
+    "uid": "gNBFmUFtW6a",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Early learning services availed",
+    "uid": "GL5thgdHcDd",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Average number of meals in the past month",
+    "uid": "SOa1oPsJ7iH",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Access to alternative sources of food",
+    "uid": "Q48wScY7yMD",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Walking distance time to public facilities",
+    "uid": "pGDkzy24jOZ",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "Balanced food consumed in the last month",
+    "uid": "GK9fvjUhS6E",
+    "hide": false,
+    "styles": {}
+  },
+  {
+    "type": "data",
+    "name": "HH experienced hunger in last 3 months",
+    "uid": "ya8RsEdaasP",
+    "hide": false,
+    "styles": {}
+  }
+]

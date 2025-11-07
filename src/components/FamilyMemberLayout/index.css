@@ -1,0 +1,30 @@
+.wrapper {
+  /* margin-top: 5px; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.leftBar {
+  width: 100%;
+  /* padding-left: 15px; */
+  margin-right: auto;
+}
+
+.rightBar {
+  flex-basis: 100%;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 768px) {
+  .wrapper {
+    flex-direction: row;
+  }
+
+  .leftBar {
+    margin: 0;
+    width: 200px;
+    flex-shrink: 0;
+    height: 100%;
+  }
+}

@@ -1,0 +1,130 @@
+import * as trackedEntityManager from "@/indexDB/TrackedEntityManager/TrackedEntityManager";
+import { push } from "connected-react-router";
+import moment from "moment";
+import { call, put, select, takeLatest } from "redux-saga/effects";
+import { dataApi } from "../../../api";
+import { generateDhis2Payload } from "../../../utils";
+import { editingAttributes } from "../../actions/data";
+import { getTeiError, getTeiSuccessMessage, loadTei } from "../../actions/data/tei";
+import { mutateAttributes, updateNewStatus } from "../../actions/data/tei/currentTei";
+import { SUBMIT_ATTRIBUTES } from "../../types/data/tei";
+import { getTeiId } from "./utils";
+
+export function* handleSubmitAttributes({ attributes }) {
+  yield put(loadTei(true));
+
+  const teiId = yield call(getTeiId);
+
+  const { currentTei, currentEnrollment } = yield call(makePayload, attributes);
+
+  console.log("handleSubmitAttributes", {
+    teiId,
+    attributes,
+    currentTei,
+    currentEnrollment,
+  });
+
+  try {
+    if (teiId) {
+      yield call(putTeiToServer, {
+        currentTei,
+        currentEnrollment,
+        attributes,
+      });
+      yield put(getTeiSuccessMessage(`Updated tracked entity instance: ${teiId} successfully`));
+    } else {
+      yield call(postTeiToServer, {
+        currentTei,
+        currentEnrollment,
+        attributes,
+      });
+      yield put(getTeiSuccessMessage(`Created new tracked entity instance: ${currentTei.trackedEntity} successfully`));
+    }
+    yield put(mutateAttributes(attributes));
+    yield put(updateNewStatus(false));
+    yield put(editingAttributes(false));
+  } catch (e) {
+    console.error("handleSubmitAttributes", e.message);
+    yield put(getTeiError(e.message));
+  }
+
+  yield put(loadTei(false));
+}
+
+function* makePayload(attributes) {
+  const data = yield select((state) => state.data.tei.data);
+  const programMetadata = yield select((state) => state.metadata.programMetadata);
+
+  const newCurrentTei = { ...data.currentTei, attributes };
+  const { currentTei, currentEnrollment } = generateDhis2Payload(
+    { ...data, currentTei: newCurrentTei },
+    programMetadata,
+  );
+  return {
+    currentTei,
+    currentEnrollment,
+  };
+}
+
+function* putTeiToServer({ currentTei, currentEnrollment, attributes }) {
+  console.log("putTeiToServer", { currentTei });
+  const { offlineStatus } = yield select((state) => state.common);
+
+  if (offlineStatus) {
+    yield call(trackedEntityManager.setTrackedEntityInstance, {
+      trackedEntity: currentTei,
+    });
+  } else {
+    // yield call(dataApi.putTrackedEntityInstance, currentTei, programMetadataId);
+    yield call(dataApi.postTrackedEntityInstances, {
+      trackedEntities: [currentTei],
+    });
+  }
+}
+
+function* postTeiToServer({ currentTei, currentEnrollment, attributes }) {
+  const { offlineStatus } = yield select((state) => state.common);
+  const programMetadataId = yield select((state) => state.metadata.programMetadata.id);
+  const newEnrollment = {
+    ...currentEnrollment,
+    enrolledAt: moment().format("YYYY-MM-DD"),
+    incidentDate: moment().format("YYYY-MM-DD"),
+  };
+
+  console.log("postTeiToServer", {
+    currentTei,
+    currentEnrollment,
+    attributes,
+    newEnrollment,
+  });
+
+  if (offlineStatus) {
+    const teiWithEnrollment = currentTei;
+    teiWithEnrollment.enrollments = [newEnrollment];
+
+    yield call(trackedEntityManager.setTrackedEntityInstance, {
+      trackedEntity: teiWithEnrollment,
+    });
+  } else {
+    yield call(
+      dataApi.pushTrackedEntityInstance,
+      {
+        trackedEntities: [currentTei],
+      },
+      programMetadataId,
+    );
+    yield call(
+      dataApi.pushEnrollment,
+      {
+        enrollments: [newEnrollment],
+      },
+      programMetadataId,
+    );
+  }
+
+  yield put(push(`/form?tei=${currentTei.trackedEntity}`));
+}
+
+export default function* submitAttributes() {
+  yield takeLatest(SUBMIT_ATTRIBUTES, handleSubmitAttributes);
+}

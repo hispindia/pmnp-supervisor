@@ -1,0 +1,117 @@
+import {
+  CHANGE_TAB,
+  IS_EDITING_ATTRIBUTES,
+  MUTATE_TEI,
+  MUTATE_ATTRIBUTES,
+  MUTATE_ENROLLMENT,
+  MUTATE_EVENT,
+  MUTATE_DATAVALUE,
+  INIT_DATA,
+  INIT_NEW_DATA,
+  INIT_DATA_MEMBER,
+  INIT_NEW_EVENT,
+  SUBMIT_ATTRIBUTES,
+  SUBMIT_EVENTS,
+  SET_PARENT_OU_PATTERN,
+  SUBMIT_DATA_VALUES,
+  SUBMIT_EVENT_DATA,
+} from "../../types/data/tei";
+
+export const mutateTei = (property, value) => ({
+  type: MUTATE_TEI,
+  payload: {
+    property,
+    value,
+  },
+});
+
+export const mutateEnrollment = (property, value) => ({
+  type: MUTATE_ENROLLMENT,
+  payload: {
+    property,
+    value,
+  },
+});
+
+export const mutateEvent = (eventId, dataValues) => ({
+  type: MUTATE_EVENT,
+  eventId,
+  dataValues,
+});
+
+export const mutateDataValue = (eventId, dataElement, value) => ({
+  type: MUTATE_DATAVALUE,
+  payload: {
+    eventId,
+    dataElement,
+    value,
+  },
+});
+
+export const initNewData = () => ({
+  type: INIT_NEW_DATA,
+});
+
+export const initData = (trackedEntity) => ({
+  type: INIT_DATA,
+  trackedEntity,
+});
+
+export const setSelectedParentOuPattern = (pattern = null) => ({
+  type: SET_PARENT_OU_PATTERN,
+  payload: {
+    pattern,
+  },
+});
+
+export const initDataMember = (trackedEntity, programMetadata) => ({
+  type: INIT_DATA_MEMBER,
+  payload: {
+    trackedEntity,
+    programMetadata,
+  },
+});
+
+export const submitAttributes = (attributes) => {
+  return {
+    type: SUBMIT_ATTRIBUTES,
+    attributes,
+  };
+};
+
+export const submitEvent = (event, refreshTei = true) => {
+  return {
+    type: SUBMIT_EVENTS,
+    event,
+    refreshTei,
+  };
+};
+
+export const initNewEvent = (eventId, programStage) => ({
+  type: INIT_NEW_EVENT,
+  payload: { eventId, programStage },
+});
+
+export const editingAttributes = (isEditingAttributes) => ({
+  type: IS_EDITING_ATTRIBUTES,
+  isEditingAttributes,
+});
+
+export const changeTab = (tabId) => ({
+  type: CHANGE_TAB,
+  tabId,
+});
+
+export const submitDataValues = (data) => {
+  return {
+    type: SUBMIT_DATA_VALUES,
+    data,
+  };
+};
+
+export const submitEventData = (data) => {
+  return {
+    type: SUBMIT_EVENT_DATA,
+    data,
+  };
+};

@@ -1,0 +1,45 @@
+.input-field-container {
+    width: 100%;
+    /* margin-bottom: 5px; */
+    /* padding: 0px 5px 0px 5px; */
+}
+
+.input-field-label {
+    font-size: 12px;
+    color: #424242;
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.input-field-input {
+    height: 40px;
+}
+
+.input-field-warning {
+    color: #de9b00;
+    font-size: 12.5px;
+    margin-top: 2px;
+    font-weight: bold;
+}
+
+.input-field-error {
+    color: #e04848;
+    font-size: 12.5px;
+    margin-top: 2px;
+    font-weight: bold;
+}
+
+.input-field-helper-text {
+    color: #367f9e;
+    font-size: 12.5px;
+    margin-top: 2px;
+    font-weight: bold;
+}
+
+.boolean-field-container {
+    display: flex;
+    /* justify-content: center; */
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}

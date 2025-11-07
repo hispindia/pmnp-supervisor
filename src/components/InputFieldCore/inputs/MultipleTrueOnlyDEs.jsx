@@ -1,0 +1,114 @@
+import { Checkbox } from "antd";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import Select from "react-select";
+
+const MultipleTrueOnlyDEs = ({ valueSet, locale, disabled, changeValue, formData, onBlur = () => {}, ...props }) => {
+  const { t } = useTranslation();
+  const [value, setValue] = useState([]);
+
+  const handleChange = (newValue) => {
+    if (newValue) {
+      valueSet.forEach((option) => {
+        const found = newValue.find((v) => v.value === option.value);
+        if (found) {
+          changeValue(option.value, "true");
+        } else {
+          changeValue(option.value, null);
+        }
+      });
+    }
+
+    // mark parent dataElement as valid if at least one DE is selected
+    if (newValue && newValue.length > 0) {
+      // TRICK: have to use the first selected value to mark the parent DE as valid,
+      // because dhis2 only allows value in optionSet
+      const optionValue = newValue[0].value;
+      changeValue(props["data-element-id"], optionValue);
+    } else {
+      changeValue(props["data-element-id"], "");
+    }
+
+    onBlur && onBlur(null);
+    setValue(newValue);
+  };
+
+  const renderValue = (props) => {
+    if (props.index === value.length - 1) return props.data.label;
+    return props.data.label + ", ";
+  };
+
+  const options = valueSet.map((e) => {
+    if (!locale || locale === "en" || !e.translations) return e;
+    const found = e.translations.find((t) => t.locale === locale && t.property === "FORM_NAME");
+    if (!found) return e;
+    return { ...e, label: found.value };
+  });
+
+  const valueStr = valueSet.map((v) => formData[v.value]).join(",");
+  useEffect(() => {
+    setValue(valueSet.filter((v) => formData[v.value]));
+  }, [valueStr]);
+
+  return (
+    <Select
+      isMulti
+      value={value}
+      isDisabled={disabled}
+      isClearable={true}
+      options={options}
+      isSearchable={false}
+      blurInputOnSelect={false} // for mobile/tablet
+      closeMenuOnSelect={false}
+      hideSelectedOptions={false}
+      placeholder={value ? value : t("select")}
+      components={{ MultiValue: renderValue, Option: CustomOption }}
+      onChange={handleChange}
+      styles={{
+        control: (provided) => ({
+          ...provided,
+          height: 40,
+        }),
+        option: (provided, { isSelected }) => ({
+          ...provided,
+          ...(isSelected && { backgroundColor: "var(--primary)" }),
+        }),
+        valueContainer: (provided) => ({
+          ...provided,
+          whiteSpace: "nowrap",
+          width: 100,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          flexWrap: "nowrap",
+          height: 40,
+          display: "flex",
+          alignItems: "center",
+        }),
+      }}
+      {...props}
+    />
+  );
+};
+const CustomOption = ({ children, ...props }) => {
+  const { innerRef, innerProps } = props;
+
+  return (
+    <div
+      ref={innerRef}
+      {...innerProps}
+      style={{
+        ...innerProps.style,
+        display: "flex",
+        alignItems: "center",
+        padding: "8px",
+        paddingTop: 0,
+        cursor: "pointer",
+      }}
+    >
+      <Checkbox checked={props.isSelected} />
+      <span style={{ marginLeft: 8 }}>{children}</span>
+    </div>
+  );
+};
+
+export default MultipleTrueOnlyDEs;

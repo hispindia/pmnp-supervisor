@@ -1,0 +1,101 @@
+.formContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.entryFormContainer {
+  width: 100%;
+  height: calc(100% - 48px);
+  display: flex;
+}
+
+.syncButton {
+  background: linear-gradient(#28a745 100%, #28a745 90%);
+}
+
+.completeButton {
+  background: linear-gradient(#28a745 100%, #28a745 90%);
+}
+
+.incompleteButton {
+  background: linear-gradient(#ed9c28 100%, #ed9c28 90%);
+}
+
+.statisticBtn {
+  position: absolute;
+  top: 0.4em;
+  right: 3em;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 0.4em;
+  right: 0em;
+}
+
+.stepButtonsContainer {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepperContainer {
+  border-bottom: 1px solid #d6d6d6;
+}
+
+.yearSelectionContainer {
+  width: 160px;
+  border-right: 1px solid #d6d6d6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.yearAddButton {
+  padding: 10px 0 10px 0;
+}
+
+.yearSelectionItem {
+  width: 100%;
+  height: 50px;
+  border-bottom: 1px solid #d6d6d6;
+  border-top: 1px solid #d6d6d6;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #4d4d4d;
+  cursor: pointer;
+  padding: 10px 0 10px 5px;
+}
+
+.yearText {
+  flex-grow: 8;
+  margin: auto;
+}
+
+.yearDeleteItem {
+  flex-grow: 2;
+  margin: auto;
+}
+
+.yearSelected {
+  background-color: #d1d1d1;
+}
+
+.summaryContainer {
+  width: calc(100% - 50px);
+  height: 100%;
+  padding: 10px;
+  position: relative;
+}
+
+.summaryTools {
+  width: 50px;
+  height: 100%;
+  padding-top: 10px;
+  margin-right: 5px;
+  position: relative;
+}
