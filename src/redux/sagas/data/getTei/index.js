@@ -127,7 +127,7 @@ function* initExistedDataSaga() {
   yield put(setSelectedOrgUnit(selectedOrgUnit));
   yield call(handleInitData, teiData);
   yield call(initCascadeDataFromTEIsEvents, memberTEIs, false);
-  yield call(initInterviewCascadeDataFromTEIsEvents, memberTEIsEvents, memberTEIs);
+  yield call(initInterviewCascadeDataFromTEIsEvents, memberTEIsEvents);
   yield put(editingAttributes(false));
 }
 
