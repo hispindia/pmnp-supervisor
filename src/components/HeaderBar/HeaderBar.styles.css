@@ -2,6 +2,10 @@ header {
   background: linear-gradient(135deg, #f78e21, #f7c834, #369fd4) !important;
 }
 
+header > div {
+  background: linear-gradient(135deg, #f78e21, #f7c834, #369fd4) !important;
+}
+
 header div[data-test="headerbar-logo"] {
   border-right: 0;
 }
