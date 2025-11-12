@@ -1,10 +1,10 @@
 import { useUser } from "./useUser";
 
-const accessAbleRoleIDs = ["EcTqBndpJRF"];
+const accessAbleRoleIDs = ["MUNroCPg9tl"];
 
 export const useAccessControl = () => {
   const { user, isSuperuser } = useUser();
-  const userRolesIds = (user.userGroups || []).map((role) => role.id);
+  const userRolesIds = (user.userRoles || []).map((role) => role.id);
 
   // Check if user has any role that belongs to accessAbleRoleIDs or is superuser
   const isAccessAble = isSuperuser || userRolesIds.some((roleId) => accessAbleRoleIDs.includes(roleId));

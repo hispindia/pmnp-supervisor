@@ -38,6 +38,7 @@ import {
 } from "./houseHoldMemberRules";
 import "./interview-detail-table.css";
 import { clearHiddenFieldData, generateTEIDhis2Payload, getFullName, updateMetadata } from "./utils";
+import { calculateHouseHoldFields } from "./calculateHouseHoldFields";
 
 const calculateAge = (dateOBbirth, currentDate) => {
   const years = differenceInYears(currentDate, dateOBbirth);
@@ -53,17 +54,55 @@ const calculateAge = (dateOBbirth, currentDate) => {
   };
 };
 
+const createOrUpdateEventPayload = ({
+  interviewEvents,
+  programStageId,
+  dataValues,
+  newEvent,
+  status,
+  customFindFn,
+}) => {
+  const foundEvent = customFindFn
+    ? interviewEvents.find(customFindFn)
+    : interviewEvents.find((e) => e.programStage === programStageId);
+
+  if (!foundEvent) {
+    return transformEvent({
+      ...newEvent,
+      event: generateUid(),
+      dataValues,
+      status,
+      eventStatus: status,
+      programStage: programStageId,
+    });
+  } else {
+    return transformEvent({
+      ...foundEvent,
+      _isDirty: true,
+      status,
+      eventStatus: status,
+      dataValues,
+    });
+  }
+};
+
 const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
   const { t, i18n } = useTranslation();
   const { pustTei } = usePushData();
   const dispatch = useDispatch();
   const locale = i18n.language || "en";
   const interviewId = interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID];
+  const houseHoldTrackedEntity = useSelector((state) => state.data.tei.data.currentTei.trackedEntity);
+  const houseHoldEnrollment = useSelector((state) => state.data.tei.data.currentEnrollment.enrollment);
   const { interviewCascadeData } = useInterviewCascadeData(interviewData);
   const { currentInterviewCascade } = useSelector((state) => state.data.tei.data);
-  const { programMetadataMember, selectedOrgUnit } = useSelector((state) => state.metadata);
-
-  const [originMetadata, stageDataElements] = convertOriginMetadata(programMetadataMember, interviewCascadeData);
+  const currentEvents = useSelector((state) => state.data.tei.data.currentEvents);
+  const { programMetadataMember, programMetadata, selectedOrgUnit } = useSelector((state) => state.metadata);
+  const [originMetadata, memberStageDataElements, hhStageDataElements] = convertOriginMetadata(
+    programMetadataMember,
+    interviewCascadeData,
+    programMetadata,
+  );
 
   const [data, setData] = useState([]);
   const [metadata, setMetadata] = useState(_.cloneDeep(originMetadata));
@@ -190,12 +229,12 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     console.log({ interviewCascadeData, interviewEvents, rowIndex, selectedRowIndex, row });
 
     const demographicDataValues = {};
-    stageDataElements[MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID].forEach((de) => {
+    memberStageDataElements[MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID].forEach((de) => {
       demographicDataValues[de.id] = row[de.id];
     });
 
     const scorecardSurveyDataValues = {};
-    stageDataElements[MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID].forEach((de) => {
+    memberStageDataElements[MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID].forEach((de) => {
       scorecardSurveyDataValues[de.id] = row[de.id];
     });
 
@@ -220,54 +259,70 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     const status = type == "submit" ? "COMPLETED" : "ACTIVE";
 
-    let demographicEventPayload;
-    const foundDemographicEvent = interviewEvents.find((e) => e.programStage === MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID);
-    if (!foundDemographicEvent) {
-      demographicEventPayload = transformEvent({
-        ...newEvent,
-        event: generateUid(),
-        dataValues: demographicDataValues,
-        status,
-        eventStatus: status,
-        programStage: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
-      });
-    } else {
-      demographicEventPayload = transformEvent({
-        ...foundDemographicEvent,
-        _isDirty: true,
-        status,
-        eventStatus: status,
-        dataValues: demographicDataValues,
-      });
-    }
+    const demographicEventPayload = createOrUpdateEventPayload({
+      interviewEvents,
+      programStageId: MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
+      dataValues: demographicDataValues,
+      newEvent,
+      status,
+    });
     // only push -> do not refresh tei
     dispatch(submitEvent(demographicEventPayload, false));
 
-    let scorecardSurveyEventPayload;
-    const foundScorecardSurveyEvent = interviewEvents.find(
-      (e) => e.programStage === MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID,
+    const scorecardSurveyEventPayload = createOrUpdateEventPayload({
+      interviewEvents,
+      programStageId: MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID,
+      dataValues: scorecardSurveyDataValues,
+      newEvent,
+      status,
+    });
+
+    dispatch(submitEvent(scorecardSurveyEventPayload, false));
+
+    // Household General_Survey Event
+    let hhGeneralSurveyEventPayload;
+    const hhGeneralSurveyEvent = currentEvents.find(
+      (e) =>
+        e.programStage === HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID &&
+        e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
     );
-    if (!foundScorecardSurveyEvent) {
-      scorecardSurveyEventPayload = transformEvent({
-        ...newEvent,
+
+    let scorecardHHGeneralSurveyDataValues = {};
+    hhStageDataElements[HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID].forEach((de) => {
+      scorecardHHGeneralSurveyDataValues[de.id] = row[de.id];
+    });
+    scorecardHHGeneralSurveyDataValues = { ...scorecardHHGeneralSurveyDataValues, ...hhGeneralSurveyEvent?.dataValues };
+
+    if (!hhGeneralSurveyEvent) {
+      hhGeneralSurveyEventPayload = transformEvent({
+        ...{
+          program: programMetadata.id,
+          enrollment: houseHoldEnrollment,
+          occurredAt,
+          orgUnit,
+          trackedEntity: houseHoldTrackedEntity,
+          dueDate: occurredAt,
+          status: "ACTIVE",
+          _isDirty: true,
+        },
         event: generateUid(),
-        dataValues: scorecardSurveyDataValues,
+        dataValues: scorecardHHGeneralSurveyDataValues,
         status,
         eventStatus: status,
-        programStage: MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID,
+        programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
       });
     } else {
-      scorecardSurveyEventPayload = transformEvent({
-        ...foundScorecardSurveyEvent,
+      hhGeneralSurveyEventPayload = transformEvent({
+        ...hhGeneralSurveyEvent,
         _isDirty: true,
         status,
         eventStatus: status,
-        dataValues: scorecardSurveyDataValues,
+        dataValues: scorecardHHGeneralSurveyDataValues,
       });
     }
 
     // default refresh tei and loading for the last
-    dispatch(submitEvent(scorecardSurveyEventPayload));
+    dispatch(submitEvent(hhGeneralSurveyEventPayload));
 
     // update member TEI
     const currentTei = newData[rowIndex];
@@ -575,9 +630,10 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
   );
 };
 
-const convertOriginMetadata = (programMetadataMember, cascadeMembers) => {
+const convertOriginMetadata = (programMetadataMember, cascadeMembers, programMetadata) => {
   const metadata = [];
-  const stageDataElements = {};
+  const hhStageDataElements = {};
+  const memberStageDataElements = {};
 
   const trackedEntityAttributes = programMetadataMember.trackedEntityAttributes.map((attr) => ({
     ...attr,
@@ -601,14 +657,22 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers) => {
       de.hidden = HAS_INITIAN_NOVALUE.includes(de.id);
     });
 
-    stageDataElements[stage.id] = [...stage.dataElements];
+    memberStageDataElements[stage.id] = [...stage.dataElements];
 
     return [...acc, ...stage.dataElements];
   }, []);
 
   metadata.push(...programStagesDataElements);
 
-  return [metadata, stageDataElements];
+  const hhProgramStagesDataElements = programMetadata.programStages.reduce((acc, stage) => {
+    hhStageDataElements[stage.id] = [...stage.dataElements];
+
+    return [...acc, ...stage.dataElements];
+  }, []);
+
+  metadata.push(...hhProgramStagesDataElements);
+
+  return [metadata, memberStageDataElements, hhStageDataElements];
 };
 
 export default HouseHoldMemberTable;

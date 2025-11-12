@@ -58,7 +58,6 @@ export const setUsers = (users) => ({
     users,
   },
 });
-
 export const setOrgUnitGroups = (orgUnitGroups) => ({
   type: SET_ORGUNIT_GROUPS,
   payload: {

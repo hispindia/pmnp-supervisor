@@ -1,4 +1,3 @@
-import { list } from "postcss";
 import {
   CHANGE_PAGER,
   FILTER,

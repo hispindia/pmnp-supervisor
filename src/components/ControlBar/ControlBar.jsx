@@ -16,6 +16,8 @@ import RightSideButtonsContainer from "../../containers/ControlBar/RightSideButt
 import AssignHouseholdButtonContainer from "../../containers/ControlBar/AssignHouseholdButton";
 import { Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import { useUser } from "@/hooks/useUser";
+
 import LanguageSelectionButton from "./LanguageSelectionButton";
 import manifest from "../../../manifest.webapp.json";
 
@@ -66,6 +68,7 @@ const items = [
 
 const ControlBar = () => {
   const { t } = useTranslation();
+  const { user } = useUser();
   const { selectedOrgUnit, orgUnits } = useSelector((state) => state.metadata);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -101,6 +104,7 @@ const ControlBar = () => {
                 </a>
               </Dropdown>
             </div>
+
             <div className="d-none d-lg-block">
               <ListButtonContainer />
             </div> 
@@ -109,14 +113,42 @@ const ControlBar = () => {
             </div> 
           </div>
 
-          <Typography color="primary" style={{ paddingRight: 8, paddingTop: 2 }}>
-            {orgUnitLabel.map((name, index) => (
+         <div className="d-flex align-items-center">
+            <Typography color="primary" style={{ paddingTop: 2 }}>
               <>
-                {" "}
-                {name} {index < orgUnitLabel.length - 1 && <RightOutlined style={{ fontSize: 12 }} />}
+                User: &nbsp;
+                <span
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user?.displayName || user?.name || "Unknown User"}
+                </span>
               </>
-            ))}
-          </Typography>
+            </Typography>
+
+            {orgUnitLabel.length > 0 && (
+              <>
+                <div
+                  style={{
+                    width: "2px",
+                    height: "20px",
+                    background: "#f68e22",
+                    margin: "0 12px",
+                  }}
+                />
+
+                <Typography color="primary" style={{ paddingRight: 8, paddingTop: 2 }}>
+                  {orgUnitLabel.map((name, index) => (
+                    <>
+                      {name} {index < orgUnitLabel.length - 1 && <RightOutlined style={{ fontSize: 12 }} />}
+                    </>
+                  ))}
+                </Typography>
+              </>
+            )}
+          </div>
+
         </div>
 
         <RightSideButtonsContainer />

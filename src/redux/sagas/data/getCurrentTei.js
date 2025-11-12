@@ -8,18 +8,13 @@ function* handleGetTei({ tei: teiId }) {
 
   if (teiId) {
     try {
-      const data = yield call(
-        dataApi.getTrackedEntityInstanceById,
-        teiId,
-        programId
-      );
+      const data = yield call(dataApi.getTrackedEntityInstanceById, teiId, programId);
       yield put(initData(data));
     } catch (e) {
       console.log(e);
       yield put(initNewData());
     }
   } else {
-    // TODO: [Liem]: redirect to tei = null
     yield put(initNewData());
   }
 }

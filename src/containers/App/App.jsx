@@ -60,7 +60,6 @@ const AppContainer = () => {
           } catch (e) {
             console.log(e);
           }
-          console.log("orgUnitJsonData", { orgUnitJsonData });
           dispatch(setSelectedOrgUnit(orgUnitJsonData));
           // history.push("/list");
         }
