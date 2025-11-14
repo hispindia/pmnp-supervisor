@@ -16,7 +16,8 @@ const ReportButtonContainer = () => {
   }
 
   return (
-    <ReportButton
+    <>
+     <ReportButton
       variant="contained"
       color="primary"
       // disableElevation
@@ -26,8 +27,22 @@ const ReportButtonContainer = () => {
       href={`../../../dhis-web-reports/index.html#/standard-report/view/zDH0OW4JKEi?ou=${selectedOrgUnit.id}`}
       target={'_blank'}
     >
-      {t("report")}
+      {t("Consolidation Report")}
     </ReportButton>
+     <ReportButton
+      variant="contained"
+      color="primary"
+      // disableElevation
+      // onClick={() => {
+      //   history.replace(`/report`);
+      // }}
+      href={`../../../dhis-web-reports/index.html#/standard-report/view/TND8uKGSLfL?ou=${selectedOrgUnit.id}`}
+      target={'_blank'}
+    >
+      {t("Deduplication Report")}
+    </ReportButton>
+    </>
+
   );
 };
 
