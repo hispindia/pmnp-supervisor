@@ -61,11 +61,14 @@ const createOrUpdateEventPayload = ({
   dataValues,
   newEvent,
   status,
-  customFindFn,
+  interviewData,
 }) => {
-  const foundEvent = customFindFn
-    ? interviewEvents.find(customFindFn)
-    : interviewEvents.find((e) => e.programStage === programStageId);
+  const foundEvent = interviewEvents.find(
+    (e) =>
+      e.programStage === programStageId &&
+      e.dataValues.find((dv) => dv.dataElement === HOUSEHOLD_INTERVIEW_ID_DE_ID)?.value ===
+        interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
+  );
 
   if (!foundEvent) {
     return transformEvent({
@@ -87,7 +90,7 @@ const createOrUpdateEventPayload = ({
   }
 };
 
-const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
+const HouseHoldMemberTable = ({ interviewData, disabled }) => {
   const { t, i18n } = useTranslation();
   const { pustTei } = usePushData();
   const dispatch = useDispatch();
@@ -227,7 +230,13 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     // save event
     const interviewEvents = interviewCascadeData[selectedRowIndex]?.events || [];
-    console.log({ interviewCascadeData, interviewEvents, rowIndex, selectedRowIndex, row });
+    console.log({
+      interviewCascadeData,
+      interviewData,
+      interviewEvents,
+      currentEvents,
+      row,
+    });
 
     const demographicDataValues = {};
     memberStageDataElements[MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID].forEach((de) => {
@@ -266,6 +275,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       dataValues: demographicDataValues,
       newEvent,
       status,
+      interviewData,
     });
     // only push -> do not refresh tei
     dispatch(submitEvent(demographicEventPayload, false));
@@ -276,8 +286,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       dataValues: scorecardSurveyDataValues,
       newEvent,
       status,
+      interviewData,
     });
-
     dispatch(submitEvent(scorecardSurveyEventPayload, false));
 
     // Household General_Survey Event
