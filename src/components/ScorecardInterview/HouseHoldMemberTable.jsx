@@ -318,16 +318,12 @@ const HouseHoldMemberTable = ({ interviewData, disabled }) => {
         },
         event: generateUid(),
         dataValues: scorecardHHGeneralSurveyDataValues,
-        status,
-        eventStatus: status,
         programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
       });
     } else {
       hhGeneralSurveyEventPayload = transformEvent({
         ...hhGeneralSurveyEvent,
         _isDirty: true,
-        status,
-        eventStatus: status,
         dataValues: scorecardHHGeneralSurveyDataValues,
       });
     }
