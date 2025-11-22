@@ -343,7 +343,6 @@ const HouseHoldMemberTable = ({ interviewData, disabled }) => {
 
     const events = [demographicEventPayload, scorecardSurveyEventPayload];
     console.log("update member events:", { events, updatedMemberTei, scorecardSurveyDataValues });
-    // clearForm();
   };
 
   const editRowCallback = (metadataOrigin, previousData, data, code, value) => {
@@ -354,7 +353,7 @@ const HouseHoldMemberTable = ({ interviewData, disabled }) => {
       return metadataOrigin[metaId];
     };
 
-    console.log("HouseHoldMemberTable", { previousData, data, code, value, interviewData });
+    console.log("HouseHoldMemberTable", { data, code, value, interviewData });
     metadata("X5YLeBE3BzL").compulsory = false;
 
     // stage
@@ -656,7 +655,7 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers, programMet
 
   const valueSetListOfFemales = createValueSet(cascadeMembers, "PIGLwIaw0wy", "Cn37lbyhz6f");
 
-  const programStagesDataElements = programMetadataMember.programStages.reduce((acc, stage) => {
+  const memberProgramStagesDataElements = programMetadataMember.programStages.reduce((acc, stage) => {
     stage.dataElements.forEach((de) => {
       // Drop down for mother’s name
       if (de.id === "q0WEgMBwi0p") {
@@ -672,7 +671,7 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers, programMet
     return [...acc, ...stage.dataElements];
   }, []);
 
-  metadata.push(...programStagesDataElements);
+  metadata.push(...memberProgramStagesDataElements);
 
   const hhProgramStagesDataElements = programMetadata.programStages.reduce((acc, stage) => {
     hhStageDataElements[stage.id] = [...stage.dataElements];
@@ -682,7 +681,17 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers, programMet
 
   metadata.push(...hhProgramStagesDataElements);
 
-  return [metadata, memberStageDataElements, hhStageDataElements];
+  // duplicate metadata removal - cuz DE can be in multiple stagesq
+  const hashMetadata = {};
+  const cleanedMetadata = metadata.reduce((acc, curr) => {
+    if (!hashMetadata[curr.id]) {
+      hashMetadata[curr.id] = true;
+      acc.push(curr);
+    }
+    return acc;
+  }, []);
+
+  return [cleanedMetadata, memberStageDataElements, hhStageDataElements];
 };
 
 export default HouseHoldMemberTable;
