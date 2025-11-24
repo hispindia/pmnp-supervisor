@@ -344,7 +344,6 @@ function CaptureForm(props) {
         <div className="col-md-12">
           {generateSectionFields()}
           {generateProgramStageSectionFields()}
-          {/* {generateFields(formMetadata)} */}
         </div>
       </div>
       <div className="row">
