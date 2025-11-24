@@ -288,11 +288,13 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
     );
 
+    console.log("handleEditRow", row["l3vrPTVrY45"]);
+
     let scorecardHHGeneralSurveyDataValues = {};
     hhStageDataElements[HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID].forEach((de) => {
-      scorecardHHGeneralSurveyDataValues[de.id] = row[de.id];
+      if (row[de.id]) scorecardHHGeneralSurveyDataValues[de.id] = row[de.id];
     });
-    scorecardHHGeneralSurveyDataValues = { ...scorecardHHGeneralSurveyDataValues, ...hhGeneralSurveyEvent?.dataValues };
+    scorecardHHGeneralSurveyDataValues = { ...hhGeneralSurveyEvent?.dataValues, ...scorecardHHGeneralSurveyDataValues };
 
     if (!hhGeneralSurveyEvent) {
       hhGeneralSurveyEventPayload = transformEvent({
@@ -336,7 +338,12 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     pustTei({ currentTei: updatedMemberTei });
 
     const events = [demographicEventPayload, scorecardSurveyEventPayload];
-    console.log("update member events:", { events, updatedMemberTei, scorecardSurveyDataValues });
+    console.log("update member events:", {
+      events,
+      updatedMemberTei,
+      scorecardSurveyDataValues,
+      hhGeneralSurveyEventPayload,
+    });
     // clearForm();
   };
 
@@ -514,7 +521,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
     handleAgeFields(metadata);
     handleTetanusVaccineLogics({ metadata, data, eventDate });
 
-    const memberData = interviewCascadeData.map((d) => d.memberData);
+    const memberData = interviewCascadeData.map((d) => (d.memberData.id === data.id ? { ...data } : d.memberData));
     calculateHouseHoldFields(data, memberData, interviewData);
 
     // hide all attribute
