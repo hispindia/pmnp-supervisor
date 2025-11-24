@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import InputField from "../InputFieldCore/InputField.component.jsx";
 import { useState } from "react";
 import ChildHealthCustomForm from "./ChildHealthCustomForm.component";
-import ChildHealth from "./ChildHealth";
+import TetanusHealth from "./TetanusHealth";
 import { pickTranslation } from "@/utils";
 import { getTranslationDisplayName } from "@/utils/translation";
 
@@ -231,7 +231,7 @@ function CaptureForm(props) {
       }
       if (pSection.id == "vRw4T2DXede") {
         return (
-          <ChildHealth
+          <TetanusHealth
             section={pSection}
             formMetadata={formMetadata}
             changeValue={changeValue}

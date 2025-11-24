@@ -87,7 +87,10 @@ const HouseHoldSurveyForm = ({ interviewMetadata, interviewData = {}, onClose = 
   const editRowCallback = (metadata, previousData, newData, code, value) => {
     const editRowCallback = { defaultData, metadata, previousData, newData, code, value };
     console.log("HouseHoldSurveyForm change", editRowCallback);
-
+debugger
+    if(newData["vff"]== "true"){
+      metadata["yyy"].hidden = true;
+    }
     metadata[HOUSEHOLD_INTERVIEW_ID_DE_ID].disabled = true;
 
     // Quaterly update

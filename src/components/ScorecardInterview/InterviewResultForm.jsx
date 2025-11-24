@@ -2,6 +2,7 @@ import _ from "lodash";
 import moment from "moment";
 import CaptureForm from "../CaptureForm";
 import {
+  HOUSEHOLD_APPROVAL_STATUS,
   HOUSEHOLD_INTERVIEW_DATE_DE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
   HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID,
@@ -71,7 +72,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
       _isDirty: true,
     });
 
-    const hhStatus = getHHStatus(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID], newData['JzxYzLgo0P9']);
+    const hhStatus = getHHStatus(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID], newData[HOUSEHOLD_APPROVAL_STATUS]);
     dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
 
     dispatch(submitEvent(eventPayload));
@@ -100,7 +101,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
       dataValues,
     });
     
-    const hhStatus = getHHStatus(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID], newData['JzxYzLgo0P9']);
+    const hhStatus = getHHStatus(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID], newData[HOUSEHOLD_APPROVAL_STATUS]);
     dispatch(submitAttributes({ ...attributes, [HH_STATUS_ATTR_ID]: hhStatus }));
     dispatch(submitEvent(eventPayload));
     setFormDirty(false);
@@ -113,9 +114,6 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     NextVisitTime_DE: "Z7BdeNfK9r6",
   };
 
-  const supervisorApproval = {
-    ApprovalStatus: 'JzxYzLgo0P9',
-  }
 
   const editRowCallback = (metadataOrigin, previousData, newData, code, value) => {
 
@@ -129,7 +127,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
       interviewData,
     });
 
-    if(newData[supervisorApproval.ApprovalStatus] == "Needs_updates") {
+    if(newData[HOUSEHOLD_APPROVAL_STATUS] == "Needs_updates") {
       newData['K2ySLF5Qnri'] = "Needs_updates"
     }
 
@@ -147,10 +145,10 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     }
     
     if(newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]=="Completed" || newData[HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID]=="Partially Completed") {
-      metadata("JzxYzLgo0P9").disabled = false;
+      metadata(HOUSEHOLD_APPROVAL_STATUS).disabled = false;
       metadata("upZKsrkhYmb").disabled = false;
     } else {
-      metadata("JzxYzLgo0P9").disabled = true;
+      metadata(HOUSEHOLD_APPROVAL_STATUS).disabled = true;
       metadata("upZKsrkhYmb").disabled = true;
     }
     metadata(HOUSEHOLD_INTERVIEW_ID_DE_ID).disabled = true;
@@ -158,7 +156,7 @@ const InterviewResultForm = ({ interviewData = {}, onClose = () => {}, disabled 
     newData[HOUSEHOLD_INTERVIEW_TIME_DE_ID] = getQuarterlyFromDate(interviewData[HOUSEHOLD_INTERVIEW_DATE_DE_ID]);
 
     if (code == HOUSEHOLD_INTERVIEW_RESULT_COMPLETE_DE_ID) {
-      newData["JzxYzLgo0P9"] = "";
+      newData[HOUSEHOLD_APPROVAL_STATUS] = "";
     }
 
     // InterviewResult_DEs

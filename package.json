@@ -1,7 +1,7 @@
 {
   "name": "vite-pwa-fi-supervisor",
   "private": true,
-  "version": "0.0.81",
+  "version": "0.0.82",
   "scripts": {
     "dev": "vite",
     "start": "vite",

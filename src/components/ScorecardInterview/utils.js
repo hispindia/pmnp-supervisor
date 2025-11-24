@@ -11,7 +11,7 @@ export const getHHStatus = (interviewResult, supervisorStatus) => {
     if (interviewResult === "Others") return HH_STATUSES.other;
     if (interviewResult === "Partially Completed") return HH_STATUSES.ongoing;
     if (interviewResult === "Completed" && supervisorStatus==='Approved') return HH_STATUSES.approved;
-    if (interviewResult === "Completed") return HH_STATUSES.submitted;
+    if (interviewResult === "Completed" && supervisorStatus==='') return HH_STATUSES.submitted;
     if (interviewResult === "Needs_updates") return HH_STATUSES.needsUpdates;
   };
   

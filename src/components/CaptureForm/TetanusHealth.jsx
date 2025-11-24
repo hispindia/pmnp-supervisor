@@ -8,7 +8,7 @@ import InputField from "../InputFieldCore/InputField.component.jsx";
 import { pickTranslation } from "@/utils";
 import HyperLink from "../InputFieldCore/HyperLink";
 
-const ChildHealth = ({
+const TetanusHealth = ({
   locale,
   section,
   formMetadata,
@@ -114,4 +114,4 @@ const ChildHealth = ({
   );
 };
 
-export default ChildHealth;
+export default TetanusHealth;
