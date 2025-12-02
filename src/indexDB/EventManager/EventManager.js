@@ -72,7 +72,7 @@ export const pull = async ({ handleDispatchCurrentOfflineLoading, offlineSelecte
       console.log("clearing Events...");
       await db[TABLE_NAME].clear();
     }
-    // const updatedAt = moment().subtract(3, 'months').format('YYYY-MM-DD');
+
     const programs = await programManager.getPrograms();
 
     for (let j = 0; j < offlineSelectedOrgUnits.length; j++) {

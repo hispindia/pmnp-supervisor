@@ -8,6 +8,7 @@ import { CHILD_VACCINES, FORM_ACTION_TYPES, HAS_INITIAN_NOVALUE, MEMBER_HOUSEHOL
 import {
   HOUSEHOLD_INTERVIEW_DATE_DE_ID,
   HOUSEHOLD_INTERVIEW_ID_DE_ID,
+  HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
   HOUSEHOLD_INTERVIEW_TIME_DE_ID,
   MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID,
   MEMBER_SCORECARD_SURVEY_PROGRAM_STAGE_ID,
@@ -60,11 +61,14 @@ const createOrUpdateEventPayload = ({
   dataValues,
   newEvent,
   status,
-  customFindFn,
+  interviewData,
 }) => {
-  const foundEvent = customFindFn
-    ? interviewEvents.find(customFindFn)
-    : interviewEvents.find((e) => e.programStage === programStageId);
+  const foundEvent = interviewEvents.find(
+    (e) =>
+      e.programStage === programStageId &&
+      e.dataValues.find((dv) => dv.dataElement === HOUSEHOLD_INTERVIEW_ID_DE_ID)?.value ===
+        interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
+  );
 
   if (!foundEvent) {
     return transformEvent({
@@ -86,7 +90,7 @@ const createOrUpdateEventPayload = ({
   }
 };
 
-const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) => {
+const HouseHoldMemberTable = ({ interviewData, disabled }) => {
   const { t, i18n } = useTranslation();
   const { pustTei } = usePushData();
   const dispatch = useDispatch();
@@ -226,7 +230,13 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     // save event
     const interviewEvents = interviewCascadeData[selectedRowIndex]?.events || [];
-    console.log({ interviewCascadeData, interviewEvents, rowIndex, selectedRowIndex, row });
+    console.log({
+      interviewCascadeData,
+      interviewData,
+      interviewEvents,
+      currentEvents,
+      row,
+    });
 
     const demographicDataValues = {};
     memberStageDataElements[MEMBER_DEMOGRAPHIC_PROGRAM_STAGE_ID].forEach((de) => {
@@ -265,6 +275,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       dataValues: demographicDataValues,
       newEvent,
       status,
+      interviewData,
     });
     // only push -> do not refresh tei
     dispatch(submitEvent(demographicEventPayload, false));
@@ -275,8 +286,8 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       dataValues: scorecardSurveyDataValues,
       newEvent,
       status,
+      interviewData,
     });
-
     dispatch(submitEvent(scorecardSurveyEventPayload, false));
 
     // Household General_Survey Event
@@ -287,11 +298,13 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         e.dataValues[HOUSEHOLD_INTERVIEW_ID_DE_ID] === interviewData[HOUSEHOLD_INTERVIEW_ID_DE_ID],
     );
 
+    console.log("handleEditRow", row["l3vrPTVrY45"]);
+
     let scorecardHHGeneralSurveyDataValues = {};
     hhStageDataElements[HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID].forEach((de) => {
-      scorecardHHGeneralSurveyDataValues[de.id] = row[de.id];
+      if (row[de.id]) scorecardHHGeneralSurveyDataValues[de.id] = row[de.id];
     });
-    scorecardHHGeneralSurveyDataValues = { ...scorecardHHGeneralSurveyDataValues, ...hhGeneralSurveyEvent?.dataValues };
+    scorecardHHGeneralSurveyDataValues = { ...hhGeneralSurveyEvent?.dataValues, ...scorecardHHGeneralSurveyDataValues };
 
     if (!hhGeneralSurveyEvent) {
       hhGeneralSurveyEventPayload = transformEvent({
@@ -307,16 +320,12 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
         },
         event: generateUid(),
         dataValues: scorecardHHGeneralSurveyDataValues,
-        status,
-        eventStatus: status,
         programStage: HOUSEHOLD_SURVEY_PROGRAM_STAGE_ID,
       });
     } else {
       hhGeneralSurveyEventPayload = transformEvent({
         ...hhGeneralSurveyEvent,
         _isDirty: true,
-        status,
-        eventStatus: status,
         dataValues: scorecardHHGeneralSurveyDataValues,
       });
     }
@@ -336,7 +345,6 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
 
     const events = [demographicEventPayload, scorecardSurveyEventPayload];
     console.log("update member events:", { events, updatedMemberTei, scorecardSurveyDataValues });
-    // clearForm();
   };
 
   const editRowCallback = (metadataOrigin, previousData, data, code, value) => {
@@ -347,7 +355,7 @@ const HouseHoldMemberTable = ({ interviewData, onClose = () => {}, disabled }) =
       return metadataOrigin[metaId];
     };
 
-    console.log("HouseHoldMemberTable", { previousData, data, code, value, interviewData });
+    console.log("HouseHoldMemberTable", { data, code, value, interviewData });
     metadata("X5YLeBE3BzL").compulsory = false;
 
     // stage
@@ -646,7 +654,7 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers, programMet
 
   const valueSetListOfFemales = createValueSet(cascadeMembers, "PIGLwIaw0wy", "Cn37lbyhz6f");
 
-  const programStagesDataElements = programMetadataMember.programStages.reduce((acc, stage) => {
+  const memberProgramStagesDataElements = programMetadataMember.programStages.reduce((acc, stage) => {
     stage.dataElements.forEach((de) => {
       // Drop down for mother’s name
       if (de.id === "q0WEgMBwi0p") {
@@ -662,7 +670,7 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers, programMet
     return [...acc, ...stage.dataElements];
   }, []);
 
-  metadata.push(...programStagesDataElements);
+  metadata.push(...memberProgramStagesDataElements);
 
   const hhProgramStagesDataElements = programMetadata.programStages.reduce((acc, stage) => {
     hhStageDataElements[stage.id] = [...stage.dataElements];
@@ -672,7 +680,17 @@ const convertOriginMetadata = (programMetadataMember, cascadeMembers, programMet
 
   metadata.push(...hhProgramStagesDataElements);
 
-  return [metadata, memberStageDataElements, hhStageDataElements];
+  // duplicate metadata removal - cuz DE can be in multiple stagesq
+  const hashMetadata = {};
+  const cleanedMetadata = metadata.reduce((acc, curr) => {
+    if (!hashMetadata[curr.id]) {
+      hashMetadata[curr.id] = true;
+      acc.push(curr);
+    }
+    return acc;
+  }, []);
+
+  return [cleanedMetadata, memberStageDataElements, hhStageDataElements];
 };
 
 export default HouseHoldMemberTable;

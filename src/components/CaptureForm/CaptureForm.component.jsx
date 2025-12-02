@@ -229,7 +229,7 @@ function CaptureForm(props) {
           />
         );
       }
-      if (pSection.id == "vRw4T2DXede") {
+      if (pSection.id == "VEveCdHCwyD") {
         return (
           <TetanusHealth
             section={pSection}
@@ -344,7 +344,6 @@ function CaptureForm(props) {
         <div className="col-md-12">
           {generateSectionFields()}
           {generateProgramStageSectionFields()}
-          {/* {generateFields(formMetadata)} */}
         </div>
       </div>
       <div className="row">

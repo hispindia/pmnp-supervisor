@@ -123,12 +123,21 @@ export const calculateHouseHoldFields = (newData, interviewCascadeData, intervie
     sXCoUlbEULM: "YgK3LWUrA6f",
     kL0aNVBx5MS: "RLms3EMK6Lx",
     nVzXtXKKiGI: "zLJX0cTUhbU",
+    l3vrPTVrY45: "jIAwnqn8GTU",
+    ULshoKF1PfR: "AhH8CegcpvQ",
+    ZDoQ5iZUEB3: "EadgXIE9RbC",
+    Z8Gcu624BsF: "sOsvy89ROmD",
   };
+
+  const yesNoOptionSetDEs = ["jIAwnqn8GTU", "AhH8CegcpvQ", "EadgXIE9RbC", "sOsvy89ROmD"];
 
   const yesNoNa = { YES: "1", NO: "0", NA: "NA" };
   Object.keys(mapDE).map((surveyDe) => {
     const HH_DE = mapDE[surveyDe];
-    const [count_true, count_false, count_na] = countValues(interviewCascadeData, HH_DE, ["true", "false", "NA"]);
+
+    let values = ["true", "false", "NA"];
+    if (yesNoOptionSetDEs.includes(HH_DE)) values = ["1", "0", "NA"];
+    const [count_true, count_false, count_na] = countValues(interviewCascadeData, HH_DE, values);
 
     // Count blank/empty values
     const count_blank = interviewCascadeData.filter((item) => !item[HH_DE] || item[HH_DE] === "").length;
